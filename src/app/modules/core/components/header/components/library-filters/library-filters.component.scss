@@ -1,0 +1,145 @@
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+input[type="text"],
+button,
+.button,
+textarea,
+.library_filter_dropdown_container
+mat-select {
+    -webkit-app-region: no-drag;
+}
+
+.button {
+    transition: color 0.3s ease;
+    color: rgba(black, 1);
+    margin-left: 0.5rem;
+    padding-left: 0.2rem;
+    padding-right: 0.3rem;
+    padding-top: 0.2rem;
+
+    &:hover {
+        color: rgba(black, 0.5);
+        cursor: pointer;
+    }
+}
+
+#header-library {
+    display: grid;
+    //TODO figure out a way to achieve min-sizing for individual buttons
+    grid-template-columns: repeat(auto-fit, 10px);
+    gap: 5px;
+    overflow: hidden;
+    max-width: calc(100vw - 480px);
+    margin: 0;
+    padding: 0;
+    position: relative;
+    min-height: 0;
+
+    .button-library_filter:nth-child(-n + 1) { grid-column: span 6; }
+    .button-library_filter:nth-child(n + 2) { grid-column: span 7; }
+    .button-library_filter:nth-child(n + 3)  { grid-column: span 8; }
+    .button-library_filter:nth-child(n + 4)  { grid-column: span 6; }
+
+    .mat-mdc-unelevated-button:not(:disabled) {
+        background-color: transparent;
+    }
+
+    ::ng-deep .mdc-button__label {
+        color: rgba(black, 0.8);
+        font-weight: 300;
+    }
+}
+
+.library_filter_dropdown_container {
+    margin: -0.15rem -0.751955rem;
+    flex-flow: column wrap;
+    
+    #button-library_filter_menu {
+        display: none;
+        color: black;
+        font-family: 'Roboto';
+        position: relative;
+        flex: 1 1 auto;
+        margin: 0 2rem;
+
+        .mat-mdc-select-value {
+            display: inline-flex;
+            color: black;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.0892857143em;
+        }
+
+        .mat-mdc-select-arrow { 
+            padding: 0;
+            margin: 0;
+        }
+    }
+    
+    @media (max-width: 969px) {
+        #button-library_filter_menu {            
+            display: inline-flex;
+        }
+    }
+    
+    .button-library_filter {
+        flex-flow: column wrap;
+        overflow: hidden;
+    }
+}
+
+#currentPageControls {
+    display: flex;
+    width: fit-content;
+    overflow-x: visible;
+    margin-left: 0;
+    height: 2.1rem;
+    min-width: max-content;
+}
+
+.button-library_filter {
+    height: 2.1rem !important;
+}
+
+.selected {
+    .mat-mdc-button-persistent-ripple::before {
+        opacity: 0.12 !important;
+    }
+}
+
+.hidden {
+    display: none !important;
+}
+
+.mdc-notched-outline__leading, .mdc-notched-outline__notch, .mdc-notched-outline__trailing {
+    border: none !important;
+}
+
+.mat-mdc-text-field-wrapper.mdc-text-field--outlined, .mat-mdc-form-field-infix {
+    padding: 0 !important;
+    width: 2rem !important;
+    margin: none !important;
+}
+
+.shift-arrow {
+    .mat-mdc-select-arrow-wrapper {
+        margin-left: -2rem !important;
+    }
+}
+
+.mdc-menu-surface.mat-mdc-select-panel {
+    margin: 0 -0.2rem;
+    width: 8rem !important;
+    position: absolute !important;
+}
+
+@media (min-width: 880px) {
+    #audiobooks_library_filter {
+        display: inline-flex;
+    }
+}
+
+.cdk-overlay-pane {
+    top: 40px !important
+}

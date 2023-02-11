@@ -1,0 +1,203 @@
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+input[type="text"],
+button,
+.button,
+textarea,
+mat-select {
+    -webkit-app-region: no-drag;
+}
+
+.draggable {
+    -webkit-app-region: drag;
+}
+
+.mat-toolbar {
+    background: transparent;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: linear-gradient(to right, #FFFFFF 199px, rgba(0, 0, 0, .12) 199px 200px, #FAFAFA 200px 100%);
+    overflow: visible;
+    padding: 0;
+    padding-top: 0;
+}
+
+#profile-settings-container {
+    box-shadow: none;
+    width: 200px;
+    height: 45px;
+    background-color: #5A578E;
+    display: inline-flex;
+    justify-content: space-between;
+}
+
+.button {
+    transition: color 0.3s ease;
+    color: rgba(#ffffff, 1);
+    margin-left: 0.5rem;
+    padding-left: 0.2rem;
+    padding-right: 0.3rem;
+    padding-top: 0.2rem;
+
+    &:hover {
+        color: rgba(white, 0.7);
+        cursor: pointer;
+    }
+
+    #user-profile-icon {
+        vertical-align: middle;
+        transform: scale(1.5);
+    }
+
+    #user-profile-name {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 16px;
+        padding-top: 0.3rem;
+        padding-left: 0.8rem;
+    }
+}
+
+#button-settings {
+    padding: 0.55rem 0.6rem;
+
+    & mat-icon {
+        font-size: 26px;
+    }
+}
+
+#page-controls-container {
+    display: inline-flex;
+    margin-left: 0.4rem;
+    transform: scale(1.05);
+
+    :has(.disabled) {
+        cursor: pointer;
+    }
+
+    #button-page_previous,
+    #button-page_next {
+        background-color: rgba(#5A578E, 0.6);
+        border-radius: 10rem;
+        width: 25px;
+        height: 30px;
+        margin: 0 0.4rem;
+        font-weight: 100;
+
+        &:hover {
+            background-color: rgba(#5A578E, 0.5);
+        }
+
+        .mat-ligature-font {
+            vertical-align: middle;
+            margin-bottom: 0.5rem;
+            transform: scale(1.25);
+        }
+
+        #icon-page_next {
+            margin-left: 2px;
+        }
+    }
+}
+
+#currentPageControls {
+    display: inline-flex;
+    width: fit-content;
+    margin-left: 0.6rem;
+    margin-top: 0.1rem;
+}
+
+#input-search {
+    flex: auto;
+    width: 20rem;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    font-size: 16px;
+    color: rgba(black, 0.8);
+    caret-color: rgba(#5A578E, 0.6);
+    padding: 0.4rem 1rem;
+    padding-right: 2.4rem;
+
+    &:active,
+    &:focus {
+        outline: rgba(#5A578E, 0.6) 1px;
+        border: 1px solid rgba(#5A578E, 0.6)
+    }
+
+    &::placeholder {
+        color: rgba(black, 0.4);
+    }
+}
+
+.icon-button {
+    color: rgba(black, 0.8);
+    transition: color 300ms ease;
+    display: inline-flex;
+    position: absolute;
+    z-index: 1;
+
+    :hover {
+        color: rgba(black, 0.6);
+    }
+}
+
+#button-clear_input {
+    color: rgba(black, 0.8);
+    left: 36.375rem;
+    top: 0.55rem;
+}
+
+::ng-deep .mat-mdc-unelevated-button {
+    background-color: transparent;
+}
+
+::ng-deep .context-menu {
+    &.mdc-menu-surface {
+        border-radius: 0.4rem;
+    }
+
+    .mat-mdc-menu-item {
+        padding: 0 1rem;
+        min-height: 2.5rem;
+    }
+
+    .mdc-list-item__primary-text {
+        font-size: 1rem;
+        padding: 0;
+        margin: 0;
+    }
+}
+
+::ng-deep .app-settings-menu {
+    .mat-mdc-menu-item {
+        padding: 0 0.5rem;
+        min-height: 2rem;
+
+        .mdc-list-item__primary-text {
+            font-size: 0.8rem;
+        }
+    }
+}
+
+::ng-deep .account-settings-menu {
+    .icon-context-menu {
+        &.mat-icon {
+            padding: 0;
+            margin-right: 0.6rem;
+        }
+    }
+
+    ::ng-deep .mat-mdc-menu-content .mat-mdc-menu-item {
+        margin: 0;
+        padding: 0 0.6rem;
+    }
+}
+
+.disabled {
+    background-color: rgba(#5A578E, 0.2) !important;
+    color: white !important;
+    cursor: not-allowed !important;
+}

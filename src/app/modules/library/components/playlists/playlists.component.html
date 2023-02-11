@@ -1,0 +1,27 @@
+<ng-template #playlistsTemplate>
+    <p>playlists works!</p>
+</ng-template>
+
+<ng-template #podcastsTemplate>
+    <p>podcasts works!</p>
+</ng-template>
+
+<ng-template #audiobooksTemplate>
+    <p>audiobooks works!</p>
+</ng-template>
+
+<ng-template #artistsTemplate>
+    <p>artists works!</p>
+</ng-template>
+
+<ng-template #albumsTemplate>
+    <p>albums works!</p>
+</ng-template>
+
+<ng-template #defaultTemplate>
+    <p>hhe</p>
+</ng-template>
+
+<div>
+    <ng-template *ngTemplateOutlet="currentView"></ng-template>
+</div>

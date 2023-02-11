@@ -1,0 +1,94 @@
+<mat-toolbar #header class="header draggable" [style.height.px]="45">
+    <div id="profile-settings-container">
+        <div class='button' #settingsMenuTrigger="matMenuTrigger" [matMenuTriggerFor]="accountSettingsMenu"
+            id="button-user-profile">
+            <mat-icon id="user-profile-icon" class="material-icons-round" fontIcon="account_circle" />
+            <div id="user-profile-name">Scarlet</div>
+        </div>
+        <div class='button' id="button-settings" [matMenuTriggerFor]="appSettingsMenu">
+            <mat-icon class="material-icons-round" fontIcon="more_vert" />
+        </div>
+    </div>
+    <div id="page-controls-container">
+        <div class='button' (click)="prevPage()" [ngClass]="{'disabled' : disableBackBtn}" id="button-page_previous">
+            <mat-icon id="icon-page_previous" class="material-icons-round" fontIcon="chevron_left" />
+        </div>
+        <div class='button' (click)="nextPage()" [ngClass]="{'disabled' : disableForwardBtn}" id="button-page_next">
+            <mat-icon id="icon-page_next" class="material-icons-round" fontIcon="chevron_right" />
+        </div>
+    </div>
+    <div id="currentPageControls">
+        <div id="header-search" *ngIf="router.url === '/search'">
+            <input id="input-search" value="" placeholder="Search for music" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" [(ngModel)]="searchInput">
+            <div id="button-clear_input" class='button icon-button' *ngIf="searchInput" mat matSuffix mat-icon-button aria-label="Clear" (click)="searchInput=''">
+                <mat-icon class="material-icons-round" fontIcon="close"/>
+            </div>
+        </div>
+        <app-library-filters *ngIf="router.url === '/library'"/>
+    </div>
+
+    <mat-menu class="context-menu account-settings-menu" #accountSettingsMenu xPosition="before">
+        <button mat-menu-item [routerLink]="['/profile']">
+            <mat-icon class="material-icons-round icon-context-menu" fontIcon="account_circle" />
+            <span>Profile</span>
+        </button>
+        <button mat-menu-item [routerLink]="['/settings']">
+            <mat-icon class="material-icons-round icon-context-menu" fontIcon="settings"/>
+            <span>Settings</span>
+        </button>
+        <button mat-menu-item>
+            <mat-icon class="material-icons-round icon-context-menu" fontIcon="logout"/>
+            <span>Log Out</span>
+        </button>
+    </mat-menu>
+
+    <mat-menu class="context-menu app-settings-menu" #appSettingsMenu xPosition="after">
+        <button mat-menu-item [matMenuTriggerFor]="file">File</button>
+        <button mat-menu-item [matMenuTriggerFor]="edit">Edit</button>
+        <button mat-menu-item [matMenuTriggerFor]="view">View</button>
+        <button mat-menu-item [matMenuTriggerFor]="playback">Playback</button>
+        <button mat-menu-item [matMenuTriggerFor]="help">Help</button>
+
+        <mat-menu class="context-menu app-settings-menu" #file="matMenu">
+            <button mat-menu-item>New Playlist</button>
+            <button mat-menu-item>Log Out</button>
+            <button mat-menu-item>Exit</button>
+        </mat-menu>
+
+        <mat-menu class="context-menu app-settings-menu" #edit="matMenu">
+            <button mat-menu-item>Undo</button>
+            <button mat-menu-item>Redo</button>
+            <button mat-menu-item>Cut</button>
+            <button mat-menu-item>Copy</button>
+            <button mat-menu-item>Paste</button>
+            <button mat-menu-item>Delete</button>
+            <button mat-menu-item>Select All</button>
+            <button mat-menu-item>Search</button>
+            <button mat-menu-item>Preferences</button>
+        </mat-menu>
+
+        <mat-menu class="context-menu app-settings-menu" #view="matMenu">
+            <button mat-menu-item>Zoom In</button>
+            <button mat-menu-item>Zoom Out</button>
+            <button mat-menu-item>Reset Zoom</button>
+            <button mat-menu-item>Hardware Acceleration</button>
+        </mat-menu>
+
+        <mat-menu class="context-menu app-settings-menu" #playback="matMenu">
+            <button mat-menu-item>Play</button>
+            <button mat-menu-item>Next</button>
+            <button mat-menu-item>Previous</button>
+            <button mat-menu-item>Seek Forward</button>
+            <button mat-menu-item>Seek Backward</button>
+            <button mat-menu-item>Shuffle</button>
+            <button mat-menu-item>Repeat</button>
+            <button mat-menu-item>Volume Up</button>
+            <button mat-menu-item>Volume Down</button>
+        </mat-menu>
+
+        <mat-menu class="context-menu app-settings-menu" #help="matMenu">
+            <button mat-menu-item>About musicnya</button>
+        </mat-menu>
+          
+    </mat-menu>
+</mat-toolbar>

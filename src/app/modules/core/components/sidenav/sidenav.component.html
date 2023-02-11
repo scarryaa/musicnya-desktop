@@ -1,0 +1,57 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="'navigation'" [mode]="'side'" opened="true" position="start"
+    [fixedTopGap]="45" [fixedBottomGap]="75">
+    <mat-nav-list class="sidenav-nav-items" [disableRipple]="true">
+      <a [@elementState]="elementStates[0]" (mousedown)="elementStates[0]='selected'" (mouseup)="elementStates[0]='unselected'" class="sidebar-item nav-text" routerLinkActive="active" [routerLink]="['/home']"
+        [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
+        <span>
+          <mat-icon class="material-icons-round nav-icon" fontIcon="home" /> Home
+        </span>
+      </a>
+      <a [@elementState]="elementStates[1]" (mousedown)="elementStates[1]='selected'" (mouseup)="elementStates[1]='unselected'" class="sidebar-item nav-text" routerLinkActive="active" [routerLink]="['/search']"
+        [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
+        <span>
+          <mat-icon class="material-icons-round nav-icon" fontIcon="search" /> Search
+        </span>
+      </a>
+      <a [@elementState]="elementStates[2]" (mousedown)="elementStates[2]='selected'" (mouseup)="elementStates[2]='unselected'" class="sidebar-item nav-text" routerLinkActive="active" [routerLink]="['/library']"
+        [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
+        <span>
+          <mat-icon class="material-icons-round nav-icon" fontIcon="library_music" /> Library
+        </span>
+      </a>
+
+      <a class="sidebar-item nav-text" mat-list-item (click)="createNewPlaylist()">
+        <span>
+          <mat-icon class="material-icons-round nav-icon" fontIcon="add_box" /> New Playlist
+        </span>
+      </a>
+      <a class="sidebar-item nav-text" routerLinkActive="active" [routerLink]="['/liked_songs']"
+        [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
+        <span>
+          <mat-icon class="material-icons-round nav-icon" fontIcon="thumb_up" /> Liked Songs
+        </span>
+      </a>
+      <mat-divider class="nav-divider"></mat-divider>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="content-container">
+    <div class=content>
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<mat-sidenav-container>
+  <mat-sidenav class="sidenav scrollbarHidden" id="sidenav-playlists" position="start" [ngClass]="scrollbarVisible ? 'scrollbarShown' : 'scrollbarHidden'" (mouseover)="enter()" (mouseleave)="leave()" fixedInViewport [mode]="'side'" opened="true"
+    [fixedTopGap]="272" [fixedBottomGap]="75">
+    <mat-list class="sidebar-items">
+      <a *ngFor="let playlist of playlists$ | async" class="sidebar-item nav-text" routerLinkActive="active"
+        [routerLink]="['/playlist', playlist.id]" [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
+        <span>
+          {{playlist.name}}
+        </span>
+      </a>
+    </mat-list>
+  </mat-sidenav>
+</mat-sidenav-container>
