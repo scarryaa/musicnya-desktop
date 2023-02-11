@@ -1,14 +1,12 @@
 # musicnya
-### A purrfect Apple Music alternative and general music player for Android, iOS, Windows, MacOS, Linux, and (technically) Web.
+#### A purrfect Apple Music alternative and general music player for Android, iOS, Windows, MacOS, Linux, and (technically) Web.
 <br>
 
-### This project contains the desktop (Windows, Linux, MacOS) implementation of musicnya. [Find the mobile versions here.](https://github.com/scarryaa/musicnya)
+ This project contains the desktop (Windows, Linux, MacOS) implementation of musicnya. [Find the mobile versions here.](https://github.com/scarryaa/musicnya)
 
-<br>
 <br>
 
 ## Installation
-___
 This project is based on Electron and Angular. To build and run it locally:
 
 1. Run `npm i` to install dependencies.
