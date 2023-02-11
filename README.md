@@ -16,3 +16,9 @@ This project is based on Electron and Angular. To build and run it locally:
 The project is configured such that `npm start` will launch the Angular build process and Electron service. 
 
 Using `ng serve` will bypass the Electron service and host the app on http://localhost:4200/ as usual.
+
+<br>
+
+## Sample Screenshots (subject to change)
+
+![Sample screenshot](/example_screenshots/main_app.png "Optional Title")
