@@ -1,27 +1,20 @@
-# Musicnya
+# musicnya
+### A purrfect Apple Music alternative and general music player for Android, iOS, Windows, MacOS, Linux, and (technically) Web.
+<br>
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.4.
+### This project contains the desktop (Windows, Linux, MacOS) implementation of musicnya. [Find the mobile versions here.](https://github.com/scarryaa/musicnya)
 
-## Development server
+<br>
+<br>
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Installation
+___
+This project is based on Electron and Angular. To build and run it locally:
 
-## Code scaffolding
+1. Run `npm i` to install dependencies.
+2. Run `npm start` to launch the app.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+The project is configured such that `npm start` will launch the Angular build process and Electron service. 
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Using `ng serve` will bypass the Electron service and host the app on http://localhost:4200/ as usual.
