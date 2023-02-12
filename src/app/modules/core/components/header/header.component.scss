@@ -18,7 +18,7 @@ mat-select {
     position: sticky;
     top: 0;
     z-index: 1;
-    background: linear-gradient(to right, #FFFFFF 199px, rgba(0, 0, 0, .12) 199px 200px, #FAFAFA 200px 100%);
+    background: linear-gradient(to right, #FFFFFF 199px, rgba(0, 0, 0, .12) 199px 200px, transparent 200px 100%);
     overflow: visible;
     padding: 0;
     padding-top: 0;
@@ -197,7 +197,7 @@ mat-select {
 }
 
 .disabled {
-    background-color: rgba(#5A578E, 0.2) !important;
+    background-color: rgba(#5A578E, 0.5) !important;
     color: white !important;
     cursor: not-allowed !important;
 }

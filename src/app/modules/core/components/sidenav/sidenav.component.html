@@ -49,7 +49,7 @@
       <a *ngFor="let playlist of playlists$ | async" class="sidebar-item nav-text" routerLinkActive="active"
         [routerLink]="['/playlist', playlist.id]" [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
         <span>
-          {{playlist.name}}
+          {{playlist.title}}
         </span>
       </a>
     </mat-list>

@@ -1,1 +1,50 @@
-<p>playlist {{playlistId + 1}}</p>
+<div class="background">
+    <div class="playlistView">
+        <div class="bgImg"
+            [style.background]="'linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), ' + getBackgroundImg()">
+        </div>
+
+        <div *ngIf="playlist$ | async as playlist">
+            <div class="playlistInfo">
+                <img class="playlistCover" src="{{playlist.artwork}}" />
+                <div class="titleArtistInfo">
+                    <div class="title">{{playlist.title}}</div>
+                    <div class="author">{{playlist.author}}</div>
+                </div>
+            </div>
+
+            <table class="songs" mat-table [dataSource]="(observableDataSource$ | async)!" matSort>
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by id">
+                        Id
+                    </th>
+                    <td mat-cell *matCellDef="let song"> {{song.id}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="title">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by title">
+                        Title
+                    </th>
+                    <td mat-cell *matCellDef="let song"> {{song.title}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="album">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by album">
+                        Album
+                    </th>
+                    <td mat-cell *matCellDef="let song"> {{song.album}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="length">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by length">
+                        Length
+                    </th>
+                    <td mat-cell *matCellDef="let song"> {{song.length}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+    </div>
+</div>

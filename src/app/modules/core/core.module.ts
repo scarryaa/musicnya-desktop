@@ -52,7 +52,7 @@ import { BrowserModule } from '@angular/platform-browser';
     FormsModule,
     MatSelectModule,
     AngularResizeEventModule,
-    BrowserModule
+    BrowserModule,
   ],
   exports: [AuthenticationComponent, SideNavComponent, HeaderComponent, FooterComponent, ScrollDirective]
 })

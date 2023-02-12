@@ -1,0 +1,76 @@
+.background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    margin-left: -16px;
+    margin-top: -55px;
+    background-color: rgba(#385C75, 1);
+
+    .playlistView {
+        margin-top: -87px;
+        margin-left: 0px;
+        color: white;
+    
+        .bgImg {
+            background-size: cover !important;
+            background-repeat: no-repeat !important;
+            background-attachment: fixed !important;
+            margin-top: -12rem;
+            position: fixed;
+            width: 100%;
+            height: 40rem;
+            z-index: -1;
+            mask-image: -webkit-gradient(linear, left 60%, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+            background-color: rgba(#385C75, 1);
+        }
+    
+        .bgImg::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(10px);
+            pointer-events: none;
+        }
+    
+        .playlistInfo {
+            padding-top: 11rem;
+            padding-left: 0.8rem;
+            display: flex;
+            align-items: flex-end;
+    
+            .playlistCover {
+                border-radius: 8px;
+                height: 12rem;
+            }
+    
+            .titleArtistInfo {
+                margin: 0 1rem;
+            }
+    
+            .title {
+                font-size: 4em;
+                display: inline-block;
+                margin-bottom: 1.6rem;
+                padding: 0;
+            }
+    
+            .author {
+                font-size: 12pt;
+            }
+        }
+    
+        .songs {
+            ::ng-deep div {
+                color: white;
+            }
+
+            ::ng-deep td {
+                color: white;
+            }
+
+            margin-top: 1rem;
+            background-color: transparent;
+        }
+    }
+}

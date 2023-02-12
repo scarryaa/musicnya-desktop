@@ -9,8 +9,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     titleBarStyle: 'hidden',
     titleBarOverlay: {
-      color: '#FAFAFA',
-      symbolColor: 'black',
+      color: "#5A578E",
+      symbolColor: 'white',
       height: 25
     },
     fullscreenable:false,
