@@ -4,6 +4,8 @@
 
  This project contains the desktop (Windows, Linux, MacOS) implementation of musicnya. [Find the mobile versions here.](https://github.com/scarryaa/musicnya)
 
+Check out a [live demo](https://scarryaa.github.io/musicnya-desktop/)!
+
 <br>
 
 ## Installation
