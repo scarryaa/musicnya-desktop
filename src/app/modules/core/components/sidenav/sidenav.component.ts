@@ -6,6 +6,7 @@ import { trigger, transition, animate, style, state } from '@angular/animations'
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { PlaylistDataService } from 'src/app/services/playlist-data/playlist-data.service';
+import { Playlist } from '../../models/playlist';
 
 @Component({
   selector: 'app-sidenav',
@@ -33,7 +34,7 @@ import { PlaylistDataService } from 'src/app/services/playlist-data/playlist-dat
 export class SideNavComponent implements OnInit {
   constructor(private playlistDataService: PlaylistDataService, private route: ActivatedRoute, private breakpointObserver: BreakpointObserver) { }
 
-  playlists$!: Observable<any[]>;
+  playlists$!: Observable<Playlist[]>;
   to: any;
   scrollbarVisible: boolean = false;
   elementStates: string[] = Array.from(Array(3), (e, i) => 'unselected');

@@ -46,7 +46,7 @@
   <mat-sidenav class="sidenav scrollbarHidden" id="sidenav-playlists" position="start" [ngClass]="scrollbarVisible ? 'scrollbarShown' : 'scrollbarHidden'" (mouseover)="enter()" (mouseleave)="leave()" fixedInViewport [mode]="'side'" opened="true"
     [fixedTopGap]="272" [fixedBottomGap]="75">
     <mat-list class="sidebar-items">
-      <a *ngFor="let playlist of playlists$ | async" class="sidebar-item nav-text" routerLinkActive="active"
+      <a *ngFor="let playlist of (playlists$ | async)! | reverse" class="sidebar-item nav-text" routerLinkActive="active"
         [routerLink]="['/playlist', playlist.id]" [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
         <span>
           {{playlist.title}}

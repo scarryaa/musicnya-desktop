@@ -7,22 +7,28 @@ export class Playlist {
     artwork: string;
     description: string;
     tracks: Song[];
+    dominantColor?: string;
 
-    constructor(id: number, title: string, author: string, artwork: string, description: string, tracks: Song[]) {
+    constructor(id: number, title: string, author: string, artwork: string, description: string, tracks: Song[], dominantColor?: string) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.artwork = artwork;
         this.description = description;
         this.tracks = tracks;
+        this.dominantColor = dominantColor;
     }
 
-    totalLength(): number {
-        var length: number = 0;
+    totalDuration(): number {
+        var duration: number = 0;
         this.tracks.forEach(track => {
-            length += track.length;
+            duration += track.duration;
         });
 
-        return length;
+        return duration;
+    }
+
+    totalSongs(): number {
+        return this.tracks.length;
     }
 }

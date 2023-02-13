@@ -23,6 +23,8 @@ import { ScrollDirective } from 'src/app/directives/scroll.directive';
 import { LibraryFiltersComponent } from './components/header/components/library-filters/library-filters.component';
 import { AngularResizeEventModule } from 'angular-resize-event';
 import { BrowserModule } from '@angular/platform-browser';
+import { ReversePipe } from 'src/app/pipes/reverse.pipe';
+import { MinSecPipe } from 'src/app/pipes/min-sec.pipe';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,7 @@ import { BrowserModule } from '@angular/platform-browser';
     FooterComponent,
     ScrollDirective,
     LibraryFiltersComponent,
+    ReversePipe
   ],
   imports: [
     CommonModule,
@@ -52,7 +55,7 @@ import { BrowserModule } from '@angular/platform-browser';
     FormsModule,
     MatSelectModule,
     AngularResizeEventModule,
-    BrowserModule,
+    BrowserModule
   ],
   exports: [AuthenticationComponent, SideNavComponent, HeaderComponent, FooterComponent, ScrollDirective]
 })

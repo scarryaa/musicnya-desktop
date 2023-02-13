@@ -1,10 +1,4 @@
 <mat-toolbar class="footer" [style.height.px]="75">
-    <div class="seekbar-container">
-        <mat-slider class="seekBar" [disabled]="disabled" [max]="max" [min]="min" [step]="step"
-            [discrete]="thumbLabel" [showTickMarks]="showTicks">
-            <input class="seekBarThumb" (sliderValue)="playbackValue.valueChanges" disableRipple matSliderThumb [formControl]="playbackValue">
-        </mat-slider>
-    </div>
     <div class="media-album-info">
         <img id="current-album-cover"
             src="https://media.pitchfork.com/photos/5929abfe5e6ef95969321857/1:1/w_320/a0536854.jpg">
@@ -15,13 +9,19 @@
     </div>
     <div class="media-controls-container">
         <div class="main-media-controls-container">
-            <span class="track-time" id="seekbar-value">{{ playbackValue.value! * 1000 | date:'m:ss' }}</span>
             <mat-icon class="media-controls material-icons-round" id="button-shuffle" fontIcon="shuffle" />
             <mat-icon class="media-controls material-icons-round" id="button-skip_previous" fontIcon="skip_previous" />
             <mat-icon class="media-controls material-icons-round" id="button-play" fontIcon="play_circle" />
             <mat-icon class="media-controls material-icons-round" id="button-skip_next" fontIcon="skip_next" />
             <mat-icon class="media-controls material-icons-round" id="button-repeat" fontIcon="repeat" />
-            <span class="track-time" id="seekbar-max-value">{{ max * 1000 | date:'m:ss' }}</span>
+            <div class="seekbar-container">
+                <span class="track-time" id="seekbar-value">{{ playbackValue.value! * 1000 | date:'m:ss' }}</span>
+                <mat-slider class="seekBar" [disabled]="disabled" [max]="max" [min]="min" [step]="step"
+                    [discrete]="thumbLabel" [showTickMarks]="showTicks">
+                    <input class="seekBarThumb" (sliderValue)="playbackValue.valueChanges" disableRipple matSliderThumb [formControl]="playbackValue">
+                </mat-slider>
+                <span class="track-time" id="seekbar-max-value">{{ max * 1000 | date:'m:ss' }}</span>
+            </div>
         </div>
         <div class="media-controls-misc">
             <mat-icon class="media-controls material-icons-round" id="button-lyrics" fontIcon="lyrics" />

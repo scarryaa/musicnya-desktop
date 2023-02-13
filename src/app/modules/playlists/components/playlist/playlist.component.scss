@@ -4,11 +4,10 @@
     height: 100%;
     margin-left: -16px;
     margin-top: -55px;
-    background-color: rgba(#385C75, 1);
 
     .playlistView {
         margin-top: -87px;
-        margin-left: 0px;
+        margin-left: 0;
         color: white;
     
         .bgImg {
@@ -21,7 +20,6 @@
             height: 40rem;
             z-index: -1;
             mask-image: -webkit-gradient(linear, left 60%, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
-            background-color: rgba(#385C75, 1);
         }
     
         .bgImg::after {
@@ -35,42 +33,224 @@
     
         .playlistInfo {
             padding-top: 11rem;
-            padding-left: 0.8rem;
+            padding-left: 1.5rem;
             display: flex;
             align-items: flex-end;
     
             .playlistCover {
                 border-radius: 8px;
+                width: 12rem;
                 height: 12rem;
             }
     
             .titleArtistInfo {
                 margin: 0 1rem;
             }
-    
+
             .title {
                 font-size: 4em;
                 display: inline-block;
-                margin-bottom: 1.6rem;
+                margin-bottom: 2.5rem;
+                margin-left: -0.2rem;
                 padding: 0;
+
+                #titleEditButton {
+                    position: absolute;
+                    margin-left: 0rem;
+                    margin-top: -2rem;
+                    width: 25px;
+                    height: 25px;
+                    visibility: hidden;
+                    background-color: white;
+                    color: black;
+
+                    mat-icon {
+                        font-size: 14pt;
+                        margin-top: 0.3rem;
+                    }
+                }
+
+                &:hover {
+                    #titleEditButton {
+                        visibility: visible;
+                    }
+                }
+            }
+
+            .author-pic {
+                margin-left: -0.2rem;
+                display: inline-block;
+                vertical-align: middle;
+                margin-bottom: 0.4rem;
             }
     
             .author {
                 font-size: 12pt;
+                font-weight: 500;
+                display: inline-block;
+                margin-left: 0.3rem;
+                margin-bottom: 0.15rem;
+                margin-right: 1rem;
+                vertical-align: middle;
+            }
+
+            .totalSongs {
+                font-size: 12pt;
+            }
+
+            .totalDuration {
+                font-size: 12pt;
+                color: rgba(white, 0.6);
             }
         }
+
+        .songs-container {
+            margin-right: 16rem;
+
+            .mat-sort-header {
+                border: none;
+            }
+
+            .songs {
+                margin: 2rem 0.6rem;
+                background-color: transparent;
+
+                ::ng-deep thead {
+                    tr {
+                        height: 30px;
+                        overflow: hidden; 
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+                }
+
+                ::ng-deep tbody {
+                    tr {
+                        height: 55px;
+                        overflow: hidden; 
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+
+                        .id {
+                            visibility: visible;
+                        }
+
+                        .rowPlayIcon {
+                            left: 0.9rem;
+                            cursor: pointer;
+                            width: 10px;
+                            height: 10px;
+                            margin-top: -1.5rem;
+                            visibility: hidden;
+                            position: absolute;
+
+                            mat-icon {
+                                font-size: 22pt;
+                                overflow: visible;
+                            }
+                        }
+                    }
+
+                    tr:hover {
+                        background-color: rgba(white, 0.05);
+
+                        .rowPlayIcon {
+                            visibility: visible;
+                        }
+
+                        .id {
+                            visibility: hidden;
+                        }
+                    }
+                }
+
+                .album:hover {
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
+
+                .mat-column-id  {
+                    color: rgba(white, 0.6);
+                    font-size: 12pt;
+                    font-weight: 200;
+                    text-align: end;
+                    width: 2px;
+                    padding: 0 0 0 16px;
+                }
+
+                .song-container {
+                    padding-top: 4px;
+                    height: 50px;
+
+                    .songImg {
+                        height: 40px;
+                        width: 40px;
+                        float: left;
+                        margin-right: 1rem;
+                        border-radius: 4px;
+                        image-rendering: crisp-edges;
+                    }
+
+                    .title-artist {
+                        line-height: 22.8px;
+                        overflow: hidden; 
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+
+                        .title {
+                            color: white;
+                            font-size: 12pt;
+                            font-weight: 400;
+                        }
+        
+                        .artist {   
+                            color: rgba(white, 0.6);
+                            font-weight: 200;
+                            font-size: 11pt;
+
+                            &:hover {
+                                text-decoration: underline;
+                                cursor: pointer;
+                            }
+                        }
+                    }
+                }
+
+                .mat-sort-header-container {
+                    text-align: end;
+                }
+
+                ::ng-deep .mat-column-duration {
+                    text-align: right;
+                    justify-content: flex-end;
+                    width: 10px;
+                }
+
+                ::ng-deep div {
+                    color: rgba(white, 0.6);
+                    font-weight: 200;
+                    font-size: 12pt;
+                }
     
-        .songs {
-            ::ng-deep div {
-                color: white;
-            }
+                ::ng-deep td {
+                    color: white;
+                }
 
-            ::ng-deep td {
-                color: white;
-            }
+                .mdc-data-table__cell {
+                    border: none;
+                    border-collapse: collapse;
+                }
 
-            margin-top: 1rem;
-            background-color: transparent;
+                td:first-child {
+                    border-top-left-radius: 4px; 
+                    border-bottom-left-radius: 4px;
+                }
+
+                td:last-child {
+                    border-bottom-right-radius: 4px; 
+                    border-top-right-radius: 4px; 
+                }
+            }
         }
     }
 }

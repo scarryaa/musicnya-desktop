@@ -3,17 +3,19 @@ export class Song {
     title: string;
     album: string;
     albumId: number;
-    artwork: string;
+    artwork?: string;
     artist: string;
-    length: number;
+    duration: number;
+    dateAdded?: number;
 
-    constructor(id: number, title: string, album: string, albumId: number, artwork: string, artist: string, length: number) {
+    constructor(id: number, title: string, album: string, albumId: number, artist: string, duration: number, artwork?: string, dateAdded?: number) {
         this.id = id;
         this.title = title;
         this.album = album;
         this.albumId = albumId;
         this.artwork = artwork;
         this.artist = artist;
-        this.length = length;
+        this.duration = duration;
+        this.dateAdded = dateAdded;
     }
 }
