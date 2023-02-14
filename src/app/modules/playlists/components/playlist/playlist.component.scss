@@ -1,24 +1,39 @@
-.background {
+.mainmain {
+    width: calc(100% - 200px);
+    height: calc(100% - 75px);
+}
+
+.main-container {
     position: fixed;
+    margin-top: -45px;
+    height: inherit;
+    width: inherit;
+    overflow: overlay;
+}
+
+.background {
+    position: sticky;
     width: 100%;
-    height: 100%;
-    margin-left: -16px;
-    margin-top: -55px;
+    padding-bottom: 45px;
+    min-height: calc(100% + 42px);
 
     .playlistView {
+        width: 100%;
+        height: 100%;
         margin-top: -87px;
         margin-left: 0;
         color: white;
+        background-color: transparent;
     
         .bgImg {
             background-size: cover !important;
             background-repeat: no-repeat !important;
             background-attachment: fixed !important;
             margin-top: -12rem;
-            position: fixed;
+            position: absolute;
+            z-index: -1;
             width: 100%;
             height: 40rem;
-            z-index: -1;
             mask-image: -webkit-gradient(linear, left 60%, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
         }
     
@@ -41,10 +56,11 @@
                 border-radius: 8px;
                 width: 12rem;
                 height: 12rem;
+                filter: drop-shadow(0 0 0.75rem rgba(0, 0, 0, 0.5));
             }
     
             .titleArtistInfo {
-                margin: 0 1rem;
+                margin: 0 1.4rem;
             }
 
             .title {
@@ -105,7 +121,8 @@
         }
 
         .songs-container {
-            margin-right: 16rem;
+            margin-left: 0.8rem;
+            margin-right: 2rem;
 
             .mat-sort-header {
                 border: none;
@@ -136,11 +153,11 @@
                         }
 
                         .rowPlayIcon {
-                            left: 0.9rem;
                             cursor: pointer;
                             width: 10px;
                             height: 10px;
                             margin-top: -1.5rem;
+                            margin-right: -0rem;
                             visibility: hidden;
                             position: absolute;
 
@@ -173,9 +190,21 @@
                     color: rgba(white, 0.6);
                     font-size: 12pt;
                     font-weight: 200;
-                    text-align: end;
-                    width: 2px;
-                    padding: 0 0 0 16px;
+                    position: sticky;
+                    overflow: visible;
+                    width: 20px;
+                    margin-right: -4px;
+                    direction: rtl;
+                    text-align: right;
+                    padding: 0 4px 0 18px;
+
+                    ::ng-deep span {
+                        margin-left: -20px;
+                    }
+                }
+
+                .mat-column-duration {
+                    width: 20px;
                 }
 
                 .song-container {

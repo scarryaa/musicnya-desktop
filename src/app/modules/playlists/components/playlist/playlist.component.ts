@@ -70,6 +70,10 @@ export class PlaylistComponent implements AfterViewInit, OnInit {
     }, delay);
   }
 
+  addTrack() {
+    this.playlistDataService.addTrack();
+  }
+
   playSong(row: any) {
     this.preventSimpleClick = true;
     clearTimeout(this.timer);
