@@ -102,18 +102,30 @@
   }
 }
 
-::ng-deep ::-webkit-scrollbar {
-  width: 10px; 
+
+::ng-deep * {
+  scrollbar-width: auto;
+  scrollbar-color: rgba(black, 0.4) transparent;
 }
 
-::ng-deep::-webkit-scrollbar-thumb {
-  background-clip: content-box;
-  box-shadow: inset 0 0 0 10px rgba(black, 0.4);
-  border-top: solid 50px transparent;
+::ng-deep *::-webkit-scrollbar {
+  width: 10px;
+  display: block;
+}
 
-  &:hover {
-    color: inherit !important;
-  }
+::ng-deep *::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::ng-deep *::-webkit-scrollbar-track-piece:start {
+  background: transparent;
+  margin-top: 50px;
+}
+
+::ng-deep *::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.4);
+  border-right: none;
+  border-left: none;
 }
 
 .scrollbarHidden {

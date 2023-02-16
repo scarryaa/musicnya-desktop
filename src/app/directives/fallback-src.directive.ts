@@ -5,7 +5,8 @@ import { Directive, ElementRef, Input } from '@angular/core';
   host: {
     '[src]': 'checkPath(src)',
     '(error)': 'onError()'
-}
+},
+standalone: true
 })
 export class FallbackSrc {
 

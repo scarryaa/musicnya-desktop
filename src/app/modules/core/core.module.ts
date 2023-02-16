@@ -24,7 +24,12 @@ import { LibraryFiltersComponent } from './components/header/components/library-
 import { AngularResizeEventModule } from 'angular-resize-event';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReversePipe } from 'src/app/pipes/reverse.pipe';
-import { MinSecPipe } from 'src/app/pipes/min-sec.pipe';
+import { MatTableModule } from '@angular/material/table';
+import { VirtualScrollTableComponent } from './components/virtual-scroll-table/virtual-scroll-table.component';
+import { TableVirtualScrollModule } from 'ng-table-virtual-scroll';
+import { MatSortModule } from '@angular/material/sort';
+import { CdkVirtualScrollViewportPatchDirective } from 'src/app/directives/cdk-virtual-scroll-viewport-patch.directive';
+import { FallbackSrc } from 'src/app/directives/fallback-src.directive';
 
 @NgModule({
   declarations: [
@@ -34,7 +39,8 @@ import { MinSecPipe } from 'src/app/pipes/min-sec.pipe';
     FooterComponent,
     ScrollDirective,
     LibraryFiltersComponent,
-    ReversePipe
+    ReversePipe,
+    VirtualScrollTableComponent
   ],
   imports: [
     CommonModule,
@@ -55,8 +61,11 @@ import { MinSecPipe } from 'src/app/pipes/min-sec.pipe';
     FormsModule,
     MatSelectModule,
     AngularResizeEventModule,
-    BrowserModule
+    MatTableModule,
+    TableVirtualScrollModule,
+    MatSortModule,
+    FallbackSrc
   ],
-  exports: [AuthenticationComponent, SideNavComponent, HeaderComponent, FooterComponent, ScrollDirective]
+  exports: [AuthenticationComponent, SideNavComponent, HeaderComponent, FooterComponent, ScrollDirective, VirtualScrollTableComponent]
 })
 export class CoreModule { }

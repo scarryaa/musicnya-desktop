@@ -1,14 +1,14 @@
 <div class="mainmain">
-    <div class="main-container">
+    <div #mainContainer class="main-container" cdkVirtualScrollingElement>
         <div class="background">
             <div class="playlistView">
                 <div class="bgImg"
-                    [style.background]="'linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), ' + getBackgroundImg()">
+                    [style.background]="'linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), ' + urlImg">
                 </div>
         
-                <div class="content" *ngIf="playlist$ | async as playlist">
-                    <div class="playlistInfo">
-                        <img #playlistCover class="playlistCover" src="{{imgUrl}}" crossorigin="anonymous"/>
+                <div class="content">
+                    <div class="playlistInfo" *ngIf="playlist$ | async as playlist">
+                        <img #playlistCover class="playlistCover" src="{{playlist.artwork}}" crossorigin="anonymous"/>
                         <div class="titleArtistInfo">
                             <div class="title">{{playlist.title}}
                                 <button mat-mini-fab id="titleEditButton">
@@ -26,67 +26,7 @@
                     </div>
         
                     <div class="songs-container">
-                        <table class="songs" mat-table [dataSource]="(observableDataSource$ | async)!" matSort>
-                            <ng-container id="id" matColumnDef="id">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header disabled sortActionDescription="Sort by id">
-                                    #
-                                </th>
-                                <td mat-cell *matCellDef="let song; let i = index;">
-                                    <span class="id">
-                                        {{i + 1}}
-                                    </span>
-        
-                                    <div class="rowPlayIcon">
-                                        <mat-icon class="material-icons-round" fontIcon="play_arrow"/>
-                                    </div>
-                                </td>
-                            </ng-container>
-            
-                            <ng-container matColumnDef="title">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by title">
-                                    Title
-                                </th>
-                                <td class="song-container" mat-cell *matCellDef="let song">
-                                    <img class="songImg" src={{song.artwork}}/>
-                                    <div class="title-artist">
-                                        <span class="title">
-                                            {{song.title}}
-                                        </span>
-                                        <span class="artist">
-                                            <br>{{song.artist}}
-                                        </span>
-                                    </div>
-                                </td>
-                            </ng-container>
-            
-                            <ng-container matColumnDef="album">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header="album" sortActionDescription="Sort by album">
-                                    Album
-                                </th>
-                                <td mat-cell *matCellDef="let song">
-                                    <span class="album">
-                                        {{song.album}}
-                                    </span>
-                                </td>
-                            </ng-container>
-        
-                            <ng-container matColumnDef="dateAdded">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date added">
-                                    Date Added
-                                </th>
-                                <td mat-cell *matCellDef="let song"> {{song.dateAdded | date}} </td>
-                            </ng-container>
-            
-                            <ng-container matColumnDef="duration">
-                                <th mat-header-cell arrowPosition="before" *matHeaderCellDef mat-sort-header sortActionDescription="Sort by duration">
-                                    Duration
-                                </th>
-                                <td mat-cell *matCellDef="let song"> {{song.duration | date: 'm:ss' }} </td>
-                            </ng-container>
-            
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selectRow(row)" (dblclick)="playSong(row)"></tr>
-                        </table>
+                        <app-virtual-scroll-table [rows]="(rows | async)!"></app-virtual-scroll-table>
                     </div>
                 </div>
             </div>
