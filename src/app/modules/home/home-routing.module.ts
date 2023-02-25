@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RecentlyPlayedComponent } from './components/recently-played/recently-played.component';
+import { HomeComponent } from './components/home/home.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: RecentlyPlayedComponent
+    component: HomeComponent
   }
 ];
 

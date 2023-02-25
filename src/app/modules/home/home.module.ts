@@ -1,16 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RecentlyPlayedComponent } from './components/recently-played/recently-played.component';
 import { HomeRoutingModule } from './home-routing.module';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
-    RecentlyPlayedComponent
+    HomeComponent
   ],
   imports: [
     CommonModule,
-    HomeRoutingModule
+    HomeRoutingModule,
+    SharedModule
   ],
-  exports: [RecentlyPlayedComponent]
+  exports: [HomeComponent]
 })
 export class HomeModule { }

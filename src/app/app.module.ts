@@ -10,6 +10,7 @@ import { InitializationService } from 'ngx-apple-music';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './modules/core/core.module';
 import { MatTooltipDefaultOptions, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
+import { SongPipe } from './pipes/song.pipe';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: true,
@@ -35,6 +36,7 @@ const globalTooltipConfig: MatTooltipDefaultOptions = {
     SharedModule,
     CoreModule,
     BrowserAnimationsModule,
+    SharedModule
   ],
   providers: [
     { provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig },

@@ -12,6 +12,7 @@ body {
     -webkit-user-drag: none;
 }
 
+
 .br1 {
     border-radius: 1rem;
 }
@@ -143,6 +144,42 @@ body {
     margin-bottom: 0.5rem;
 }
 
+.f3 {
+    font-size: 1.5rem;
+}
+
+.f4 {
+    font-size: 2rem;
+}
+
+.fw6 {
+    font-weight: 600;
+}
+
+.fw5 {
+    font-weight: 500;
+}
+
+.fw4 {
+    font-weight: 400;
+}
+
+.mb2 {
+    margin-bottom: 2rem;
+}
+
+.mb2h {
+    margin-bottom: 1.5rem;
+}
+
+.mb1 {
+    margin-bottom: 1rem;
+}
+
+.mb1h {
+    margin-bottom: 0.5rem;
+}
+
 .mt1 {
     margin-top: 1rem;
 }
@@ -157,4 +194,13 @@ body {
 
 .truncate-text {
     text-overflow: ellipsis;
+}
+
+.subheading {
+    font-size: 12pt;
+}
+
+.container {
+    padding-inline: 1.2rem;
+    padding-block: 1rem 8rem;
 }
