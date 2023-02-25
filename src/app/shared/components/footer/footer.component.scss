@@ -1,0 +1,284 @@
+.mat-toolbar {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    overflow-x: clip;
+    overflow-y: visible;
+    background-color: #5A578E;
+    padding: 0;
+    display: flex;
+    border-top: 1px solid #525080;
+}
+
+.mat-mdc-slider {
+    ::ng-deep .mat-mdc-focus-indicator {
+        display: none;
+    }
+
+    ::ng-deep .mdc-slider__track--inactive,
+    ::ng-deep .mdc-slider__track--active {
+        height: 6px;
+    }
+
+    ::ng-deep .mdc-slider__track--active {
+        top: 0;
+    }
+
+    &:hover ::ng-deep .mdc-slider__thumb {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    ::ng-deep .mdc-slider__thumb {
+        opacity: 0;
+    }
+}
+
+.seekbar-container {
+    position: absolute;
+    width: 20vw;
+    min-width: 15rem;
+    max-width: 50rem;
+    height: 5px;
+    top: 10px;
+    border-radius: 26px;
+}
+
+.seekBar {
+    position: absolute;
+    left: 0;
+    height: 2px;
+    width: auto;
+    border-radius: 26px;
+    top: 1px;
+    min-width: 15rem;
+    max-width: 50rem;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+
+    ::ng-deep .mdc-slider__thumb {
+        height: 2px;
+
+        .mdc-slider__thumb-knob {
+            border-color: rgb(255, 64, 128);
+            border-width: 8px;
+            width: 5px;
+            height: 6px;
+        }
+    }
+
+    ::ng-deep .mdc-slider__track--inactive,
+    ::ng-deep .mdc-slider__track--active {
+        height: 5px;
+        border-radius: 26px;
+    }
+
+    ::ng-deep .mdc-slider__track--inactive {
+        background-color: rgba(rgb(255, 255, 255), 1);
+        border-radius: 26px;
+        opacity: 0.45;
+    }
+
+    ::ng-deep .mdc-slider__track--active_fill {
+        border-color: rgb(236, 82, 133);
+        border-radius: 26px;
+    }
+}
+
+.media-album-info {
+    max-height: 60px;
+    margin-top: 0px;
+    display: inline-flex;
+
+    #current-album-info {
+        min-width: 105px;
+        height: fit-content;
+        padding-left: 0.8rem;
+        font-size: 0.95rem;
+        font-weight: 200;
+        color: white;
+        line-height: 1.2rem;
+        align-self: center;
+    }
+
+    div {
+        #current-song-artist {
+            font-size: 0.8rem;
+            color: rgba(white, 0.7)
+        }
+
+        height: fit-content;
+        padding: 0;
+    }
+}
+
+#current-album-cover {
+    width: 4rem;
+    height: 60px;
+    object-fit: cover;
+    margin-left: 0.4rem;
+    border-radius: 4px;
+    filter: drop-shadow(0rem 0.3rem 0.5rem rgba(black, 0.4))
+}
+
+.media-controls-container {
+    display: inline-flex;
+    margin-top: 17.5px;
+    flex: auto;
+
+    .track-time {
+        position: absolute;
+        color: rgba(white, 0.7);
+        margin: -0.8rem -2.6rem;
+        width: 2rem;
+        font-weight: 200;
+        font-size: 0.9rem;
+    }
+
+    #seekbar-max-value {
+        position: absolute;
+        margin: -0.8rem 0;
+        left: 100%;
+        transform: translate(45%, 0);
+        display: table-cell;
+    }   
+}
+
+.media-controls-misc {
+    margin-top: -0.0rem;
+    display: flex;
+    justify-content: center;
+}
+
+.main-media-controls-container {
+    display: flex;
+    flex: auto;
+    justify-content: center;
+}
+
+#button-shuffle {
+    color: rgba(white, 0.50);
+}
+
+#button-repeat, #button-shuffle {
+    transform: scale(0.45);
+    margin: 0 -0.8rem;
+}
+
+#button-skip_previous,
+#button-skip_next {
+    transform: scale(.75);
+    padding: 0;
+    color: rgba(white, 0.85);
+}
+
+.mdc-slider__input {
+    cursor: default;
+}
+
+.media-controls-volume {
+    display: inline-flex;
+    margin-left: auto;
+    height: auto;
+
+    &:hover {
+        ::ng-deep &:hover .mdc-slider__track--active_fill {
+            border-color: rgb(236, 82, 133) !important;
+        }
+
+        #button-mute {
+            color: white !important;
+        }
+
+        ::ng-deep .mdc-slider__thumb {
+            opacity: 1;
+        }
+    }
+
+    ::ng-deep .mat-mdc-slider {
+        cursor: default;
+        width: 5rem;
+        min-width: 5rem;
+        max-width: 5rem;
+    }
+}
+
+#button-play {
+    transform: scale(1.00);
+    color: white;
+
+    &:hover {
+        transform: scale(1.03);
+    }
+}
+
+#button-lyrics {
+    color: rgba(white, 0.60);
+    transform: scale(0.45);
+    margin-right: -0.8rem;
+    margin-top: 0.12rem;
+}
+
+#button-queue {
+    color: rgba(white, 0.60);
+    transform: scale(0.58);
+    margin-right: 2.2rem;
+}
+
+#button-mute {
+    color: rgba(white, 0.60);
+    transform: scale(0.5);
+    z-index: 2;
+    position: absolute;
+}
+
+.showThumb {
+    ::ng-deep .mdc-slider__thumb {
+        opacity: 1;
+    }
+}
+
+#seekbar-volume {
+    cursor: default;
+    align-self: center;
+    margin-top: -0.1rem;
+    margin-right: 1.2rem;
+    margin-left: -0.1rem;
+
+    ::ng-deep .mdc-slider__track--inactive {
+        background-color: rgba(rgb(255, 229, 229), 1);
+        opacity: 0.5;
+    }
+
+    ::ng-deep .mdc-slider__track--active_fill {
+        border-color: white;
+    }
+
+    ::ng-deep &:hover .mdc-slider__track--active_fill {
+        border-color: rgb(236, 82, 133) !important;
+    }
+
+    ::ng-deep .mdc-slider__thumb-knob {
+        border-color: rgb(255, 64, 128);
+        border-width: 6px;
+        width: 3px;
+        height: 3px;
+    }
+
+    ::ng-deep .mdc-slider__track--inactive,
+    ::ng-deep .mdc-slider__track--active {
+        height: 4px;
+    }
+}
+
+.media-controls {
+    font-size: 38pt;
+    width: fit-content;
+    height: fit-content;
+    transition: color 0.2s ease;
+
+    &:hover:not(#button-repeat) {
+        color: white !important;
+    }
+}

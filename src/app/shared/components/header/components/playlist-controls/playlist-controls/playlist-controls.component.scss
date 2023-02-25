@@ -1,0 +1,28 @@
+.button {
+    transition: color 0.3s ease;
+    color: rgb(255, 64, 128);
+    font-size: 40px;
+    padding-top: 0.5rem;
+    width: 40px;
+    height: 45px;
+
+    &:hover {
+        color: rgba(white, 0.7);
+        cursor: pointer;
+    }
+}
+
+.playlist-title {
+    padding-top: 0.8rem;
+    margin-left: 0.8rem;
+    font-size: 24px;
+    font-weight: 500;
+    width: 40px;
+    height: 45px;
+    color: rgba(white, 1);
+}
+
+.inline {
+    height: 45px;
+    display: inline-flex;
+}

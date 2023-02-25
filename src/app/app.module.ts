@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CoreModule } from './modules/core/core.module';
 import { MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions } from '@angular/material/core';
 import { APP_INITIALIZER } from '@angular/core';
-import { PlaylistDataService } from './services/playlist-data/playlist-data.service';
-import { SongPipe } from './pipes/song.pipe';
+import { PlaylistDataService } from './shared/services/playlist-data/playlist-data.service';
+import { InitializationService } from 'ngx-apple-music';
+import { SharedModule } from './shared/shared.module';
+import { CoreModule } from './modules/core/core.module';
+import { MatTooltipDefaultOptions, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: true,
@@ -18,6 +19,12 @@ const globalRippleConfig: RippleGlobalOptions = {
   }
 };
 
+const globalTooltipConfig: MatTooltipDefaultOptions = {
+  showDelay: 300,
+  hideDelay: 0,
+  touchendHideDelay: 0
+}
+
 @NgModule({
   declarations: [
     AppComponent
@@ -25,16 +32,27 @@ const globalRippleConfig: RippleGlobalOptions = {
   imports: [
     BrowserModule,
     AppRoutingModule,
+    SharedModule,
     CoreModule,
     BrowserAnimationsModule,
   ],
-  providers: [{ provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig},
-  PlaylistDataService, {
+  providers: [
+    { provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig },
+    { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: globalTooltipConfig},
+    PlaylistDataService, {
     provide: APP_INITIALIZER,
-    useFactory: (pData: PlaylistDataService) => () => {return pData.getSamplePlaylist()},
+    useFactory: (pData: PlaylistDataService) => () => pData.getSamplePlaylist(),
     deps: [PlaylistDataService],
     multi: true
-  }],
+  },
+  //   InitializationService, {
+  //   provide: APP_INITIALIZER,
+  //   useFactory: (initService: InitializationService) => () => initService.initMusicKit('DEV_TOKEN',
+  //     'musicnya', '1.0.0'),
+  //   deps: [InitializationService],
+  //   multi: true
+  // }],
+],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

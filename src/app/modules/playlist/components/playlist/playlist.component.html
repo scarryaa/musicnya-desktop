@@ -1,0 +1,35 @@
+<div class="mainmain" [ngClass]="true ? 'drawerCollapsed' : ''">
+    <div #mainContainer class="main-container" cdkVirtualScrollingElement cdkScrollable>
+        <div class="background">
+            <div class="playlistView">
+                <div class="bgImg"
+                    [style.background]="'linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), ' + 'url(' + imgUrl + ')'">
+                </div>
+        
+                <div class="content">
+                    <div class="playlistInfo" *ngIf="playlist$ | async as playlist">
+                        <img #playlistCover class="playlistCover" src="{{playlist.artwork}}" crossorigin="anonymous"/>
+                        <div class="titleArtistInfo">
+                            <div class="title">{{playlist.title}}
+                                <button mat-mini-fab id="titleEditButton">
+                                    <mat-icon class="material-icons-round" fontIcon="edit"/>
+                                </button>
+                            </div>
+                            <div>
+                                <mat-icon class="material-icons-round author-pic" fontIcon="account_circle"/>
+                                <div class="author">{{playlist.author}}</div>
+                            </div>
+                            <span class="totalSongs">{{playlist.totalSongs() | song}}, </span>
+                            <span class="totalDuration">{{playlist.totalDuration() | minSec}}</span>
+                            <div><mat-icon  class="material-icons-round" fontIcon="add" (click)="addTrack()"/></div>
+                        </div>
+                    </div>
+        
+                    <div class="songs-container">
+                        <app-virtual-scroll-table [rows]="(rows | async)!"></app-virtual-scroll-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

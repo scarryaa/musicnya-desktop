@@ -1,0 +1,45 @@
+<mat-toolbar class="footer" [style.height.px]="75">
+    <div class="media-album-info">
+        <img id="current-album-cover"
+            src="https://media.pitchfork.com/photos/5929abfe5e6ef95969321857/1:1/w_320/a0536854.jpg">
+        <div id="current-album-info">
+            <div id="current-song-title">A Bad Dream</div>
+            <div id="current-song-artist">Keane</div>
+        </div>
+    </div>
+    <div class="media-controls-container">
+        <div class="main-media-controls-container">
+            <mat-icon class="media-controls material-icons-round" id="button-shuffle" fontIcon="shuffle" matTooltip="Enable Shuffle" matTooltipPosition="above"/>
+            <mat-icon class="media-controls material-icons-round" id="button-skip_previous" fontIcon="skip_previous" matTooltip="Previous" matTooltipPosition="above"/>
+            <mat-icon class="media-controls material-icons-round" id="button-play" fontIcon="play_circle" (click)="play()" matTooltip="Play" matTooltipPosition="above"/>
+            <mat-icon class="media-controls material-icons-round" id="button-skip_next" fontIcon="skip_next" matTooltip="Next" matTooltipPosition="above"/>
+            <mat-icon class="media-controls material-icons-round" id="button-repeat" [style.opacity]="1" [style.color]="setRepeatColor()"
+                [fontIcon]="repeatState == 2 ? 'repeat_one' : 'repeat'" (click)="setRepeat()"
+                (mouseover)="repeatHover=true" (mouseleave)="repeatHover=false" [matTooltip]="(repeatState == 0) ? 'Enable Repeat' : repeatState == 1 ? 'Enable Repeat Once' : 'Disable Repeat'" matTooltipPosition="above"/>
+            <div class="seekbar-container">
+                <span class="track-time" id="seekbar-value">{{ playbackValue.value! * 1000 | date:'m:ss' }}</span>
+                <mat-slider class="seekBar" [disabled]="disabled" [max]="max" [min]="min" [step]="step"
+                    [discrete]="thumbLabel" [showTickMarks]="showTicks">
+                    <input class="seekBarThumb" (sliderValue)="playbackValue.valueChanges" disableRipple matSliderThumb [formControl]="playbackValue">
+                </mat-slider>
+                <span class="track-time" id="seekbar-max-value">{{ max * 1000 | date:'m:ss' }}</span>
+            </div>
+        </div>
+        <div class="media-controls-misc">
+            <mat-icon class="media-controls material-icons-round" id="button-lyrics" fontIcon="lyrics" matTooltip="Lyrics" matTooltipPosition="above"/>
+        </div>
+        <div class="media-controls-misc">
+            <mat-icon class="media-controls material-icons-round" id="button-queue" fontIcon="queue_music" matTooltip="Queue" matTooltipPosition="above"/>
+        </div>
+        <div class="media-controls-volume">
+            <mat-icon class="media-controls material-icons-round" (click)="mute()" id="button-mute" 
+                [style.right.px]="(volumeValue.value! <= 51 && volumeValue.value! > 0) ? 97 : 95" 
+                [fontIcon]="volMuted ? 'volume_off' : volumeValue.value! > 51 ? 'volume_up' : 'volume_down'"
+                [matTooltip]="volMuted ? 'Unmute' : 'Mute'" matTooltipPosition="above"/>
+            <mat-slider id="seekbar-volume" [disabled]="disabled" [max]="volMax" [min]="volMin" [step]="volStep"
+            [discrete]="thumbLabel" [showTickMarks]="showTicks">
+                <input (sliderValue)="volumeValue.valueChanges" id="volumeValue" [formControl]="volumeValue" disableRipple matSliderThumb>
+            </mat-slider>
+        </div>
+    </div>
+</mat-toolbar>

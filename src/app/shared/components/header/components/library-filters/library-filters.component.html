@@ -1,0 +1,14 @@
+<div id="filters-container">
+    <div id="header-library" #filterElements>
+        <button *ngFor="let filter of filters;" [ngClass]="{'selected' : filter.selected, 'hidden' : filter.hidden == true}" [id]="(filter.name | lowercase) + '_library_filter'" (click)="changeView(filter, false)" class="button-library_filter" mat-flat-button>{{filter.name}}</button>
+    </div>
+    <div class="library_filter_dropdown_container" #dropdown>
+        <mat-form-field #formField appearance="outline" id="button-library_filter_menu">
+            <mat-select #filterSelect class="shift-arrow" (click)="onDropdownClick()">
+                <ng-container *ngFor="let filter of filters;">
+                    <mat-option (click)="changeView(filter, true)" [ngClass]="{'hidden': !filter.overflowing || filter.hidden}">{{filter.name}}</mat-option>
+                </ng-container>
+            </mat-select>
+          </mat-form-field>
+    </div>
+</div>

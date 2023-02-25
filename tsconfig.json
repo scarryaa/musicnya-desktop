@@ -19,6 +19,10 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
+    "paths": {
+      "ngx-apple-music": ["dist/ngx-apple-music"]
+    },
+    "typeRoots": ["src/assets/js/"],
     "lib": [
       "ES2022",
       "dom",

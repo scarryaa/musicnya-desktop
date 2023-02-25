@@ -4,12 +4,12 @@ export class Playlist {
     id: number;
     title: string;
     author: string;
-    artwork: string;
+    artwork?: string;
     description: string;
     tracks: Song[];
-    dominantColor?: string;
+    dominantColor: string;
 
-    constructor(id: number, title: string, author: string, artwork: string, description: string, tracks: Song[], dominantColor?: string) {
+    constructor(id: number, title: string, author: string, description: string, tracks: Song[], dominantColor: string, artwork?: string) {
         this.id = id;
         this.title = title;
         this.author = author;

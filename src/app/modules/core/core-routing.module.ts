@@ -3,10 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthenticationComponent } from './components/authentication/authentication.component';
 
 const coreRoutes: Routes = [
-  {
-    path: '',
-    component: AuthenticationComponent
-  },
+  { path: '', loadComponent: () => import('./components/settings/settings.component').then(c => c.SettingsComponent)},
+  { path: '', loadComponent: () => import('./components/profile/profile.component').then(c => c.ProfileComponent)},
+  { path: '', component: AuthenticationComponent }
 ];
 
 @NgModule({
