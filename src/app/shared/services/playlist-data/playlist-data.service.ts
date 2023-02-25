@@ -44,7 +44,7 @@ export class PlaylistDataService {
   async getDominantColor(artwork: string): Promise<string> {
     var color: string;
     // dark mode
-    if (!artwork || artwork == undefined || artwork == '') color = 'rgb(62, 59, 59)';
+    if (!artwork || artwork == undefined || artwork == '') color = 'rgb(54, 51, 51)';
     //light
     //if (!artwork || artwork == undefined || artwork == '') color = 'rgb(212, 209, 209)';
     else await this.fac.getColorAsync(artwork, {algorithm: 'simple', mode: 'speed', step: 50}).then((res: FastAverageColorResult) => color = res.rgb);

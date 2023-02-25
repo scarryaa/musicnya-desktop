@@ -19,7 +19,8 @@
     position: sticky;
     width: 100%;
     padding-bottom: 45px;
-    min-height: calc(100% + 42px);
+    overflow: hidden;
+    backface-visibility: hidden;
 
     .playlistView {
         width: 100%;
@@ -31,23 +32,12 @@
     
         .bgImg {
             background-size: 100% auto !important;
-            background-repeat: no-repeat !important;
             background-attachment: fixed !important;
             margin-top: -12rem;
             position: absolute;
             z-index: -1;
             width: 100%;
-            height: 40rem;
-            mask-image: -webkit-gradient(linear, left 60%, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
-        }
-    
-        .bgImg::after {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backdrop-filter: blur(10px);
-            pointer-events: none;
+            mask: linear-gradient(black 60%, transparent);
         }
 
         .mat-mdc-row {
@@ -64,7 +54,7 @@
                 border-radius: 8px;
                 width: 12rem;
                 height: 12rem;
-                filter: drop-shadow(0 0 0.75rem rgba(0, 0, 0, 0.5));
+                filter: drop-shadow(0 0 0.75rem rgba(0, 0, 0, 0.7));
             }
     
             .titleArtistInfo {
