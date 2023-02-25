@@ -6,6 +6,7 @@ import { Song } from 'src/app/modules/core/models/song';
 import { Playlist } from 'src/app/modules/core/models/playlist';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ColorFadeService } from 'src/app/shared/services/color-fade/color-fade.service';
+import { UserPrefsService } from 'src/app/shared/services/user-prefs/user-prefs.service'
 
 @Component({
   selector: 'app-playlist',
@@ -15,7 +16,7 @@ import { ColorFadeService } from 'src/app/shared/services/color-fade/color-fade.
 })
 export class PlaylistComponent implements AfterViewInit, OnInit {
   constructor(private playlistDataService: PlaylistDataService, private route: ActivatedRoute, private router: Router,
-    private ref: ChangeDetectorRef, private colorFadeService: ColorFadeService) {}
+    private ref: ChangeDetectorRef, private colorFadeService: ColorFadeService, private userPrefsService: UserPrefsService) {}
 
   rows!: Observable<Array<Song>>;
   playlist$!: Observable<Playlist>;
@@ -23,9 +24,15 @@ export class PlaylistComponent implements AfterViewInit, OnInit {
   bgImgColor!: string;
   playlistId!: number;
   playlistTitle!: string;
+  drawerCollapsed: boolean = false;
   @ViewChild(CdkScrollable) scrollable!: CdkScrollable;
 
   async ngOnInit() {
+    this.userPrefsService.drawerCollapsed$.subscribe((collapsed) => {
+      this.drawerCollapsed = collapsed;
+      this.ref.detectChanges();
+    });
+    
     this.router.events.subscribe((evt) => {
       if (!(evt instanceof NavigationEnd)) {
           return;
@@ -75,6 +82,7 @@ export class PlaylistComponent implements AfterViewInit, OnInit {
       } else if (this.scrollable.measureScrollOffset("top") < 200) {
         this.colorFadeService.changeOpacity(0, this.bgImgColor);
       }
+      this.ref.detectChanges();
     })
   }
 

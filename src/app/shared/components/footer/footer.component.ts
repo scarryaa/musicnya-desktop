@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PlaybackService } from 'ngx-apple-music';
 
@@ -26,7 +26,7 @@ export class FooterComponent implements OnInit {
     }
     )
   }
-
+  
   volumeValue = new FormControl<number>(50);
   playbackValue = new FormControl<number>(0);
 

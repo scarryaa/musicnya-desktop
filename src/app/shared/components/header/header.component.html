@@ -5,8 +5,8 @@
             <mat-icon [matTooltipDisabled]="compact ? false : true" matTooltip="Scarlet | Account Options" matTooltipPosition="right" id="user-profile-icon" class="material-icons-round" fontIcon="account_circle" />
             <div id="user-profile-name" [style.visibility]="compact ? 'hidden' : 'visible'">Scarlet</div>
         </div>
-        <div [style.display]="compact ? 'none' : 'block'" class='button' id="button-settings" [matMenuTriggerFor]="appSettingsMenu">
-            <mat-icon class="material-icons-round" fontIcon="more_vert" />
+        <div [style.display]="compact ? 'none' : 'block'" class='button' id="button-settings" *ngIf="enableWindowControls" [matMenuTriggerFor]="appSettingsMenu">
+            <mat-icon *ngIf="enableWindowControls" class="material-icons-round" fontIcon="more_vert" />
         </div>
     </div>
     <div id="page-controls-container">
@@ -28,7 +28,7 @@
         <app-playlist-controls [title]="playlistTitle" [opacity]="headerOpacity" *ngIf="router.url.includes('/playlist')"/>
     </div>
 
-    <div class="window-controls">
+    <div class="window-controls" *ngIf="enableWindowControls">
         <div class="minimize-button" (click)="minWindow()">
             <img src="assets/fonts/chrome_minimize.svg"/>
         </div>
@@ -106,6 +106,6 @@
         <mat-menu class="context-menu app-settings-menu" #help="matMenu">
             <button mat-menu-item>About musicnya</button>
         </mat-menu>
-          
+            
     </mat-menu>
 </mat-toolbar>

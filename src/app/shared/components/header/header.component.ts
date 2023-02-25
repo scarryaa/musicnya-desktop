@@ -1,17 +1,18 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { Location } from "@angular/common";
 import { ColorFadeService } from 'src/app/shared/services/color-fade/color-fade.service';
 import { MatToolbar } from '@angular/material/toolbar';
 import { ElectronService } from 'src/app/shared/services/electron/electron.service';
 import { UserPrefsService } from '../../services/user-prefs/user-prefs.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements AfterViewInit {
+export class HeaderComponent implements AfterViewInit, OnInit {
   @ViewChild('header') headerElem!: MatToolbar;
   @ViewChild('playlistControls') playlistControls!: any;
 
@@ -24,6 +25,7 @@ export class HeaderComponent implements AfterViewInit {
   backButton: boolean = false;
   currentNavIndex: number = 1;
   playlistTitle: string = '';
+  enableWindowControls: boolean = true;
 
   //TODO implement back navigation within library filters page
   constructor(public router: Router, private _location: Location, private colorFadeService: ColorFadeService, private renderer: Renderer2, 
@@ -41,6 +43,10 @@ export class HeaderComponent implements AfterViewInit {
         this.shouldDisableNav();
       }
     });
+  }
+
+  ngOnInit(): void {
+    this.enableWindowControls = environment.enableWindowControls;
   }
 
   closeWindow() {

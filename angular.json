@@ -70,6 +70,10 @@
                 {
                   "replace": "app.js",
                   "with": "app.prod.js"
+                },
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.github-pages.ts"
                 }
               ],
               "outputHashing": "all"
@@ -93,6 +97,9 @@
             },
             "development": {
               "browserTarget": "musicnya:build:development"
+            },
+            "github-pages": {
+              "browserTarget": "musicnya:build:github-pages"
             }
           },
           "defaultConfiguration": "development"

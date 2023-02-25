@@ -4,6 +4,7 @@ import { trigger, transition, animate, style, state } from '@angular/animations'
 import { PlaylistDataService } from 'src/app/shared/services/playlist-data/playlist-data.service';
 import { Playlist } from 'src/app/modules/core/models/playlist';
 import { UserPrefsService } from '../../services/user-prefs/user-prefs.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-sidenav',
@@ -37,8 +38,10 @@ export class SideNavComponent implements OnInit, OnDestroy {
   to: any;
   scrollbarVisible: boolean = false;
   elementStates: string[] = Array.from(Array(4), (e, i) => 'unselected');
+  enableWindowControls: boolean = true;
 
   ngOnInit() {
+    this.enableWindowControls = environment.enableWindowControls;
     this.playlists$ = this.playlistDataService.getPlaylists();
     this.drawerCollapsed$= this.userPrefsService.drawerCollapsed$.subscribe((value: boolean) => this.drawerCollapsed = value);
   }
