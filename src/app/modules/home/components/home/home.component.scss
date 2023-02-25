@@ -1,0 +1,22 @@
+.container {
+    width: calc(100% - 2.4rem);
+    overflow: overlay;
+}
+
+.album-details-container {
+    display: grid;
+    grid-template-columns:repeat(auto-fit, minmax(125px, 1fr));
+    column-gap: 10px;
+    grid-template-rows: auto;
+    grid-auto-rows: 0px;
+    overflow: hidden;
+
+    :first-child {
+        margin-left: 0;
+    }
+
+    > app-album-tile {
+        max-width: fit-content;
+        flex-grow: 1;
+    }
+}

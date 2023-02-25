@@ -29,6 +29,9 @@ import { PlaylistControlsComponent } from './components/header/components/playli
 import { VirtualScrollTableComponent } from './components/virtual-scroll-table/virtual-scroll-table.component';
 import { FallbackSrc } from './directives/fallback-src.directive';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { AlbumTileComponent } from './components/album-tile/album-tile.component';
+import { CategoryTileComponent } from './components/category-tile/category-tile.component';
+import { HeadingComponent } from './components/heading/heading.component';
 
 @NgModule({
   declarations:
@@ -42,7 +45,10 @@ import {MatTooltipModule} from '@angular/material/tooltip';
       ScrollDirective,
       LibraryFiltersComponent,
       PlaylistControlsComponent,
-      VirtualScrollTableComponent
+      VirtualScrollTableComponent,
+      AlbumTileComponent,
+      HeadingComponent,
+      CategoryTileComponent
     ],
   imports: [
     RouterModule,
@@ -73,7 +79,10 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     FooterComponent, MinSecPipe,
     ReversePipe, SongPipe,
     ScrollDirective,
-    VirtualScrollTableComponent
+    VirtualScrollTableComponent,
+    AlbumTileComponent,
+    CategoryTileComponent,
+    HeadingComponent
   ]
 })
 export class SharedModule { }

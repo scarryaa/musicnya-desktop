@@ -1,0 +1,44 @@
+.category-tile-container {
+    width: calc(100% + 1rem);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    overflow: overlay;
+
+    .category-details-container {
+        overflow: hidden;
+        margin-top: 0.5rem;
+        margin-right: 1rem;
+        background-blend-mode: multiply;
+        border-radius: 6px;
+    }
+
+    .category-title {
+        font-size: 10pt;
+        margin-inline: 0.4rem;
+        white-space: nowrap;
+        color: white;
+        overflow: hidden;
+        font-weight: 500;
+        padding-top: 4.5rem;
+        padding-bottom: 0.6rem;
+        text-overflow: ellipsis;
+    }
+}
+
+@media screen and (min-width: 1000px) {  
+    .category-tile-container {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }  
+}
+
+@media screen and (min-width: 1400px) {  
+    .category-tile-container {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }  
+}
+
+@media screen and (min-width: 1800px) {  
+    .category-tile-container {
+        grid-template-columns: repeat(5, 1fr) !important;
+    }  
+}

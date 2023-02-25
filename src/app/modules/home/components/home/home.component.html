@@ -1,0 +1,15 @@
+<div class="container">
+    <app-heading class="fw4" fontSize="f4" marginBottom="mb2h" text="Good evening"></app-heading>
+    <div>
+        <app-heading text="Recently Played" icon="chevron_right" [showIcon]="true"></app-heading>
+        <div class="album-details-container">
+            <app-album-tile *ngFor="let recentlyPlayedItem of recentlyPlayedItems;"></app-album-tile>
+        </div>
+    </div>
+    <div class="mt2">
+        <app-heading text="Stations for You" icon="chevron_right" [showIcon]="true"></app-heading>
+        <div class="album-details-container">
+            <app-album-tile *ngFor="let station of userStations"></app-album-tile>
+        </div>
+    </div>
+</div>
