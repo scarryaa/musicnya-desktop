@@ -13,6 +13,7 @@ import { MatTooltipDefaultOptions, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/
 import { ElectronService } from './shared/services/electron/electron.service';
 import { Observable, Subscriber } from 'rxjs';
 import { UserPrefsService } from './shared/services/user-prefs/user-prefs.service';
+import { environment } from 'src/environments/environment';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: true,
@@ -51,12 +52,12 @@ const globalTooltipConfig: MatTooltipDefaultOptions = {
   },
   ElectronService, {
     provide: APP_INITIALIZER,
-    useFactory: (electronService: ElectronService, userPrefsService: UserPrefsService) => () => { var platform$ = new Observable<boolean>((observer: Subscriber<boolean>) =>
+    useFactory: environment.enableWindowControls ? ((electronService: ElectronService, userPrefsService: UserPrefsService) => () => { var platform$ = new Observable<boolean>((observer: Subscriber<boolean>) =>
       electronService.getIpcRenderer().receive('fromMain', (arg: any, event: any) => observer.next(arg)));
 
     platform$.subscribe((res: boolean) => userPrefsService.setPlatform(res) );
     electronService.getIpcRenderer().send("toMain", {command: 'whatPlatform'});
-  },
+    }) : () => () => {},
     deps: [ElectronService, UserPrefsService],
     multi: true
   }

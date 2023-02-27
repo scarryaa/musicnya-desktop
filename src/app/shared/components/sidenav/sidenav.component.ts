@@ -47,7 +47,7 @@ export class SideNavComponent implements OnInit, OnDestroy, AfterViewInit {
   platformIsWindows: boolean = true;
 
   ngOnInit() {
-    this.platformIsWindows = !this.userPrefsService.isWindows();
+    this.platformIsWindows = this.userPrefsService.isWindows();
     this.router.events.subscribe((evt) => {
       if (!this.router.url.includes('playlist')) this.colorFadeService.setColor('170, 168, 218');
       if (!(evt instanceof NavigationEnd)) {

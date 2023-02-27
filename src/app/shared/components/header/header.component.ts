@@ -31,7 +31,7 @@ export class HeaderComponent implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     this.enableWindowControls = environment.enableWindowControls;
-    this.platformIsWindows = !this.userPrefsService.isWindows();
+    this.platformIsWindows = this.userPrefsService.isWindows();
   }
 
   //TODO implement back navigation within library filters page
