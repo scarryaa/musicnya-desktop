@@ -120,7 +120,7 @@
 
 ::ng-deep *::-webkit-scrollbar-track-piece:start {
   background: transparent;
-  margin-top: 50px;
+  margin-top: 60px;
 }
 
 ::ng-deep *::-webkit-scrollbar-thumb {
@@ -168,4 +168,20 @@
 
 .playlist-item-compact {
   margin-left: 0.2rem;
+}
+
+.mainmain {
+  width: calc(100% - 200px);
+  height: calc(100% - 75px);
+}
+
+.drawerCollapsed {
+  width: calc(100% - 50px);
+}
+
+.main-container {
+  position: fixed;
+  height: inherit;
+  width: inherit;
+  overflow: overlay;
 }

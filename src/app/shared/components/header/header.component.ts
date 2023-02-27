@@ -26,6 +26,13 @@ export class HeaderComponent implements AfterViewInit, OnInit {
   currentNavIndex: number = 1;
   playlistTitle: string = '';
   enableWindowControls: boolean = true;
+  headerHeight: number = 45;
+  platformIsWindows: boolean = true;
+
+  ngOnInit(): void {
+    this.enableWindowControls = environment.enableWindowControls;
+    this.platformIsWindows = !this.userPrefsService.isWindows();
+  }
 
   //TODO implement back navigation within library filters page
   constructor(public router: Router, private _location: Location, private colorFadeService: ColorFadeService, private renderer: Renderer2, 
@@ -43,10 +50,6 @@ export class HeaderComponent implements AfterViewInit, OnInit {
         this.shouldDisableNav();
       }
     });
-  }
-
-  ngOnInit(): void {
-    this.enableWindowControls = environment.enableWindowControls;
   }
 
   closeWindow() {
@@ -74,17 +77,17 @@ export class HeaderComponent implements AfterViewInit, OnInit {
 
     this.colorFadeService.myFunctionCalled$.subscribe((values: [number, string]) => {
       this.headerOpacity = values[0];
-      this.ref.detectChanges();
-
+      
       this.renderer.setStyle(this.headerElem._elementRef.nativeElement,
-      'backgroundColor', `rgba(${this.darkenColor(values[1])}, ${values[0]}`)
+        'backgroundColor', `rgba(${this.darkenColor(this.colorFadeService.getCurrentColor())}, ${values[0]}`);
+      this.ref.detectChanges();
     });
   }
 
   darkenColor(color: string): string {
     var splitValues: string[] = color.replace('rgb(', '').replace(')', '').split(',');
     splitValues.forEach((elem: string, index: number) => {
-      splitValues[index] = `${parseInt(elem) - 20}`;
+      if (parseInt(elem) > 20) splitValues[index] = `${parseInt(elem) - 20}`;
     });
     return `${splitValues[0]}, ${splitValues[1]}, ${splitValues[2]}`;
   }

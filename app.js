@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, session, components } = require('electron')
 if (process.env.NODE_ENV === 'development') { require('electron-reload')(__dirname) }
 const path = require('path');
 const fs = require('fs');
+var isWin = process.platform === "win32";
 
 let mainWindow;
 app.commandLine.appendSwitch('ignore-certificate-errors');
@@ -39,13 +40,9 @@ function createWindow() {
 })
 
   mainWindow.loadURL('http://localhost:4200');
-  //   // Open the DevTools.
-  //   mainWindow.webContents.openDevTools()
 }
 
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
-  // On certificate error we disable default behaviour (stop loading the page)
-  // and we then say "it is all fine - true" to the callback
   event.preventDefault();
   callback(true);
 });
@@ -84,6 +81,10 @@ ipcMain.on("toMain", (event, args) => {
     else mainWindow.maximize();
   } else if (args.command == 'minimizeWindow') {
     mainWindow.minimize();
+  } 
+  
+  if (args.command == 'whatPlatform') {
+    event.sender.send('fromMain', isWin);
   }
 
   // user prefs

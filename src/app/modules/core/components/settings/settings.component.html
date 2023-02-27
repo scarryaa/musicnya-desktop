@@ -1,31 +1,40 @@
-<div class="settings-container">
+<div class="container settings-container">
     <div class="content">
         <div class="header">
             <div>Settings</div>
-            <mat-icon class="material-icons-round" fontIcon="search"/>
+            <mat-icon class="material-icons-round" fontIcon="search" />
         </div>
         <div class="subheader">
             <div>Colors</div>
             <div class="subheader-items mt1">
                 <div>Pick a custom primary and secondary color.</div>
-                <div class="color-wheel mvn1h mh1h" #primaryColor cdkOverlayOrigin #primaryTrigger="cdkOverlayOrigin" [style.background-color]="(primaryOpen && colorPicker && colorPicker.color) ? colorPicker.color : userPrimaryColor"> </div>
-                <div class="color-wheel mvn1h mh1h" cdkOverlayOrigin #secondaryTrigger="cdkOverlayOrigin" [style.background-color]="(secondaryOpen && secondaryColorPicker && secondaryColorPicker.color) ? secondaryColorPicker.color : userSecondaryColor"> </div>
+                <div class="color-wheel mvn1h mh1h" #primaryColor cdkOverlayOrigin #primaryTrigger="cdkOverlayOrigin"
+                    [style.background-color]="(primaryOpen && colorPicker && colorPicker.color) ? colorPicker.color : userPrimaryColor">
+                </div>
+                <div class="color-wheel mvn1h mh1h" cdkOverlayOrigin #secondaryTrigger="cdkOverlayOrigin"
+                    [style.background-color]="(secondaryOpen && secondaryColorPicker && secondaryColorPicker.color) ? secondaryColorPicker.color : userSecondaryColor">
+                </div>
             </div>
             <div class="subheader-items mt1h color-presets">
                 <mat-accordion (click)="presetColorsOpen = !presetColorsOpen" class="mln1h">
                     <mat-expansion-panel hideToggle class="no-box-shadow">
-                      <mat-expansion-panel-header [collapsedHeight]="'30px'" [expandedHeight]="'30px'" class="ph1h mln1">
-                        <mat-panel-title>
-                            <div class="faded-text">Or choose from a selection of presets.</div>
-                            <mat-icon class="material-icons-round accordion-dropdown faded-text" [fontIcon]="!presetColorsOpen ? 'expand_more' : 'expand_less'"/>
-                        </mat-panel-title>
-                      </mat-expansion-panel-header>
-                      <div class="flex fdr flex-wrap mln2 mb1h">
-                          <div *ngFor="let preset of colorPresets;" class="mln1 flex color-preset br2 mh1h mv1h" [style.background-color]="!preset.selected ? 'transparent' : 'rgba(0, 0, 0, 0.1)'" (click)="selectPreset(preset)">
-                              <div class="color-wheel mt1h mh1h" [style.background-color]="preset.primaryColor"></div>
-                              <div class="color-wheel mt1h mh1h" [style.background-color]="preset.secondaryColor"></div>
-                          </div>
-                      </div>
+                        <mat-expansion-panel-header [collapsedHeight]="'30px'" [expandedHeight]="'30px'"
+                            class="ph1h mln1">
+                            <mat-panel-title>
+                                <div class="faded-text">Or choose from a selection of presets.</div>
+                                <mat-icon class="material-icons-round accordion-dropdown faded-text"
+                                    [fontIcon]="!presetColorsOpen ? 'expand_more' : 'expand_less'" />
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="flex fdr flex-wrap mln2 mb1h">
+                            <div *ngFor="let preset of colorPresets;" class="mln1 flex color-preset br2 mh1h mv1h"
+                                [style.background-color]="!preset.selected ? 'transparent' : 'rgba(0, 0, 0, 0.1)'"
+                                (click)="selectPreset(preset)">
+                                <div class="color-wheel mt1h mh1h" [style.background-color]="preset.primaryColor"></div>
+                                <div class="color-wheel mt1h mh1h" [style.background-color]="preset.secondaryColor">
+                                </div>
+                            </div>
+                        </div>
                     </mat-expansion-panel>
                 </mat-accordion>
             </div>
@@ -33,26 +42,28 @@
     </div>
 </div>
 
-<ng-template #primaryOverlay cdkConnectedOverlay [cdkConnectedOverlayOffsetY]="26" [cdkConnectedOverlayOffsetX]="15" [cdkConnectedOverlayOrigin]="primaryTrigger" [cdkConnectedOverlayOpen]="primaryOpen">
+<ng-template #primaryOverlay cdkConnectedOverlay [cdkConnectedOverlayOffsetY]="26" [cdkConnectedOverlayOffsetX]="15"
+    [cdkConnectedOverlayOrigin]="primaryTrigger" [cdkConnectedOverlayOpen]="primaryOpen">
     <div class="primary-picker-container">
         <app-color-picker #colorPicker this.color="color"></app-color-picker>
         <button mat-icon-button class="color-picker-button" (click)="setUserPrimaryColor()">
-            <mat-icon class="material-icons-round" fontIcon="done"/>
+            <mat-icon class="material-icons-round" fontIcon="done" />
         </button>
         <button mat-icon-button class="color-picker-button">
-            <mat-icon class="material-icons-round" fontIcon="close"/>
+            <mat-icon class="material-icons-round" fontIcon="close" />
         </button>
     </div>
 </ng-template>
 
-<ng-template cdkConnectedOverlay [cdkConnectedOverlayOffsetY]="26" [cdkConnectedOverlayOffsetX]="15" [cdkConnectedOverlayOrigin]="secondaryTrigger" [cdkConnectedOverlayOpen]="secondaryOpen">
+<ng-template cdkConnectedOverlay [cdkConnectedOverlayOffsetY]="26" [cdkConnectedOverlayOffsetX]="15"
+    [cdkConnectedOverlayOrigin]="secondaryTrigger" [cdkConnectedOverlayOpen]="secondaryOpen">
     <div class="secondary-picker-container">
         <app-color-picker #secondaryColorPicker this.color="color"></app-color-picker>
         <button mat-icon-button class="color-picker-button" (click)="setUserSecondaryColor()">
-            <mat-icon class="material-icons-round" fontIcon="done"/>
+            <mat-icon class="material-icons-round" fontIcon="done" />
         </button>
         <button mat-icon-button class="color-picker-button">
-            <mat-icon class="material-icons-round" fontIcon="close"/>
+            <mat-icon class="material-icons-round" fontIcon="close" />
         </button>
     </div>
 </ng-template>

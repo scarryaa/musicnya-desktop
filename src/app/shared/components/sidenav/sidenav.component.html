@@ -1,6 +1,6 @@
 <mat-sidenav-container [ngClass]="drawerCollapsed ? 'collapseMargin' : 'fullMargin'" class="sidenav-container">
   <mat-sidenav #drawer [ngClass]="drawerCollapsed ? 'collapseDrawer' : ''" class="sidenav" fixedInViewport
-    [attr.role]="'navigation'" [mode]="'side'" opened="true" position="start" [fixedTopGap]="45" [fixedBottomGap]="75">
+    [attr.role]="'navigation'" [mode]="'side'" opened="true" position="start" [fixedTopGap]="platformIsWindows ? 45 : 60" [fixedBottomGap]="75">
     <mat-nav-list class="sidenav-nav-items" [disableRipple]="true">
       <a *ngIf="enableWindowControls" [style.display]="drawerCollapsed ? 'block' : 'none'" [@elementState]="elementStates[0]" class="sidebar-item nav-text mbn1h sidenavHoverable" mat-list-item>
         <span>
@@ -45,7 +45,11 @@
   </mat-sidenav>
   <div class="content-container">
     <div class="content">
-      <router-outlet></router-outlet>
+      <div class="mainmain" [ngClass]="drawerCollapsed ? 'drawerCollapsed' : ''" [style.margin-top.px]="platformIsWindows ? -45 : -60">
+        <div #mainContainer class="main-container" cdkVirtualScrollingElement cdkScrollable>
+          <router-outlet></router-outlet>
+      </div>
+      </div>
     </div>
   </div>
 </mat-sidenav-container>
@@ -53,7 +57,7 @@
 <mat-sidenav-container>
   <mat-sidenav [ngClass]="[drawerCollapsed ? 'collapseDrawer' : '', scrollbarVisible ? 'scrollbarShown' : 'scrollbarHidden']" class="sidenav scrollbarHidden" id="sidenav-playlists" position="start"
     (mouseover)="enter()" (mouseleave)="leave()"
-    fixedInViewport [mode]="'side'" opened="true" [fixedTopGap]="(drawerCollapsed && enableWindowControls) ? 300 : 272" [fixedBottomGap]="75">
+    fixedInViewport [mode]="'side'" opened="true" [fixedTopGap]="(drawerCollapsed && enableWindowControls) ? platformIsWindows ? 300 : 315 : platformIsWindows ? 272 : 287" [fixedBottomGap]="75">
     <mat-list class="sidebar-items">
       <a *ngFor="let playlist of (playlists$ | async)! | reverse" [ngClass]="drawerCollapsed ? 'playlist-item-compact' : ''" class="sidebar-item nav-text truncate-text"
         routerLinkActive="active" [routerLink]="['/playlist', playlist.id]" [routerLinkActiveOptions]="{ exact: true }"

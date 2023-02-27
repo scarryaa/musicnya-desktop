@@ -11,6 +11,7 @@ export class UserPrefsService {
 
   private drawerCollapsed: boolean = false;
   public drawerCollapsed$: BehaviorSubject<boolean> = new BehaviorSubject(this.drawerCollapsed);
+  private platformWin: boolean = true;
 
   toggleDrawer(): void {
     this.drawerCollapsed = !this.drawerCollapsed;
@@ -25,6 +26,14 @@ export class UserPrefsService {
 
       this.electronService.getIpcRenderer().send("toMain", {command: 'getUserPrimaryColor'});
     });
+  }
+
+  setPlatform(isWin: boolean): void {
+    this.platformWin = isWin;
+  }
+
+  isWindows(): boolean {
+    return this.platformWin;
   }
 
   getUserSecondaryColor(): any {

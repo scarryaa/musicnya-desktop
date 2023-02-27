@@ -1,10 +1,9 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, ParamMap, Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { map, Observable, of, switchMap } from 'rxjs';
 import { PlaylistDataService } from 'src/app/shared/services/playlist-data/playlist-data.service';
 import { Song } from 'src/app/modules/core/models/song';
 import { Playlist } from 'src/app/modules/core/models/playlist';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ColorFadeService } from 'src/app/shared/services/color-fade/color-fade.service';
 import { UserPrefsService } from 'src/app/shared/services/user-prefs/user-prefs.service'
 
@@ -14,8 +13,8 @@ import { UserPrefsService } from 'src/app/shared/services/user-prefs/user-prefs.
   styleUrls: ['./playlist.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PlaylistComponent implements AfterViewInit, OnInit {
-  constructor(private playlistDataService: PlaylistDataService, private route: ActivatedRoute, private router: Router,
+export class PlaylistComponent implements OnInit {
+  constructor(private playlistDataService: PlaylistDataService, private route: ActivatedRoute,
     private ref: ChangeDetectorRef, private colorFadeService: ColorFadeService, private userPrefsService: UserPrefsService) {}
 
   rows!: Observable<Array<Song>>;
@@ -24,22 +23,8 @@ export class PlaylistComponent implements AfterViewInit, OnInit {
   bgImgColor!: string;
   playlistId!: number;
   playlistTitle!: string;
-  drawerCollapsed: boolean = false;
-  @ViewChild(CdkScrollable) scrollable!: CdkScrollable;
 
   async ngOnInit() {
-    this.userPrefsService.drawerCollapsed$.subscribe((collapsed) => {
-      this.drawerCollapsed = collapsed;
-      this.ref.detectChanges();
-    });
-    
-    this.router.events.subscribe((evt) => {
-      if (!(evt instanceof NavigationEnd)) {
-          return;
-      }
-      this.scrollable.scrollTo({"top": 0});
-  });
-
     this.route.url.subscribe(url =>{
       this.ref.detectChanges();
   });
@@ -75,17 +60,6 @@ export class PlaylistComponent implements AfterViewInit, OnInit {
     }
   }
 
-  ngAfterViewInit() {
-    this.scrollable.elementScrolled().pipe().subscribe(() => {
-      if (this.scrollable.measureScrollOffset("top") >= 200) {
-          this.colorFadeService.changeOpacity(((this.scrollable.measureScrollOffset("top") - 200) / 100), this.bgImgColor);
-      } else if (this.scrollable.measureScrollOffset("top") < 200) {
-        this.colorFadeService.changeOpacity(0, this.bgImgColor);
-      }
-      this.ref.detectChanges();
-    })
-  }
-
   private handleResults() {
     if (this.playlist$) {
       this.getBackgroundImg();
@@ -101,6 +75,7 @@ export class PlaylistComponent implements AfterViewInit, OnInit {
         this.playlistId = data.id;
         this.playlistTitle = data.title;
         this.setColor();
+        this.colorFadeService.setColor(this.bgImgColor);
       }
      )
   }
@@ -111,7 +86,7 @@ export class PlaylistComponent implements AfterViewInit, OnInit {
   }
 
   async setColor() {
-    document.querySelector('.main-container')!.setAttribute('style', `background: ${this.bgImgColor}`);
+    document.querySelector('.background')!.setAttribute('style', `background: ${this.bgImgColor}`);
   }
 
   addTrack() {

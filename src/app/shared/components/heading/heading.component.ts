@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-heading',
@@ -6,6 +6,8 @@ import { AfterViewInit, Component, Input } from '@angular/core';
   styleUrls: ['./heading.component.scss']
 })
 export class HeadingComponent implements AfterViewInit {
+  constructor(private ref: ChangeDetectorRef) {}
+
   fontStyle: string = 'f3';
   marginBottomStyle: string = 'mb1';
   @Input('text') text!: string;
@@ -22,5 +24,6 @@ export class HeadingComponent implements AfterViewInit {
     if (this.marginBottom) {
       this.marginBottomStyle = this.marginBottom;
     }
+    this.ref.detectChanges();
   }
 }

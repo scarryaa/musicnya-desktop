@@ -5,8 +5,9 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class ColorFadeService {
-  private myFunctionCallSource = new BehaviorSubject<[number, string]>([0, 'FFFFFF']);
+  private myFunctionCallSource = new BehaviorSubject<[number, string]>([0, '000000']);
   myFunctionCalled$ = this.myFunctionCallSource.asObservable();
+  currentColor: string = '';
   
   private playlistTitle = new BehaviorSubject<string>('');
   playlistTitle$ = this.playlistTitle.asObservable();
@@ -19,4 +20,11 @@ export class ColorFadeService {
     this.playlistTitle.next(title);
   }
 
+  setColor(color: string) {
+    this.currentColor = color;
+  }
+
+  getCurrentColor() {
+    return this.currentColor;
+  }
 }

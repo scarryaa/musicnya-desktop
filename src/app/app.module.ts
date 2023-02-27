@@ -10,7 +10,9 @@ import { InitializationService } from 'ngx-apple-music';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './modules/core/core.module';
 import { MatTooltipDefaultOptions, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
-import { SongPipe } from './pipes/song.pipe';
+import { ElectronService } from './shared/services/electron/electron.service';
+import { Observable, Subscriber } from 'rxjs';
+import { UserPrefsService } from './shared/services/user-prefs/user-prefs.service';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: true,
@@ -47,6 +49,17 @@ const globalTooltipConfig: MatTooltipDefaultOptions = {
     deps: [PlaylistDataService],
     multi: true
   },
+  ElectronService, {
+    provide: APP_INITIALIZER,
+    useFactory: (electronService: ElectronService, userPrefsService: UserPrefsService) => () => { var platform$ = new Observable<boolean>((observer: Subscriber<boolean>) =>
+      electronService.getIpcRenderer().receive('fromMain', (arg: any, event: any) => observer.next(arg)));
+
+    platform$.subscribe((res: boolean) => userPrefsService.setPlatform(res) );
+    electronService.getIpcRenderer().send("toMain", {command: 'whatPlatform'});
+  },
+    deps: [ElectronService, UserPrefsService],
+    multi: true
+  }
   //   InitializationService, {
   //   provide: APP_INITIALIZER,
   //   useFactory: (initService: InitializationService) => () => initService.initMusicKit('DEV_TOKEN',
