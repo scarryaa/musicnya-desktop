@@ -82,6 +82,10 @@ body {
     margin-top: -1rem;
 }
 
+.mtn1h {
+    margin-top: -0.5rem;
+}
+
 .mbn1 {
     margin-bottom: -1rem;
 }
@@ -207,5 +211,12 @@ body {
 
 .container {
     padding-inline: 1.2rem;
-    padding-block: 1rem 8rem;
+    padding-block: 1rem 2rem;
+    padding-top: 4rem;
+}
+
+.disable-focus-indicator {
+    .mdc-switch__shadow, .mdc-switch__ripple {
+        display: none;
+    }
 }

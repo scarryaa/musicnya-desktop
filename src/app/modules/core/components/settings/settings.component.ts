@@ -8,13 +8,14 @@ import { UserPrefsService } from 'src/app/shared/services/user-prefs/user-prefs.
 import { CommonModule } from '@angular/common';
 import { ThemeService } from 'src/app/shared/services/theme/theme.service';
 import { UtilityService } from 'src/app/shared/services/utility/utility.service';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
   standalone: true,
-  imports: [MatIconModule, ColorPickerModule, CdkOverlayOrigin, CdkConnectedOverlay, MatButtonModule, MatExpansionModule, CommonModule]
+  imports: [MatIconModule, ColorPickerModule, CdkOverlayOrigin, CdkConnectedOverlay, MatButtonModule, MatExpansionModule, CommonModule, MatSlideToggleModule]
 })
 
 export class SettingsComponent implements OnInit {
@@ -43,6 +44,7 @@ export class SettingsComponent implements OnInit {
 
   userPrimaryColor: string = this.userPrefsService.getUserPrimaryColor();
   userSecondaryColor: string = this.userPrefsService.getUserAccentColor();
+  darkTheme: boolean = this.userPrefsService.getDarkTheme();
 
   documentClickListener(target: any): void {
     if (!this.primaryOpen && (target.className.includes('color-wheel primary'))) {

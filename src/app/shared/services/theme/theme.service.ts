@@ -6,19 +6,17 @@ import { UtilityService } from '../utility/utility.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ThemeService implements OnInit {
-  constructor(private userPrefsService: UserPrefsService, private utilityService: UtilityService) {}
-
-  playlistHeaderColor$ = new Subject<string>();
-
-  ngOnInit(): void {
+export class ThemeService {
+  constructor(private userPrefsService: UserPrefsService, private utilityService: UtilityService) {
     this.userPrefsService.colorChanged$.subscribe((res: [string, string]) => { console.log(res[0]); this.currentPrimary = res[0]; this.currentAccent = res[1]; })
+    this.userPrefsService.darkTheme$.subscribe((res: boolean) => this.darkTheme = res);
   }
 
+  playlistHeaderColor$ = new Subject<string>();
   currentPrimary: string = this.userPrefsService.getUserPrimaryColor() ?? 'rgb(90, 87, 142)';
   currentAccent: string = this.userPrefsService.getUserAccentColor() ?? 'rgb(255, 64, 128)';
   primaryPageColor: string = this.currentPrimary;
-  darkTheme: boolean = false;
+  darkTheme: boolean = this.userPrefsService.getDarkTheme();
   headerColor: string = this.darkTheme ? '20, 20, 20' : '235, 235, 235';
 
   resetColorHeader() {

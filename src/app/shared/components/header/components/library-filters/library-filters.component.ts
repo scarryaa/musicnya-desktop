@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { LibraryViewHandlerService } from 'src/app/services/library-view-handler/library-view-handler.service';
-import { Subject } from 'rxjs';
 import { MatSelect } from '@angular/material/select';
 import { Filter } from './models/filter';
 import { UtilityService } from 'src/app/shared/services/utility/utility.service';
@@ -9,11 +8,9 @@ import { UtilityService } from 'src/app/shared/services/utility/utility.service'
   selector: 'app-library-filters',
   templateUrl: './library-filters.component.html',
   styleUrls: ['./library-filters.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LibraryFiltersComponent implements OnDestroy, OnInit {
-  destroyed = new Subject<void>();
   @ViewChild('dropdown', { read: ElementRef, static: true }) dropdown!: ElementRef;
   @ViewChild('filterSelect') filterSelect!: MatSelect;
   @ViewChildren('filterElements', { read: ElementRef }) filterElements?: QueryList<ViewChild>;
@@ -152,7 +149,5 @@ export class LibraryFiltersComponent implements OnDestroy, OnInit {
   ngOnDestroy() {
     this.clickSub.unsubscribe();
     this.resizeSub.unsubscribe();
-    this.destroyed.next();
-    this.destroyed.complete();
   }
 }

@@ -36,7 +36,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     MatInputModule,
     ReactiveFormsModule,
     FormsModule,
-    MatSelectModule,
+    MatSelectModule
   ],
   exports: [AuthenticationComponent]
 })

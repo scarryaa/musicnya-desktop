@@ -20,6 +20,8 @@ export class UIService {
   scrollPosition$ = new BehaviorSubject<number>(0);
   drawerCollapsed = this.userPrefsService.getDrawerSetting();
   drawerCollapsed$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.drawerCollapsed);
+  backButtonEnabled: boolean = false;
+  forwardButtonEnabled: boolean = false;
 
   setHeaderTitle(title: string) {
     this.headerTitle.next(title);
@@ -32,6 +34,14 @@ export class UIService {
     } else if (this.scrollPosition$.value < 200) {
       this.headerOpacity$.next(0);
     }
+  }
+
+  disableBackButton() {
+
+  }
+
+  disableForwardButton() {
+
   }
 
   toggleDrawer() {

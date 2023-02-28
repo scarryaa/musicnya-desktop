@@ -7,6 +7,10 @@
         <div class="subheader">
             <div>Colors</div>
             <div class="subheader-items mt1">
+                <div>Dark Theme</div>
+                <mat-slide-toggle [checked]="darkTheme" (change)="this.userPrefsService.toggleDarkTheme()" class="mtn1h disable-focus-indicator"></mat-slide-toggle>
+            </div>
+            <div class="subheader-items mt1">
                 <div>Pick a custom primary and secondary color.</div>
                 <div class="color-wheel primary mvn1h mh1h" #primaryColor cdkOverlayOrigin #primaryTrigger="cdkOverlayOrigin"
                     [style.background-color]="(primaryOpen && colorPicker && colorPicker.color) ? colorPicker.color : userPrimaryColor">

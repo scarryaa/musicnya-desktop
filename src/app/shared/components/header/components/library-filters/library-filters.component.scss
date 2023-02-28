@@ -62,6 +62,19 @@ mat-select {
         flex: 1 1 auto;
         margin: 0 2rem;
 
+        &::ng-deep .mdc-notched-outline__leading, ::ng-deep .mdc-notched-outline__notch, ::ng-deep .mdc-notched-outline__trailing {
+            outline: none;
+            border: none;
+        }
+
+        & ::ng-deep .mat-mdc-form-field-infix {
+            width: 80px;
+        }
+
+        & ::ng-deep .mat-mdc-select {
+            margin-left: -100px;
+        }
+
         .mat-mdc-select-value {
             display: inline-flex;
             color: black;
@@ -70,9 +83,9 @@ mat-select {
             letter-spacing: 0.0892857143em;
         }
 
-        .mat-mdc-select-arrow { 
+        ::ng-deep .mat-mdc-select-arrow { 
             padding: 0;
-            margin: 0;
+            margin-top: -15px;
         }
     }
     

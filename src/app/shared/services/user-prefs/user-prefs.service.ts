@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, Subscriber } from 'rxjs';
+import { Preferences } from 'src/app/modules/core/models/preferences';
 import { ElectronService } from '../electron/electron.service';
 import { CurrentPlatform } from '../ui/current-platform';
-import { UIService } from '../ui/ui.service';
 import { UtilityService } from '../utility/utility.service';
 
 @Injectable({
@@ -16,27 +16,39 @@ export class UserPrefsService {
       this.electronService.getIpcRenderer().receive('fromMain', (arg: any, event: any) => { if (arg.command == 'getUserPrefs') observer.next(arg) }));
 
     platform$.subscribe((res: any) => {
-      var strippedPrimary: string = this.utilityService.stripRgb(res.data.data.userPrimaryColor);
-      var strippedAccent: string = this.utilityService.stripRgb(res.data.data.userAccentColor);
+      var prefs: Preferences = res.data.data;
+      var strippedPrimary: string = this.utilityService.stripRgb(prefs.userPrimaryColor);
+      var strippedAccent: string = this.utilityService.stripRgb(prefs.userAccentColor);
       document.documentElement.style.setProperty('--primaryColor', strippedPrimary);
       document.documentElement.style.setProperty('--accentColor', strippedAccent);
       this.colorChanged$.next([strippedPrimary, strippedAccent]);
-      return this.userPrefs = res.data.data;
+      this.darkTheme = prefs.darkTheme;
+      !this.darkTheme ? document.documentElement.classList.add("use-light-theme") : document.documentElement.classList.remove("use-light-theme");
+      return this.userPrefs = prefs;
     });
     this.electronService.getIpcRenderer().send("toMain", { command: 'getUserPrefs' });
   }
 
-  private userPrefs!: any;
+  private userPrefs!: Preferences;
   private drawerCollapsed = false;
   private currentPlatform: CurrentPlatform = CurrentPlatform.Win;
   private currentPrimaryColor: string = '';
   private currentAccentColor: string = '';
-
+  private darkTheme: boolean = true;
+  public darkTheme$ = new BehaviorSubject<boolean>(this.darkTheme);
   public colorChanged$ = new BehaviorSubject<[string, string]>([this.currentPrimaryColor, this.currentAccentColor]);
 
   toggleDrawer(): void {
     this.drawerCollapsed = !this.drawerCollapsed;
     this.userPrefs.drawerCollapsed = !this.userPrefs.drawerCollapsed;
+    this.saveUserPrefs();
+  }
+
+  toggleDarkTheme() {
+    this.darkTheme = !this.darkTheme;
+    this.userPrefs.darkTheme = !this.userPrefs.darkTheme;
+    !this.darkTheme ? document.documentElement.classList.add("use-light-theme") : document.documentElement.classList.remove("use-light-theme");
+    this.darkTheme$.next(this.darkTheme);
     this.saveUserPrefs();
   }
 
@@ -85,5 +97,7 @@ export class UserPrefsService {
     return this.userPrefs.userAccentColor;
   }
 
-  //TODO: create data object
+  getDarkTheme() {
+    return this.userPrefs.darkTheme;
+  }
 }

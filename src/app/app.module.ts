@@ -14,6 +14,8 @@ import { ElectronService } from './shared/services/electron/electron.service';
 import { Observable, Subscriber } from 'rxjs';
 import { UserPrefsService } from './shared/services/user-prefs/user-prefs.service';
 import { environment } from 'src/environments/environment';
+import { MatSlideToggleDefaultOptions, MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS } from '@angular/material/slide-toggle';
+import { ThemePalette } from '@angular/material/core';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: true,
@@ -27,6 +29,11 @@ const globalTooltipConfig: MatTooltipDefaultOptions = {
   showDelay: 300,
   hideDelay: 0,
   touchendHideDelay: 0
+}
+
+var userAccentColor: ThemePalette = "accent";
+const globalSlideToggleConfig: MatSlideToggleDefaultOptions = {
+  color: userAccentColor
 }
 
 @NgModule({
@@ -44,6 +51,7 @@ const globalTooltipConfig: MatTooltipDefaultOptions = {
   providers: [
     { provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig },
     { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: globalTooltipConfig },
+    { provide: MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS, useValue: globalSlideToggleConfig },
     PlaylistDataService, {
       provide: APP_INITIALIZER,
       useFactory: (pData: PlaylistDataService) => () => pData.getSamplePlaylist(),
