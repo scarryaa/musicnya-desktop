@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain, session, components } = require('electron')
 if (process.env.NODE_ENV === 'development') { require('electron-reload')(__dirname) }
 const path = require('path');
 const fs = require('fs');
-var isWin = process.platform === "win32";
+var currentPlatform = process.platform;
 
 let mainWindow;
 app.commandLine.appendSwitch('ignore-certificate-errors');
@@ -84,18 +84,20 @@ ipcMain.on("toMain", (event, args) => {
   } 
   
   if (args.command == 'whatPlatform') {
-    event.sender.send('fromMain', isWin);
+    event.sender.send('fromMain', currentPlatform);
   }
 
   // user prefs
-  if (args.command == 'storeUserPrimaryColor') {
-    fs.writeFileSync(app.getPath('userData') + '/userprefs.json', JSON.stringify(args.data));
-  } else if (args.command == 'storeUserSecondaryColor') {
-    fs.writeFileSync(app.getPath('userData') + '/userprefs.json', JSON.stringify(args.data));
+  if (args.command == 'getUserPrefs') {
+    var data = fs.readFileSync(app.getPath('userData') + '/userprefs.json');
+    event.sender.send('fromMain', {command: 'getUserPrefs', data: JSON.parse(data)});
+  } else if (args.command == 'saveUserPrefs') {
+    fs.writeFileSync(app.getPath('userData') + '/userprefs.json', JSON.stringify(args));
   } else if (args.command == 'getUserPrimaryColor') {
-    event.sender.send('fromMain', 'get trolled lol');
+    var data = fs.readFileSync(app.getPath('userData') + '/userprefs.json');
+    event.sender.send('fromMain', {command: 'getUserPrimaryColor', data: JSON.parse(data)});
   } else if (args.command == 'getUserSecondaryColor') {
     var data = fs.readFileSync(app.getPath('userData') + '/userprefs.json');
-    event.sender.send('fromMain', {data: data});
+    event.sender.send('fromMain', {command: 'getUserSecondaryColor', data: JSON.parse(data)});
   }
 });

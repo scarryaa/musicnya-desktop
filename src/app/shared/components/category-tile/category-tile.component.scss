@@ -2,6 +2,7 @@
     width: calc(100% + 1rem);
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    align-content: flex-start;
     overflow: overlay;
 
     .category-details-container {
@@ -40,5 +41,6 @@
 @media screen and (min-width: 1800px) {  
     .category-tile-container {
         grid-template-columns: repeat(5, 1fr) !important;
+        max-width: 1800px;
     }  
 }

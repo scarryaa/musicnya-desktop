@@ -1,6 +1,6 @@
-import { Component, EventEmitter, HostListener, Injectable } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { injectNgxResize } from 'ngx-resize';
-import { Subject } from 'rxjs';
+import { UtilityService } from './shared/services/utility/utility.service';
 
 @Component({
   selector: 'app-root',
@@ -8,20 +8,14 @@ import { Subject } from 'rxjs';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(private utilitiesService: UtilitiesService) {}
+  constructor(private utilityService: UtilityService) {}
 
   readonly resizeResult$ = injectNgxResize().subscribe((result) => 
-    this.utilitiesService.windowResized.emit(result.width));
+    this.utilityService.windowResized.emit(result.width));
   
   @HostListener('document:click', ['$event'])
   documentClick(event: any): void {
-    this.utilitiesService.documentClickedTarget.next(event.target)
+    this.utilityService.documentClickedTarget.next(event.target)
   }
   title = 'musicnya';
-}
-
-@Injectable({ providedIn: 'root' })
-export class UtilitiesService {
- documentClickedTarget: Subject<HTMLElement> = new Subject<HTMLElement>()
- windowResized: EventEmitter<number> = new EventEmitter<number>();
 }

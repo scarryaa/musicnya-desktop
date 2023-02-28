@@ -4,8 +4,10 @@ import { map, Observable, of, switchMap } from 'rxjs';
 import { PlaylistDataService } from 'src/app/shared/services/playlist-data/playlist-data.service';
 import { Song } from 'src/app/modules/core/models/song';
 import { Playlist } from 'src/app/modules/core/models/playlist';
-import { ColorFadeService } from 'src/app/shared/services/color-fade/color-fade.service';
+import { ThemeService } from 'src/app/shared/services/theme/theme.service';
 import { UserPrefsService } from 'src/app/shared/services/user-prefs/user-prefs.service'
+import { UIService } from 'src/app/shared/services/ui/ui.service';
+import { UtilityService } from 'src/app/shared/services/utility/utility.service';
 
 @Component({
   selector: 'app-playlist',
@@ -15,7 +17,8 @@ import { UserPrefsService } from 'src/app/shared/services/user-prefs/user-prefs.
 })
 export class PlaylistComponent implements OnInit {
   constructor(private playlistDataService: PlaylistDataService, private route: ActivatedRoute,
-    private ref: ChangeDetectorRef, private colorFadeService: ColorFadeService, private userPrefsService: UserPrefsService) {}
+    private ref: ChangeDetectorRef, private themeService: ThemeService, private utilityService: UtilityService,
+      private uiService: UIService) {}
 
   rows!: Observable<Array<Song>>;
   playlist$!: Observable<Playlist>;
@@ -63,7 +66,7 @@ export class PlaylistComponent implements OnInit {
   private handleResults() {
     if (this.playlist$) {
       this.getBackgroundImg();
-      this.colorFadeService.setTitle(this.playlistTitle);
+      this.uiService.setHeaderTitle(this.playlistTitle);
     }
   }
 
@@ -75,13 +78,13 @@ export class PlaylistComponent implements OnInit {
         this.playlistId = data.id;
         this.playlistTitle = data.title;
         this.setColor();
-        this.colorFadeService.setColor(this.bgImgColor);
+        this.themeService.headerColor = this.themeService.darkenColor(this.bgImgColor);
       }
      )
   }
 
   resetColorAndLeave() {
-    this.colorFadeService.changeOpacity(0, this.bgImgColor);
+    this.uiService.headerOpacity$.next(0);
     return true;
   }
 

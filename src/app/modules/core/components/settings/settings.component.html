@@ -8,10 +8,10 @@
             <div>Colors</div>
             <div class="subheader-items mt1">
                 <div>Pick a custom primary and secondary color.</div>
-                <div class="color-wheel mvn1h mh1h" #primaryColor cdkOverlayOrigin #primaryTrigger="cdkOverlayOrigin"
+                <div class="color-wheel primary mvn1h mh1h" #primaryColor cdkOverlayOrigin #primaryTrigger="cdkOverlayOrigin"
                     [style.background-color]="(primaryOpen && colorPicker && colorPicker.color) ? colorPicker.color : userPrimaryColor">
                 </div>
-                <div class="color-wheel mvn1h mh1h" cdkOverlayOrigin #secondaryTrigger="cdkOverlayOrigin"
+                <div class="color-wheel secondary mvn1h mh1h" cdkOverlayOrigin #secondaryTrigger="cdkOverlayOrigin"
                     [style.background-color]="(secondaryOpen && secondaryColorPicker && secondaryColorPicker.color) ? secondaryColorPicker.color : userSecondaryColor">
                 </div>
             </div>
@@ -45,12 +45,12 @@
 <ng-template #primaryOverlay cdkConnectedOverlay [cdkConnectedOverlayOffsetY]="26" [cdkConnectedOverlayOffsetX]="15"
     [cdkConnectedOverlayOrigin]="primaryTrigger" [cdkConnectedOverlayOpen]="primaryOpen">
     <div class="primary-picker-container">
-        <app-color-picker #colorPicker this.color="color"></app-color-picker>
-        <button mat-icon-button class="color-picker-button" (click)="setUserPrimaryColor()">
+        <app-color-picker #colorPicker this.color="color" (mousemove)="setPrimaryColor(colorPicker.color)"></app-color-picker>
+        <button mat-icon-button class="color-picker-button" (click)="saveUserPrimaryColor()">
             <mat-icon class="material-icons-round" fontIcon="done" />
         </button>
-        <button mat-icon-button class="color-picker-button">
-            <mat-icon class="material-icons-round" fontIcon="close" />
+        <button mat-icon-button class="color-picker-button" (click)="closeWithoutSavingPrimary()">
+            <mat-icon class="material-icons-round" fontIcon="close"/>
         </button>
     </div>
 </ng-template>
@@ -58,12 +58,12 @@
 <ng-template cdkConnectedOverlay [cdkConnectedOverlayOffsetY]="26" [cdkConnectedOverlayOffsetX]="15"
     [cdkConnectedOverlayOrigin]="secondaryTrigger" [cdkConnectedOverlayOpen]="secondaryOpen">
     <div class="secondary-picker-container">
-        <app-color-picker #secondaryColorPicker this.color="color"></app-color-picker>
-        <button mat-icon-button class="color-picker-button" (click)="setUserSecondaryColor()">
-            <mat-icon class="material-icons-round" fontIcon="done" />
+        <app-color-picker #secondaryColorPicker this.color="color" (mousemove)="setSecondaryColor(secondaryColorPicker.color)"></app-color-picker>
+        <button mat-icon-button class="color-picker-button" (click)="saveUserAccentColor()">
+            <mat-icon class="material-icons-round" fontIcon="done"/>
         </button>
-        <button mat-icon-button class="color-picker-button">
-            <mat-icon class="material-icons-round" fontIcon="close" />
+        <button mat-icon-button class="color-picker-button" (click)="closeWithoutSavingAccent()">
+            <mat-icon class="material-icons-round" fontIcon="close"/>
         </button>
     </div>
 </ng-template>

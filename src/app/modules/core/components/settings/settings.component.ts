@@ -6,7 +6,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { ColorPickerModule } from 'src/app/modules/color-picker/color-picker.module';
 import { UserPrefsService } from 'src/app/shared/services/user-prefs/user-prefs.service';
 import { CommonModule } from '@angular/common';
-import { UtilitiesService } from 'src/app/app.component';
+import { ThemeService } from 'src/app/shared/services/theme/theme.service';
+import { UtilityService } from 'src/app/shared/services/utility/utility.service';
 
 @Component({
   selector: 'app-settings',
@@ -17,62 +18,72 @@ import { UtilitiesService } from 'src/app/app.component';
 })
 
 export class SettingsComponent implements OnInit {
-  constructor(private userPrefsService: UserPrefsService, private utilitiesService: UtilitiesService) {}
+  constructor(public userPrefsService: UserPrefsService, private utilityService: UtilityService, private themeService: ThemeService) { }
   primaryOpen = false;
   secondaryOpen = false;
   presetColorsOpen = false;
   clickSub: any;
-  tmpPrimaryColor: string = this.userPrefsService.getUserPrimaryColor();
-  tmpSecondaryColor: string = this.userPrefsService.getUserSecondaryColor();
   @ViewChild('primaryOverlay', { read: ElementRef, static: true }) primaryOverlay!: ElementRef;
   @ViewChild('colorPicker') colorPicker!: any;
   @ViewChild('secondaryColorPicker') secondaryColorPicker!: any;
   @ViewChild('primaryColor') primaryColor!: any;
   colorPresets: ColorPreset[] = [
-    new ColorPreset('black', 'red', false), new ColorPreset('black', 'red', false), new ColorPreset('black', 'red', false),
+    new ColorPreset('rgb(90, 87, 142)', 'rgb(255, 64, 128)', false), new ColorPreset('black', 'red', false), new ColorPreset('black', 'red', false),
     new ColorPreset('black', 'red', false), new ColorPreset('black', 'red', false), new ColorPreset('black', 'red', false),
     new ColorPreset('black', 'red', false), new ColorPreset('black', 'red', false), new ColorPreset('black', 'red', false),
     new ColorPreset('black', 'red', false), new ColorPreset('black', 'red', false), new ColorPreset('black', 'red', false),
     new ColorPreset('black', 'red', false), new ColorPreset('black', 'red', false), new ColorPreset('black', 'red', false)
   ];
   selected = false;
-  
+
   ngOnInit(): void {
-    this.clickSub = this.utilitiesService.documentClickedTarget
+    this.clickSub = this.utilityService.documentClickedTarget
       .subscribe(target => this.documentClickListener(target));
-    
-    console.log(this.userPrefsService.getUserPrimaryColor().subscribe((res: any) => console.log(res)));
-    console.log(this.userPrefsService.getUserSecondaryColor().subscribe((res: any) => console.log(res)));
   }
 
-  userPrimaryColor: string = '#DDDDDD';
-  userSecondaryColor: string = '#DDDDDD';
+  userPrimaryColor: string = this.userPrefsService.getUserPrimaryColor();
+  userSecondaryColor: string = this.userPrefsService.getUserAccentColor();
 
   documentClickListener(target: any): void {
-    if (!this.primaryOpen && (target.className.includes('color-wheel'))) {
-      this.primaryOpen = true; return;
-    }
-
-    if (this.colorPicker && this.primaryOpen && !this.primaryOverlay.nativeElement.contains(target)) {
-      console.log(target);
-      console.log(this.primaryOverlay.nativeElement)
-      this.primaryOpen = false;
-    }
-
-    if (this.secondaryColorPicker && this.secondaryOpen && !this.secondaryColorPicker.nativeElement.contains(target)) {
-      this.secondaryOpen = false;
+    if (!this.primaryOpen && (target.className.includes('color-wheel primary'))) {
+      this.primaryOpen = true;
+    } else if (!this.secondaryOpen && (target.className.includes('color-wheel secondary'))) {
+      this.secondaryOpen = true;
     }
   }
 
-  setUserPrimaryColor() {
-    this.userPrimaryColor = this.colorPicker.color;
-    this.userPrefsService.setUserPrimaryColor(this.colorPicker.color);
+  setPrimaryColor(color: string) {
+    if (!color) return;
+    var strippedVals: string = this.utilityService.stripRgb(color);
+    document.documentElement.style.setProperty('--primaryColor', strippedVals);
+  }
+
+  setSecondaryColor(color: string) {
+    if (!color) return;
+    var strippedVals: string = this.utilityService.stripRgb(color);
+    document.documentElement.style.setProperty('--accentColor', strippedVals);
+  }
+
+  saveUserPrimaryColor(color: string = this.colorPicker.color) {
+    this.userPrimaryColor = color;
+    this.userPrefsService.setUserPrimaryColor(color);
     this.primaryOpen = false;
   }
 
-  setUserSecondaryColor() {
-    this.userSecondaryColor = this.secondaryColorPicker.color;
-    this.userPrefsService.setUserSecondaryColor(this.secondaryColorPicker.color);
+  saveUserAccentColor(color: string = this.secondaryColorPicker.color) {
+    this.userSecondaryColor = color;
+    this.userPrefsService.setUserSecondaryColor(color);
+    this.secondaryOpen = false;
+  }
+
+  closeWithoutSavingPrimary() {
+    this.setPrimaryColor(this.userPrimaryColor);
+    this.primaryOpen = false;
+  }
+
+  closeWithoutSavingAccent() {
+    console.log(this.userSecondaryColor);
+    this.setSecondaryColor(this.userSecondaryColor);
     this.secondaryOpen = false;
   }
 
@@ -84,6 +95,10 @@ export class SettingsComponent implements OnInit {
     });
 
     preset.selected = !preset.selected;
+    this.saveUserPrimaryColor(preset.primaryColor);
+    this.setPrimaryColor(preset.primaryColor);
+    this.saveUserAccentColor(preset.secondaryColor);
+    this.setSecondaryColor(preset.secondaryColor);
   }
 }
 

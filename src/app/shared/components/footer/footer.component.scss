@@ -4,10 +4,10 @@
     z-index: 1;
     overflow-x: clip;
     overflow-y: visible;
-    background-color: #5A578E;
+    background-color: rgba(var(--primaryColor), 1);
     padding: 0;
     display: flex;
-    border-top: 1px solid #525080;
+    border-top: 1px solid rgba(var(--primaryColor), 1);
 }
 
 .mat-mdc-slider {
@@ -61,7 +61,7 @@
         height: 2px;
 
         .mdc-slider__thumb-knob {
-            border-color: rgb(255, 64, 128);
+            border-color: rgba(var(--accentColor), 1);
             border-width: 8px;
             width: 5px;
             height: 6px;
@@ -81,7 +81,7 @@
     }
 
     ::ng-deep .mdc-slider__track--active_fill {
-        border-color: rgb(236, 82, 133);
+        border-color: rgba(var(--accentColor), 1);
         border-radius: 26px;
     }
 }
@@ -184,7 +184,7 @@
 
     &:hover {
         ::ng-deep &:hover .mdc-slider__track--active_fill {
-            border-color: rgb(236, 82, 133) !important;
+            border-color: rgba(var(--accentColor), 1) !important;
         }
 
         #button-mute {
@@ -256,11 +256,11 @@
     }
 
     ::ng-deep &:hover .mdc-slider__track--active_fill {
-        border-color: rgb(236, 82, 133) !important;
+        border-color: rgba(var(--accentColor), 1) !important;
     }
 
     ::ng-deep .mdc-slider__thumb-knob {
-        border-color: rgb(255, 64, 128);
+        border-color: rgba(var(--accentColor), 1);
         border-width: 6px;
         width: 3px;
         height: 3px;

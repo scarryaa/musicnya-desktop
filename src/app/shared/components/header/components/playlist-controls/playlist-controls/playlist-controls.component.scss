@@ -1,6 +1,6 @@
 .button {
     transition: color 0.3s ease;
-    color: rgb(255, 64, 128);
+    color: rgba(var(--accentColor), 1);
     font-size: 40px;
     padding-top: 0.5rem;
     width: 40px;

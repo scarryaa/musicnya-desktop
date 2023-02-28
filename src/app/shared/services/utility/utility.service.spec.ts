@@ -1,13 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { UtilityService } from './utility.service';
 
-import { ColorFadeService } from './color-fade.service';
-
-describe('ColorFadeService', () => {
-  let service: ColorFadeService;
+describe('UtilityService', () => {
+  let service: UtilityService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ColorFadeService);
+    service = TestBed.inject(UtilityService);
   });
 
   it('should be created', () => {

@@ -1,15 +1,15 @@
-<mat-toolbar #header class="header draggable" [style.height.px]="platformIsWindows ? 45 : 60">
-    <div id="profile-settings-container" [ngClass]="compact ? 'compact' : ''" [style.height.px]="platformIsWindows ? 45 : 60">
-        <div class='button' #settingsMenuTrigger="matMenuTrigger" [matMenuTriggerFor]="accountSettingsMenu" [style.margin-top.px]="platformIsWindows ? 0 : 17.5"
+<mat-toolbar #header class="header draggable" [style.height.px]="uiService.currentPlatform == 0 ? 45 : 60">
+    <div id="profile-settings-container" [ngClass]="compact ? 'compact' : ''" [style.height.px]="uiService.currentPlatform == 0 ? 45 : 60">
+        <div class='button' #settingsMenuTrigger="matMenuTrigger" [matMenuTriggerFor]="accountSettingsMenu" [style.margin-top.px]="uiService.currentPlatform == 0 ? 0 : 17.5"
             id="button-user-profile">
             <mat-icon [matTooltipDisabled]="compact ? false : true" matTooltip="Scarlet | Account Options" matTooltipPosition="right" id="user-profile-icon" class="material-icons-round" fontIcon="account_circle" />
             <div id="user-profile-name" [style.visibility]="compact ? 'hidden' : 'visible'">Scarlet</div>
         </div>
-        <div [style.display]="compact ? 'none' : 'block'" class='button' id="button-settings" *ngIf="enableWindowControls" [matMenuTriggerFor]="appSettingsMenu" [style.margin-top.px]="platformIsWindows ? 0 : 17.5">
-            <mat-icon *ngIf="enableWindowControls" class="material-icons-round" fontIcon="more_vert" />
+        <div [style.display]="compact ? 'none' : 'block'" class='button' id="button-settings" *ngIf="uiService.enableWindowControls" [matMenuTriggerFor]="appSettingsMenu" [style.margin-top.px]="uiService.currentPlatform == 0 ? 0 : 17.5">
+            <mat-icon *ngIf="uiService.enableWindowControls" class="material-icons-round" fontIcon="more_vert" />
         </div>
     </div>
-    <div id="page-controls-container" [style.margin-top.px]="platformIsWindows ? 0 : 17.5">
+    <div id="page-controls-container" [style.margin-top.px]="uiService.currentPlatform == 0 ? 0 : 17.5">
         <div class='button' (click)="prevPage()" [ngClass]="{'disabled' : disableBackBtn}" id="button-page_previous">
             <mat-icon id="icon-page_previous" class="material-icons-round" fontIcon="chevron_left" />
         </div>
@@ -17,7 +17,7 @@
             <mat-icon id="icon-page_next" class="material-icons-round" fontIcon="chevron_right" />
         </div>
     </div>
-    <div id="currentPageControls" [style.margin-top.px]="platformIsWindows ? 0 : 17.5">
+    <div id="currentPageControls" [style.margin-top.px]="uiService.currentPlatform == 0 ? 0 : 17.5">
         <div id="header-search" *ngIf="router.url === '/search'">
             <input id="input-search" value="" placeholder="Search for music" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" [(ngModel)]="searchInput">
             <div id="button-clear_input" class='button icon-button' *ngIf="searchInput" mat matSuffix mat-icon-button aria-label="Clear" (click)="searchInput=''">
@@ -25,17 +25,17 @@
             </div>
         </div>
         <app-library-filters *ngIf="router.url === '/library'"/>
-        <app-playlist-controls [title]="playlistTitle" [opacity]="headerOpacity" *ngIf="router.url.includes('/playlist')"/>
+        <app-playlist-controls [title]="headerTitle" [opacity]="headerOpacity" *ngIf="router.url.includes('/playlist')"/>
     </div>
 
-    <div class="window-controls" *ngIf="enableWindowControls && platformIsWindows">
-        <div class="minimize-button" (click)="minWindow()">
+    <div class="window-controls" *ngIf="uiService.enableWindowControls && uiService.currentPlatform == 0">
+        <div class="minimize-button" (click)="uiService.minWindow()">
             <img src="assets/fonts/chrome_minimize.svg"/>
         </div>
-        <div class="maximize-button" (click)="maxWindow()">
+        <div class="maximize-button" (click)="uiService.maxWindow()">
             <img src="assets/fonts/chrome_maximize.svg"/>
         </div>
-        <div class="close-button" (click)="closeWindow()">
+        <div class="close-button" (click)="uiService.closeWindow()">
             <img src="assets/fonts/close.svg"/>
         </div>
     </div>

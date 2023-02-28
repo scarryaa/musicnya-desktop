@@ -1,13 +1,14 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { trigger, transition, animate, style, state } from '@angular/animations';
 import { PlaylistDataService } from 'src/app/shared/services/playlist-data/playlist-data.service';
 import { Playlist } from 'src/app/modules/core/models/playlist';
 import { UserPrefsService } from '../../services/user-prefs/user-prefs.service';
-import { environment } from 'src/environments/environment';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { NavigationEnd, Router } from '@angular/router';
-import { ColorFadeService } from '../../services/color-fade/color-fade.service';
+import { ThemeService } from '../../services/theme/theme.service';
+import { UIService } from '../../services/ui/ui.service';
+import { CurrentPlatform } from '../../services/ui/current-platform';
 
 @Component({
   selector: 'app-sidenav',
@@ -34,45 +35,37 @@ import { ColorFadeService } from '../../services/color-fade/color-fade.service';
 
 export class SideNavComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(private playlistDataService: PlaylistDataService, private userPrefsService: UserPrefsService, private router: Router,
-    private colorFadeService: ColorFadeService) { }
+    private themeService: ThemeService, public uiService: UIService) { }
 
-  drawerCollapsed: boolean = false;
-  drawerCollapsed$!: Subscription;
   playlists$!: Observable<Playlist[]>;
   to: any;
   scrollbarVisible: boolean = false;
   elementStates: string[] = Array.from(Array(4), (e, i) => 'unselected');
-  enableWindowControls: boolean = true;
+  currentPlatform: CurrentPlatform = this.userPrefsService.getCurrentPlatform();
   @ViewChild(CdkScrollable) scrollable!: CdkScrollable;
-  platformIsWindows: boolean = true;
+  drawerCollapsed!: boolean;
 
   ngOnInit() {
-    this.platformIsWindows = this.userPrefsService.isWindows();
+    this.currentPlatform = this.userPrefsService.getCurrentPlatform();
     this.router.events.subscribe((evt) => {
-      if (!this.router.url.includes('playlist')) this.colorFadeService.setColor('170, 168, 218');
+      if (!this.router.url.includes('playlist')) this.themeService.resetColorHeader();
       if (!(evt instanceof NavigationEnd)) {
         return;
       }
       this.scrollable.scrollTo({ "top": 0 });
     });
-
-    this.enableWindowControls = environment.enableWindowControls;
+    this.uiService.drawerCollapsed$.subscribe((res) => this.drawerCollapsed = res);
     this.playlists$ = this.playlistDataService.getPlaylists();
-    this.drawerCollapsed$ = this.userPrefsService.drawerCollapsed$.subscribe((value: boolean) => this.drawerCollapsed = value);
   }
 
   ngAfterViewInit() {
     this.scrollable.elementScrolled().pipe().subscribe(() => {
-      if (this.scrollable.measureScrollOffset("top") >= 0) {
-          this.colorFadeService.changeOpacity(((this.scrollable.measureScrollOffset("top") - 0) / 100), '0, 0, 0');
-      } else if (this.scrollable.measureScrollOffset("top") < 200) {
-        this.colorFadeService.changeOpacity(0, '000000');
-      }
+      this.uiService.getScrollPosition(this.scrollable.measureScrollOffset("top"));
     })
   }
 
   ngOnDestroy(): void {
-    this.drawerCollapsed$.unsubscribe();
+    this.uiService.drawerCollapsed$.unsubscribe();
   }
 
   enter() {

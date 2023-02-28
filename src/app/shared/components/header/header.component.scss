@@ -30,7 +30,7 @@ mat-select {
     box-shadow: none;
     width: 200px;
     height: 45px;
-    background-color: #5A578E;
+    background-color: rgba(var(--primaryColor), 1);
     display: flex;
     vertical-align: bottom;
     justify-content: space-between;
@@ -120,14 +120,14 @@ mat-select {
     border-radius: 15px;
     font-size: 16px;
     color: rgba(black, 0.8);
-    caret-color: rgba(#5A578E, 0.6);
+    caret-color: rgba(var(--primaryColor), 0.6);
     padding: 0.4rem 1rem;
     padding-right: 2.4rem;
 
     &:active,
     &:focus {
-        outline: rgba(#5A578E, 0.6) 1px;
-        border: 1px solid rgba(#5A578E, 0.6)
+        outline:rgba(var(--primaryColor), 0.6) 1px;
+        border: 1px solid rgba(var(--primaryColor), 0.6);
     }
 
     &::placeholder {

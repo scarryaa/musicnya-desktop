@@ -43,32 +43,39 @@ const globalTooltipConfig: MatTooltipDefaultOptions = {
   ],
   providers: [
     { provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig },
-    { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: globalTooltipConfig},
+    { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: globalTooltipConfig },
     PlaylistDataService, {
-    provide: APP_INITIALIZER,
-    useFactory: (pData: PlaylistDataService) => () => pData.getSamplePlaylist(),
-    deps: [PlaylistDataService],
-    multi: true
-  },
-  ElectronService, {
-    provide: APP_INITIALIZER,
-    useFactory: environment.enableWindowControls ? ((electronService: ElectronService, userPrefsService: UserPrefsService) => () => { var platform$ = new Observable<boolean>((observer: Subscriber<boolean>) =>
-      electronService.getIpcRenderer().receive('fromMain', (arg: any, event: any) => observer.next(arg)));
+      provide: APP_INITIALIZER,
+      useFactory: (pData: PlaylistDataService) => () => pData.getSamplePlaylist(),
+      deps: [PlaylistDataService],
+      multi: true
+    },
+    ElectronService, {
+      provide: APP_INITIALIZER,
+      useFactory: environment.enableWindowControls ? ((electronService: ElectronService, userPrefsService: UserPrefsService) => () => {
+        var platform$ = new Observable<string>((observer: Subscriber<string>) =>
+          electronService.getIpcRenderer().receive('fromMain', (arg: any, event: any) => observer.next(arg)));
 
-    platform$.subscribe((res: boolean) => userPrefsService.setPlatform(res) );
-    electronService.getIpcRenderer().send("toMain", {command: 'whatPlatform'});
-    }) : () => () => {},
-    deps: [ElectronService, UserPrefsService],
-    multi: true
-  }
-  //   InitializationService, {
-  //   provide: APP_INITIALIZER,
-  //   useFactory: (initService: InitializationService) => () => initService.initMusicKit('DEV_TOKEN',
-  //     'musicnya', '1.0.0'),
-  //   deps: [InitializationService],
-  //   multi: true
-  // }],
-],
+        platform$.subscribe((res: string) => userPrefsService.setPlatform(userPrefsService.convertStringToPlatform(res))).unsubscribe();
+        electronService.getIpcRenderer().send("toMain", { command: 'whatPlatform' });
+      }) : () => () => { },
+      deps: [ElectronService, UserPrefsService],
+      multi: true
+    },
+    UserPrefsService, {
+      provide: APP_INITIALIZER,
+      useFactory: (userPrefsService: UserPrefsService) => () => userPrefsService.loadUserPrefs(),
+      deps: [UserPrefsService],
+      multi: true
+    }
+    //   InitializationService, {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: (initService: InitializationService) => () => initService.initMusicKit('DEV_TOKEN',
+    //     'musicnya', '1.0.0'),
+    //   deps: [InitializationService],
+    //   multi: true
+    // }],
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
