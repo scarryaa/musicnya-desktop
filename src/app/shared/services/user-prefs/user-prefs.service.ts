@@ -29,14 +29,16 @@ export class UserPrefsService {
     this.electronService.getIpcRenderer().send("toMain", { command: 'getUserPrefs' });
   }
 
-  private userPrefs!: Preferences;
   private drawerCollapsed = false;
   private currentPlatform: CurrentPlatform = CurrentPlatform.Win;
-  private currentPrimaryColor: string = '';
-  private currentAccentColor: string = '';
+  private defaultPrimaryColor: string = '90, 87, 142';
+  private defaultAccentColor: string = '255, 64, 128';
+  private currentPrimaryColor: string = '90, 87, 142';
+  private currentAccentColor: string = '255, 64, 128';
   private darkTheme: boolean = true;
   public darkTheme$ = new BehaviorSubject<boolean>(this.darkTheme);
   public colorChanged$ = new BehaviorSubject<[string, string]>([this.currentPrimaryColor, this.currentAccentColor]);
+  private userPrefs: Preferences = new Preferences(this.defaultPrimaryColor, this.defaultAccentColor, this.drawerCollapsed, this.darkTheme);
 
   toggleDrawer(): void {
     this.drawerCollapsed = !this.drawerCollapsed;
@@ -86,15 +88,15 @@ export class UserPrefsService {
   }
 
   getDrawerSetting() {
-    return this.userPrefs.drawerCollapsed;
+    return this.userPrefs.drawerCollapsed ?? this.drawerCollapsed;
   }
 
   getUserPrimaryColor() {
-    return this.userPrefs.userPrimaryColor;
+    return (this.userPrefs.userPrimaryColor ?? this.defaultPrimaryColor);
   }
 
   getUserAccentColor() {
-    return this.userPrefs.userAccentColor;
+    return this.userPrefs.userAccentColor ?? this.defaultAccentColor;
   }
 
   getDarkTheme() {

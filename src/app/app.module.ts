@@ -72,7 +72,7 @@ const globalSlideToggleConfig: MatSlideToggleDefaultOptions = {
     },
     UserPrefsService, {
       provide: APP_INITIALIZER,
-      useFactory: (userPrefsService: UserPrefsService) => () => userPrefsService.loadUserPrefs(),
+      useFactory: environment.enableWindowControls ? (userPrefsService: UserPrefsService) => () => userPrefsService.loadUserPrefs() : () => () => {},
       deps: [UserPrefsService],
       multi: true
     }
