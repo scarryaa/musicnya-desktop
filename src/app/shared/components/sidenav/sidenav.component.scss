@@ -11,7 +11,7 @@ mat-nav-list {
   a {
     height: 2.4rem;
     opacity: 0.9;
-    transition: color 0.3s opacity 0.3s ease;
+    transition: color 0.35s, background-color 0.35s, border-color 0.35s;
   }
 
   span:hover {

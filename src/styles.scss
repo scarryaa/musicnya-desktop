@@ -4,21 +4,31 @@
     --text: white;
     --text-inverse: black;
     --background-light: rgb(46, 46, 46);
+    --ui-color-override: var(--override-color, white);
+    --enable-color-transition: color 0.35s, background-color 0.35s, border-color 0.35s;
 
     .mat-app-background {
         background-color: rgb(28, 28, 28);
+        transition: color 0.35s, background-color 0.35s, border-color 0.35s;
     }
 
     .mat-drawer-container {
         background-color: rgb(28, 28, 28);
+        transition: color 0.35s, background-color 0.35s, border-color 0.35s;
     }
 
     .mat-drawer {
         background-color: rgb(20, 20, 20);
+        transition: color 0.35s, background-color 0.35s, border-color 0.35s;
     }
 
     .mdc-menu-surface {
         background-color: rgb(35, 35, 35);
+        transition: color 0.35s, background-color 0.35s, border-color 0.35s;
+    }
+
+    mat-expansion-panel {
+        transition: color 0.35s, background-color 0.35s, border-color 0.35s;
     }
 }
 

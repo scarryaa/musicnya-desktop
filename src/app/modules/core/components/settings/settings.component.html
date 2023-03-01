@@ -12,10 +12,10 @@
             </div>
             <div class="subheader-items mt1">
                 <div>Pick a custom primary and secondary color.</div>
-                <div class="color-wheel primary mvn1h mh1h" #primaryColor cdkOverlayOrigin #primaryTrigger="cdkOverlayOrigin"
+                <div class="color-wheel primary mvn1h mh1h" (click)="toggleColorPicker(primaryColor)" tabindex="0" #primaryColor cdkOverlayOrigin #primaryTrigger="cdkOverlayOrigin"
                     [style.background-color]="(primaryOpen && colorPicker && colorPicker.color) ? colorPicker.color : userPrimaryColor">
                 </div>
-                <div class="color-wheel secondary mvn1h mh1h" cdkOverlayOrigin #secondaryTrigger="cdkOverlayOrigin"
+                <div class="color-wheel secondary mvn1h mh1h" (click)="toggleColorPicker(secondaryColor)" tabindex="0" #secondaryColor cdkOverlayOrigin #secondaryTrigger="cdkOverlayOrigin"
                     [style.background-color]="(secondaryOpen && secondaryColorPicker && secondaryColorPicker.color) ? secondaryColorPicker.color : userSecondaryColor">
                 </div>
             </div>
@@ -48,25 +48,27 @@
 
 <ng-template #primaryOverlay cdkConnectedOverlay [cdkConnectedOverlayOffsetY]="26" [cdkConnectedOverlayOffsetX]="15"
     [cdkConnectedOverlayOrigin]="primaryTrigger" [cdkConnectedOverlayOpen]="primaryOpen">
-    <div class="primary-picker-container">
-        <app-color-picker #colorPicker this.color="color" (mousemove)="setPrimaryColor(colorPicker.color)"></app-color-picker>
-        <button mat-icon-button class="color-picker-button" (click)="saveUserPrimaryColor()">
-            <mat-icon class="material-icons-round" fontIcon="done" />
-        </button>
-        <button mat-icon-button class="color-picker-button" (click)="closeWithoutSavingPrimary()">
-            <mat-icon class="material-icons-round" fontIcon="close"/>
-        </button>
-    </div>
+        <div class="primary-picker-container" cdkTrapFocusAutoCapture
+            cdkTrapFocus #primaryContainer tabindex="0" (blur)="handleBlur($event)">
+            <app-color-picker (blur)="handleChildBlur($event)" #colorPicker (colorChange$)="setPrimaryColor($event)" this.color="color"></app-color-picker>
+            <button (blur)="handleChildBlur($event)" tabindex="0" mat-icon-button class="color-picker-button" (click)="saveUserPrimaryColor()">
+                <mat-icon class="material-icons-round" fontIcon="done" />
+            </button>
+            <button (blur)="handleChildBlur($event)" tabindex="0" mat-icon-button class="color-picker-button" (click)="closeWithoutSavingPrimary()">
+                <mat-icon class="material-icons-round" fontIcon="close"/>
+            </button>
+        </div>
 </ng-template>
 
 <ng-template cdkConnectedOverlay [cdkConnectedOverlayOffsetY]="26" [cdkConnectedOverlayOffsetX]="15"
     [cdkConnectedOverlayOrigin]="secondaryTrigger" [cdkConnectedOverlayOpen]="secondaryOpen">
-    <div class="secondary-picker-container">
-        <app-color-picker #secondaryColorPicker this.color="color" (mousemove)="setSecondaryColor(secondaryColorPicker.color)"></app-color-picker>
-        <button mat-icon-button class="color-picker-button" (click)="saveUserAccentColor()">
+    <div class="secondary-picker-container" #secondaryContainer tabindex="0" (blur)="handleBlur($event)"
+    cdkTrapFocusAutoCapture cdkFocusInitial cdkTrapFocus>
+        <app-color-picker (blur)="handleChildBlur($event)" #secondaryColorPicker this.color="color" (colorChange$)="setSecondaryColor($event)"></app-color-picker>
+        <button (blur)="handleChildBlur($event)" tabindex="0" mat-icon-button class="color-picker-button" (click)="saveUserAccentColor()">
             <mat-icon class="material-icons-round" fontIcon="done"/>
         </button>
-        <button mat-icon-button class="color-picker-button" (click)="closeWithoutSavingAccent()">
+        <button (blur)="handleChildBlur($event)" tabindex="0" mat-icon-button class="color-picker-button" (click)="closeWithoutSavingAccent()">
             <mat-icon class="material-icons-round" fontIcon="close"/>
         </button>
     </div>

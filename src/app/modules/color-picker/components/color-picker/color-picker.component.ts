@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { debounceTime, fromEvent, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-color-picker',
@@ -7,6 +8,11 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 })
 export class ColorPickerComponent {
   public hue!: string;
+  @Output() colorChange$ = new EventEmitter<string>(true);
   public color!: string;
   @Input() parent: any;
+
+  colorChanged(color: string) {
+    this.colorChange$.emit(color);
+  }
 }

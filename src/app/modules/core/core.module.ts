@@ -15,6 +15,8 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { A11yModule } from '@angular/cdk/a11y'
+import { ColorPickerModule } from '../color-picker/color-picker.module';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     MatInputModule,
     ReactiveFormsModule,
     FormsModule,
-    MatSelectModule
+    MatSelectModule,
+    A11yModule,
+    ColorPickerModule
   ],
   exports: [AuthenticationComponent]
 })

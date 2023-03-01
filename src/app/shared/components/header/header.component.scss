@@ -30,14 +30,15 @@ mat-select {
     width: 200px;
     height: 45px;
     background-color: rgba(var(--primaryColor), 1);
+    transition: var(--enable-color-transition);
     display: flex;
     vertical-align: bottom;
     justify-content: space-between;
 }
 
 .button {
-    transition: opacity 0.3s ease;
-    color: rgba(#ffffff, 1);
+    transition: var(--enable-color-transition);
+    color: var(--ui-color-override);
     margin-left: 0.5rem;
     padding-left: 0.2rem;
     padding-right: 0.3rem;
@@ -81,6 +82,7 @@ mat-select {
 
     #button-page_previous,
     #button-page_next {
+        transition: color 0.35s, background-color 0.35s, border-color 0.35s;
         color: var(--text-inverse);
         background-color: var(--text);
         transition: opacity 0.3s ease;

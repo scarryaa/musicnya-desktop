@@ -8,7 +8,7 @@ import { UtilityService } from '../utility/utility.service';
 })
 export class ThemeService {
   constructor(private userPrefsService: UserPrefsService, private utilityService: UtilityService) {
-    this.userPrefsService.colorChanged$.subscribe((res: [string, string]) => { console.log(res[0]); this.currentPrimary = res[0]; this.currentAccent = res[1]; })
+    this.userPrefsService.colorChanged$.subscribe((res: [string, string]) => { this.currentPrimary = res[0]; this.currentAccent = res[1]; })
     this.userPrefsService.darkTheme$.subscribe((res: boolean) => this.darkTheme = res);
   }
 
@@ -41,5 +41,16 @@ export class ThemeService {
       splitValues[index] = `${Math.min((parseInt(elem) - (20 * factor)), 255)}`;
     });
     return `${splitValues[0]}, ${splitValues[1]}, ${splitValues[2]}`;
+  }
+
+  calculateColorBrightness(color: string) {
+    color = color.substring(1);
+    var rgb = parseInt(color, 16);
+    var r = (rgb >> 16) & 0xff;
+    var g = (rgb >>  8) & 0xff;
+    var b = (rgb >>  0) & 0xff;
+
+    var luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // ITU-R BT.709
+    return luma;
   }
 }
