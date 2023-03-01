@@ -1,6 +1,135 @@
 :root {
     --primaryColor: 90, 87, 142;
     --accentColor: 255, 64, 128;
+    --text: white;
+    --text-inverse: black;
+    --background-light: rgb(46, 46, 46);
+
+    .mat-app-background {
+        background-color: rgb(28, 28, 28);
+    }
+
+    .mat-drawer-container {
+        background-color: rgb(28, 28, 28);
+    }
+
+    .mat-drawer {
+        background-color: rgb(20, 20, 20);
+    }
+
+    .mdc-menu-surface {
+        background-color: rgb(35, 35, 35);
+    }
+}
+
+.use-light-theme {
+    --text: black;
+    --text-inverse: white;
+    --background-light: rgb(224, 224, 224);
+
+    .mat-app-background {
+        background-color: #fafafa;
+    }
+
+    .mat-drawer-container {
+        background-color: #fafafa;
+    }
+
+    .mat-drawer {
+        background-color: #ffffff
+    }
+
+    .mdc-menu-surface {
+        background-color: #ffffff;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --text: black;
+        --text-inverse: white;
+        --background-light: rgb(224, 224, 224);
+
+        .mat-app-background {
+            background-color: #fafafa;
+        }
+
+        .mat-drawer-container {
+            background-color: #fafafa;
+        }
+
+        .mat-drawer {
+            background-color: #ffffff
+        }
+
+        .mdc-menu-surface {
+            background-color: #ffffff;
+        }
+    }
+}
+
+.faded-text {
+    color: var(--text);
+    opacity: 0.4;
+}
+
+.hover-fade {
+    :hover {
+        opacity: 0.8;
+    }
+}
+
+.hover-no-bg {
+    &:hover::before {
+        background-color: transparent !important;
+    }
+
+    &:focus::before {
+        background: transparent !important;
+    }
+}
+
+* {
+    scrollbar-width: auto;
+    scrollbar-color: rgba(black, 0.4) transparent;
+}
+
+*::-webkit-scrollbar {
+    width: 10px;
+    display: block;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.no-scrollbar-margin {
+    *::-webkit-scrollbar-track-piece:start {
+        margin-top: 0;
+    }
+}
+
+*::-webkit-scrollbar-track-piece:start {
+    background: transparent;
+    margin-top: 60px;
+}
+
+*::-webkit-scrollbar-thumb {
+    border-right: none;
+    border-left: none;
+    background: rgba(125, 125, 125, 0.4);
+}
+
+.scrollbarHidden {
+    color: transparent !important;
+}
+
+.scrollbarShown {
+    color: rgba(#888, 1) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(125, 125, 125, 1);
 }
 
 body {
@@ -17,7 +146,6 @@ body {
     -webkit-user-drag: none;
 }
 
-
 .br1 {
     border-radius: 1rem;
 }
@@ -28,6 +156,10 @@ body {
 
 .br2 {
     border-radius: 2rem;
+}
+
+.pa0 {
+    padding: 0;
 }
 
 .pa1 {
@@ -48,6 +180,10 @@ body {
 
 .pl1h {
     padding-left: 0.5rem;
+}
+
+.pl1q {
+    padding-left: 0.25rem;
 }
 
 .mln2 {
@@ -123,6 +259,10 @@ body {
 
 .mt1h {
     margin-top: 0.5rem;
+}
+
+.mt1q {
+    margin-top: 0.25rem;
 }
 
 .aifs {
@@ -216,7 +356,9 @@ body {
 }
 
 .disable-focus-indicator {
-    .mdc-switch__shadow, .mdc-switch__ripple {
+
+    .mdc-switch__shadow,
+    .mdc-switch__ripple {
         display: none;
     }
 }

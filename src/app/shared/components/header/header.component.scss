@@ -36,7 +36,7 @@ mat-select {
 }
 
 .button {
-    transition: color 0.3s ease;
+    transition: opacity 0.3s ease;
     color: rgba(#ffffff, 1);
     margin-left: 0.5rem;
     padding-left: 0.2rem;
@@ -44,7 +44,7 @@ mat-select {
     padding-top: 0.2rem;
 
     &:hover {
-        color: rgba(white, 0.7);
+        opacity: 0.8;
         cursor: pointer;
     }
 
@@ -81,7 +81,10 @@ mat-select {
 
     #button-page_previous,
     #button-page_next {
-        background-color: rgba(#1a1a1a, 0.6);
+        color: var(--text-inverse);
+        background-color: var(--text);
+        transition: opacity 0.3s ease;
+        opacity: 0.8;
         border-radius: 10rem;
         width: 25px;
         height: 30px;
@@ -89,7 +92,7 @@ mat-select {
         font-weight: 100;
 
         &:hover {
-            background-color: rgba(#1a1a1a, 0.5);
+            opacity: 0.6;
         }
 
         .mat-ligature-font {
@@ -115,11 +118,12 @@ mat-select {
     flex: auto;
     width: 20rem;
     box-sizing: border-box;
-    border: 1px solid #ccc;
+    border: 1px solid var(--background-light);
     border-radius: 15px;
+    background-color: var(--background-light);
     font-size: 16px;
-    color: rgba(black, 0.8);
-    caret-color: rgba(var(--primaryColor), 0.6);
+    color: var(--text);
+    caret-color: var(--text);
     padding: 0.4rem 1rem;
     padding-right: 2.4rem;
 
@@ -130,58 +134,34 @@ mat-select {
     }
 
     &::placeholder {
-        color: rgba(black, 0.4);
+        color: var(--text);
+        opacity: 0.4;
     }
 }
 
 .icon-button {
-    color: rgba(black, 0.8);
+    color: var(--text);
+    opacity: 0.8;
     transition: color 300ms ease;
     display: inline-flex;
     position: absolute;
     z-index: 1;
 
     :hover {
-        color: rgba(black, 0.6);
+        color: var(--text);
+        opacity: 0.6;
     }
 }
 
 #button-clear_input {
-    color: rgba(black, 0.8);
+    color: var(--text);
+    opacity: 0.8;
     left: 36.375rem;
     top: 0.55rem;
 }
 
 ::ng-deep .mat-mdc-unelevated-button {
     background-color: transparent;
-}
-
-::ng-deep .context-menu {
-    &.mdc-menu-surface {
-        border-radius: 0.4rem;
-    }
-
-    .mat-mdc-menu-item {
-        padding: 0 1rem;
-        min-height: 2.5rem;
-    }
-
-    .mdc-list-item__primary-text {
-        font-size: 1rem;
-        padding: 0;
-        margin: 0;
-    }
-}
-
-::ng-deep .app-settings-menu {
-    .mat-mdc-menu-item {
-        padding: 0 0.5rem;
-        min-height: 2rem;
-
-        .mdc-list-item__primary-text {
-            font-size: 0.8rem;
-        }
-    }
 }
 
 ::ng-deep .account-settings-menu {
@@ -199,8 +179,8 @@ mat-select {
 }
 
 .disabled {
-    background-color: rgba(#1a1a1a, 0.3) !important;
-    color: rgba(white, 0.5);
+    background-color: var(--text) !important;
+    opacity: 0.3 !important;
     cursor: not-allowed !important;
 }
 

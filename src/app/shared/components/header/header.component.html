@@ -5,7 +5,7 @@
             <mat-icon [matTooltipDisabled]="compact ? false : true" matTooltip="Scarlet | Account Options" matTooltipPosition="right" id="user-profile-icon" class="material-icons-round" fontIcon="account_circle" />
             <div id="user-profile-name" [style.visibility]="compact ? 'hidden' : 'visible'">Scarlet</div>
         </div>
-        <div [style.display]="compact ? 'none' : 'block'" class='button' id="button-settings" *ngIf="uiService.enableWindowControls" [matMenuTriggerFor]="appSettingsMenu" [style.margin-top.px]="uiService.currentPlatform == 0 ? 0 : 17.5">
+        <div [style.display]="compact ? 'none' : 'block'" class='button' id="button-settings" *ngIf="uiService.enableWindowControls" [matMenuTriggerFor]="matMenu" [style.margin-top.px]="uiService.currentPlatform == 0 ? 0 : 17.5">
             <mat-icon *ngIf="uiService.enableWindowControls" class="material-icons-round" fontIcon="more_vert" />
         </div>
     </div>
@@ -57,55 +57,5 @@
             <mat-icon class="material-icons-round icon-context-menu" fontIcon="logout"/>
             <span>Log Out</span>
         </button>
-    </mat-menu>
-
-    <mat-menu class="context-menu app-settings-menu" #appSettingsMenu xPosition="after">
-        <button mat-menu-item [matMenuTriggerFor]="file">File</button>
-        <button mat-menu-item [matMenuTriggerFor]="edit">Edit</button>
-        <button mat-menu-item [matMenuTriggerFor]="view">View</button>
-        <button mat-menu-item [matMenuTriggerFor]="playback">Playback</button>
-        <button mat-menu-item [matMenuTriggerFor]="help">Help</button>
-
-        <mat-menu class="context-menu app-settings-menu" #file="matMenu">
-            <button mat-menu-item>New Playlist</button>
-            <button mat-menu-item>Log Out</button>
-            <button mat-menu-item>Exit</button>
-        </mat-menu>
-
-        <mat-menu class="context-menu app-settings-menu" #edit="matMenu">
-            <button mat-menu-item>Undo</button>
-            <button mat-menu-item>Redo</button>
-            <button mat-menu-item>Cut</button>
-            <button mat-menu-item>Copy</button>
-            <button mat-menu-item>Paste</button>
-            <button mat-menu-item>Delete</button>
-            <button mat-menu-item>Select All</button>
-            <button mat-menu-item>Search</button>
-            <button mat-menu-item>Preferences</button>
-        </mat-menu>
-
-        <mat-menu class="context-menu app-settings-menu" #view="matMenu">
-            <button mat-menu-item>Zoom In</button>
-            <button mat-menu-item>Zoom Out</button>
-            <button mat-menu-item>Reset Zoom</button>
-            <button mat-menu-item>Hardware Acceleration</button>
-        </mat-menu>
-
-        <mat-menu class="context-menu app-settings-menu" #playback="matMenu">
-            <button mat-menu-item>Play</button>
-            <button mat-menu-item>Next</button>
-            <button mat-menu-item>Previous</button>
-            <button mat-menu-item>Seek Forward</button>
-            <button mat-menu-item>Seek Backward</button>
-            <button mat-menu-item>Shuffle</button>
-            <button mat-menu-item>Repeat</button>
-            <button mat-menu-item>Volume Up</button>
-            <button mat-menu-item>Volume Down</button>
-        </mat-menu>
-
-        <mat-menu class="context-menu app-settings-menu" #help="matMenu">
-            <button mat-menu-item>About musicnya</button>
-        </mat-menu>
-            
     </mat-menu>
 </mat-toolbar>

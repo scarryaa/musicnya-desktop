@@ -42,6 +42,24 @@ function createWindow() {
   mainWindow.loadURL('http://localhost:4200');
 }
 
+function setMainMenu() {
+  const template = [
+    {
+      label: 'Filter',
+      submenu: [
+        {
+          label: 'Hello',
+          accelerator: 'Shift+CmdOrCtrl+H',
+          click() {
+              console.log('Oh, hi there!')
+          }
+        }
+      ]
+    }
+  ];
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+}
+
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
   event.preventDefault();
   callback(true);
@@ -56,6 +74,7 @@ app.on('ready', async () => {
 // });
 
   createWindow();
+  setMainMenu();
   
   mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
     (details, callback) => {

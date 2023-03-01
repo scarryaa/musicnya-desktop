@@ -24,6 +24,7 @@ export class UserPrefsService {
       this.colorChanged$.next([strippedPrimary, strippedAccent]);
       this.darkTheme = prefs.darkTheme;
       !this.darkTheme ? document.documentElement.classList.add("use-light-theme") : document.documentElement.classList.remove("use-light-theme");
+      this.darkTheme$.next(this.darkTheme);
       return this.userPrefs = prefs;
     });
     this.electronService.getIpcRenderer().send("toMain", { command: 'getUserPrefs' });
@@ -33,8 +34,8 @@ export class UserPrefsService {
   private currentPlatform: CurrentPlatform = CurrentPlatform.Win;
   private defaultPrimaryColor: string = '90, 87, 142';
   private defaultAccentColor: string = '255, 64, 128';
-  private currentPrimaryColor: string = '90, 87, 142';
-  private currentAccentColor: string = '255, 64, 128';
+  private currentPrimaryColor!: string;
+  private currentAccentColor!: string;
   private darkTheme: boolean = true;
   public darkTheme$ = new BehaviorSubject<boolean>(this.darkTheme);
   public colorChanged$ = new BehaviorSubject<[string, string]>([this.currentPrimaryColor, this.currentAccentColor]);

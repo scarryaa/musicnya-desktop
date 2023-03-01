@@ -32,6 +32,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { AlbumTileComponent } from './components/album-tile/album-tile.component';
 import { CategoryTileComponent } from './components/category-tile/category-tile.component';
 import { HeadingComponent } from './components/heading/heading.component';
+import { AppMenuComponent } from './components/app-menu/app-menu.component';
 
 @NgModule({
   declarations:
@@ -48,7 +49,8 @@ import { HeadingComponent } from './components/heading/heading.component';
       VirtualScrollTableComponent,
       AlbumTileComponent,
       HeadingComponent,
-      CategoryTileComponent
+      CategoryTileComponent,
+      AppMenuComponent
     ],
   imports: [
     RouterModule,
@@ -82,7 +84,8 @@ import { HeadingComponent } from './components/heading/heading.component';
     VirtualScrollTableComponent,
     AlbumTileComponent,
     CategoryTileComponent,
-    HeadingComponent
+    HeadingComponent,
+    AppMenuComponent
   ]
 })
 export class SharedModule { }

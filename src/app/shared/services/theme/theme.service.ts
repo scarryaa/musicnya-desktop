@@ -17,10 +17,10 @@ export class ThemeService {
   currentAccent: string = this.userPrefsService.getUserAccentColor() ?? 'rgb(255, 64, 128)';
   primaryPageColor: string = this.currentPrimary;
   darkTheme: boolean = this.userPrefsService.getDarkTheme();
-  headerColor: string = this.darkTheme ? '20, 20, 20' : '235, 235, 235';
+  headerColor: string = this.darkTheme ? '20, 20, 20' : '250, 250, 250';
 
   resetColorHeader() {
-    this.headerColor = this.darkTheme ? '20, 20, 20' : '235, 235, 235';
+    this.headerColor = this.darkTheme ? '20, 20, 20' : '250, 250, 250';
   }
 
   getPrimaryPageColor() {

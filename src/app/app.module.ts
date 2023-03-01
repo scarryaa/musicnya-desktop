@@ -16,6 +16,7 @@ import { UserPrefsService } from './shared/services/user-prefs/user-prefs.servic
 import { environment } from 'src/environments/environment';
 import { MatSlideToggleDefaultOptions, MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS } from '@angular/material/slide-toggle';
 import { ThemePalette } from '@angular/material/core';
+import { MatMenuModule } from '@angular/material/menu';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: true,
@@ -46,7 +47,8 @@ const globalSlideToggleConfig: MatSlideToggleDefaultOptions = {
     SharedModule,
     CoreModule,
     BrowserAnimationsModule,
-    SharedModule
+    SharedModule,
+    MatMenuModule
   ],
   providers: [
     { provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig },

@@ -61,7 +61,7 @@
 
 .primary-picker-container {
     filter: drop-shadow(0 0px 3px rgba(black, 0.2));
-    background-color: rgb(245, 245, 245);
+    background-color: var(--background-light);
     padding: 0;
     border-radius: 10px;
 
@@ -70,7 +70,7 @@
         position: absolute;
         top: -16px;
         right: 16px;
-        border-bottom: 16px solid rgb(245, 245, 245);
+        border-bottom: 16px solid var(--background-light);
         border-left: 12px solid transparent;
         border-right: 12px solid transparent;
       }
@@ -78,7 +78,7 @@
 
 .secondary-picker-container {
     filter: drop-shadow(0 0px 3px rgba(black, 0.2));
-    background-color: rgb(245, 245, 245);
+    background-color: var(--background-light);
     padding: 0;
     border-radius: 10px;
 
@@ -87,18 +87,14 @@
         position: absolute;
         top: -16px;
         right: 16px;
-        border-bottom: 16px solid rgb(245, 245, 245);
+        border-bottom: 16px solid var(--background-light);
         border-left: 12px solid transparent;
         border-right: 12px solid transparent;
       }
 }
 
-.faded-text {
-    color: rgba(black, 0.4);
-}
-
 .no-box-shadow {
-    box-shadow: none;
+    box-shadow: none !important;
 }
 
 .color-preset {

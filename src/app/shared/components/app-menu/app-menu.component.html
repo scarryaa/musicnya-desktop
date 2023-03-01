@@ -1,7 +1,3 @@
-<app-header [matMenu]="appSettingsMenu"></app-header>
-<app-sidenav [matMenu]="appSettingsMenu"></app-sidenav>
-<app-footer></app-footer>
-
 <mat-menu class="context-menu app-settings-menu" #appSettingsMenu xPosition="after">
     <button mat-menu-item [matMenuTriggerFor]="file">File</button>
     <button mat-menu-item [matMenuTriggerFor]="edit">Edit</button>
@@ -49,4 +45,5 @@
     <mat-menu class="context-menu app-settings-menu" #help="matMenu">
         <button mat-menu-item>About musicnya</button>
     </mat-menu>
+        
 </mat-menu>

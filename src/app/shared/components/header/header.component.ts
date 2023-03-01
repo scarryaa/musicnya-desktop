@@ -4,6 +4,7 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { environment } from 'src/environments/environment';
 import { UIService } from '../../services/ui/ui.service';
 import { NavigationService } from '../../services/navigation/navigation.service';
+import { MatMenu } from '@angular/material/menu';
 
 @Component({
   selector: 'app-header',
@@ -21,6 +22,7 @@ export class HeaderComponent implements AfterViewInit, OnInit {
   headerTitle: string = '';
   enableWindowControls: boolean = true;
   headerHeight: number = 45;
+  @Input() matMenu!: MatMenu;
 
   ngOnInit(): void {
     this.enableWindowControls = environment.enableWindowControls;

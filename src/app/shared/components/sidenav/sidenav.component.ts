@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { trigger, transition, animate, style, state } from '@angular/animations';
 import { PlaylistDataService } from 'src/app/shared/services/playlist-data/playlist-data.service';
@@ -9,6 +9,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { ThemeService } from '../../services/theme/theme.service';
 import { UIService } from '../../services/ui/ui.service';
 import { CurrentPlatform } from '../../services/ui/current-platform';
+import { MatMenu } from '@angular/material/menu';
 
 @Component({
   selector: 'app-sidenav',
@@ -44,6 +45,7 @@ export class SideNavComponent implements OnInit, OnDestroy, AfterViewInit {
   currentPlatform: CurrentPlatform = this.userPrefsService.getCurrentPlatform();
   @ViewChild(CdkScrollable) scrollable!: CdkScrollable;
   drawerCollapsed!: boolean;
+  @Input() matMenu!: MatMenu;
 
   ngOnInit() {
     this.currentPlatform = this.userPrefsService.getCurrentPlatform();
