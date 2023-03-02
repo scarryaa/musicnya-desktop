@@ -1,3 +1,4 @@
 export const environment = {
-    enableWindowControls: true
-  };
+  production: false,
+  enableWindowControls: true
+};
