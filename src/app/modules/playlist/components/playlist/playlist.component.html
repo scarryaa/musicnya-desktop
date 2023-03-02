@@ -6,7 +6,7 @@
         </div>
         <div class="content">
             <div class="playlistInfo" *ngIf="playlist$ | async as playlist">
-                <img #playlistCover class="playlistCover" src="{{playlist.artwork}}" crossorigin="anonymous" />
+                <img #playlistCover class="playlistCover" [src]="playlist.artwork!" crossorigin="anonymous" />
                 <div class="titleArtistInfo">
                     <div class="title">{{playlist.title}}
                         <button mat-mini-fab id="titleEditButton">

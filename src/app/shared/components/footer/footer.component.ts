@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PlaybackService } from 'ngx-apple-music';
+import { ThemeService } from '../../services/theme/theme.service';
+import { UserPrefsService } from '../../services/user-prefs/user-prefs.service';
 
 @Component({
   selector: 'app-footer',
@@ -9,8 +11,10 @@ import { PlaybackService } from 'ngx-apple-music';
 }
 )
 
-export class FooterComponent implements OnInit {
-  constructor(private playbackService: PlaybackService) { }
+export class FooterComponent implements OnInit, AfterViewInit {
+  constructor(private playbackService: PlaybackService, private ref: ChangeDetectorRef, private userPrefsService: UserPrefsService, private themeService: ThemeService) {
+    this.iconColor = getComputedStyle(document.documentElement).getPropertyValue('--ui-color-override');
+  }
 
   ngOnInit(): void {
     this.volumeValue.valueChanges.subscribe((value) => {
@@ -26,7 +30,16 @@ export class FooterComponent implements OnInit {
     }
     )
   }
-  
+
+  ngAfterViewInit(): void {
+    this.accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accentColor');
+    this.userPrefsService.colorChanged$.subscribe((colors: string[]) => this.accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accentColor'));
+    this.themeService.overrideColor$.subscribe((color: string) => this.iconColor = getComputedStyle(document.documentElement).getPropertyValue('--ui-color-override'));
+    this.ref.detectChanges();
+  }
+
+  accentColor!: string;
+  iconColor!: string;
   volumeValue = new FormControl<number>(50);
   playbackValue = new FormControl<number>(0);
 
@@ -60,11 +73,11 @@ export class FooterComponent implements OnInit {
   setRepeatColor(): string | undefined {
     switch (this.repeatState) {
       case repeatStateEnum.enabled:
-        return this.repeatHover ? '#FF84A3' : '#FF4673';
+        return 'rgb(' + this.accentColor! + ')';
       case repeatStateEnum.once:
-        return this.repeatHover ? '#FF84A3' : '#FF4673';
+        return 'rgb(' + this.accentColor! + ')';
       default:
-        return this.repeatHover ? 'white' : '#ADACC5';
+        return this.iconColor!;
     }
   }
 

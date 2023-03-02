@@ -58,6 +58,12 @@
     margin-left: auto;
     margin-right: auto;
 
+    &:hover {
+        ::ng-deep > * {
+            transition: all 0s !important;
+        }
+    }
+
     ::ng-deep .mdc-slider__thumb {
         height: 2px;
 
@@ -142,7 +148,7 @@
         opacity: 0.7;
         margin: -0.8rem -2.6rem;
         width: 2rem;
-        font-weight: 200;
+        font-weight: 500;
         font-size: 0.9rem;
     }
 
@@ -152,7 +158,7 @@
         left: 100%;
         transform: translate(45%, 0);
         display: table-cell;
-    }   
+    }
 }
 
 .media-controls-misc {
@@ -168,7 +174,7 @@
 }
 
 #button-shuffle {
-    transition: var(--enable-color-transition);
+    transition: var(--enable-color-transition), opacity 0.3s ease;
     color: var(--ui-color-override);
     opacity: 0.5;
 }
@@ -176,15 +182,29 @@
 #button-repeat, #button-shuffle {
     transform: scale(0.45);
     margin: 0 -0.8rem;
+    opacity: 0.5;
+    transition: var(--enable-color-transition), opacity 0.3s ease;
+
+    &:hover {
+        opacity: 1 !important;
+    }
+}
+
+#button-repeat {
+    color: var(--ui-color-override)
 }
 
 #button-skip_previous,
 #button-skip_next {
     transform: scale(.75);
     padding: 0;
-    transition: var(--enable-color-transition);
+    transition: var(--enable-color-transition), opacity 0.3s ease;
     color: var(--ui-color-override);
     opacity: 0.85;
+
+    &:hover {
+        opacity: 1;
+    }
 }
 
 .mdc-slider__input {
@@ -197,14 +217,19 @@
     height: auto;
 
     &:hover {
+        ::ng-deep * {
+            transition: all 0s !important;
+        }
+
         ::ng-deep &:hover .mdc-slider__track--active_fill {
             transition: color 0s, background-color 0s, border-color 0s !important;
             border-color: rgba(var(--accentColor), 1) !important;
         }
 
         #button-mute {
-            transition: var(--enable-color-transition);
+            transition: var(--enable-color-transition), opacity 0.3s ease;
             color: var(--ui-color-override) !important;
+            opacity: 1;
         }
 
         ::ng-deep .mdc-slider__thumb {
@@ -221,7 +246,7 @@
 }
 
 #button-play {
-    transition: var(--enable-color-transition);
+    transition: var(--enable-color-transition), opacity 0.3s ease;
     transform: scale(1.00);
     color: var(--ui-color-override);
 
@@ -231,29 +256,41 @@
 }
 
 #button-lyrics {
-    transition: var(--enable-color-transition);
+    transition: var(--enable-color-transition), opacity 0.3s ease;
     color: var(--ui-color-override);
     opacity: 0.6;
     transform: scale(0.45);
     margin-right: -0.8rem;
     margin-top: 0.12rem;
+
+    &:hover {
+        opacity: 1;
+    }
 }
 
 #button-queue {
-    transition: var(--enable-color-transition);
+    transition: var(--enable-color-transition), opacity 0.3s ease;
     color: var(--ui-color-override);
     opacity: 0.6;
     transform: scale(0.58);
     margin-right: 2.2rem;
+
+    &:hover {
+        opacity: 1;
+    }
 }
 
 #button-mute {
-    transition: var(--enable-color-transition);
+    transition: var(--enable-color-transition), opacity 0.3s ease;
     color: var(--ui-color-override);
     opacity: 0.6;
     transform: scale(0.5);
     z-index: 2;
     position: absolute;
+
+    &:hover {
+        opacity: 1;
+    }
 }
 
 .showThumb {
@@ -269,6 +306,7 @@
     margin-right: 1.2rem;
     margin-left: -0.1rem;
     transition: var(--enable-color-transition);
+    
     ::ng-deep .mdc-slider__track--inactive {
         transition: var(--enable-color-transition);
         background-color: var(--ui-color-override);
@@ -303,8 +341,8 @@
     height: fit-content;
     transition: color 0.2s ease;
 
-    &:hover:not(#button-repeat) {
+    &:hover {
         transition: var(--enable-color-transition);
-        color: var(--ui-color-override) !important;
+        color: var(--ui-color-override);
     }
 }

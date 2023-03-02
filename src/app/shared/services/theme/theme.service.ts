@@ -1,5 +1,5 @@
-import { Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { UserPrefsService } from '../user-prefs/user-prefs.service';
 import { UtilityService } from '../utility/utility.service';
 
@@ -13,11 +13,17 @@ export class ThemeService {
   }
 
   playlistHeaderColor$ = new Subject<string>();
+  overrideColor$ = new Subject<string>();
   currentPrimary: string = this.userPrefsService.getUserPrimaryColor() ?? 'rgb(90, 87, 142)';
   currentAccent: string = this.userPrefsService.getUserAccentColor() ?? 'rgb(255, 64, 128)';
   primaryPageColor: string = this.currentPrimary;
   darkTheme: boolean = this.userPrefsService.getDarkTheme();
   headerColor: string = this.darkTheme ? '20, 20, 20' : '250, 250, 250';
+
+  initialize(preferences: any) {
+    var luma = this.calculateColorBrightness(this.utilityService.rgbToHex(preferences.userPrimaryColor));
+    if (luma > 180) document.documentElement.style.setProperty('--override-color', 'rgb(33, 30, 30)');
+  }
 
   resetColorHeader() {
     this.headerColor = this.darkTheme ? '20, 20, 20' : '250, 250, 250';

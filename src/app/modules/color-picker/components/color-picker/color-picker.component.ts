@@ -14,5 +14,6 @@ export class ColorPickerComponent {
 
   colorChanged(color: string) {
     this.colorChange$.emit(color);
+    this.color = color;
   }
 }

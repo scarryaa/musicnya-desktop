@@ -9,11 +9,12 @@
     </div>
     <div class="media-controls-container">
         <div class="main-media-controls-container">
-            <mat-icon class="media-controls material-icons-round" id="button-shuffle" fontIcon="shuffle" matTooltip="Enable Shuffle" matTooltipPosition="above"/>
-            <mat-icon class="media-controls material-icons-round" id="button-skip_previous" fontIcon="skip_previous" matTooltip="Previous" matTooltipPosition="above"/>
-            <mat-icon class="media-controls material-icons-round" id="button-play" fontIcon="play_circle" (click)="play()" matTooltip="Play" matTooltipPosition="above"/>
-            <mat-icon class="media-controls material-icons-round" id="button-skip_next" fontIcon="skip_next" matTooltip="Next" matTooltipPosition="above"/>
-            <mat-icon class="media-controls material-icons-round" id="button-repeat" [style.opacity]="1" [style.color]="setRepeatColor()"
+            <mat-icon class="media-controls material-icons-round media-button" id="button-shuffle" fontIcon="shuffle" matTooltip="Enable Shuffle" matTooltipPosition="above"/>
+            <mat-icon class="media-controls material-icons-round media-button" id="button-skip_previous" fontIcon="skip_previous" matTooltip="Previous" matTooltipPosition="above"/>
+            <mat-icon class="media-controls material-icons-round media-button" id="button-play" fontIcon="play_circle" (click)="play()" matTooltip="Play" matTooltipPosition="above"/>
+            <mat-icon class="media-controls material-icons-round media-button" id="button-skip_next" fontIcon="skip_next" matTooltip="Next" matTooltipPosition="above"/>
+            <mat-icon class="media-controls material-icons-round media-button" id="button-repeat" #repeat [style.color]="setRepeatColor()"
+                [style.opacity]="(repeatState == 0) ? 0.5 : 0.75"
                 [fontIcon]="repeatState == 2 ? 'repeat_one' : 'repeat'" (click)="setRepeat()"
                 (mouseover)="repeatHover=true" (mouseleave)="repeatHover=false" [matTooltip]="(repeatState == 0) ? 'Enable Repeat' : repeatState == 1 ? 'Enable Repeat Once' : 'Disable Repeat'" matTooltipPosition="above"/>
             <div class="seekbar-container">
@@ -25,14 +26,14 @@
                 <span class="track-time" id="seekbar-max-value">{{ max * 1000 | date:'m:ss' }}</span>
             </div>
         </div>
-        <div class="media-controls-misc">
+        <div class="media-controls-misc media-button">
             <mat-icon class="media-controls material-icons-round" id="button-lyrics" fontIcon="lyrics" matTooltip="Lyrics" matTooltipPosition="above"/>
         </div>
-        <div class="media-controls-misc">
+        <div class="media-controls-misc media-button">
             <mat-icon class="media-controls material-icons-round" id="button-queue" fontIcon="queue_music" matTooltip="Queue" matTooltipPosition="above"/>
         </div>
         <div class="media-controls-volume">
-            <mat-icon class="media-controls material-icons-round" (click)="mute()" id="button-mute" 
+            <mat-icon class="media-controls material-icons-round media-button" (click)="mute()" id="button-mute" 
                 [style.right.px]="(volumeValue.value! <= 51 && volumeValue.value! > 0) ? 97 : 95" 
                 [fontIcon]="volMuted ? 'volume_off' : volumeValue.value! > 51 ? 'volume_up' : 'volume_down'"
                 [matTooltip]="volMuted ? 'Unmute' : 'Mute'" matTooltipPosition="above"/>

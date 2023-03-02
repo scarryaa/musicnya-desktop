@@ -3,6 +3,8 @@ import { Observable, of } from 'rxjs';
 import { Playlist } from 'src/app/modules/core/models/playlist';
 import { Song } from 'src/app/modules/core/models/song';
 import { FastAverageColor, FastAverageColorResult } from 'fast-average-color';
+import { ThemeService } from '../theme/theme.service';
+import { UserPrefsService } from '../user-prefs/user-prefs.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,9 @@ export class PlaylistDataService {
   playlists: Playlist[] = [];
   playlists$: Observable<Playlist[]> = of(this.playlists);
 
-  constructor() {}
+  constructor(private themeService: ThemeService, private userPrefsService: UserPrefsService) {
+    this.userPrefsService.darkTheme$.subscribe((res: boolean) => this.switchPlaylistColors(res));
+  }
 
   getPlaylists(): Observable<Playlist[]> {
     return this.playlists$;
@@ -41,12 +45,15 @@ export class PlaylistDataService {
     return this.playlists.length;
   }
 
+  switchPlaylistColors(darkTheme: boolean) {
+    this.playlists.forEach((val: Playlist) => { if (!val.artwork) val.dominantColor = darkTheme ? 'rgb(54, 51, 51)' : 'rgb(212, 209, 209)';})
+  }
+
   async getDominantColor(artwork: string): Promise<string> {
     var color: string;
-    // dark mode
-    if (!artwork || artwork == undefined || artwork == '') color = 'rgb(54, 51, 51)';
-    //light
-    //if (!artwork || artwork == undefined || artwork == '') color = 'rgb(212, 209, 209)';
+    if (!artwork || artwork == undefined || artwork == '') {
+      color = this.themeService.darkTheme ? 'rgb(54, 51, 51)' : 'rgb(212, 209, 209)';
+    }
     else await this.fac.getColorAsync(artwork, {algorithm: 'simple', mode: 'speed', step: 50}).then((res: FastAverageColorResult) => color = res.rgb);
     return color!;
   }
@@ -54,7 +61,6 @@ export class PlaylistDataService {
  async getSamplePlaylist(): Promise<void> {
     // this.apiservice.getPlaylist()...
     var color = await this.getDominantColor('https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png');
-    console.log(color);
     var p = new Playlist(1,
       'Playlist 1',
       'Scarlet',

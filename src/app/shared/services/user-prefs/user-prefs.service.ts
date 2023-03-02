@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, Subscriber } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, Subject, Subscriber } from 'rxjs';
 import { Preferences } from 'src/app/modules/core/models/preferences';
 import { ElectronService } from '../electron/electron.service';
 import { CurrentPlatform } from '../ui/current-platform';
@@ -11,11 +11,12 @@ import { UtilityService } from '../utility/utility.service';
 export class UserPrefsService {
   constructor(private electronService: ElectronService, private utilityService: UtilityService) { }
 
-  loadUserPrefs() {
+  async loadUserPrefs(): Promise<Preferences> {
     var platform$ = new Observable<any>((observer: Subscriber<any>) =>
       this.electronService.getIpcRenderer().receive('fromMain', (arg: any, event: any) => { if (arg.command == 'getUserPrefs') observer.next(arg) }));
+      this.electronService.getIpcRenderer().send("toMain", { command: 'getUserPrefs' });
 
-    platform$.subscribe((res: any) => {
+      return firstValueFrom(platform$).then((res: any) => {
       var prefs: Preferences = res.data.data;
       var strippedPrimary: string = this.utilityService.stripRgb(prefs.userPrimaryColor);
       var strippedAccent: string = this.utilityService.stripRgb(prefs.userAccentColor);
@@ -27,7 +28,6 @@ export class UserPrefsService {
       this.darkTheme$.next(this.darkTheme);
       return this.userPrefs = prefs;
     });
-    this.electronService.getIpcRenderer().send("toMain", { command: 'getUserPrefs' });
   }
 
   private drawerCollapsed = false;

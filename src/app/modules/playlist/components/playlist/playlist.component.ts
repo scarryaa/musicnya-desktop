@@ -40,7 +40,7 @@ export class PlaylistComponent implements OnInit {
       this.playlistId = parseInt(id!);
       this.fetchPlaylistData(this.playlistId);
       this.playlist$.pipe(map((p) => {
-        this.imgUrl = p.artwork ?? '';
+        this.imgUrl = p.artwork!;
         this.bgImgColor = p.dominantColor!;
         this.playlistId = p.id;
         this.playlistTitle = p.title;
@@ -73,7 +73,7 @@ export class PlaylistComponent implements OnInit {
   getBackgroundImg(): any {
     this.playlist$.subscribe(
       data => {
-        this.imgUrl = data.artwork ?? '';
+        this.imgUrl = data.artwork!;
         this.bgImgColor = data.dominantColor!;
         this.playlistId = data.id;
         this.playlistTitle = data.title;

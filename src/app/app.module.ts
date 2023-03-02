@@ -17,6 +17,7 @@ import { environment } from 'src/environments/environment';
 import { MatSlideToggleDefaultOptions, MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS } from '@angular/material/slide-toggle';
 import { ThemePalette } from '@angular/material/core';
 import { MatMenuModule } from '@angular/material/menu';
+import { ThemeService } from './shared/services/theme/theme.service';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: true,
@@ -72,10 +73,10 @@ const globalSlideToggleConfig: MatSlideToggleDefaultOptions = {
       deps: [ElectronService, UserPrefsService],
       multi: true
     },
-    UserPrefsService, {
+    UserPrefsService, ThemeService, {
       provide: APP_INITIALIZER,
-      useFactory: environment.enableWindowControls ? (userPrefsService: UserPrefsService) => () => userPrefsService.loadUserPrefs() : () => () => {},
-      deps: [UserPrefsService],
+      useFactory: environment.enableWindowControls ? (userPrefsService: UserPrefsService, themeService: ThemeService) => async () => await userPrefsService.loadUserPrefs().then((res: any) => themeService.initialize(res)) : () => () => {},
+      deps: [UserPrefsService, ThemeService],
       multi: true
     }
     //   InitializationService, {

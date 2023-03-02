@@ -13,7 +13,7 @@
             <div class="subheader-items mt1">
                 <div>Pick a custom primary and secondary color.</div>
                 <div class="color-wheel primary mvn1h mh1h" (click)="toggleColorPicker(primaryColor)" tabindex="0" #primaryColor cdkOverlayOrigin #primaryTrigger="cdkOverlayOrigin"
-                    [style.background-color]="(primaryOpen && colorPicker && colorPicker.color) ? colorPicker.color : userPrimaryColor">
+                    [style.background-color]="(primaryOpen && colorPicker && colorPicker.color) ? colorPicker.color : 'rgb(' + userPrimaryColor.replace('rgb(', '').replace(')', '') + ')'">
                 </div>
                 <div class="color-wheel secondary mvn1h mh1h" (click)="toggleColorPicker(secondaryColor)" tabindex="0" #secondaryColor cdkOverlayOrigin #secondaryTrigger="cdkOverlayOrigin"
                     [style.background-color]="(secondaryOpen && secondaryColorPicker && secondaryColorPicker.color) ? secondaryColorPicker.color : userSecondaryColor">
@@ -22,15 +22,14 @@
             <div class="subheader-items mt1h color-presets">
                 <mat-accordion (click)="presetColorsOpen = !presetColorsOpen" class="mln1h">
                     <mat-expansion-panel hideToggle class="no-box-shadow">
-                        <mat-expansion-panel-header [collapsedHeight]="'30px'" [expandedHeight]="'30px'"
-                            class="ph1h mln1">
+                        <mat-expansion-panel-header>
                             <mat-panel-title>
                                 <div class="faded-text">Or choose from a selection of presets.</div>
                                 <mat-icon class="material-icons-round accordion-dropdown faded-text"
                                     [fontIcon]="!presetColorsOpen ? 'expand_more' : 'expand_less'" />
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <div class="flex fdr flex-wrap mln2 mb1h">
+                        <div class="flex fdr flex-wrap">
                             <div *ngFor="let preset of colorPresets;" class="mln1 flex color-preset br2 mh1h mv1h"
                                 [style.background-color]="!preset.selected ? 'transparent' : 'rgba(0, 0, 0, 0.1)'"
                                 (click)="selectPreset(preset)">

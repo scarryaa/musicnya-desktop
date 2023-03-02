@@ -21,7 +21,15 @@ import { A11yModule, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 })
 
 export class SettingsComponent implements OnInit {
-  constructor(public userPrefsService: UserPrefsService, private utilityService: UtilityService, private themeService: ThemeService) { }
+  constructor(public userPrefsService: UserPrefsService, private utilityService: UtilityService, private themeService: ThemeService) {
+    this.userPrimaryColor = this.userPrefsService.getUserPrimaryColor();
+    var luma = this.themeService.calculateColorBrightness(this.utilityService.rgbToHex(this.userPrimaryColor));
+    if (luma > 180) document.documentElement.style.setProperty('--override-color', 'rgb(33, 30, 30)');
+
+    this.userSecondaryColor = this.userPrefsService.getUserAccentColor();
+    this.darkTheme = this.userPrefsService.getDarkTheme();
+  }
+
   primaryOpen = false;
   secondaryOpen = false;
   presetColorsOpen = false;
@@ -56,9 +64,9 @@ export class SettingsComponent implements OnInit {
     this.clickSub = this.utilityService.documentClickedTarget
       .subscribe(target => this.documentClickListener(target));
   }
-  userPrimaryColor: string = this.userPrefsService.getUserPrimaryColor();
-  userSecondaryColor: string = this.userPrefsService.getUserAccentColor();
-  darkTheme: boolean = this.userPrefsService.getDarkTheme();
+  userPrimaryColor: string;
+  userSecondaryColor: string;
+  darkTheme: boolean;
 
   toggleColorPicker(picker: HTMLDivElement) {
     if (picker.classList.contains('primary')) {
@@ -102,23 +110,28 @@ export class SettingsComponent implements OnInit {
     var strippedVals: string = this.utilityService.stripRgb(color);
     document.documentElement.style.setProperty('--primaryColor', strippedVals);
     var luma = this.themeService.calculateColorBrightness(this.utilityService.rgbToHex(color));
-    if (luma > 180) document.documentElement.style.setProperty('--override-color', 'rgb(40, 40, 40)');
+    if (luma > 180) document.documentElement.style.setProperty('--override-color', 'rgb(33, 30, 30)');
     else document.documentElement.style.setProperty('--override-color', '');
+    this.themeService.overrideColor$.next(document.documentElement.style.getPropertyValue('--override-color'));
+    this.userPrefsService.colorChanged$.next([strippedVals, this.userSecondaryColor]);
   }
 
   setSecondaryColor(color: string) {
     if (!color) return;
     var strippedVals: string = this.utilityService.stripRgb(color);
     document.documentElement.style.setProperty('--accentColor', strippedVals);
+    this.userPrefsService.colorChanged$.next([this.userPrimaryColor, strippedVals]);
   }
 
-  saveUserPrimaryColor(color: string = this.colorPicker.color) {
+  saveUserPrimaryColor(color: string = 
+      this.userPrefsService.colorChanged$.value[0]) {
     this.userPrimaryColor = color;
     this.userPrefsService.setUserPrimaryColor(color);
+    console.log(this.colorPicker);
     this.primaryOpen = false;
   }
 
-  saveUserAccentColor(color: string = this.secondaryColorPicker.color) {
+  saveUserAccentColor(color: string = this.userPrefsService.colorChanged$.value[1]) {
     this.userSecondaryColor = color;
     this.userPrefsService.setUserSecondaryColor(color);
     this.secondaryOpen = false;
@@ -146,6 +159,7 @@ export class SettingsComponent implements OnInit {
     this.setPrimaryColor(preset.primaryColor);
     this.saveUserAccentColor(preset.secondaryColor);
     this.setSecondaryColor(preset.secondaryColor);
+    this.userPrefsService.colorChanged$.next([preset.primaryColor, preset.secondaryColor]);
   }
 }
 
