@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { injectNgxResize } from 'ngx-resize';
-import { UtilityService } from './shared/services/utility/utility.service';
+import { documentClickedTarget, windowResized } from './helpers/helpers';
 
 @Component({
   selector: 'app-root',
@@ -8,14 +8,14 @@ import { UtilityService } from './shared/services/utility/utility.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(private utilityService: UtilityService) {}
+  constructor() {}
 
   readonly resizeResult$ = injectNgxResize().subscribe((result) => 
-    this.utilityService.windowResized.emit(result.width));
+    windowResized.emit(result.width));
   
   @HostListener('document:click', ['$event'])
   documentClick(event: any): void {
-    this.utilityService.documentClickedTarget.next(event.target)
+    documentClickedTarget.next(event.target)
   }
   title = 'musicnya';
 }

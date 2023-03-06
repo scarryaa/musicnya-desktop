@@ -1,74 +1,84 @@
-<div class="container settings-container">
-    <div class="content">
-        <div class="header">
-            <div>Settings</div>
-            <mat-icon class="material-icons-round" fontIcon="search" />
-        </div>
-        <div class="subheader">
-            <div>Colors</div>
-            <div class="subheader-items mt1">
-                <div>Dark Theme</div>
-                <mat-slide-toggle [checked]="darkTheme" (change)="this.userPrefsService.toggleDarkTheme()" class="mtn1h disable-focus-indicator"></mat-slide-toggle>
+<ng-container *ngTemplateOutlet="settingsTemplate; context: { $implicit: this.settingsStore.state$ | async, themeStore: this.themeStore.state$ | async}">
+</ng-container>
+
+<ng-template #settingsTemplate let-settingsStore$>
+    <div class="container settings-container">
+        <div class="content">
+            <div class="header">
+                <div>Settings</div>
+                <mat-icon class="material-icons-round" fontIcon="search" />
             </div>
-            <div class="subheader-items mt1">
-                <div>Pick a custom primary and secondary color.</div>
-                <div class="color-wheel primary mvn1h mh1h" (click)="toggleColorPicker(primaryColor)" tabindex="0" #primaryColor cdkOverlayOrigin #primaryTrigger="cdkOverlayOrigin"
-                    [style.background-color]="(primaryOpen && colorPicker && colorPicker.color) ? colorPicker.color : 'rgb(' + userPrimaryColor.replace('rgb(', '').replace(')', '') + ')'">
+            <div class="subheader">
+                <div>Colors</div>
+                <div class="subheader-items mt1">
+                    <div>Dark Theme</div>
+                    <mat-slide-toggle [checked]="settingsStore$?.darkTheme" (change)="themeStore.toggleDarkTheme()" 
+                    class="mtn1h disable-focus-indicator"></mat-slide-toggle>
                 </div>
-                <div class="color-wheel secondary mvn1h mh1h" (click)="toggleColorPicker(secondaryColor)" tabindex="0" #secondaryColor cdkOverlayOrigin #secondaryTrigger="cdkOverlayOrigin"
-                    [style.background-color]="(secondaryOpen && secondaryColorPicker && secondaryColorPicker.color) ? secondaryColorPicker.color : userSecondaryColor">
+                <div class="subheader-items mt1">
+                    <div>Pick a custom primary and secondary color.</div>
+                    <div class="color-wheel primary mvn1h mh1h" (click)="toggleColorPicker(primaryColor)" tabindex="0" #primaryColor 
+                    cdkOverlayOrigin #primaryTrigger="cdkOverlayOrigin"
+                        [style.background-color]="(primaryOpen && colorPicker && colorPicker.color) ? 
+                        colorPicker.color : tmpPrimaryColor">
+                    </div>
+                    <div class="color-wheel secondary mvn1h mh1h" (click)="toggleColorPicker(secondaryColor)" tabindex="0" #secondaryColor 
+                    cdkOverlayOrigin #secondaryTrigger="cdkOverlayOrigin"
+                        [style.background-color]="(accentOpen && secondaryColorPicker && secondaryColorPicker.color) 
+                        ? secondaryColorPicker.color : tmpAccentColor">
+                    </div>
                 </div>
-            </div>
-            <div class="subheader-items mt1h color-presets">
-                <mat-accordion (click)="presetColorsOpen = !presetColorsOpen" class="mln1h">
-                    <mat-expansion-panel hideToggle class="no-box-shadow">
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>
-                                <div class="faded-text">Or choose from a selection of presets.</div>
-                                <mat-icon class="material-icons-round accordion-dropdown faded-text"
-                                    [fontIcon]="!presetColorsOpen ? 'expand_more' : 'expand_less'" />
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <div class="flex fdr flex-wrap">
-                            <div *ngFor="let preset of colorPresets;" class="mln1 flex color-preset br2 mh1h mv1h"
-                                [style.background-color]="!preset.selected ? 'transparent' : 'rgba(0, 0, 0, 0.1)'"
-                                (click)="selectPreset(preset)">
-                                <div class="color-wheel mt1h mh1h" [style.background-color]="preset.primaryColor"></div>
-                                <div class="color-wheel mt1h mh1h" [style.background-color]="preset.secondaryColor">
+                <div class="subheader-items mt1h color-presets">
+                    <mat-accordion (click)="presetColorsOpen = !presetColorsOpen" class="mln1h">
+                        <mat-expansion-panel hideToggle class="no-box-shadow">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <div class="faded-text">Or choose from a selection of presets.</div>
+                                    <mat-icon class="material-icons-round accordion-dropdown faded-text"
+                                        [fontIcon]="!presetColorsOpen ? 'expand_more' : 'expand_less'" />
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="flex fdr flex-wrap">
+                                <div *ngFor="let preset of colorPresets;" class="mln1 flex color-preset br2 mh1h mv1h"
+                                    [style.background-color]="!preset.selected ? 'transparent' : 'rgba(0, 0, 0, 0.1)'"
+                                    (click)="selectPreset(preset)">
+                                    <div class="color-wheel mt1h mh1h" [style.background-color]="preset[1].primaryColor"></div>
+                                    <div class="color-wheel mt1h mh1h" [style.background-color]="preset[1].accentColor">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </mat-expansion-panel>
-                </mat-accordion>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<ng-template #primaryOverlay cdkConnectedOverlay [cdkConnectedOverlayOffsetY]="26" [cdkConnectedOverlayOffsetX]="15"
-    [cdkConnectedOverlayOrigin]="primaryTrigger" [cdkConnectedOverlayOpen]="primaryOpen">
-        <div class="primary-picker-container" cdkTrapFocusAutoCapture
-            cdkTrapFocus #primaryContainer tabindex="0" (blur)="handleBlur($event)">
-            <app-color-picker (blur)="handleChildBlur($event)" #colorPicker (colorChange$)="setPrimaryColor($event)" this.color="color"></app-color-picker>
-            <button (blur)="handleChildBlur($event)" tabindex="0" mat-icon-button class="color-picker-button" (click)="saveUserPrimaryColor()">
-                <mat-icon class="material-icons-round" fontIcon="done" />
+    <ng-template #primaryOverlay cdkConnectedOverlay [cdkConnectedOverlayOffsetY]="26" [cdkConnectedOverlayOffsetX]="15"
+        [cdkConnectedOverlayOrigin]="primaryTrigger" [cdkConnectedOverlayOpen]="primaryOpen">
+            <div class="primary-picker-container" cdkTrapFocusAutoCapture
+                cdkTrapFocus #primaryContainer tabindex="0" (blur)="handleBlur($event)">
+                <app-color-picker (blur)="handleChildBlur($event)" #colorPicker (colorChange$)="previewColorPrimary($event)" this.color="color"></app-color-picker>
+                <button (blur)="handleChildBlur($event)" tabindex="0" mat-icon-button class="color-picker-button" (click)="setPrimaryColor()">
+                    <mat-icon class="material-icons-round" fontIcon="done" />
+                </button>
+                <button (blur)="handleChildBlur($event)" tabindex="0" mat-icon-button class="color-picker-button" (click)="closeWithoutSavingPrimary()">
+                    <mat-icon class="material-icons-round" fontIcon="close"/>
+                </button>
+            </div>
+    </ng-template>
+    
+    <ng-template cdkConnectedOverlay [cdkConnectedOverlayOffsetY]="26" [cdkConnectedOverlayOffsetX]="15"
+        [cdkConnectedOverlayOrigin]="secondaryTrigger" [cdkConnectedOverlayOpen]="accentOpen">
+        <div class="secondary-picker-container" #secondaryContainer tabindex="0" (blur)="handleBlur($event)"
+        cdkTrapFocusAutoCapture cdkFocusInitial cdkTrapFocus>
+            <app-color-picker (blur)="handleChildBlur($event)" #secondaryColorPicker this.color="color" (colorChange$)="previewColorAccent($event)"></app-color-picker>
+            <button (blur)="handleChildBlur($event)" tabindex="0" mat-icon-button class="color-picker-button" (click)="setAccentColor()">
+                <mat-icon class="material-icons-round" fontIcon="done"/>
             </button>
-            <button (blur)="handleChildBlur($event)" tabindex="0" mat-icon-button class="color-picker-button" (click)="closeWithoutSavingPrimary()">
+            <button (blur)="handleChildBlur($event)" tabindex="0" mat-icon-button class="color-picker-button" (click)="closeWithoutSavingAccent()">
                 <mat-icon class="material-icons-round" fontIcon="close"/>
             </button>
         </div>
-</ng-template>
+    </ng-template>
 
-<ng-template cdkConnectedOverlay [cdkConnectedOverlayOffsetY]="26" [cdkConnectedOverlayOffsetX]="15"
-    [cdkConnectedOverlayOrigin]="secondaryTrigger" [cdkConnectedOverlayOpen]="secondaryOpen">
-    <div class="secondary-picker-container" #secondaryContainer tabindex="0" (blur)="handleBlur($event)"
-    cdkTrapFocusAutoCapture cdkFocusInitial cdkTrapFocus>
-        <app-color-picker (blur)="handleChildBlur($event)" #secondaryColorPicker this.color="color" (colorChange$)="setSecondaryColor($event)"></app-color-picker>
-        <button (blur)="handleChildBlur($event)" tabindex="0" mat-icon-button class="color-picker-button" (click)="saveUserAccentColor()">
-            <mat-icon class="material-icons-round" fontIcon="done"/>
-        </button>
-        <button (blur)="handleChildBlur($event)" tabindex="0" mat-icon-button class="color-picker-button" (click)="closeWithoutSavingAccent()">
-            <mat-icon class="material-icons-round" fontIcon="close"/>
-        </button>
-    </div>
 </ng-template>

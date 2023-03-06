@@ -1,16 +1,19 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ColorPickerModule } from 'src/app/modules/color-picker/color-picker.module';
-import { UserPrefsService } from 'src/app/shared/services/user-prefs/user-prefs.service';
 import { CommonModule } from '@angular/common';
-import { ThemeService } from 'src/app/shared/services/theme/theme.service';
-import { UtilityService } from 'src/app/shared/services/utility/utility.service';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ColorPickerComponent } from 'src/app/modules/color-picker/components/color-picker/color-picker.component';
-import { A11yModule, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { A11yModule } from '@angular/cdk/a11y';
+import { Subscription } from 'rxjs';
+import { SettingsStore } from 'src/app/store/settings-store';
+import { ColorPreset, Constants } from 'src/app/constants/constants';
+import { ThemeStore } from 'src/app/store/theme-store';
+import { rgbToHex } from 'src/app/helpers/helpers';
+import { StyleService } from 'src/app/shared/services/style/style.service';
 
 @Component({
   selector: 'app-settings',
@@ -20,20 +23,29 @@ import { A11yModule, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
   imports: [MatIconModule, ColorPickerModule, CdkOverlayOrigin, CdkConnectedOverlay, MatButtonModule, MatExpansionModule, CommonModule, MatSlideToggleModule, A11yModule]
 })
 
-export class SettingsComponent implements OnInit {
-  constructor(public userPrefsService: UserPrefsService, private utilityService: UtilityService, private themeService: ThemeService) {
-    this.userPrimaryColor = this.userPrefsService.getUserPrimaryColor();
-    var luma = this.themeService.calculateColorBrightness(this.utilityService.rgbToHex(this.userPrimaryColor));
-    if (luma > 180) document.documentElement.style.setProperty('--override-color', 'rgb(33, 30, 30)');
+export class SettingsComponent implements OnInit, OnDestroy {
+  subs: Subscription = new Subscription();
+  tmpPrimaryColor!: string;
+  tmpAccentColor!: string;
+  primaryOpen = false;
+  accentOpen = false;
+  presetColorsOpen = false;
+  colorPresets: any;
 
-    this.userSecondaryColor = this.userPrefsService.getUserAccentColor();
-    this.darkTheme = this.userPrefsService.getDarkTheme();
+  constructor(public themeStore: ThemeStore, public settingsStore: SettingsStore, private styleService: StyleService) {
+    var result = Object.entries<any>(Constants.colorPresets);
+    result.forEach(element => element.push({ "selected": false }));
+    this.colorPresets = [...result];
+    this.tmpPrimaryColor = themeStore.state.primaryColor;
+    this.tmpAccentColor = themeStore.state.accentColor;
   }
 
-  primaryOpen = false;
-  secondaryOpen = false;
-  presetColorsOpen = false;
-  clickSub: any;
+  ngOnInit(): void {}
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
   @ViewChild('primaryOverlay', { read: ElementRef, static: true }) primaryOverlay!: ElementRef;
   @ViewChild('colorPicker') colorPicker!: ColorPickerComponent;
   @ViewChild('secondaryColorPicker') secondaryColorPicker!: ColorPickerComponent;
@@ -41,43 +53,16 @@ export class SettingsComponent implements OnInit {
   @ViewChild('primaryContainer') primaryContainer!: HTMLDivElement;
   @ViewChild('accentContainer') accentContainer!: HTMLDivElement;
 
-  colorPresets: ColorPreset[] = [
-    new ColorPreset(this.utilityService.hexToRgb('#4c4978')!, this.utilityService.hexToRgb('#ff4d9d')!, false),
-    new ColorPreset(this.utilityService.hexToRgb('#418975')!, this.utilityService.hexToRgb('#ff7ca1')!, false),
-    new ColorPreset(this.utilityService.hexToRgb('#772245')!, this.utilityService.hexToRgb('#ffa4c0')!, false),
-    new ColorPreset(this.utilityService.hexToRgb('#006480')!, this.utilityService.hexToRgb('#b3e7ff')!, false),
-    new ColorPreset(this.utilityService.hexToRgb('#6f8947')!, this.utilityService.hexToRgb('#dced7d')!, false),
-    new ColorPreset(this.utilityService.hexToRgb('#e65825')!, this.utilityService.hexToRgb('#fed2c2')!, false),
-    new ColorPreset(this.utilityService.hexToRgb('#c9a847')!, this.utilityService.hexToRgb('#fff2d9')!, false),
-    new ColorPreset(this.utilityService.hexToRgb('#e65382')!, this.utilityService.hexToRgb('#ffe4ed')!, false),
-    new ColorPreset(this.utilityService.hexToRgb('#5e1649')!, this.utilityService.hexToRgb('#ffd0e9')!, false),
-    new ColorPreset(this.utilityService.hexToRgb('#df003f')!, this.utilityService.hexToRgb('#ffdada')!, false),
-    new ColorPreset(this.utilityService.hexToRgb('#004844')!, this.utilityService.hexToRgb('#a8c4c0')!, false),
-    new ColorPreset(this.utilityService.hexToRgb('#b18a82')!, this.utilityService.hexToRgb('#ffdad3')!, false),
-    new ColorPreset(this.utilityService.hexToRgb('#0086e7')!, this.utilityService.hexToRgb('#beddff')!, false),
-    new ColorPreset(this.utilityService.hexToRgb('#7d4993')!, this.utilityService.hexToRgb('#f7d4ff')!, false),
-    new ColorPreset(this.utilityService.hexToRgb('#00324a')!, this.utilityService.hexToRgb('#d4e7ff')!, false),
-  ];
-  selected = false;
-
-  ngOnInit(): void {
-    this.clickSub = this.utilityService.documentClickedTarget
-      .subscribe(target => this.documentClickListener(target));
-  }
-  userPrimaryColor: string;
-  userSecondaryColor: string;
-  darkTheme: boolean;
-
   toggleColorPicker(picker: HTMLDivElement) {
     if (picker.classList.contains('primary')) {
-      this.secondaryOpen = false;
+      this.accentOpen = false;
       this.primaryOpen = !this.primaryOpen;
     } else if (picker.classList.contains('secondary')) {
       this.primaryOpen = false;
-      this.secondaryOpen = !this.secondaryOpen;
+      this.accentOpen = !this.accentOpen;
     }
 
-    if (this.primaryOpen || this.secondaryOpen) {
+    if (this.primaryOpen || this.accentOpen) {
       if (document.documentElement.style.getPropertyValue('--enable-color-transition') !== '0s')
         document.documentElement.style.setProperty('--enable-color-transition', '0s');
     } else {
@@ -90,87 +75,63 @@ export class SettingsComponent implements OnInit {
     if (!event.currentTarget.contains(event.relatedTarget) && (!event.relatedTarget || !event.relatedTarget.classList.contains('primary') &&
       (!event.relatedTarget || !event.relatedTarget.classList.contains('secondary')))) {
       if (this.primaryOpen) this.closeWithoutSavingPrimary();
-      if (this.secondaryOpen) this.closeWithoutSavingAccent();
+      if (this.accentOpen) this.closeWithoutSavingAccent();
     }
   }
 
   handleChildBlur(event: any) {
     if (!event.relatedTarget || !event.relatedTarget.parentNode.contains(event.currentTarget)) {
       if (this.primaryOpen) this.closeWithoutSavingPrimary();
-      if (this.secondaryOpen) this.closeWithoutSavingAccent();
+      if (this.accentOpen) this.closeWithoutSavingAccent();
     }
   }
 
-  documentClickListener(target: Element): void {
-
+  previewColorPrimary(color: string) {
+    this.tmpPrimaryColor = rgbToHex(color);
+    this.styleService.setTheme({primaryColor: this.tmpPrimaryColor});
   }
 
-  setPrimaryColor(color: string) {
-    if (!color) return;
-    var strippedVals: string = this.utilityService.stripRgb(color);
-    document.documentElement.style.setProperty('--primaryColor', strippedVals);
-    var luma = this.themeService.calculateColorBrightness(this.utilityService.rgbToHex(color));
-    if (luma > 180) document.documentElement.style.setProperty('--override-color', 'rgb(33, 30, 30)');
-    else document.documentElement.style.setProperty('--override-color', '');
-    this.themeService.overrideColor$.next(document.documentElement.style.getPropertyValue('--override-color'));
-    this.userPrefsService.colorChanged$.next([strippedVals, this.userSecondaryColor]);
-  }
-
-  setSecondaryColor(color: string) {
-    if (!color) return;
-    var strippedVals: string = this.utilityService.stripRgb(color);
-    document.documentElement.style.setProperty('--accentColor', strippedVals);
-    this.userPrefsService.colorChanged$.next([this.userPrimaryColor, strippedVals]);
-  }
-
-  saveUserPrimaryColor(color: string = 
-      this.userPrefsService.colorChanged$.value[0]) {
-    this.userPrimaryColor = color;
-    this.userPrefsService.setUserPrimaryColor(color);
-    console.log(this.colorPicker);
-    this.primaryOpen = false;
-  }
-
-  saveUserAccentColor(color: string = this.userPrefsService.colorChanged$.value[1]) {
-    this.userSecondaryColor = color;
-    this.userPrefsService.setUserSecondaryColor(color);
-    this.secondaryOpen = false;
+  previewColorAccent(color: string) {
+    this.tmpAccentColor = rgbToHex(color); 
+    this.styleService.setTheme({accentColor: this.tmpAccentColor});
   }
 
   closeWithoutSavingPrimary() {
-    this.setPrimaryColor(this.userPrimaryColor);
+    this.styleService.setTheme({primaryColor: this.themeStore.state.primaryColor});
+    this.tmpPrimaryColor = this.themeStore.state.primaryColor;
     this.primaryOpen = false;
   }
 
   closeWithoutSavingAccent() {
-    this.setSecondaryColor(this.userSecondaryColor);
-    this.secondaryOpen = false;
+    this.styleService.setTheme({accentColor: this.themeStore.state.accentColor});
+    this.tmpAccentColor = this.themeStore.state.accentColor;
+    this.accentOpen = false;
   }
 
-  selectPreset(preset: ColorPreset) {
-    this.colorPresets.forEach(colorPreset => {
-      if (colorPreset !== preset) {
-        colorPreset.selected = false;
+  setPrimaryColor() {
+    this.themeStore.setThemePair(this.tmpPrimaryColor, undefined);
+    this.primaryOpen = false;
+  }
+
+  setAccentColor() {
+    this.themeStore.setThemePair(undefined, this.tmpAccentColor);
+    this.accentOpen = false;
+  }
+
+  setTheme(theme: ColorPreset) {
+    this.themeStore.setThemePair(theme.primaryColor, theme.accentColor);
+  }
+
+  selectPreset(preset: any) {
+    this.colorPresets.forEach((e: any) => {
+      if (e[1] !== preset) {
+        e[2].selected = false;
       }
     });
+    preset[2].selected = !preset[2].selected;
 
-    preset.selected = !preset.selected;
-    this.saveUserPrimaryColor(preset.primaryColor);
-    this.setPrimaryColor(preset.primaryColor);
-    this.saveUserAccentColor(preset.secondaryColor);
-    this.setSecondaryColor(preset.secondaryColor);
-    this.userPrefsService.colorChanged$.next([preset.primaryColor, preset.secondaryColor]);
-  }
-}
-
-class ColorPreset {
-  primaryColor: string;
-  secondaryColor: string;
-  selected: boolean = false;
-
-  constructor(primaryColor: string, secondaryColor: string, selected: boolean) {
-    this.primaryColor = primaryColor;
-    this.secondaryColor = secondaryColor;
-    this.selected = selected;
+    this.setTheme(preset[1]);
+    this.tmpPrimaryColor = preset[1].primaryColor;
+    this.tmpAccentColor = preset[1].accentColor;
   }
 }

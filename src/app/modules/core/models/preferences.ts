@@ -1,12 +1,12 @@
 export class Preferences {
-    userPrimaryColor: string;
-    userAccentColor: string;
+    primaryColor: string;
+    accentColor: string;
     drawerCollapsed: boolean;
     darkTheme: boolean;
 
-    constructor(userPrimaryColor: string, userAccentColor: string, drawerCollapsed: boolean, darkTheme: boolean) {
-        this.userPrimaryColor = userPrimaryColor;
-        this.userAccentColor = userAccentColor;
+    constructor(primaryColor: string, accentColor: string, drawerCollapsed: boolean, darkTheme: boolean) {
+        this.primaryColor = primaryColor;
+        this.accentColor = accentColor;
         this.drawerCollapsed = drawerCollapsed;
         this.darkTheme = darkTheme;
     }

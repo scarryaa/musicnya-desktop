@@ -1,15 +1,13 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
+import { distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 import { trigger, transition, animate, style, state } from '@angular/animations';
 import { PlaylistDataService } from 'src/app/shared/services/playlist-data/playlist-data.service';
 import { Playlist } from 'src/app/modules/core/models/playlist';
-import { UserPrefsService } from '../../services/user-prefs/user-prefs.service';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { NavigationEnd, Router } from '@angular/router';
-import { ThemeService } from '../../services/theme/theme.service';
-import { UIService } from '../../services/ui/ui.service';
-import { CurrentPlatform } from '../../services/ui/current-platform';
 import { MatMenu } from '@angular/material/menu';
+import { UIState, UIStore } from 'src/app/store/ui-store';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-sidenav',
@@ -34,40 +32,68 @@ import { MatMenu } from '@angular/material/menu';
   ]
 })
 
-export class SideNavComponent implements OnInit, OnDestroy, AfterViewInit {
-  constructor(private playlistDataService: PlaylistDataService, private userPrefsService: UserPrefsService, private router: Router,
-    private themeService: ThemeService, public uiService: UIService) { }
-
+export class SideNavComponent implements OnInit, AfterViewInit, OnDestroy {
+  useElectron: boolean;
+  scrollbarVisible: boolean;
   playlists$!: Observable<Playlist[]>;
   to: any;
-  scrollbarVisible: boolean = false;
-  elementStates: string[] = Array.from(Array(4), (e, i) => 'unselected');
-  currentPlatform: CurrentPlatform = this.userPrefsService.getCurrentPlatform();
+  elementStates: string[];
   @ViewChild(CdkScrollable) scrollable!: CdkScrollable;
   drawerCollapsed!: boolean;
+  headerHeight!: number;
   @Input() matMenu!: MatMenu;
+  subs: Subscription;
+
+  constructor(public playlistDataService: PlaylistDataService, private router: Router, public uiStore: UIStore) {
+    this.useElectron = environment.useElectron;
+    this.scrollbarVisible = false;
+    this.elementStates = Array.from(Array(4), (e, i) => 'unselected');
+    this.subs = new Subscription();
+  }
 
   ngOnInit() {
-    this.currentPlatform = this.userPrefsService.getCurrentPlatform();
-    this.router.events.subscribe((evt) => {
-      if (!this.router.url.includes('playlist')) this.themeService.resetColorHeader();
+    this.subs.add(this.uiStore.state$.pipe(
+      map((state: UIState) => state.drawerCollapsed),
+      distinctUntilChanged())
+      .subscribe(drawerCollapsed => this.drawerCollapsed = drawerCollapsed));
+
+    // there is probably a better way to do this
+    this.subs.add(this.uiStore.state$.pipe(
+      map((state: UIState) => state.headerHeight),
+      distinctUntilChanged())
+      .subscribe(headerHeight => this.headerHeight = headerHeight));
+
+    this.subs.add(this.router.events.subscribe((evt) => {
       if (!(evt instanceof NavigationEnd)) {
         return;
       }
       this.scrollable.scrollTo({ "top": 0 });
-    });
-    this.uiService.drawerCollapsed$.subscribe((res) => this.drawerCollapsed = res);
-    this.playlists$ = this.playlistDataService.getPlaylists();
+    }));
   }
 
   ngAfterViewInit() {
-    this.scrollable.elementScrolled().pipe().subscribe(() => {
-      this.uiService.getScrollPosition(this.scrollable.measureScrollOffset("top"));
-    })
+    // not sure if we can refactor this out to the ui service
+    this.subs.add(this.scrollable.elementScrolled().pipe().subscribe(() => {
+      let position = this.scrollable.measureScrollOffset("top");
+        if (position >= 0) this.uiStore.setHeaderPageControlsOpacity(position / 100);
+        else if (position < 200) this.uiStore.resetHeaderPageControlsOpacity();
+      }));
+      // this.uiStore.setScrollPosition(this.scrollable.measureScrollOffset("top"));
   }
 
   ngOnDestroy(): void {
-    this.uiService.drawerCollapsed$.unsubscribe();
+    this.subs.unsubscribe();
+  }
+
+  handleDrawerMouseOver() {
+    this.uiStore?.setDrawerScrollbarVisible();
+    clearTimeout(this.to);
+  }
+
+  handleDrawerMouseLeave() {
+    this.to = setTimeout(() => {
+      this.uiStore?.resetDrawerScrollbarVisible();
+    }, 1000);
   }
 
   enter() {

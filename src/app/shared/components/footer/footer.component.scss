@@ -4,11 +4,11 @@
     z-index: 1;
     overflow-x: clip;
     overflow-y: visible;
-    background-color: rgba(var(--primaryColor), 1);
+    background-color: rgb(var(--primary-color));
     transition: var(--enable-color-transition);
     padding: 0;
     display: flex;
-    border-top: 1px solid rgba(var(--primaryColor), 1);
+    border-top: 1px solid rgb(var(--primary-color-dark));
 }
 
 .mat-mdc-slider {
@@ -69,7 +69,7 @@
 
         .mdc-slider__thumb-knob {
             transition: var(--enable-color-transition);
-            border-color: rgba(var(--accentColor), 1);
+            border-color: rgb(var(--accent-color));
             border-width: 8px;
             width: 5px;
             height: 6px;
@@ -91,7 +91,7 @@
 
     ::ng-deep .mdc-slider__track--active_fill {
         transition: var(--enable-color-transition);
-        border-color: rgba(var(--accentColor), 1);
+        border-color: rgb(var(--accent-color));
         border-radius: 26px;
     }
 }
@@ -223,7 +223,7 @@
 
         ::ng-deep &:hover .mdc-slider__track--active_fill {
             transition: color 0s, background-color 0s, border-color 0s !important;
-            border-color: rgba(var(--accentColor), 1) !important;
+            border-color: rgba(var(--accent-color), 1) !important;
         }
 
         #button-mute {
@@ -319,11 +319,11 @@
 
     ::ng-deep &:hover .mdc-slider__track--active_fill {
         transition: color 0s, background-color 0s, border-color 0s !important;
-        border-color: rgba(var(--accentColor), 1) !important;
+        border-color: rgba(var(--accent-color), 1) !important;
     }
 
     ::ng-deep .mdc-slider__thumb-knob {
-        border-color: rgba(var(--accentColor), 1);
+        border-color: rgba(var(--accent-color), 1);
         border-width: 6px;
         width: 3px;
         height: 3px;

@@ -1,18 +1,19 @@
+@use "./variables" as v;
 @use '@angular/material' as mat;
 
 @include mat.core();
 
 $primary-palette: (
-  50: rgba(var(--primaryColor), 0.05),
-  100: rgba(var(--primaryColor), 0.1),
-  200: rgba(var(--primaryColor), 0.2),
-  300: rgba(var(--primaryColor), 0.3),
-  400: rgba(var(--primaryColor), 0.4),
-  500: rgba(var(--primaryColor), 0.5),
-  600: rgba(var(--primaryColor), 0.6),
-  700: rgba(var(--primaryColor), 0.7),
-  800: rgba(var(--primaryColor), 0.8),
-  900: rgba(var(--primaryColor), 0.9),
+  50: rgba(var(--primary-color), 0.05),
+  100: rgba(var(--primary-color), 0.1),
+  200: rgba(var(--primary-color), 0.2),
+  300: rgba(var(--primary-color), 0.3),
+  400: rgba(var(--primary-color), 0.4),
+  500: rgba(var(--primary-color), 0.5),
+  600: rgba(var(--primary-color), 0.6),
+  700: rgba(var(--primary-color), 0.7),
+  800: rgba(var(--primary-color), 0.8),
+  900: rgba(var(--primary-color), 0.9),
  contrast: (
    50: rgba(black, 0.87),
    100: rgba(black, 0.87),
@@ -28,16 +29,16 @@ $primary-palette: (
 );
 
 $accent-palette: (
- 50: rgba(var(--accentColor), 0.05),
- 100: rgba(var(--accentColor), 0.1),
- 200: rgba(var(--accentColor), 0.2),
- 300: rgba(var(--accentColor), 0.3),
- 400: rgba(var(--accentColor), 0.4),
- 500: rgba(var(--accentColor), 0.5),
- 600: rgba(var(--accentColor), 0.6),
- 700: rgba(var(--accentColor), 0.7),
- 800: rgba(var(--accentColor), 0.8),
- 900: rgba(var(--accentColor), 0.9),
+ 50: rgba(var(--accent-color), 0.05),
+ 100: rgba(var(--accent-color), 0.1),
+ 200: rgba(var(--accent-color), 0.2),
+ 300: rgba(var(--accent-color), 0.3),
+ 400: rgba(var(--accent-color), 0.4),
+ 500: rgba(var(--accent-color), 0.5),
+ 600: rgba(var(--accent-color), 0.6),
+ 700: rgba(var(--accent-color), 0.7),
+ 800: rgba(var(--accent-color), 0.8),
+ 900: rgba(var(--accent-color), 0.9),
  contrast: (
    50: rgba(black, 0.87),
    100: rgba(black, 0.87),
@@ -89,7 +90,7 @@ $dark-theme: mat.define-dark-theme((
     @include mat.expansion-color($light-theme);
 }
 
-.use-light-theme {
+.light-theme {
     @include mat.core-color($light-theme);
     @include mat.sidenav-color($light-theme);
     @include mat.slide-toggle-color($light-theme);

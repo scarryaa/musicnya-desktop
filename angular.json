@@ -44,12 +44,8 @@
             "preserveSymlinks": true
           },
           "configurations": {
-            "production": {
+            "electron-production": {
               "fileReplacements": [
-                {
-                  "replace": "app.js",
-                  "with": "app.prod.js"
-                },
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
@@ -69,34 +65,92 @@
               ],
               "outputHashing": "all"
             },
-            "github-pages": {
-              "baseHref": "/musicnya-desktop/",
+            "electron-development": {
               "fileReplacements": [
                 {
-                  "replace": "app.js",
-                  "with": "app.prod.js"
-                },
-                {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.github-pages.ts"
+                  "with": "src/environments/environment.dev.ts"
                 }
               ],
-              "outputHashing": "all"
-            },
-            "development": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "10mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "50kb"
+                }
+              ],
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.web.prod.ts"
+                }
+              ],
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "10mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "50kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.web.dev.ts"
+                }
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
+            "github-pages": {
+              "baseHref": "/musicnya-desktop/",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.web.prod.github.ts"
+                }
+              ],
+              "outputHashing": "all"
             }
           },
           "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "musicnya:build"
+          },
           "configurations": {
+            "electron-production": {
+              "browserTarget": "musicnya:build:electron-production"
+            },
+            "electron-development": {
+              "browserTarget": "musicnya:build:electron-development"
+            },
             "production": {
               "browserTarget": "musicnya:build:production"
             },

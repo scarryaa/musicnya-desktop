@@ -1,0 +1,8 @@
+{
+    "baseUrl": "http://localhost:4200/",
+    "environment": "dev",
+    "args": {
+        "ignore-certificate-errors": true,
+        "allow-insecure-localhost": true
+    }
+}

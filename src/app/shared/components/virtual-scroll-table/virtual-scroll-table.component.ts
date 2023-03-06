@@ -9,7 +9,7 @@ import { Song } from 'src/app/modules/core/models/song';
   selector: 'app-virtual-scroll-table',
   templateUrl: './virtual-scroll-table.component.html',
   styleUrls: ['./virtual-scroll-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VirtualScrollTableComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild(MatSort, { static: true }) sort!: MatSort;

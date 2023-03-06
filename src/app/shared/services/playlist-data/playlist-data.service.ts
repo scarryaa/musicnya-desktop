@@ -1,22 +1,27 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { distinctUntilChanged, map, Observable, of, Subscription } from 'rxjs';
 import { Playlist } from 'src/app/modules/core/models/playlist';
 import { Song } from 'src/app/modules/core/models/song';
 import { FastAverageColor, FastAverageColorResult } from 'fast-average-color';
-import { ThemeService } from '../theme/theme.service';
-import { UserPrefsService } from '../user-prefs/user-prefs.service';
+import { ThemeState, ThemeStore } from 'src/app/store/theme-store';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlaylistDataService {
+  // TODO playlist store
   private fac = new FastAverageColor();
 
   playlists: Playlist[] = [];
   playlists$: Observable<Playlist[]> = of(this.playlists);
+  subs!: Subscription;
 
-  constructor(private themeService: ThemeService, private userPrefsService: UserPrefsService) {
-    this.userPrefsService.darkTheme$.subscribe((res: boolean) => this.switchPlaylistColors(res));
+  constructor(private themeStore: ThemeStore) {
+    this.subs = new Subscription();
+    this.subs.add(this.themeStore.state$.pipe(
+      map((state: ThemeState) => state.darkTheme),
+      distinctUntilChanged())
+      .subscribe(darkThemeEnabled => this.switchPlaylistColors(darkThemeEnabled)));
   }
 
   getPlaylists(): Observable<Playlist[]> {
@@ -52,7 +57,8 @@ export class PlaylistDataService {
   async getDominantColor(artwork: string): Promise<string> {
     var color: string;
     if (!artwork || artwork == undefined || artwork == '') {
-      color = this.themeService.darkTheme ? 'rgb(54, 51, 51)' : 'rgb(212, 209, 209)';
+      //TODO convert this to subscription
+      color = this.themeStore.state.darkTheme ? 'rgb(54, 51, 51)' : 'rgb(212, 209, 209)';
     }
     else await this.fac.getColorAsync(artwork, {algorithm: 'simple', mode: 'speed', step: 50}).then((res: FastAverageColorResult) => color = res.rgb);
     return color!;

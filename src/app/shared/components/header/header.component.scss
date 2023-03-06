@@ -29,7 +29,7 @@ mat-select {
     box-shadow: none;
     width: 200px;
     height: 45px;
-    background-color: rgba(var(--primaryColor), 1);
+    background-color: rgb(var(--primary-color));
     transition: var(--enable-color-transition);
     display: flex;
     vertical-align: bottom;
@@ -131,8 +131,8 @@ mat-select {
 
     &:active,
     &:focus {
-        outline:rgba(var(--primaryColor), 0.6) 1px;
-        border: 1px solid rgba(var(--primaryColor), 0.6);
+        outline: rgba(var(--primary-color), 0.6) 1px;
+        border: 1px solid rgba(var(--primary-color), 0.6);
     }
 
     &::placeholder {

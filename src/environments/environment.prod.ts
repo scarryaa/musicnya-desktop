@@ -1,4 +1,5 @@
 export const environment = {
     production: true,
-    enableWindowControls: false
-  };
+    useElectron: true,
+    baseUrl: 'https://main.doei3b6u2rrea.amplifyapp.com/'
+};

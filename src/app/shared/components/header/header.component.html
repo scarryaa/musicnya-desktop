@@ -1,61 +1,67 @@
-<mat-toolbar #header class="header draggable" [style.height.px]="uiService.currentPlatform == 0 ? 45 : 60">
-    <div id="profile-settings-container" [ngClass]="compact ? 'compact' : ''" [style.height.px]="uiService.currentPlatform == 0 ? 45 : 60">
-        <div class='button' #settingsMenuTrigger="matMenuTrigger" [matMenuTriggerFor]="accountSettingsMenu" [style.margin-top.px]="uiService.currentPlatform == 0 ? 0 : 17.5"
-            id="button-user-profile">
-            <mat-icon [matTooltipDisabled]="compact ? false : true" matTooltip="Scarlet | Account Options" matTooltipPosition="right" id="user-profile-icon" class="material-icons-round" fontIcon="account_circle" />
-            <div id="user-profile-name" [style.visibility]="compact ? 'hidden' : 'visible'">Scarlet</div>
-        </div>
-        <div [style.display]="compact ? 'none' : 'block'" class='button' id="button-settings" *ngIf="uiService.enableWindowControls" [matMenuTriggerFor]="matMenu" [style.margin-top.px]="uiService.currentPlatform == 0 ? 0 : 17.5">
-            <mat-icon *ngIf="uiService.enableWindowControls" class="material-icons-round" fontIcon="more_vert" />
-        </div>
-    </div>
-    <div id="page-controls-container" [style.margin-top.px]="uiService.currentPlatform == 0 ? 0 : 17.5">
-        <div class='button' (click)="this.navigationService.prevPage()" [ngClass]="{'disabled' :!this.uiService.backButtonEnabled}" id="button-page_previous">
-            <mat-icon id="icon-page_previous" class="material-icons-round" fontIcon="chevron_left" />
-        </div>
-        <div class='button' (click)="this.navigationService.nextPage()" [ngClass]="{'disabled' : !this.uiService.forwardButtonEnabled}" id="button-page_next">
-            <mat-icon id="icon-page_next" class="material-icons-round" fontIcon="chevron_right" />
-        </div>
-    </div>
-    <div id="currentPageControls" [style.margin-top.px]="uiService.currentPlatform == 0 ? 0 : 17.5">
-        <div id="header-search" *ngIf="this.navigationService.router.url === '/search'">
-            <input id="input-search" value="" placeholder="Search for music" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" [(ngModel)]="searchInput">
-            <div id="button-clear_input" class='button icon-button' *ngIf="searchInput" mat matSuffix mat-icon-button aria-label="Clear" (click)="searchInput=''">
-                <mat-icon class="material-icons-round" fontIcon="close"/>
+<ng-container *ngTemplateOutlet="headerTemplate; context: { $implicit: this.uiStore.state$ | async, themeStore: this.themeStore.state$ | async}">
+</ng-container>
+
+<ng-template #headerTemplate let-uiStore$ let-themeStore$="themeStore">
+    <mat-toolbar class="header draggable" [style.height.px]="uiStore$?.headerHeight"
+     [style.background-color]="backgroundColor">
+        <div id="profile-settings-container" [ngClass]="{'compact' : uiStore$?.drawerCollapsed}" [style.height.px]="uiStore$?.headerHeight">
+            <div class='button' #settingsMenuTrigger="matMenuTrigger" [matMenuTriggerFor]="accountSettingsMenu" [style.margin-top.px]="uiStore$?.headerMargin"
+                id="button-user-profile">
+                <mat-icon [matTooltipDisabled]="!uiStore$?.drawerCollapsed" matTooltip="Scarlet | Account Options" matTooltipPosition="right" id="user-profile-icon" class="material-icons-round" fontIcon="account_circle" />
+                <div id="user-profile-name" [style.visibility]="uiStore$?.drawerCollapsed ? 'hidden' : 'visible'">Scarlet</div>
+            </div>
+            <div *ngIf="uiStore$?.showFileMenuButton && this.showFileMenuButton" class='button' id="button-settings" [matMenuTriggerFor]="matMenu" [style.margin-top.px]="uiStore$?.headerMargin">
+                <mat-icon class="material-icons-round" fontIcon="more_vert" />
             </div>
         </div>
-        <app-library-filters *ngIf="this.navigationService.router.url === '/library'"/>
-        <app-playlist-controls [title]="headerTitle" [opacity]="headerOpacity" *ngIf="this.navigationService.router.url.includes('/playlist')"/>
-    </div>
-
-    <div class="window-controls" *ngIf="uiService.enableWindowControls && uiService.currentPlatform == 0">
-        <div class="minimize-button" (click)="uiService.minWindow()">
-            <img src="assets/fonts/chrome_minimize.svg"/>
+        <div id="page-controls-container" [style.margin-top.px]="uiStore$?.headerMargin">
+            <div class='button' (click)="this.navigationService.prevPage()" [ngClass]="{'disabled' : !uiStore$?.backButtonEnabled}" id="button-page_previous">
+                <mat-icon id="icon-page_previous" class="material-icons-round" fontIcon="chevron_left" />
+            </div>
+            <div class='button' (click)="this.navigationService.nextPage()" [ngClass]="{'disabled' : !uiStore$?.forwardButtonEnabled}" id="button-page_next">
+                <mat-icon id="icon-page_next" class="material-icons-round" fontIcon="chevron_right" />
+            </div>
         </div>
-        <div class="maximize-button" (click)="uiService.maxWindow()">
-            <img src="assets/fonts/chrome_maximize.svg"/>
+        <div id="currentPageControls" [style.margin-top.px]="uiStore$?.headerMargin">
+            <div id="header-search" *ngIf="this.navigationService.router.url === '/search'">
+                <input id="input-search" value="" placeholder="Search for music" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" [(ngModel)]="searchInput">
+                <div id="button-clear_input" class='button icon-button' *ngIf="searchInput" mat matSuffix mat-icon-button aria-label="Clear" (click)="searchInput=''">
+                    <mat-icon class="material-icons-round" fontIcon="close"/>
+                </div>
+            </div>
+            <app-library-filters *ngIf="this.navigationService.router.url === '/library'"/>
+            <app-playlist-controls [title]="uiStore$?.headerTitle" *ngIf="this.navigationService.router.url.includes('/playlist')"/>
         </div>
-        <div class="close-button" (click)="uiService.closeWindow()">
-            <img src="assets/fonts/close.svg"/>
+    
+        <div *ngIf="uiStore$?.showFileMenuButton" class="window-controls">
+            <div class="minimize-button" (click)="windowService.minWindow()">
+                <img src="assets/fonts/chrome_minimize.svg"/>
+            </div>
+            <div class="maximize-button" (click)="windowService.maxWindow()">
+                <img src="assets/fonts/chrome_maximize.svg"/>
+            </div>
+            <div class="close-button" (click)="windowService.closeWindow()">
+                <img src="assets/fonts/close.svg"/>
+            </div>
         </div>
-    </div>
-
-    <mat-menu class="context-menu account-settings-menu" #accountSettingsMenu xPosition="before">
-        <button mat-menu-item [routerLink]="['/profile']">
-            <mat-icon class="material-icons-round icon-context-menu" fontIcon="account_circle" />
-            <span>Profile</span>
-        </button>
-        <button mat-menu-item [routerLink]="['/settings']">
-            <mat-icon class="material-icons-round icon-context-menu" fontIcon="settings"/>
-            <span>Settings</span>
-        </button>
-        <button mat-menu-item (click)="toggleSideNav()">
-            <mat-icon class="material-icons-round icon-context-menu" [fontIcon]="compact ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left'"/>
-            <span>{{compact ? 'Expand' : 'Collapse'}}</span>
-        </button>
-        <button mat-menu-item>
-            <mat-icon class="material-icons-round icon-context-menu" fontIcon="logout"/>
-            <span>Log Out</span>
-        </button>
-    </mat-menu>
-</mat-toolbar>
+    
+        <mat-menu class="context-menu account-settings-menu" #accountSettingsMenu xPosition="before">
+            <button mat-menu-item [routerLink]="['/profile']">
+                <mat-icon class="material-icons-round icon-context-menu" fontIcon="account_circle" />
+                <span>Profile</span>
+            </button>
+            <button mat-menu-item [routerLink]="['/settings']">
+                <mat-icon class="material-icons-round icon-context-menu" fontIcon="settings"/>
+                <span>Settings</span>
+            </button>
+            <button mat-menu-item (click)="this.uiStore.toggleDrawer(); this.uiStore$?.showFileMenuButton ? this.toggleFileMenuButton() : ''">
+                <mat-icon class="material-icons-round icon-context-menu" [fontIcon]="uiStore$?.drawerCollapsed ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left'"/>
+                <span>{{uiStore$?.drawerCollapsed ? 'Expand' : 'Collapse'}}</span>
+            </button>
+            <button mat-menu-item>
+                <mat-icon class="material-icons-round icon-context-menu" fontIcon="logout"/>
+                <span>Log Out</span>
+            </button>
+        </mat-menu>
+    </mat-toolbar>
+</ng-template>

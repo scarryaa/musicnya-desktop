@@ -8,7 +8,8 @@ import { PlaylistComponent } from './playlist.component';
 })
 export class DeactivateGuard implements CanDeactivate<PlaylistComponent> {
   canDeactivate(component: PlaylistComponent) {
-    return component.resetColorAndLeave();
+    component.resetHeaderOpacity();
+    return true;
   }
   
 }

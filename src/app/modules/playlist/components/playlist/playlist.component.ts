@@ -4,10 +4,9 @@ import { map, Observable, of, switchMap } from 'rxjs';
 import { PlaylistDataService } from 'src/app/shared/services/playlist-data/playlist-data.service';
 import { Song } from 'src/app/modules/core/models/song';
 import { Playlist } from 'src/app/modules/core/models/playlist';
-import { ThemeService } from 'src/app/shared/services/theme/theme.service';
-import { UserPrefsService } from 'src/app/shared/services/user-prefs/user-prefs.service'
-import { UIService } from 'src/app/shared/services/ui/ui.service';
-import { UtilityService } from 'src/app/shared/services/utility/utility.service';
+import { UIStore } from 'src/app/store/ui-store';
+import { ThemeStore } from 'src/app/store/theme-store';
+import { darkenColor } from 'src/app/helpers/helpers';
 
 @Component({
   selector: 'app-playlist',
@@ -17,8 +16,7 @@ import { UtilityService } from 'src/app/shared/services/utility/utility.service'
 })
 export class PlaylistComponent implements OnInit {
   constructor(private playlistDataService: PlaylistDataService, private route: ActivatedRoute,
-    private ref: ChangeDetectorRef, private themeService: ThemeService, private utilityService: UtilityService,
-      private uiService: UIService) {}
+    private ref: ChangeDetectorRef, private themeStore: ThemeStore, private uiStore: UIStore) {}
 
   rows!: Observable<Array<Song>>;
   playlist$!: Observable<Playlist>;
@@ -66,7 +64,7 @@ export class PlaylistComponent implements OnInit {
   private handleResults() {
     if (this.playlist$) {
       this.getBackgroundImg();
-      this.uiService.setHeaderTitle(this.playlistTitle);
+      this.uiStore.setHeaderTitle(this.playlistTitle);
     }
   }
 
@@ -78,14 +76,13 @@ export class PlaylistComponent implements OnInit {
         this.playlistId = data.id;
         this.playlistTitle = data.title;
         this.setColor();
-        this.themeService.headerColor = this.themeService.darkenColor(this.bgImgColor);
+        this.themeStore.setHeaderColor(darkenColor(this.bgImgColor));
       }
      )
   }
 
-  resetColorAndLeave() {
-    this.uiService.headerOpacity$.next(0);
-    return true;
+  resetHeaderOpacity() {
+    this.uiStore.resetHeaderPageControlsOpacity();
   }
 
   async setColor() {

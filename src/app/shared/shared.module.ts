@@ -28,7 +28,7 @@ import { LibraryFiltersComponent } from './components/header/components/library-
 import { PlaylistControlsComponent } from './components/header/components/playlist-controls/playlist-controls/playlist-controls.component';
 import { VirtualScrollTableComponent } from './components/virtual-scroll-table/virtual-scroll-table.component';
 import { FallbackSrc } from './directives/fallback-src.directive';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AlbumTileComponent } from './components/album-tile/album-tile.component';
 import { CategoryTileComponent } from './components/category-tile/category-tile.component';
 import { HeadingComponent } from './components/heading/heading.component';

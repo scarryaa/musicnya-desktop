@@ -1,56 +1,64 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { ThemeService } from 'src/app/shared/services/theme/theme.service';
-import { MatToolbar } from '@angular/material/toolbar';
-import { environment } from 'src/environments/environment';
-import { UIService } from '../../services/ui/ui.service';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { WindowService } from '../../services/window/window.service';
 import { NavigationService } from '../../services/navigation/navigation.service';
 import { MatMenu } from '@angular/material/menu';
+import { UIState, UIStore } from 'src/app/store/ui-store';
+import { ThemeState, ThemeStore } from 'src/app/store/theme-store';
+import { distinctUntilChanged, map, Subscription } from 'rxjs';
+import { Constants } from 'src/app/constants/constants';
+import { hexToRgb } from 'src/app/helpers/helpers';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements AfterViewInit, OnInit {
-  @ViewChild('header') headerElem!: MatToolbar;
-  @ViewChild('playlistControls') playlistControls!: any;
-
-  compact: boolean = this.uiService.drawerCollapsed;
-  headerOpacity: number = 0;
-  firstPage: boolean = true;
-  backButton: boolean = false;
-  headerTitle: string = '';
-  enableWindowControls: boolean = true;
-  headerHeight: number = 45;
+export class HeaderComponent implements OnInit, OnDestroy {
+  showFileMenuButton: boolean;
   @Input() matMenu!: MatMenu;
+  subs: Subscription;
+  currentBackgroundColor: string;
+  backgroundColor: string;
+  backgroundOpacity: number;
+  //TODO implement back navigation within library filters page
+
+  constructor(public windowService: WindowService, public uiStore: UIStore,
+    public navigationService: NavigationService, public themeStore: ThemeStore,
+    private ref: ChangeDetectorRef) {
+      this.backgroundOpacity = 0;
+      this.currentBackgroundColor = hexToRgb(Constants.headerColorDark, true)!;
+      this.backgroundColor = 'rgb(' + this.currentBackgroundColor + ')';
+      this.subs = new Subscription();
+      this.showFileMenuButton = !this.uiStore.state.drawerCollapsed;
+    }
 
   ngOnInit(): void {
-    this.enableWindowControls = environment.enableWindowControls;
+    this.subs.add(this.uiStore.state$.pipe(
+      map((state: UIState) => state.headerPageControlsOpacity),
+      distinctUntilChanged())
+      .subscribe(headerPageControlsOpacity => {
+        this.backgroundOpacity = headerPageControlsOpacity;
+        this.backgroundColor = 'rgba(' + this.currentBackgroundColor + ', ' + this.backgroundOpacity + ')';
+        this.ref.detectChanges();
+      }));
+
+      this.subs.add(this.themeStore.state$.pipe(
+        map((state: ThemeState) => state.headerColor),
+        distinctUntilChanged())
+        .subscribe(headerColor => {
+          this.currentBackgroundColor = headerColor;
+          this.backgroundColor = 'rgba(' + this.currentBackgroundColor + ', ' + this.backgroundOpacity + ')';
+          this.ref.detectChanges();
+        }));
   }
 
-  //TODO implement back navigation within library filters page
-  constructor(public themeService: ThemeService, private renderer: Renderer2,
-    private ref: ChangeDetectorRef, public uiService: UIService, public navigationService: NavigationService) {
-    this.uiService.drawerCollapsed$.subscribe((value: boolean) => this.compact = value);
-  }
-
-  toggleSideNav() {
-    this.uiService.toggleDrawer();
-  }
-
-  ngAfterViewInit(): void {
-    this.uiService.headerTitle$.subscribe((title: string) => {
-      this.headerTitle = title;
-      this.ref.detectChanges();
-    });
-
-    this.uiService.headerOpacity$.subscribe((opacity: number) => {
-      this.renderer.setStyle(this.headerElem._elementRef.nativeElement,
-        'backgroundColor', `rgba(${this.themeService.headerColor}, ${opacity}`);
-        this.headerOpacity = opacity;
-      this.ref.detectChanges();
-    });
+  ngOnDestroy(): void {
+    throw new Error('Method not implemented.');
   }
 
   @Input() searchInput: string = '';
+
+  toggleFileMenuButton() {
+    this.showFileMenuButton = !this.showFileMenuButton;
+  }
 }

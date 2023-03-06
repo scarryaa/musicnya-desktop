@@ -1,8 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PlaybackService } from 'ngx-apple-music';
-import { ThemeService } from '../../services/theme/theme.service';
-import { UserPrefsService } from '../../services/user-prefs/user-prefs.service';
 
 @Component({
   selector: 'app-footer',
@@ -12,11 +10,15 @@ import { UserPrefsService } from '../../services/user-prefs/user-prefs.service';
 )
 
 export class FooterComponent implements OnInit, AfterViewInit {
-  constructor(private playbackService: PlaybackService, private ref: ChangeDetectorRef, private userPrefsService: UserPrefsService, private themeService: ThemeService) {
+  constructor(private playbackService: PlaybackService, private ref: ChangeDetectorRef) {
+    this.accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
     this.iconColor = getComputedStyle(document.documentElement).getPropertyValue('--ui-color-override');
   }
 
   ngOnInit(): void {
+    this.primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+    this.accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color');
+    this.iconColor = getComputedStyle(document.documentElement).getPropertyValue('--ui-color-override');
     this.volumeValue.valueChanges.subscribe((value) => {
       // we know the user manually did this, because it 
       // would be muted already if the mute btn was pressed
@@ -32,13 +34,10 @@ export class FooterComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accentColor');
-    this.userPrefsService.colorChanged$.subscribe((colors: string[]) => this.accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accentColor'));
-    this.themeService.overrideColor$.subscribe((color: string) => this.iconColor = getComputedStyle(document.documentElement).getPropertyValue('--ui-color-override'));
-    this.ref.detectChanges();
   }
 
   accentColor!: string;
+  primaryColor!: string;
   iconColor!: string;
   volumeValue = new FormControl<number>(50);
   playbackValue = new FormControl<number>(0);

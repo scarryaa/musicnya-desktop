@@ -1,85 +1,90 @@
-<mat-sidenav-container [ngClass]="drawerCollapsed ? 'collapseMargin' : 'fullMargin'" class="sidenav-container">
-  <mat-sidenav #drawer [ngClass]="drawerCollapsed ? 'collapseDrawer' : ''" class="sidenav" fixedInViewport
-    [attr.role]="'navigation'" [mode]="'side'" opened="true" position="start"
-    [fixedTopGap]="currentPlatform == 0 ? 45 : 60" [fixedBottomGap]="75">
-    <mat-nav-list [disableRipple]="true">
-      <a *ngIf="uiService.enableWindowControls" [style.display]="drawerCollapsed ? 'block' : 'none'"
-        [@elementState]="elementStates[0]" class="mbn1h hover-no-bg" mat-list-item [matMenuTriggerFor]="matMenu">
-        <span>
-          <mat-icon [matTooltipDisabled]="drawerCollapsed ? false : true" matTooltip="File Menu"
-            matTooltipPosition="right" class="material-icons-round sidenav-icon" fontIcon="more_vert" />
-        </span>
-      </a>
-      <a [@elementState]="elementStates[1]" (mousedown)="elementStates[1]='selected'"
-        (mouseup)="elementStates[1]='unselected'" class="hover-no-bg" routerLinkActive="active"
-        [routerLink]="['/home']" [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
-        <span>
-          <mat-icon [matTooltipDisabled]="drawerCollapsed ? false : true" matTooltip="Home" matTooltipPosition="right"
-            class="material-icons-round sidenav-icon" fontIcon="home" />{{!drawerCollapsed ? ' Home' : ''}}
-        </span>
-      </a>
-      <a [@elementState]="elementStates[2]" (mousedown)="elementStates[2]='selected'"
-        (mouseup)="elementStates[2]='unselected'" class="hover-no-bg" routerLinkActive="active"
-        [routerLink]="['/search']" [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
-        <span>
-          <mat-icon [matTooltipDisabled]="drawerCollapsed ? false : true" matTooltip="Search" matTooltipPosition="right"
-            class="material-icons-round sidenav-icon" fontIcon="search" />{{!drawerCollapsed ? ' Search' : ''}}
-        </span>
-      </a>
-      <a [@elementState]="elementStates[3]" (mousedown)="elementStates[3]='selected'"
-        (mouseup)="elementStates[3]='unselected'" class="sidenav-item hover-no-bg mt1"
-        routerLinkActive="active" [routerLink]="['/library']" [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
-        <span>
-          <mat-icon [matTooltipDisabled]="drawerCollapsed ? false : true" matTooltip="Library"
-            matTooltipPosition="right" class="material-icons-round sidenav-icon library-icon"
-            fontIcon="library_music" />{{!drawerCollapsed ? ' Library' : ''}}
-        </span>
-      </a>
+<ng-container *ngTemplateOutlet="drawerTemplate; context: { $implicit: this.uiStore.state$ | async}">
+</ng-container>
 
-      <a class="hover-no-bg" mat-list-item (click)="createNewPlaylist()">
-        <span>
-          <mat-icon [matTooltipDisabled]="drawerCollapsed ? false : true" matTooltip="New Playlist"
-            matTooltipPosition="right" class="material-icons-round sidenav-icon" fontIcon="add_box" />{{!drawerCollapsed ? '
-          New Playlist' : ''}}
-        </span>
-      </a>
-      <a class="hover-no-bg" routerLinkActive="active" [routerLink]="['/liked_songs']"
-        [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
-        <span>
-          <mat-icon [matTooltipDisabled]="drawerCollapsed ? false : true" matTooltip="Liked Songs"
-            matTooltipPosition="right" class="material-icons-round sidenav-icon" fontIcon="thumb_up" />{{!drawerCollapsed ?
-          ' Liked Songs' : ''}}
-        </span>
-      </a>
-      <mat-divider class="sidenav-divider"></mat-divider>
-    </mat-nav-list>
-  </mat-sidenav>
-  <div class="content-container">
-    <div class="content-width-height" [ngClass]="drawerCollapsed ? 'drawerCollapsed' : ''"
-      [style.margin-top.px]="currentPlatform == 0 ? -45 : -60">
-      <div #mainContainer class="main-container" cdkVirtualScrollingElement cdkScrollable>
-        <router-outlet></router-outlet>
+<ng-template #drawerTemplate let-uiStore>
+  <mat-sidenav-container [ngClass]="uiStore?.drawerCollapsed ? 'collapseMargin' : 'fullMargin'" class="sidenav-container">
+    <mat-sidenav #drawer [ngClass]="uiStore?.drawerCollapsed ? 'collapseDrawer' : ''" class="sidenav" fixedInViewport
+      [attr.role]="'navigation'" [mode]="'side'" opened="true" position="start"
+      [fixedTopGap]="uiStore?.headerHeight" [fixedBottomGap]="uiStore?.footerHeight">
+      <mat-nav-list [disableRipple]="true">
+        <a *ngIf="useElectron" [style.display]="uiStore?.drawerCollapsed ? 'block' : 'none'"
+          [@elementState]="elementStates[0]" class="mbn1h hover-no-bg" mat-list-item [matMenuTriggerFor]="matMenu">
+          <span>
+            <mat-icon [matTooltipDisabled]="!uiStore?.drawerCollapsed" matTooltip="File Menu"
+              matTooltipPosition="right" class="material-icons-round sidenav-icon" fontIcon="more_vert" />
+          </span>
+        </a>
+        <a [@elementState]="elementStates[1]" (mousedown)="elementStates[1]='selected'"
+          (mouseup)="elementStates[1]='unselected'" class="hover-no-bg" routerLinkActive="active"
+          [routerLink]="['/home']" [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
+          <span>
+            <mat-icon [matTooltipDisabled]="!uiStore?.drawerCollapsed" matTooltip="Home" matTooltipPosition="right"
+              class="material-icons-round sidenav-icon" fontIcon="home" />{{!uiStore?.drawerCollapsed ? ' Home' : ''}}
+          </span>
+        </a>
+        <a [@elementState]="elementStates[2]" (mousedown)="elementStates[2]='selected'"
+          (mouseup)="elementStates[2]='unselected'" class="hover-no-bg" routerLinkActive="active"
+          [routerLink]="['/search']" [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
+          <span>
+            <mat-icon [matTooltipDisabled]="!uiStore?.drawerCollapsed" matTooltip="Search" matTooltipPosition="right"
+              class="material-icons-round sidenav-icon" fontIcon="search" />{{!uiStore?.drawerCollapsed ? ' Search' : ''}}
+          </span>
+        </a>
+        <a [@elementState]="elementStates[3]" (mousedown)="elementStates[3]='selected'"
+          (mouseup)="elementStates[3]='unselected'" class="sidenav-item hover-no-bg mt1"
+          routerLinkActive="active" [routerLink]="['/library']" [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
+          <span>
+            <mat-icon [matTooltipDisabled]="!uiStore?.drawerCollapsed" matTooltip="Library"
+              matTooltipPosition="right" class="material-icons-round sidenav-icon library-icon"
+              fontIcon="library_music" />{{!uiStore?.drawerCollapsed ? ' Library' : ''}}
+          </span>
+        </a>
+  
+        <a class="hover-no-bg" mat-list-item (click)="createNewPlaylist()">
+          <span>
+            <mat-icon [matTooltipDisabled]="!uiStore?.drawerCollapsed" matTooltip="New Playlist"
+              matTooltipPosition="right" class="material-icons-round sidenav-icon" fontIcon="add_box" />{{!uiStore?.drawerCollapsed ? '
+            New Playlist' : ''}}
+          </span>
+        </a>
+        <a class="hover-no-bg" routerLinkActive="active" [routerLink]="['/liked_songs']"
+          [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
+          <span>
+            <mat-icon [matTooltipDisabled]="!uiStore?.drawerCollapsed" matTooltip="Liked Songs"
+              matTooltipPosition="right" class="material-icons-round sidenav-icon" fontIcon="thumb_up" />{{!uiStore?.drawerCollapsed ?
+            ' Liked Songs' : ''}}
+          </span>
+        </a>
+        <mat-divider class="sidenav-divider"></mat-divider>
+      </mat-nav-list>
+    </mat-sidenav>
+    <div class="content-container">
+      <div class="content-width-height" [ngClass]="uiStore?.drawerCollapsed ? 'drawerCollapsed' : ''"
+        [style.margin-top.px]="-uiStore?.headerHeight">
+        <div #mainContainer class="main-container" cdkVirtualScrollingElement cdkScrollable>
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </div>
-  </div>
-</mat-sidenav-container>
-
-<mat-sidenav-container class="no-scrollbar-margin">
-  <mat-sidenav
-    [ngClass]="[drawerCollapsed ? 'collapseDrawer' : '', scrollbarVisible ? 'scrollbarShown' : 'scrollbarHidden']"
-    class="sidenav scrollbarHidden sidenav-playlists" position="start" (mouseover)="enter()" (mouseleave)="leave()"
-    fixedInViewport [mode]="'side'" opened="true"
-    [fixedTopGap]="(drawerCollapsed && uiService.enableWindowControls) ? currentPlatform == 0 ? 300 : 315 : currentPlatform == 0 ? 272 : 287"
-    [fixedBottomGap]="75">
-    <mat-list class="sidenav-items">
-      <a *ngFor="let playlist of (playlists$ | async)! | reverse"
-        [ngClass]="drawerCollapsed ? 'playlist-item-compact' : ''"
-        class="sidenav-item truncate-text hover-fade hover-no-bg" routerLinkActive="active"
-        [routerLink]="['/playlist', playlist.id]" [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
-        <span matTooltip="{{playlist.title}}" matTooltipPosition="right">
-          {{!drawerCollapsed ? playlist.title : playlist.title.slice(0, 2)}}
-        </span>
-      </a>
-    </mat-list>
-  </mat-sidenav>
-</mat-sidenav-container>
+  </mat-sidenav-container>
+  
+  <mat-sidenav-container class="no-scrollbar-margin">
+    <mat-sidenav
+      [ngClass]="[uiStore?.drawerCollapsed ? 'collapseDrawer' : '', uiStore?.drawerScrollbarVisible ? 'scrollbarShown' : 'scrollbarHidden']"
+      class="sidenav scrollbarHidden sidenav-playlists" position="start" (mouseover)="handleDrawerMouseOver()" (mouseleave)="handleDrawerMouseLeave()"
+      fixedInViewport [mode]="'side'" opened="true"
+      [fixedTopGap]="uiStore?.playlistDrawerTopOffset"
+      [fixedBottomGap]="uiStore?.footerHeight">
+      <mat-list class="sidenav-items">
+        <a *ngFor="let playlist of (this.playlistDataService.playlists$ | async)! | reverse"
+          [ngClass]="uiStore?.drawerCollapsed ? 'playlist-item-compact' : ''"
+          class="sidenav-item truncate-text hover-fade hover-no-bg" routerLinkActive="active"
+          [routerLink]="['/playlist', playlist.id]" [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
+          <span matTooltip="{{playlist.title}}" matTooltipPosition="right">
+            {{!uiStore?.drawerCollapsed ? playlist.title : playlist.title.slice(0, 2)}}
+          </span>
+        </a>
+      </mat-list>
+    </mat-sidenav>
+  </mat-sidenav-container>
+</ng-template>

@@ -1,7 +1,9 @@
 :root {
-    --primaryColor: 90, 87, 142;
-    --accentColor: 255, 64, 128;
+    --primary-color-dark: 49, 46, 84;
+    --primary-color: 76, 73, 120;
+    --accent-color: 255, 77, 157;
     --text: white;
+    --drawer-border: rgba(white, 0.12);
     --text-inverse: black;
     --background-light: rgb(46, 46, 46);
     --ui-color-override: var(--override-color, white);
@@ -32,7 +34,7 @@
     }
 }
 
-.use-light-theme {
+.light-theme {
     --text: black;
     --text-inverse: white;
     --background-light: rgb(224, 224, 224);

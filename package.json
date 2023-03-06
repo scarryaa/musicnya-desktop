@@ -1,17 +1,21 @@
 {
   "name": "musicnya",
-  "version": "0.1.0-alpha.0",
+  "version": "0.2.0-alpha.0",
   "main": "app.js",
   "scripts": {
-    "electron": "wait-on http://localhost:4200 && electron .",
-    "start": "concurrently -k \"ng serve\" \"npm run electron -ignore-certificate-errors\"",
+    "start:electron:dev": "concurrently -k \"ng serve --configuration electron-development\" \"npm run electron:dev",
+    "start:electron:prod": "npm run electron:prod",
+    "start:web:dev": "ng serve --configuration development",
+    "start:web:prod": "ng serve --configuration production",
     "ng": "ng",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "electron:dev": "copy environments\\environment.dev.json environments\\environment.json && wait-on http://localhost:4200 && electron .",
+    "electron:prod": "copy environments\\environment.prod.json environments\\environment.json && electron ."
   },
   "build": {
     "electronDownload": {
@@ -35,7 +39,6 @@
     "ngx-apple-music": "https://gitpkg.now.sh/scarryaa/ngx-apple-music/dist/ngx-apple-music?main",
     "ngx-resize": "^1.0.6",
     "npm": "^9.5.0",
-    "patch-package": "^6.5.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.5.0",
     "zone.js": "^0.12.0"

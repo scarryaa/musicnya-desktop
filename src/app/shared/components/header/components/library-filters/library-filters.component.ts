@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation, ChangeDetectorRe
 import { LibraryViewHandlerService } from 'src/app/services/library-view-handler/library-view-handler.service';
 import { MatSelect } from '@angular/material/select';
 import { Filter } from './models/filter';
-import { UtilityService } from 'src/app/shared/services/utility/utility.service';
+import { documentClickedTarget, windowResized } from 'src/app/helpers/helpers';
 
 @Component({
   selector: 'app-library-filters',
@@ -21,15 +21,15 @@ export class LibraryFiltersComponent implements OnDestroy, OnInit {
   widthUnhideThreshold: number = 0;
   firstRun: boolean = true;
 
-  constructor(private ref: ChangeDetectorRef, private libraryService: LibraryViewHandlerService, private utilityService: UtilityService) { }
+  constructor(private ref: ChangeDetectorRef, private libraryService: LibraryViewHandlerService) { }
 
   ngOnInit() {
     this.ref.detach();
 
-    this.clickSub = this.utilityService.documentClickedTarget
+    this.clickSub = documentClickedTarget
       .subscribe(target => this.documentClickListener(target));
 
-    this.resizeSub = this.utilityService.windowResized.subscribe(currentWidth => {
+    this.resizeSub = windowResized.subscribe(currentWidth => {
       if (this.firstRun) {
         this.firstRun = false;
         this.windowWidth = currentWidth;

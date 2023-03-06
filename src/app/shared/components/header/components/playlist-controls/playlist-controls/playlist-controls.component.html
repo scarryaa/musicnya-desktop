@@ -1,4 +1,9 @@
-<div class="inline" [style.opacity]="opacity">
-    <mat-icon class="button material-icons-round" fontIcon="play_circle" />
-    <p class="playlist-title">{{title}}</p>
-</div>
+<ng-container *ngTemplateOutlet="playlistControlsTemplate;">
+</ng-container>
+
+<ng-template #playlistControlsTemplate let-uiStore$>
+    <div class="inline" [style.opacity]="opacity">
+        <mat-icon class="button material-icons-round" fontIcon="play_circle" />
+        <p class="playlist-title">{{title}}</p>
+    </div>
+</ng-template>
