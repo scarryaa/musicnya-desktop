@@ -3,7 +3,8 @@ import { Directive, OnInit, OnDestroy, Self, Inject } from "@angular/core";
 import { Subject, fromEvent, debounceTime, takeUntil } from "rxjs";
 
 @Directive({
-	selector: 'cdk-virtual-scroll-viewport'
+	selector: 'cdk-virtual-scroll-viewport',
+	
 })
 export class CdkVirtualScrollViewportPatchDirective implements OnInit, OnDestroy {
 	protected readonly destroy$ = new Subject();

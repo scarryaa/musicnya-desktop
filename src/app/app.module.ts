@@ -11,14 +11,21 @@ import { CoreModule } from './modules/core/core.module';
 import { MatTooltipDefaultOptions, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 import { ElectronService } from './shared/services/electron/electron.service';
 import { MatSlideToggleDefaultOptions, MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS } from '@angular/material/slide-toggle';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { InitializationService } from './shared/services/initialization/initialization.service';
 import { UIStore } from 'src/app/store/ui-store';
 import { ThemeStore } from 'src/app/store/theme-store';
-import { LocalStorageService } from './shared/services/local-storage/local-storage.service';
 import { StyleService } from './shared/services/style/style.service';
 import { SettingsStore } from './store/settings-store';
 import { environment } from 'src/environments/environment';
+import { MusickitStore } from "ngx-apple-music";
+import { UserStore } from './store/user-store';
+import { LocalStorageService } from './shared/services/local-storage/local-storage.service';
+import { CurrentPlatform } from './constants/constants';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { H401Interceptor } from './modules/core/error-handling/http-interceptor';
+import { AwsService } from './shared/services/aws/aws.service';
 
 const globalRippleConfig: RippleGlobalOptions = {
   disabled: true,
@@ -38,6 +45,12 @@ const globalSlideToggleConfig: MatSlideToggleDefaultOptions = {
   color: "accent"
 }
 
+export function initConfiguration(initializationService: InitializationService,
+  themeStore: ThemeStore, uiStore: UIStore, styleService: StyleService, localStorageService: LocalStorageService, 
+  electronService: ElectronService): () => Promise<any> {
+    return () => initializationService.initialize(themeStore, uiStore, styleService, localStorageService, electronService);
+}
+
 @NgModule({
   declarations: [
     AppComponent
@@ -49,39 +62,35 @@ const globalSlideToggleConfig: MatSlideToggleDefaultOptions = {
     CoreModule,
     BrowserAnimationsModule,
     SharedModule,
-    MatMenuModule
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    HttpClientModule
   ],
   providers: [
     { provide: MAT_RIPPLE_GLOBAL_OPTIONS, useValue: globalRippleConfig },
     { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: globalTooltipConfig },
     { provide: MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS, useValue: globalSlideToggleConfig },
-    InitializationService, {
-      provide: APP_INITIALIZER,
-      useFactory: environment.useElectron ? (electronService: ElectronService) => async () => await new InitializationService()
-        .setPlatform(electronService) :
-        () => async () => await new InitializationService().setPlatform(),
-      deps: environment.useElectron ? [ElectronService] : [],
+    { provide: HTTP_INTERCEPTORS,
+      useClass: H401Interceptor,
       multi: true
     },
-    InitializationService, {
+    {
       provide: APP_INITIALIZER,
-      useFactory: (playlistDataService: PlaylistDataService,
-        themeStore: ThemeStore, uiStore: UIStore, styleService: StyleService,
-        localStorageService: LocalStorageService) => async () => await new InitializationService()
-        .initialize(playlistDataService, themeStore, uiStore, styleService, localStorageService),
-      deps: [PlaylistDataService, ThemeStore, UIStore, StyleService, LocalStorageService],
+      useFactory: (musickitStore: MusickitStore, awsService: AwsService) => async () => musickitStore.initMusicKit(await awsService.refreshToken(), "musicnya", "0.3.1-alpha.0")
+      .catch((error: any) => Promise.resolve(error))
+      .then(() => musickitStore.authorizeUser().then(() => console.log(musickitStore.instance))).then(() => musickitStore.getUserPlaylists()),
+      deps: [MusickitStore, AwsService],
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initConfiguration,
+      deps: [InitializationService, ThemeStore, UIStore, StyleService, LocalStorageService, environment.useElectron ? ElectronService : null],
       multi: true
     }
-    //   InitializationService, {
-    //   provide: APP_INITIALIZER,
-    //   useFactory: (initService: InitializationService) => () => initService.initMusicKit('DEV_TOKEN',
-    //     'musicnya', '1.0.0'),
-    //   deps: [InitializationService],
-    //   multi: true
-    // }],
   ],
   bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor(settingsStore: SettingsStore) {}
+  constructor(settingsStore: SettingsStore, userStore: UserStore) { }
 }

@@ -97,17 +97,21 @@
 }
 
 .media-album-info {
+    overflow: hidden;
     max-height: 60px;
     margin-top: 0px;
-    display: inline-flex;
+    display: flex;
+    max-width: fit-content;
+    flex: 1;
 
     #current-album-info {
         min-width: 105px;
+        max-width: fit-content;
+        overflow: hidden;
         height: fit-content;
         padding-left: 0.8rem;
         font-size: 0.95rem;
         font-weight: 200;
-        
         color: var(--ui-color-override);
         transition: var(--enable-color-transition);
         line-height: 1.2rem;
@@ -115,6 +119,15 @@
     }
 
     div {
+        display: block;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        
+        :hover {
+            text-decoration: underline;
+        }
+
         #current-song-artist {
             font-size: 0.8rem;
             transition: var(--enable-color-transition);
@@ -128,18 +141,23 @@
 }
 
 #current-album-cover {
-    width: 4rem;
     height: 60px;
     object-fit: cover;
     margin-left: 0.4rem;
     border-radius: 4px;
-    filter: drop-shadow(0rem 0.3rem 0.5rem rgba(black, 0.4))
+    filter: drop-shadow(0rem 0.3rem 0.5rem rgba(black, 0.4));
+
+    &:hover {
+        cursor: pointer;
+    }
 }
 
 .media-controls-container {
     display: inline-flex;
     margin-top: 17.5px;
+    min-width: max-content;
     flex: auto;
+    flex-shrink: 0;
 
     .track-time {
         position: absolute;
@@ -297,6 +315,13 @@
     ::ng-deep .mdc-slider__thumb {
         opacity: 1;
     }
+}
+
+.hideThumb {
+    ::ng-deep .mdc-slider__thumb {
+        opacity: 0;
+        display: none;
+    } 
 }
 
 #seekbar-volume {

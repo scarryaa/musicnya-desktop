@@ -1,25 +1,43 @@
 <div class="background">
-    <div class="playlistView">
+    <div class="playlistView" *ngIf="!loading">
         <div class="bgImg"
             [style.background]="'linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4)), ' + 'url(' + imgUrl + ')'"
             [style.filter]="imgUrl !== '' ? 'blur(10px)' : ''" [style.height]="imgUrl !== '' ? '40rem' : '30rem'">
         </div>
         <div class="content">
-            <div class="playlistInfo" *ngIf="playlist$ | async as playlist">
-                <img #playlistCover class="playlistCover" [src]="playlist.artwork!" crossorigin="anonymous" />
-                <div class="titleArtistInfo">
-                    <div class="title">{{playlist.title}}
-                        <button mat-mini-fab id="titleEditButton">
-                            <mat-icon class="material-icons-round" fontIcon="edit" />
-                        </button>
+            <div class="playlistInfo">
+                <img class="playlistCover" [src]="imgUrl" crossorigin="anonymous" />
+                <div class="playlist-info">
+                    <div class="titleArtistInfo">
+                        <div class="title-container">
+                            <button mat-mini-fab id="titleEditButton">
+                                <mat-icon class="material-icons-round" fontIcon="edit" />
+                            </button>
+                            <div>{{playlistTitle}}</div>
+                        </div>
+                        <div>
+                            <div>
+                                <mat-icon class="material-icons-round author-pic" fontIcon="account_circle" />
+                                <div class="author">User</div>
+                            </div>
+                            <span class="totalSongs">{{(rows | async)?.length! | song}}, </span>
+                            <span class="totalDuration">{{totalDuration() | minSec}}</span>
+                        </div>
                     </div>
-                    <div>
-                        <mat-icon class="material-icons-round author-pic" fontIcon="account_circle" />
-                        <div class="author">{{playlist.author}}</div>
+                    <div class="playlist-button-container flex fdr">
+                        <div>
+                            <button class="button-playlist" mat-flat-button (click)="playPlaylist()">
+                                <mat-icon class="material-icons-round" fontIcon="play_arrow"></mat-icon>
+                                <span>Play</span>
+                            </button>
+                        </div>
+                        <div class="mh1">
+                            <button class="button-playlist" mat-flat-button (click)="shufflePlayPlaylist()">
+                                <mat-icon class="material-icons-round" fontIcon="shuffle"></mat-icon>
+                                <span>Shuffle</span>
+                            </button>
+                        </div>
                     </div>
-                    <span class="totalSongs">{{playlist.totalSongs() | song}}, </span>
-                    <span class="totalDuration">{{playlist.totalDuration() | minSec}}</span>
-                    <div><mat-icon class="material-icons-round" fontIcon="add" (click)="addTrack()" /></div>
                 </div>
             </div>
 

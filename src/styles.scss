@@ -9,6 +9,17 @@
     --ui-color-override: var(--override-color, white);
     --enable-color-transition: color 0.35s, background-color 0.35s, border-color 0.35s;
 
+    .mat-mdc-progress-bar {
+        border-radius: 4px;
+        height: 5px;
+
+        div, span {
+            border-radius: 4px;
+        }
+
+        --mdc-linear-progress-active-indicator-color: rgb(var(--accent-color));
+    }
+
     .mat-app-background {
         background-color: rgb(28, 28, 28);
         transition: color 0.35s, background-color 0.35s, border-color 0.35s;
@@ -77,6 +88,15 @@
         .mdc-menu-surface {
             background-color: #ffffff;
         }
+    }
+}
+
+.button-disabled {
+    opacity: 0.4;
+    transform: none;
+
+    &:hover {
+        transform: none !important;
     }
 }
 
@@ -289,6 +309,10 @@ body {
     flex-direction: row;
 }
 
+.fdc {
+    flex-direction: column;
+}
+
 .flex-wrap {
     flex-wrap: wrap;
 }
@@ -354,7 +378,10 @@ body {
 }
 
 .truncate-text {
+    display: block;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .subheading {

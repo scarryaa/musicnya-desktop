@@ -10,7 +10,7 @@ import { documentClickedTarget, windowResized } from './helpers/helpers';
 export class AppComponent {
   constructor() {}
 
-  readonly resizeResult$ = injectNgxResize().subscribe((result) => 
+  readonly resizeResult$ = injectNgxResize().subscribe((result: any) => 
     windowResized.emit(result.width));
   
   @HostListener('document:click', ['$event'])

@@ -1,7 +1,7 @@
-<ng-container *ngTemplateOutlet="drawerTemplate; context: { $implicit: this.uiStore.state$ | async}">
+<ng-container *ngTemplateOutlet="drawerTemplate; context: { $implicit: this.uiStore.state$ | async, musickitStore$: this.musickitStore.state$ | async}">
 </ng-container>
 
-<ng-template #drawerTemplate let-uiStore>
+<ng-template #drawerTemplate let-uiStore let-userStore$ let-musickitStore$>
   <mat-sidenav-container [ngClass]="uiStore?.drawerCollapsed ? 'collapseMargin' : 'fullMargin'" class="sidenav-container">
     <mat-sidenav #drawer [ngClass]="uiStore?.drawerCollapsed ? 'collapseDrawer' : ''" class="sidenav" fixedInViewport
       [attr.role]="'navigation'" [mode]="'side'" opened="true" position="start"
@@ -76,14 +76,16 @@
       [fixedTopGap]="uiStore?.playlistDrawerTopOffset"
       [fixedBottomGap]="uiStore?.footerHeight">
       <mat-list class="sidenav-items">
-        <a *ngFor="let playlist of (this.playlistDataService.playlists$ | async)! | reverse"
-          [ngClass]="uiStore?.drawerCollapsed ? 'playlist-item-compact' : ''"
-          class="sidenav-item truncate-text hover-fade hover-no-bg" routerLinkActive="active"
-          [routerLink]="['/playlist', playlist.id]" [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
-          <span matTooltip="{{playlist.title}}" matTooltipPosition="right">
-            {{!uiStore?.drawerCollapsed ? playlist.title : playlist.title.slice(0, 2)}}
-          </span>
-        </a>
+        <ng-container *ngIf="musickitStore$">
+          <a *ngFor="let playlist of playlists"
+            [ngClass]="uiStore?.drawerCollapsed ? 'playlist-item-compact' : ''"
+            class="sidenav-item hover-fade hover-no-bg" routerLinkActive="active"
+            [routerLink]="['/playlist', playlist.id]" [routerLinkActiveOptions]="{ exact: true }" mat-list-item>
+            <span class="truncate-text" matTooltip="{{playlist.attributes.name}}" matTooltipPosition="right">
+              {{!uiStore?.drawerCollapsed ? playlist.attributes.name : playlist.attributes.name.slice(0, 2)}}
+            </span>
+          </a>
+        </ng-container>
       </mat-list>
     </mat-sidenav>
   </mat-sidenav-container>

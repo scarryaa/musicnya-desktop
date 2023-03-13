@@ -46,8 +46,13 @@ export class StyleService implements OnDestroy {
   
   applyThemeColorOverride(primaryColor: string) {
     var luma = calculateColorBrightness(hexToRgb(primaryColor, true)!);
-    if (luma > 180) this.setDOMStyle(DOMProperty.overrideColor, Constants.darkThemeOverride);
-    else this.setDOMStyle(DOMProperty.overrideColor);
+    if (luma > 180) {
+      this.setDOMStyle(DOMProperty.overrideColor, Constants.darkThemeOverride);
+      this.themeStore.setOverrideColor(Constants.darkThemeOverride);
+    } else {
+      this.setDOMStyle(DOMProperty.overrideColor);
+      this.themeStore.setOverrideColor(Constants.white);
+    }
   }
 
   setDarkTheme(enabled: boolean) {

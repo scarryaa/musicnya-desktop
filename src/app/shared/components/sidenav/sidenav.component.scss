@@ -5,7 +5,12 @@
 .sidenav {
   border-right-color: transparent;
   width: 12.5rem;
-  
+
+  a {
+    span {
+        color: var(--text);
+    }
+  }
 }
 
 mat-nav-list {
@@ -29,9 +34,10 @@ mat-nav-list {
   overflow-y: overlay;
   padding: 0;
   padding-left: 0.25rem;
-
+  
   .sidenav-item {
     height: 1.75rem;
+    max-width: fit-content;
   } 
 }
 

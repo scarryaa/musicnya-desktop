@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { inject, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DeactivateGuard } from './components/playlist/deactivate.guard';
 import { PlaylistComponent } from './components/playlist/playlist.component';
@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: ':id',
     component: PlaylistComponent,
-    canDeactivate: [DeactivateGuard],
+    // canDeactivate: [(component: PlaylistComponent) => component.resetHeaderOpacity()]
   },
   {
     path: '',

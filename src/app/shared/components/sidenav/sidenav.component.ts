@@ -1,13 +1,15 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 import { trigger, transition, animate, style, state } from '@angular/animations';
 import { PlaylistDataService } from 'src/app/shared/services/playlist-data/playlist-data.service';
 import { Playlist } from 'src/app/modules/core/models/playlist';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { MatMenu } from '@angular/material/menu';
 import { UIState, UIStore } from 'src/app/store/ui-store';
 import { environment } from 'src/environments/environment';
+import { UserState, UserStore } from 'src/app/store/user-store';
+import { MusickitStore } from 'ngx-apple-music';
 
 @Component({
   selector: 'app-sidenav',
@@ -43,8 +45,9 @@ export class SideNavComponent implements OnInit, AfterViewInit, OnDestroy {
   headerHeight!: number;
   @Input() matMenu!: MatMenu;
   subs: Subscription;
+  playlists: any;
 
-  constructor(public playlistDataService: PlaylistDataService, private router: Router, public uiStore: UIStore) {
+  constructor(public playlistDataService: PlaylistDataService, private router: Router, public uiStore: UIStore, public userStore: UserStore, public musickitStore: MusickitStore) {
     this.useElectron = environment.useElectron;
     this.scrollbarVisible = false;
     this.elementStates = Array.from(Array(4), (e, i) => 'unselected');
@@ -68,6 +71,11 @@ export class SideNavComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
       }
       this.scrollable.scrollTo({ "top": 0 });
+      this.scrollable.getElementRef().nativeElement.style.display = 'block';
+    }));
+
+    this.subs.add(this.userStore.state$.subscribe((state: UserState) => {
+      this.playlists = state.playlists;
     }));
   }
 

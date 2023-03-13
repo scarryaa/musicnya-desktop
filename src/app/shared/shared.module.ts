@@ -17,6 +17,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ScrollDirective } from './directives/scroll.directive';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -33,6 +34,8 @@ import { AlbumTileComponent } from './components/album-tile/album-tile.component
 import { CategoryTileComponent } from './components/category-tile/category-tile.component';
 import { HeadingComponent } from './components/heading/heading.component';
 import { AppMenuComponent } from './components/app-menu/app-menu.component';
+import { ReplaceSrcWidthHeightPipe } from './pipes/replace-src-width-height.pipe';
+import { TextAutoFit } from './directives/text-auto-fit.directive';
 
 @NgModule({
   declarations:
@@ -43,6 +46,7 @@ import { AppMenuComponent } from './components/app-menu/app-menu.component';
       ReversePipe,
       MinSecPipe,
       SongPipe,
+      ReplaceSrcWidthHeightPipe,
       ScrollDirective,
       LibraryFiltersComponent,
       PlaylistControlsComponent,
@@ -50,7 +54,8 @@ import { AppMenuComponent } from './components/app-menu/app-menu.component';
       AlbumTileComponent,
       HeadingComponent,
       CategoryTileComponent,
-      AppMenuComponent
+      AppMenuComponent,
+      TextAutoFit
     ],
   imports: [
     RouterModule,
@@ -73,19 +78,22 @@ import { AppMenuComponent } from './components/app-menu/app-menu.component';
     FallbackSrc,
     MatSelectModule,
     MatMenuModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressBarModule
   ],
   exports: [
     HeaderComponent,
     SideNavComponent,
     FooterComponent, MinSecPipe,
     ReversePipe, SongPipe,
+    ReplaceSrcWidthHeightPipe,
     ScrollDirective,
     VirtualScrollTableComponent,
     AlbumTileComponent,
     CategoryTileComponent,
     HeadingComponent,
-    AppMenuComponent
+    AppMenuComponent,
+    TextAutoFit
   ]
 })
 export class SharedModule { }

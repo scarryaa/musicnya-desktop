@@ -40,8 +40,8 @@ export class PlaylistDataService {
     this.playlists.push(new Playlist(this.playlists.length + 1, `Playlist ${this.playlists.length + 1}`, 'Scarlet', '', [new Song(0, 'The Song', 'The Album', 0, 'The Artist', 270000, undefined, Date.now())], await this.getDominantColor('')));
   }
 
-  addTrack(id: number) {
-    this.playlists[id - 1].tracks.push(new Song(0, 'The Song', 'The Album', 0,
+  addTrack(id: string) {
+    this.playlists[parseInt(id) - 1].tracks.push(new Song(0, 'The Song', 'The Album', 0,
     'The Artist', 200000, 'https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png', Date.now()), new Song(1, 'The Song', 'The Album', 0,
       'The Artist', 270000, 'https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png', new Date().setDate(new Date().getDate() - 1)));
   }
@@ -84,7 +84,7 @@ export class PlaylistDataService {
     }
 
     this.playlists[0].tracks.push(...newSongs);
-    return await Promise.resolve();
+    return;
   }
 
   fetchMoreSongs(playlistId: number, offset: number): Array<Song> {

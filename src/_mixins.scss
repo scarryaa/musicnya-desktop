@@ -1,0 +1,7 @@
+@mixin fontResize($font-size, $iterations) { 
+    $i: 1; 
+    @while $i <= $iterations { 
+        @media all and (min-width: (80px * $i)) { font-size:$font-size * $i; } 
+        $i: $i + 1; 
+    }
+}

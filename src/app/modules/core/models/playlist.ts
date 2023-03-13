@@ -19,15 +19,6 @@ export class Playlist {
         this.dominantColor = dominantColor;
     }
 
-    totalDuration(): number {
-        var duration: number = 0;
-        this.tracks.forEach(track => {
-            duration += track.duration;
-        });
-
-        return duration;
-    }
-
     totalSongs(): number {
         return this.tracks.length;
     }

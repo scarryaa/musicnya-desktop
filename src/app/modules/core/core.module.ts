@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CoreRoutingModule } from './core-routing.module';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -17,6 +17,7 @@ import {MatSelectModule} from '@angular/material/select';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { A11yModule } from '@angular/cdk/a11y'
 import { ColorPickerModule } from '../color-picker/color-picker.module';
+import { GlobalErrorHandler } from './error-handling/global-error-handler';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,12 @@ import { ColorPickerModule } from '../color-picker/color-picker.module';
     MatSelectModule,
     A11yModule,
     ColorPickerModule
+  ],
+  providers: [
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler
+    }
   ],
   exports: [AuthenticationComponent]
 })

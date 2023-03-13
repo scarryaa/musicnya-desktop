@@ -1,6 +1,6 @@
 {
   "name": "musicnya",
-  "version": "0.2.0-alpha.0",
+  "version": "0.3.1-alpha.0",
   "main": "app.js",
   "scripts": {
     "start:electron:dev": "concurrently -k \"ng serve --configuration electron-development\" \"npm run electron:dev",
@@ -20,23 +20,31 @@
   "build": {
     "electronDownload": {
       "mirror": "https://github.com/castlabs/electron-releases/releases/download/v"
-    }
+    },
+    "files": [
+      "!release-builds",
+      "!docs",
+      "!dist",
+      "!.vscode",
+      "!.angular",
+      "!example_screenshots"
+    ]
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^15",
-    "@angular/cdk": "^15",
-    "@angular/common": "^15",
-    "@angular/compiler": "^15",
-    "@angular/core": "^15",
-    "@angular/forms": "^15.1.5",
-    "@angular/material": "^15.1.5",
-    "@angular/platform-browser": "^15",
-    "@angular/platform-browser-dynamic": "^15.1.5",
-    "@angular/router": "^15.1.5",
+    "@angular/animations": "^15.2.1",
+    "@angular/cdk": "^15.2.1",
+    "@angular/common": "^15.2.1",
+    "@angular/compiler": "^15.2.1",
+    "@angular/core": "^15.2.1",
+    "@angular/forms": "^15.2.1",
+    "@angular/material": "^15.2.1",
+    "@angular/platform-browser": "^15.2.1",
+    "@angular/platform-browser-dynamic": "^15.2.1",
+    "@angular/router": "^15.2.1",
     "fast-average-color": "^9.3.0",
     "ng-table-virtual-scroll": "^1.5.1",
-    "ngx-apple-music": "https://gitpkg.now.sh/scarryaa/ngx-apple-music/dist/ngx-apple-music?main",
+    "ngx-apple-music": "file:../../ngx-apple-music/dist/ngx-apple-music",
     "ngx-resize": "^1.0.6",
     "npm": "^9.5.0",
     "rxjs": "~7.8.0",
@@ -44,10 +52,11 @@
     "zone.js": "^0.12.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^15.1.6",
-    "@angular/cli": "^15.1.6",
-    "@angular/compiler-cli": "^15.1.5",
+    "@angular-devkit/build-angular": "^15.2.1",
+    "@angular/cli": "^15.2.1",
+    "@angular/compiler-cli": "^15.2.1",
     "@types/jasmine": "~4.3.0",
+    "@types/node": "^18.15.0",
     "concurrently": "^7.6.0",
     "electron": "github:castlabs/electron-releases#v22.0.0+wvcus",
     "electron-builder": "^22.10.3",

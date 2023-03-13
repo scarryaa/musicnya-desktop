@@ -3,7 +3,7 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { TableVirtualScrollDataSource } from 'ng-table-virtual-scroll';
-import { Song } from 'src/app/modules/core/models/song';
+import { MusickitStore } from 'ngx-apple-music';
 
 @Component({
   selector: 'app-virtual-scroll-table',
@@ -12,18 +12,17 @@ import { Song } from 'src/app/modules/core/models/song';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VirtualScrollTableComponent implements OnInit, AfterViewInit, OnChanges {
-  @ViewChild(MatSort, { static: true }) sort!: MatSort;
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
   @ViewChild(CdkVirtualScrollViewport) virtualScroll!: CdkVirtualScrollViewport;
   @Input() rows!: Array<any>;
 
   constructor(
-  private ref: ChangeDetectorRef, private breakpointObserver: BreakpointObserver) {}
+  private ref: ChangeDetectorRef, private breakpointObserver: BreakpointObserver, private musickitStore: MusickitStore) {}
   
   static BUFFER_SIZE = 3;
   rowHeight = 55;
   headerHeight = 0;
-  tableHeight = window.innerHeight;
-  dataSource = new TableVirtualScrollDataSource<Song>();
+  dataSource = new TableVirtualScrollDataSource<MusicKit.Songs>();
   timer!: any;
   preventSimpleClick!: boolean;
   displayedColumns: string[] = ['id', 'title', 'album', 'dateAdded', 'duration'];
@@ -31,8 +30,8 @@ export class VirtualScrollTableComponent implements OnInit, AfterViewInit, OnCha
   displayedColumnsSm: string[] = ['id', 'title', 'album', 'duration'];
 
   ngOnInit(): void {
+    this.dataSource.data = this.rows;
     this.dataSource.sort = this.sort;
-
     this.breakpointObserver
     .observe(["(max-width: 1100px)"])
     .subscribe(result => {
@@ -47,12 +46,14 @@ export class VirtualScrollTableComponent implements OnInit, AfterViewInit, OnCha
 
   ngAfterViewInit(): void {        
     this.dataSource.data = this.rows;
+    this.dataSource.sort = this.sort;
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['rows'].currentValue != changes['rows'].previousValue) {
       this.rows = changes['rows'].currentValue;
       this.dataSource.data = this.rows;
+      this.dataSource.sort = this.sort;
     }
   }
 
@@ -60,8 +61,8 @@ export class VirtualScrollTableComponent implements OnInit, AfterViewInit, OnCha
     this.ref.detectChanges();
 }
 
-  trackBySongId(index: number, item: Song) {
-    return item.id;
+  trackBySongId(index: number, item: MusicKit.Songs) {
+    return index;
   }
 
   selectRow(row: any) {
@@ -76,10 +77,14 @@ export class VirtualScrollTableComponent implements OnInit, AfterViewInit, OnCha
     }, delay);
   }
 
-  playSong(row: any) {
+  playSong(id: any) {
     this.preventSimpleClick = true;
     clearTimeout(this.timer);
 
-    console.log(row);
+    this.musickitStore.startPlayingSong(id);
+  }
+
+  playSongFromId(id: string) {
+    this.musickitStore.startPlayingSong(id);
   }
 }

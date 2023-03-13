@@ -30,6 +30,7 @@ export class Constants {
         darkPrussianBlueMono: { primaryColor: "#00324a", accentColor: "#d4e7ff"}
     } as const;
 
+    static white: string = "#FFFFFF";
     static darkThemeOverride: string = "#211e1e";
     static headerColor: string = "#fafafa";
     static headerColorDark: string = "#141414";

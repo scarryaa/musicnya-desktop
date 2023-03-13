@@ -5,7 +5,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class SongPipe implements PipeTransform {
 
-  transform(value: number): string {
+  transform(value: number | string): string {
+    if (typeof value === 'string') value = parseInt(value);
     if (value == 1) return `${value} song`;
     else return `${value} songs`;
   }

@@ -16,13 +16,11 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
+    "esModuleInterop": true,
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "paths": {
-      "ngx-apple-music": ["dist/ngx-apple-music"]
-    },
-    "typeRoots": ["src/assets/js/"],
+    "typeRoots": ["node_modules/@types", "node_modules/ngx-apple-music/types"],
     "lib": [
       "ES2022",
       "dom",

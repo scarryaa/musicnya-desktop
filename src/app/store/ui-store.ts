@@ -1,6 +1,8 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { Constants, CurrentPlatform } from "../constants/constants";
 import { Store } from "./store";
+import { MusickitStore, MusickitState } from "ngx-apple-music";
+import { distinctUntilChanged, map, Subscription } from "rxjs";
 
 export enum PlaylistDrawerOffset {
     CollapsedDrawerWindows = 300,
@@ -9,6 +11,26 @@ export enum PlaylistDrawerOffset {
     Windows = 272,
     Mac = 287,
     Web = 272
+}
+
+enum ShuffleIcon {
+    Standard = "shuffle",
+    On = "shuffle_on"
+}
+
+enum RepeatIcon {
+    Standard = "repeat",
+    One = "repeat_one"
+}
+
+enum PlayPauseIcon {
+    Play = "play_circle",
+    Pause = "pause_circle"
+}
+
+enum RepeatIconOpacity {
+    Default = 0.5,
+    Active = 1.0
 }
 
 export interface UIState {
@@ -24,6 +46,10 @@ export interface UIState {
     headerPageControlsOpacity: number;
     drawerScrollbarVisible: boolean;
     playlistDrawerTopOffset: number;
+    shuffleIcon: ShuffleIcon;
+    repeatIcon: RepeatIcon;
+    repeatIconOpacity: RepeatIconOpacity;
+    playPauseIcon: PlayPauseIcon;
 }
 
 const initialState: UIState = {
@@ -38,17 +64,30 @@ const initialState: UIState = {
     forwardButtonEnabled: false,
     headerPageControlsOpacity: 0,
     drawerScrollbarVisible: false,
-    playlistDrawerTopOffset: 287
+    playlistDrawerTopOffset: 287,
+    shuffleIcon: ShuffleIcon.Standard,
+    repeatIcon: RepeatIcon.Standard,
+    repeatIconOpacity: RepeatIconOpacity.Default,
+    playPauseIcon: PlayPauseIcon.Play
 }
 
 @Injectable({
     providedIn: 'root'
 })
 export class UIStore extends Store<UIState> implements OnDestroy {
-    constructor() { super(initialState); }
+    subs: Subscription = new Subscription();
+    
+    constructor(private musickitStore: MusickitStore) { 
+        super(initialState); 
+        
+        this.subs.add(musickitStore.state$.pipe(map((state: MusickitState) => state.isPlaying),
+        distinctUntilChanged()).subscribe((value: boolean) => {
+            this.setState(() => ({ playPauseIcon: value ? PlayPauseIcon.Pause : PlayPauseIcon.Play }));
+        }));
+    }
 
     ngOnDestroy(): void {
-        throw new Error("Method not implemented.");
+        this.subs.unsubscribe();
     }
 
     toggleDrawer() {
@@ -107,5 +146,32 @@ export class UIStore extends Store<UIState> implements OnDestroy {
         else if (Constants.currentPlatform == CurrentPlatform.Mac) 
             return this.state.drawerCollapsed ? PlaylistDrawerOffset.CollapsedDrawerMac : PlaylistDrawerOffset.Mac;
         else return this.state.drawerCollapsed ? PlaylistDrawerOffset.CollapsedDrawerWeb : PlaylistDrawerOffset.Web;
+    }
+
+    toggleShuffleIcon(shuffleMode: MusicKit.PlayerShuffleMode) {
+        this.setState((state) => ({ ...state, ...{ shuffleIcon: this.mapShuffleModeToIcon(shuffleMode) } }));
+    }
+
+    toggleRepeatIcon(repeatMode: MusicKit.PlayerRepeatMode) {
+        this.setState((state) => ({ ...state, ...{ repeatIcon: this.mapRepeatModeToIcon(repeatMode), 
+            repeatIconOpacity: this.mapRepeatModeToOpacity(repeatMode) } }));
+    }
+    
+    // helpers
+
+    mapShuffleModeToIcon(shuffleMode: MusicKit.PlayerShuffleMode): ShuffleIcon {
+        if (shuffleMode === MusicKit.PlayerShuffleMode.off) return ShuffleIcon.Standard;
+        else return ShuffleIcon.On;
+    }
+
+    mapRepeatModeToIcon(repeatMode: MusicKit.PlayerRepeatMode): RepeatIcon {
+        if (repeatMode == MusicKit.PlayerRepeatMode.none) return RepeatIcon.Standard;
+        else if (repeatMode == MusicKit.PlayerRepeatMode.all) return RepeatIcon.Standard;
+        else return RepeatIcon.One;
+    }
+
+    mapRepeatModeToOpacity(repeatMode: MusicKit.PlayerRepeatMode): RepeatIconOpacity {
+        if (repeatMode == MusicKit.PlayerRepeatMode.none) return RepeatIconOpacity.Default;
+        else return RepeatIconOpacity.Active;
     }
 }
