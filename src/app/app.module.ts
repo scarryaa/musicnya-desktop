@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Optional } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -47,7 +47,7 @@ const globalSlideToggleConfig: MatSlideToggleDefaultOptions = {
 
 export function initConfiguration(initializationService: InitializationService,
   themeStore: ThemeStore, uiStore: UIStore, styleService: StyleService, localStorageService: LocalStorageService, 
-  electronService: ElectronService): () => Promise<any> {
+  electronService?: ElectronService): () => Promise<any> {
     return () => initializationService.initialize(themeStore, uiStore, styleService, localStorageService, electronService);
 }
 
@@ -75,6 +75,10 @@ export function initConfiguration(initializationService: InitializationService,
       multi: true
     },
     {
+      provide: ElectronService,
+      useFactory: () => environment.useElectron ? new ElectronService() : null
+    },
+    {
       provide: APP_INITIALIZER,
       useFactory: (musickitStore: MusickitStore, awsService: AwsService) => async () => musickitStore.initMusicKit(await awsService.refreshToken(), "musicnya", "0.3.1-alpha.0")
       .catch((error: any) => Promise.resolve(error))
@@ -85,7 +89,7 @@ export function initConfiguration(initializationService: InitializationService,
     {
       provide: APP_INITIALIZER,
       useFactory: initConfiguration,
-      deps: [InitializationService, ThemeStore, UIStore, StyleService, LocalStorageService, environment.useElectron ? ElectronService : null],
+      deps: [InitializationService, ThemeStore, UIStore, StyleService, LocalStorageService, [new Optional(), ElectronService]],
       multi: true
     }
   ],

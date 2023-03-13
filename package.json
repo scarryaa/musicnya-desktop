@@ -44,7 +44,7 @@
     "@angular/router": "^15.2.1",
     "fast-average-color": "^9.3.0",
     "ng-table-virtual-scroll": "^1.5.1",
-    "ngx-apple-music": "file:../../ngx-apple-music/dist/ngx-apple-music",
+    "ngx-apple-music": "https://gitpkg.now.sh/scarryaa/ngx-apple-music/dist/ngx-apple-music?main",
     "ngx-resize": "^1.0.6",
     "npm": "^9.5.0",
     "rxjs": "~7.8.0",
