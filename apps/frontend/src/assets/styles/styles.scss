@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+@use 'fonts';
+@use 'ui_styles';
+
+html,
+body {
+  height: 100vh;
+  user-select: none;
+  overflow: hidden;
+  margin: 0;
+  border-radius: 10px;
+  background-color: transparent;
+}
+
+.app-wrapper {
+  border-radius: 10px;
+  background-color: black;
+}
+
+* {
+  box-sizing: border-box;
+}

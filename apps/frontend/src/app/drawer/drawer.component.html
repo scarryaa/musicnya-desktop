@@ -1,0 +1,97 @@
+<ui-drawer
+  [style.--drawerPadding]="!open ? '0rem' : '0.2rem'"
+  [style.--albumTileOutline]="!open ? '0.15rem' : '0'"
+  [style.--albumTileOutlineInverse]="!open ? '0' : '0.15rem'"
+>
+  <ng-container header>
+    <core-base-button
+      class="ui-button-m text-reg outline-offset drawer-item"
+      text="Home"
+      icon="home"
+      [routerLink]="'/'"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      coreDisableChildTabIndex
+    ></core-base-button>
+    <core-base-button
+      class="ui-button-m outline-offset drawer-item"
+      text="Search"
+      icon="search"
+      [routerLink]="'/search'"
+      routerLinkActive="active"
+      routerLink
+      coreDisableChildTabIndex
+    ></core-base-button>
+  </ng-container>
+  <ng-container content>
+    <core-base-button
+      class="ui-button-m outline-offset drawer-item"
+      text="Library"
+      icon="library_music"
+      uiDrawerToggle
+      (click)="toggle()"
+    ></core-base-button>
+    <!-- <core-base-button
+      uiButton
+      text="New Playlist"
+      icon="add_box"
+    ></core-base-button>
+    <core-base-button
+      uiButton
+      text="Liked Songs"
+      icon="thumb_up"
+    ></core-base-button> -->
+  </ng-container>
+  <ng-container footer>
+    <ui-album-tile
+      class="outline-offset drawer-item"
+      source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
+      [tileSize]="3"
+      mediaTitle="Test Album"
+      [artists]="['guy']"
+      [hoverUnderline]="false"
+      [showArtists]="true"
+    ></ui-album-tile>
+    <ui-album-tile
+      class="outline-offset drawer-item"
+      source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
+      [tileSize]="3"
+      mediaTitle="Test Album"
+      [artists]="['guy']"
+      [showArtists]="true"
+    ></ui-album-tile>
+    <ui-album-tile
+      class="outline-offset drawer-item"
+      source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
+      [tileSize]="3"
+      mediaTitle="Test Album"
+      [artists]="['guy']"
+      [showArtists]="true"
+    ></ui-album-tile>
+    <ui-album-tile
+      class="outline-offset drawer-item"
+      source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
+      [tileSize]="3"
+      mediaTitle="Test Album"
+      [artists]="['guy']"
+      [showArtists]="true"
+    ></ui-album-tile>
+    <ui-album-tile
+      class="outline-offset drawer-item"
+      source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
+      [tileSize]="3"
+      mediaTitle="Test Album"
+      [artists]="['guy']"
+      [showArtists]="true"
+    ></ui-album-tile>
+    <ui-album-tile
+      class="outline-offset drawer-item"
+      source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
+      [tileSize]="3"
+      mediaTitle="Test Album"
+      [artists]="['guy']"
+      [showArtists]="true"
+    ></ui-album-tile>
+  </ng-container>
+  <ng-content body-content></ng-content>
+</ui-drawer>

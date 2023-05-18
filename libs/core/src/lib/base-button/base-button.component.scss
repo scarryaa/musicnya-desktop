@@ -1,0 +1,89 @@
+button {
+  cursor: default;
+  -webkit-app-region: no-drag;
+  height: auto;
+  width: auto;
+  display: flex;
+  flex-direction: inherit;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  align-items: center;
+  background: none;
+  box-shadow: none;
+
+  &:not(.ui-button-no-hover) {
+    &:hover:not(:disabled),
+    &:focus-visible:not(:disabled) {
+      i,
+      span {
+        color: var(--font-color-hover);
+      }
+    }
+
+    &:enabled {
+      &:active {
+        i,
+        span {
+          color: var(--font-color-active);
+        }
+      }
+    }
+
+    span,
+    i {
+      color: var(--drawer-font-color);
+    }
+  }
+
+  .ui-button-no-hover {
+    cursor: default !important;
+  }
+
+  &.ui-button-l {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+
+  &.ui-button-xl {
+    height: 3rem;
+    width: 3rem;
+  }
+}
+
+.core-base-button-filled {
+  button {
+    background-color: currentColor;
+  }
+
+  i {
+    padding-right: 0.5rem;
+  }
+
+  &:hover {
+    filter: brightness(1.2);
+
+    i,
+    span {
+      color: var(--font-color-faded);
+    }
+  }
+
+  &:active {
+    filter: brightness(0.8);
+  }
+}
+
+.core-base-button-rounded {
+  border-radius: 24px;
+
+  button {
+    border-radius: 24px;
+  }
+
+  outline-offset: -0.1rem;
+}
+
+span {
+  transition: opacity 0.1s linear, padding 0.1s linear;
+}

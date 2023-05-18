@@ -1,0 +1,40 @@
+#heading-text {
+  letter-spacing: var(--letter-spacing-n4xl);
+  color: var(--font-color);
+  font-family: 'Inter';
+}
+
+.small {
+  #heading-text {
+    font-size: var(--font-size-reg);
+  }
+}
+
+.medium {
+  #heading-text {
+    font-size: var(--font-size-6xl);
+    letter-spacing: var(--letter-spacing-n4xl);
+  }
+}
+
+.large {
+  #heading-text {
+    font-size: var(--font-size-6qxl);
+    letter-spacing: var(--letter-spacing-n6xl);
+    font-weight: var(--font-weight-slightly-bold);
+  }
+}
+
+.xl {
+  #heading-text {
+    font-size: var(--font-size-6xl);
+    letter-spacing: var(--letter-spacing-n6xl);
+  }
+}
+
+.xxl {
+  #heading-text {
+    font-size: var(--font-size-8xl);
+    letter-spacing: var(--letter-spacing-n7xl);
+  }
+}

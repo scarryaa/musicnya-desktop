@@ -1,0 +1,59 @@
+@import 'material-symbols';
+
+.material-symbols-rounded {
+  font-variation-settings: 'FILL' 1;
+  font-display: block !important;
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 400;
+  font-style: normal;
+  src: url('../fonts/Inter-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-weight: 700;
+  font-style: normal;
+  src: url('../fonts/Inter-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'InterDisplay';
+  font-weight: 400;
+  font-style: normal;
+  src: url('../fonts/Inter-Display.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Figtree';
+  src: url('../fonts/Figtree-VariableFont_wght.ttf');
+  font-weight: 125 950;
+}
+
+@font-face {
+  font-family: 'Uncut Sans Var';
+  src: url('../fonts/UncutSans-Variable.ttf');
+  font-feature-settings: 'ss02' on, 'ss07' on;
+  font-weight: 125 950;
+}
+
+@font-face {
+  font-family: 'Readex Pro';
+  src: url('../fonts/Readexpro[HEXP,wght].ttf');
+  font-weight: 125 950;
+}
+
+@font-face {
+  font-family: 'Haskoy';
+  src: url('../fonts/Haskoy[wght].woff2');
+  font-weight: 125 950;
+}
+
+body,
+body .p-component {
+  font-family: 'Haskoy';
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}

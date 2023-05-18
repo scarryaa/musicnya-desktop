@@ -1,0 +1,11 @@
+<musicnya-title-bar></musicnya-title-bar>
+<div id="app-wrapper">
+  <musicnya-drawer
+    [width]="width"
+    (drawerOpened$)="toggleDrawer($event)"
+    [open]="(drawerOpen$ | async)!"
+  >
+    <router-outlet></router-outlet>
+  </musicnya-drawer>
+  <musicnya-footer></musicnya-footer>
+</div>

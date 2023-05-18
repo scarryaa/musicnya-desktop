@@ -1,0 +1,105 @@
+:host {
+  #controls-wrapper,
+  #misc-controls-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #track-wrapper {
+    margin-bottom: 0.3rem;
+  }
+
+  ::ng-deep {
+    core-base-button {
+      padding-inline: 0.1rem;
+    }
+
+    i {
+      font-size: var(--font-size-7xl);
+    }
+  }
+
+  ::ng-deep {
+    #previous-button,
+    #next-button {
+      i {
+        font-size: var(--font-size-7xl) !important;
+        vertical-align: middle;
+      }
+
+      button {
+        border-radius: 12px;
+        outline-offset: -0.5rem;
+      }
+    }
+
+    #shuffle-button,
+    #repeat-button {
+      padding-inline: 0.05rem;
+
+      i {
+        font-size: var(--font-size-4xl) !important;
+      }
+
+      button {
+        outline-offset: 0rem;
+        border-radius: 4px;
+      }
+
+      :not(:active):not(:hover):not(:focus-visible) {
+        i {
+          color: var(--font-color-faded3);
+        }
+      }
+    }
+
+    #play-button {
+      button {
+        i:not(:active) {
+          color: var(--font-color);
+        }
+      }
+    }
+  }
+
+  #misc-controls-wrapper {
+    padding-inline: 2rem;
+    margin-top: 0.7rem;
+    display: flex;
+    gap: 0.2rem;
+
+    ::ng-deep {
+      #volume-button,
+      #lyrics-button,
+      #queue-button {
+        :not(:active):not(:hover):not(:focus-visible) {
+          i {
+            color: var(--font-color-faded3);
+          }
+        }
+
+        button {
+          outline-offset: 0rem;
+          border-radius: 4px;
+        }
+
+        i {
+          font-size: var(--font-size-5xl) !important;
+        }
+      }
+
+      #lyrics-button {
+        i {
+          font-size: var(--font-size-5xl) !important;
+        }
+      }
+
+      #queue-button {
+        i {
+          font-size: var(--font-size-5xl) !important;
+        }
+      }
+    }
+  }
+}

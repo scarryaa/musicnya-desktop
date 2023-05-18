@@ -1,0 +1,34 @@
+:host {
+  padding-inline: 3rem;
+  display: block;
+}
+
+drag-scroll {
+  height: 100%;
+  width: 100%;
+}
+
+#heading {
+  padding-left: 0.5rem;
+  display: block;
+}
+
+#media-items {
+  ui-album-tile-large {
+    padding-top: 1rem;
+    padding-inline: 0.5rem;
+
+    img {
+      width: 100% !important;
+      height: 100% !important;
+
+      min-width: 8rem;
+      max-width: 10rem;
+    }
+
+    #artists,
+    #title {
+      cursor: pointer !important;
+    }
+  }
+}

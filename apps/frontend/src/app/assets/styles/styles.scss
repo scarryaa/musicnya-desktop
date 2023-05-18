@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+@use 'fonts';
+@use 'ui_styles';
+
+html,
+body {
+  height: 100vh;
+  user-select: none;
+  background-color: var(--ui-background-color);
+}
+
+body {
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}

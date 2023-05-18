@@ -1,0 +1,46 @@
+:host {
+  z-index: 99 !important;
+
+  ::ng-deep {
+    color: var(--font-color);
+  }
+
+  #start-container {
+    display: flex;
+    vertical-align: middle;
+    ::ng-deep {
+      span {
+        letter-spacing: var(--letter-spacing-n2xl);
+      }
+    }
+  }
+
+  ::ng-deep #start-container #media-tile {
+    margin-left: 1rem;
+    filter: drop-shadow(0rem 0.3rem 0.5rem rgba(black, 0.4));
+
+    .album-info {
+      vertical-align: middle !important;
+    }
+
+    #title {
+      color: var(--font-color);
+      cursor: pointer !important;
+    }
+
+    #artists {
+      cursor: pointer !important;
+    }
+
+    #artwork {
+      &:hover {
+        cursor: auto;
+      }
+    }
+
+    #artwork,
+    #album-info {
+      margin-bottom: 0.6rem;
+    }
+  }
+}

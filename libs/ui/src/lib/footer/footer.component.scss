@@ -1,0 +1,33 @@
+:host {
+  display: flex;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  height: 4.375rem;
+  max-height: 4.375rem;
+  margin-top: 1rem;
+  transition: var(--enable-background-transition);
+  background-color: var(--ui-background-color);
+  z-index: 100;
+  border-radius: 10px;
+
+  .footer-start,
+  .footer-center,
+  .footer-end {
+    justify-content: left;
+    align-self: center;
+    display: flex;
+    flex: 1;
+  }
+
+  .footer-center {
+    justify-content: center;
+    flex: 1;
+  }
+
+  .footer-end {
+    justify-content: end;
+  }
+}

@@ -1,0 +1,148 @@
+:host {
+  &:not(.ui-button-no-hover) {
+    &:hover:not(:disabled),
+    &:focus:not(:disabled) {
+      i,
+      span:not(#artists) {
+        color: var(--font-color-hover);
+      }
+    }
+
+    &:enabled {
+      &:active {
+        i,
+        span:not(#artists) {
+          color: var(--font-color-active);
+        }
+      }
+    }
+
+    span:not(#artists),
+    i {
+      color: var(--drawer-font-color);
+    }
+  }
+
+  core-base-button {
+    border-radius: 4px;
+  }
+
+  #artwork {
+    border-radius: 4px;
+  }
+
+  .album-tile {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: var(--font-color);
+  }
+
+  .album-tile-large {
+    flex-direction: column;
+    display: block;
+
+    /** TODO FIX FOCUS OPACITY BUG**/
+    &:hover,
+    &:focus-visible,
+    &:not(#play-button:focus):focus-within {
+      #play-button {
+        transform: translateY(-0.4rem);
+        opacity: 1 !important;
+      }
+    }
+
+    #title-large {
+      font-size: var(--font-size-reg);
+      color: var(--font-color);
+      margin-top: 0.5rem;
+    }
+
+    #album-info-large {
+      flex-direction: column;
+    }
+
+    ::ng-deep button {
+      align-items: flex-start !important;
+    }
+  }
+
+  #album-info,
+  #album-info-large {
+    display: block;
+    flex-direction: column;
+    #artists,
+    #title-large {
+      width: min-content;
+      outline-offset: 0.1rem;
+      border-radius: 4px;
+    }
+  }
+
+  #album-info {
+    line-height: 1.2;
+    align-items: flex-start;
+    padding-left: 1.05rem;
+    transition: opacity 0.1s linear, padding 0.2s linear;
+  }
+
+  span {
+    transition: opacity 0.1s linear, padding 0.1s linear;
+  }
+}
+
+#play-button-container {
+  position: relative;
+
+  &:hover,
+  &:focus-visible {
+    #play-button {
+      width: 3.6rem;
+      height: 3.6rem;
+      top: 5.95rem;
+      left: 5.95rem;
+      padding-left: 0.05rem;
+      opacity: 1;
+
+      &:focus-visible {
+        border: 2px solid black;
+      }
+
+      i {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  #play-button {
+    filter: drop-shadow(0rem 0.2rem 0.3rem rgba(black, 0.4));
+    transition: opacity 0.2s linear, transform 0.15s linear;
+    opacity: 0;
+    position: absolute;
+    top: 6rem;
+    left: 6rem;
+    background-color: var(--accent-color, var(--theme-contrast-color));
+    border-radius: 48px;
+    z-index: 999;
+    width: 3.5rem;
+    height: 3.5rem;
+    outline-offset: 0;
+    border: 2px solid transparent;
+
+    i {
+      color: var(--background-color);
+      font-size: var(--font-size-6hxl);
+      align-self: center;
+      padding-left: 0.4rem;
+    }
+
+    &:not(.ui-button-no-hover) {
+      &:enabled {
+        &:active {
+          filter: brightness(0.85)
+            drop-shadow(0rem 0.2rem 0.3rem rgba(black, 0.4));
+        }
+      }
+    }
+  }
+}

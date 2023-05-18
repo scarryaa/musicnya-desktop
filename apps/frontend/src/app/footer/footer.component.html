@@ -1,0 +1,24 @@
+<ui-footer>
+  <ng-container start>
+    <div id="start-container">
+      <ui-album-tile
+        id="media-tile"
+        source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
+        mediaTitle="Test Album"
+        [artists]="['guy']"
+        [showArtists]="true"
+        [tileSize]="3.5"
+        [hoverUnderline]="true"
+      >
+      </ui-album-tile>
+    </div>
+  </ng-container>
+  <ng-container center>
+    <ui-playback-controls> </ui-playback-controls>
+  </ng-container>
+  <ng-container end>
+    <div id="misc-controls-wrapper">
+      <ui-miscellaneous-controls id="misc-controls"></ui-miscellaneous-controls>
+    </div>
+  </ng-container>
+</ui-footer>

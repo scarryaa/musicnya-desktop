@@ -1,0 +1,270 @@
+:root {
+  --font-weight-thin: 200;
+  --font-weight-base: 400;
+  --font-weight-slightly-bold: 425;
+  --font-weight-bold: 500;
+  --font-weight-medium-bold: 600;
+  --font-weight-large-bold: 800;
+  --font-size-reg: 1rem;
+  --font-size-xl: 1.15rem;
+  --font-size-2xl: 1.3rem;
+  --font-size-3xl: 1.45rem;
+  --font-size-4xl: 1.6rem;
+  --font-size-5xl: 1.75rem;
+  --font-size-6xl: 2rem;
+  --font-size-6qxl: 2.25rem;
+  --font-size-6hxl: 2.5rem;
+  --font-size-6hhxl: 2.75rem;
+  --font-size-7xl: 3rem;
+  --font-size-7hxl: 3.5rem;
+  --font-size-8xl: 4rem;
+  --letter-spacing-l: 0.01rem;
+  --ketter-spacing-xl: 0.02rem;
+  --letter-spacing-nl: -0.01rem;
+  --letter-spacing-nxl: -0.02rem;
+  --letter-spacing-n2xl: -0.03rem;
+  --letter-spacing-n3xl: -0.04rem;
+  --letter-spacing-n4xl: -0.05rem;
+  --letter-spacing-n5xl: -0.05rem;
+  --letter-spacing-n6xl: -0.05rem;
+  --letter-spacing-n7xl: -0.06rem;
+  --letter-spacing-n8xl: -0.07rem;
+
+  --font-color-white: oklch(100% 0 0);
+  --font-color-white-faded: oklch(70% 0 0);
+  --font-color-white-faded2: oklch(60% 0 0);
+  --font-color-white-faded3: oklch(50% 0 0);
+}
+
+@mixin lighten() {
+  --background-color: oklch(100% 0 0);
+  --button-active-color: oklch(0% 0 0 / 50%);
+  --font-color: oklch(0% 0 0);
+  --font-color-faded: oklch(30% 0 0);
+  --font-color-faded2: oklch(50% 0 0);
+  --font-color-faded3: oklch(70% 0 0);
+  --theme-contrast-color: oklch(0% 0 0);
+  --menu-background-color: var(--font-color-faded);
+  --menu-highlight-color: var(--font-color);
+  --drawer-background-color: oklch(98% 0 0);
+  --ui-background-color: var(--accent-color, oklch(85% 0 0));
+  --drawer-font-color: var(--font-color);
+  --font-color-hover: var(--font-color-faded);
+  --font-color-active: var(--font-color-faded2);
+  color-scheme: light;
+}
+
+@mixin darken() {
+  --background-color: oklch(20.02% 0 0);
+  --button-active-color: oklch(100% 0 0 / 20%);
+  --font-color: oklch(100% 0 0);
+  --font-color-faded: oklch(70% 0 0);
+  --font-color-faded2: oklch(60% 0 0);
+  --font-color-faded3: oklch(50% 0 0);
+  --theme-contrast-color: oklch(100% 0 0);
+  --menu-background-color: var(--font-color-faded);
+  --menu-highlight-color: var(--font-color);
+  --drawer-background-color: oklch(16% 0 0);
+  --ui-background-color: var(--accent-color, oklch(0% 0 0));
+  --drawer-font-color: var(--font-color-faded);
+  --font-color-hover: var(--font-color);
+  --font-color-active: var(--font-color-faded2);
+  color-scheme: dark;
+}
+
+body.dark {
+  @include darken();
+}
+
+body.light {
+  @include lighten();
+}
+
+#title {
+  font-size: var(--font-size-xl);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: auto;
+}
+
+#artists {
+  font-size: var(--font-size-reg);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: auto;
+  color: var(--font-color-faded);
+}
+
+.text-reg {
+  font-size: var(--font-size-reg);
+}
+
+.text-xl {
+  font-size: var(--font-size-xl);
+  letter-spacing: var(--letter-spacing-nxl);
+}
+
+.text-2xl {
+  font-size: var(--font-size-2xl);
+  letter-spacing: var(--letter-spacing-n2xl);
+}
+
+.text-3xl {
+  font-size: var(--font-size-3xl);
+  letter-spacing: var(--letter-spacing-n3xl);
+}
+
+.text-4xl {
+  font-size: var(--font-size-4xl);
+  letter-spacing: var(--letter-spacing-n4xl);
+}
+
+.text-5xl {
+  font-size: var(--font-size-5xl);
+  letter-spacing: var(--letter-spacing-n5xl);
+}
+
+.text-6xl {
+  font-size: var(--font-size-6xl);
+  letter-spacing: var(--letter-spacing-n6xl);
+}
+
+.text-7xl {
+  font-size: var(--font-size-7xl);
+  letter-spacing: var(--letter-spacing-n7xl);
+}
+
+.text-8xl {
+  font-size: var(--font-size-8xl);
+  letter-spacing: var(--letter-spacing-n8xl);
+}
+
+.hover-underline {
+  :hover {
+    text-decoration: underline;
+    cursor: pointer !important;
+  }
+}
+
+.hover-pointer {
+  :hover {
+    cursor: pointer;
+  }
+}
+
+*:focus-visible {
+  outline: 2px solid var(--theme-contrast-color);
+}
+
+.outline-offset-small {
+  * {
+    outline-offset: 0.1rem;
+  }
+}
+
+.outline-offset {
+  * {
+    outline-offset: 0.3rem;
+  }
+}
+
+span,
+.text-base {
+  font-weight: var(--font-weight-base);
+  font-size: var(--font-size-base);
+  font-family: 'Haskoy';
+  transition: opacity 0.15s linear;
+}
+
+.button-active {
+  background-color: var(--button-active-color);
+}
+
+//button
+
+//accordion
+.p-accordion .p-accordion-content {
+  transition: background-color 0.3s linear, border-color 0.3s linear !important;
+  background: var(--background-color-light) !important;
+}
+
+p-accordion
+  .p-accordion
+  p-accordiontab
+  .p-accordion-tab
+  .p-accordion-header-link {
+  border-top-left-radius: 4px !important;
+  border-top-right-radius: 4px !important;
+  border: 0.15rem solid transparent;
+  outline: none;
+  transition: background-color 0.3s linear !important;
+  background-color: var(--background-color-light);
+}
+
+.p-accordion .p-accordion-header:not(.p-highlight):not(.p-disabled):hover {
+  transition: background-color 0.3s linear, border-color 0.3s linear !important;
+  background: var(--background-color-light) !important;
+}
+
+.p-accordion-header:hover,
+.p-accordion-header:focus {
+  transition: background-color 0.3s linear, border-color 0.3s linear !important;
+  background: var(--background-color-light) !important;
+}
+
+.p-accordion-header.p-highlight {
+  transition: background-color 0.3s linear, border-color 0.3s linear !important;
+  background: var(--background-color-light) !important;
+
+  .p-accordion-header-link {
+    background: var(--background-color-light) !important;
+  }
+}
+
+.p-accordion
+  p-accordiontab:last-child
+  .p-accordion-header:not(.p-highlight)
+  .p-accordion-header-link {
+  background: var(--background-color-light) !important;
+}
+
+.p-accordion-header:not(.p-highlight):not(.p-disabled):hover
+  .p-accordion-header-link {
+  background: var(--background-color-light) !important;
+}
+
+.p-accordion-tab {
+  .p-accordion-header {
+    background: var(--background-color-light) !important;
+    transition: background-color 0.3s linear !important;
+    border-radius: 4px;
+  }
+
+  .p-accordion-header-text {
+    transition: color 0.2s linear, background-color 0.3s linear,
+      border-color 0.3s linear !important;
+    color: var(--text-color);
+  }
+}
+
+.p-accordion-header-link {
+  transition: background 0.3s linear, border-color 0s linear !important;
+}
+
+//input switch
+.accessibility-container:has(p-inputswitch) {
+  p-inputswitch {
+    .p-inputswitch {
+      &:not(.p-inputswitch-checked) {
+        .p-inputswitch-slider {
+          background: var(--theme-contrast-color) !important;
+          opacity: 0.3;
+        }
+      }
+
+      .p-inputswitch-slider {
+        transition: opacity 0s, background-color 0s linear !important;
+      }
+    }
+  }
+}
