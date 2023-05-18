@@ -1,8 +1,8 @@
 {
   "$schema": "https://wails.io/schemas/config.v2.json",
-  "name": "myproject",
-  "outputfilename": "myproject",
-  "frontend:install": "nx run install",
+  "name": "musicnya",
+  "outputfilename": "musicnya",
+  "frontend:install": "yarn",
   "frontend:build": "nx run frontend:build",
   "frontend:dev:watcher": "nx run frontend:serve",
   "frontend:dev:serverUrl": "http://localhost:4200",

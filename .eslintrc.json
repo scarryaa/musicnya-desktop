@@ -52,7 +52,6 @@
         "plugin:import/errors",
         "plugin:import/warnings",
         "plugin:import/typescript",
-        "plugin:unicorn/recommended",
         "plugin:prettier/recommended"
       ],
       "rules": {

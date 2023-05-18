@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
   ChangeDetectionStrategy,
   Component,
@@ -56,17 +59,15 @@ import { BaseButtonModule } from '@nyan-inc/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TitleBarComponent {
-  constructor() {}
-
-  async minimizeWindow() {
-    // await this.currentWindow.minimize();
+  minimizeWindow() {
+    (window as any).runtime.WindowMinimise();
   }
 
-  async maximizeWindow() {
-    // await this.currentWindow.maximize();
+  maximizeWindow() {
+    (window as any).runtime.WindowMaximise();
   }
 
-  async closeWindow() {
-    // await this.currentWindow.close();
+  closeWindow() {
+    (window as any).runtime.Quit();
   }
 }

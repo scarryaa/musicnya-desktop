@@ -1,12 +1,13 @@
 #title-bar {
   width: 100%;
-  height: 1.5rem;
+  height: 2.2rem;
   position: sticky;
   display: flex;
   top: 0;
   background-color: black;
   -webkit-app-region: drag;
   justify-content: space-between;
+  --wails-draggable: drag;
 
   i {
     color: white;
@@ -14,6 +15,7 @@
 }
 
 .titlebar-button {
+  --wails-draggable: none;
   display: inline-flex;
   justify-content: center;
   align-items: center;

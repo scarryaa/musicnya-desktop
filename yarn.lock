@@ -2665,6 +2665,21 @@
     yargs "^17.6.2"
     yargs-parser "21.1.1"
 
+"@nyan-inc/core@C:\\Users\\Ficis\\Documents\\Coding\\nyan-inc\\dist\\libs\\core":
+  version "0.0.1"
+  dependencies:
+    tslib "^2.3.0"
+
+"@nyan-inc/musickit-typescript@file:dist/libs/musickit-typescript":
+  version "0.0.1"
+  dependencies:
+    tslib "^2.3.0"
+
+"@nyan-inc/ui@file:dist/libs/ui":
+  version "0.0.1"
+  dependencies:
+    tslib "^2.3.0"
+
 "@parcel/watcher@2.0.4":
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/@parcel/watcher/-/watcher-2.0.4.tgz#f300fef4cc38008ff4b8c29d92588eced3ce014b"

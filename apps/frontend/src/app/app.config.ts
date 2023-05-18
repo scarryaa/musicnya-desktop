@@ -22,7 +22,6 @@ import {
   MusickitStoreModule,
 } from '@nyan-inc/musickit-typescript';
 import {
-  HttpClientModule,
   HTTP_INTERCEPTORS,
   provideHttpClient,
   withInterceptorsFromDi,
@@ -39,12 +38,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(BrowserAnimationsModule),
     importProvidersFrom(BrowserModule),
     importProvidersFrom(MusickitStoreModule),
-    provideHttpClient(withInterceptorsFromDi()),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: MusickitHttpInterceptor,
-      multi: true,
-    },
     importProvidersFrom(
       NgScrollbarModule.withConfig({
         visibility: 'hover',

@@ -2,14 +2,13 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnDestroy,
-  OnInit,
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeadingComponent, MediaTileListComponent } from '@nyan-inc/ui';
 import { DragScrollModule } from 'ngx-drag-scroll';
 import { Subject, Subscription } from 'rxjs';
 import { MusickitFacade } from '@nyan-inc/musickit-typescript';
+import { HeadingComponent, MediaTileListComponent } from '@nyan-inc/ui';
 
 @Component({
   standalone: true,
