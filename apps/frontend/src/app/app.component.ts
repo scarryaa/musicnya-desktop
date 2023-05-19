@@ -71,8 +71,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentInit {
   ngOnInit(): void {
     this.store.dispatch(AppActions.initApp());
     this.musickitFacade.init({
-      developerToken:
-        '[redacted]',
+      developerToken: '[redacted]',
       app: {
         name: 'Apple Music',
         build: '1978.4.1',
