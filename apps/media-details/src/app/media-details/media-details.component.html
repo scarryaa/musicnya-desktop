@@ -1,0 +1,89 @@
+<div
+  id="page-wrapper"
+  [style.background]="'linear-gradient(transparent 14.09rem, teal 10rem)'"
+>
+  <div id="media-details-wrapper">
+    <ui-album-tile-large
+      id="media-cover-artwork"
+      imageSource="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
+      [showPlayButton]="false"
+      [tileSize]="12"
+      [showInfo]="false"
+    ></ui-album-tile-large>
+    <div id="media-details">
+      <div id="media-text">
+        <div id="media-title">The New Abnormal</div>
+        <span>25 songs, 0 min 0 sec</span>
+      </div>
+      <div id="media-buttons">
+        <div id="media-buttons-wrapper">
+          <core-base-button
+            id="play-button"
+            class="core-base-button-filled media-action-button outline-offset-small"
+            componentStyleClass="ui-button-l media-action-button"
+            text="Play"
+            icon="play_arrow"
+          ></core-base-button>
+          <core-base-button
+            id="shuffle-button"
+            class="core-base-button-filled media-action-button outline-offset-small"
+            componentStyleClass="ui-button-l media-action-button"
+            text="Shuffle"
+            icon="shuffle"
+          ></core-base-button>
+        </div>
+        <div id="misc-media-buttons">
+          <core-base-button
+            id="library-add-button"
+            class="media-action-button outline-offset-small"
+            componentStyleClass="ui-button-l media-action-button"
+            icon="arrow_circle_down"
+          ></core-base-button>
+          <core-base-button
+            id="media-options-button"
+            class="media-action-button outline-offset-small"
+            componentStyleClass="ui-button-l media-action-button"
+            icon="more_horiz"
+          ></core-base-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="more-info">
+    <div class="color-div"></div>
+    <i
+      id="toggle-button"
+      class="material-symbols-rounded"
+      [ngClass]="{
+        rotated: showAdditionalInfo
+      }"
+      (click)="toggleShowContent()"
+      (keydown)="toggleShowContent()"
+      >expand_circle_down</i
+    >
+    <div class="info-border"></div>
+    <ui-media-details-dropdown [showContent]="showAdditionalInfo">
+      <div id="dropdown-content-wrapper">
+        <div class="dropdown-content" #content>
+          <p>
+            <!-- <b>Genres: </b>{{ vm.genre ? (vm.genre | joinArrayPipe) : "None" }} -->
+            <b>Genres: </b> yeah idk
+          </p>
+          <p
+            id="dmedia-description"
+            [innerHTML]="
+              '\<span>\<b>Description: \</b>\</span>' +
+              (null ?? null ?? '\<span class=\'inline-block\'>None\</span>')
+            "
+          ></p>
+        </div>
+      </div>
+    </ui-media-details-dropdown>
+  </div>
+
+  <div id="media-content-wrapper">
+    <div id="media-content" [style.backgroundColor]="'teal'">
+      <ui-virtual-table></ui-virtual-table>
+    </div>
+  </div>
+</div>

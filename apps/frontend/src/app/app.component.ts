@@ -4,6 +4,12 @@ import {
   ChangeDetectionStrategy,
   OnInit,
   OnDestroy,
+  HostListener,
+  ContentChild,
+  QueryList,
+  ContentChildren,
+  AfterContentInit,
+  ElementRef,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DrawerComponent } from './drawer/drawer.component';
@@ -18,6 +24,11 @@ import { LayoutState } from '../store/reducers/layout.reducer';
 import * as LayoutActions from '../store/actions/layout.actions';
 import { TitleBarComponent } from './title-bar/title-bar.component';
 import { MusickitFacade } from '@nyan-inc/musickit-typescript';
+import {
+  DraggableDirective,
+  NavigationButtonSmartModule,
+} from '@nyan-inc/core';
+import { NavigationButtonsComponent } from './navigation-buttons/navigation-buttons.component';
 
 @Component({
   standalone: true,
@@ -28,23 +39,33 @@ import { MusickitFacade } from '@nyan-inc/musickit-typescript';
     FooterComponent,
     NgScrollbarModule,
     TitleBarComponent,
+    NavigationButtonSmartModule,
+    NavigationButtonsComponent,
   ],
   selector: 'musicnya-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy, AfterContentInit {
   drawerOpen$: Observable<boolean>;
   width!: number;
   subs: Subscription = new Subscription();
   title = 'musicnya';
+
+  @ContentChildren(DraggableDirective, { descendants: true, read: ElementRef })
+  draggables!: QueryList<DraggableDirective>;
 
   constructor(
     private store: Store<AppState & LayoutState>,
     private musickitFacade: MusickitFacade
   ) {
     this.drawerOpen$ = this.store.pipe(select(fromLayout.getDrawerOpen));
+  }
+
+  @HostListener('click', ['$event']) onClick(event: Event) {
+    const elementId = event.target as Element;
+    console.log(elementId);
   }
 
   ngOnInit(): void {
@@ -60,6 +81,10 @@ export class AppComponent implements OnInit, OnDestroy {
       sourceType: 24,
       suppressErrorDialog: false,
     });
+  }
+
+  ngAfterContentInit(): void {
+    console.log(this.draggables);
   }
 
   ngOnDestroy(): void {

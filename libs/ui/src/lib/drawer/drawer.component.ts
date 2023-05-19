@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
 import { NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
 import { filter, map, Subscription, tap } from 'rxjs';
 import { DrawerToggleDirective } from '../directives/drawer-toggle.directive';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { BaseComponent } from '@nyan-inc/core';
 
 @Component({

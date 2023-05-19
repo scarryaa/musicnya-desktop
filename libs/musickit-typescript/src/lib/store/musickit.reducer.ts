@@ -64,11 +64,11 @@ const reducer = createReducer(
   initialMusickitState,
   on(MusickitActions.initMusickit, (state) => ({
     ...state,
-    loaded: false,
     error: undefined,
   })),
   on(MusickitActions.loadMusickitSuccess, (state) => ({
     ...state,
+    loaded: true,
   })),
   on(MusickitActions.loadMusickitFailure, (state, { payload: { error } }) => ({
     ...state,

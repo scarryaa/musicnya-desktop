@@ -1,12 +1,10 @@
 import {
-  HostListener,
   Injectable,
   OnDestroy,
   Renderer2,
   RendererFactory2,
 } from '@angular/core';
 import {
-  BehaviorSubject,
   fromEventPattern,
   Observable,
   startWith,

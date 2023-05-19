@@ -76,8 +76,8 @@
 // }
 
 // export type AlbumAttributes = Required<Pick<Attributes, 'artistName' | 'artwork' | 'genreNames' | 'isCompilation' |
-//     'isComplete' | 'isMasteredForItunes' | 'isSingle' | 'name' | 'trackCount' | 'url'>> 
-//     & Partial<Pick<Attributes, 'artistUrl' | 'audioVariants' | 'contentRating' | 'copyright' 
+//     'isComplete' | 'isMasteredForItunes' | 'isSingle' | 'name' | 'trackCount' | 'url'>>
+//     & Partial<Pick<Attributes, 'artistUrl' | 'audioVariants' | 'contentRating' | 'copyright'
 //         | 'editorialNotes' | 'playParams' | 'recordLabel' | 'releaseDate' | 'upc'>>;
 
 // export type ArtistAttributes = Required<Pick<Attributes, 'genreNames' | 'name' | 'url'>>
@@ -93,10 +93,10 @@
 //     & Partial<Pick<Attributes, 'albumName' | 'artistUrl' | 'contentRating' | 'editorialNotes' | 'isrc' | 'playParams' | 'releaseDate' | 'trackNumber' |
 //         'videoSubType' | 'workId' | 'workName'>>;
 
-// export type PlaylistAttributes = Required<Pick<Attributes, 'curatorName' | 'isChart' | 'name' | 'playlistType' | 'url'>> 
+// export type PlaylistAttributes = Required<Pick<Attributes, 'curatorName' | 'isChart' | 'name' | 'playlistType' | 'url'>>
 //     & Partial<Pick<Attributes, 'artwork' | 'description' | 'lastModifiedDate' | 'playParams' | 'trackTypes'>>;
 
-// export type StationAttributes = Required<Pick<Attributes, 'artwork' | 'isLive' | 'mediaKind' | 'name' | 'url'>> 
+// export type StationAttributes = Required<Pick<Attributes, 'artwork' | 'isLive' | 'mediaKind' | 'name' | 'url'>>
 //     & Partial<Pick<Attributes, 'durationInMillis' | 'editorialNotes' | 'episodeNumber' | 'contentRating' | 'playParams' | 'stationProviderName'>>;
 
 // export type ViewAttributes = {
@@ -294,7 +294,7 @@
 //     genres: Relationship<Genre>;
 //     tracks: Relationship<Track>;
 //     library: Relationship<LibraryAlbum>;
-//     recordLabels: Relationship<RecordLabel>;   
+//     recordLabels: Relationship<RecordLabel>;
 // }
 
 // export type ArtistRelationships = {

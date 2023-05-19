@@ -9,7 +9,7 @@ export const appRoutes: Route[] = [
       ),
   },
   {
-    path: 'media-details',
+    path: 'media-details/:type/:id',
     loadChildren: () =>
       import('../../../media-details/src/app/remote-entry/entry.routes').then(
         (m) => m.remoteRoutes

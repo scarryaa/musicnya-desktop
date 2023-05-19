@@ -3,6 +3,7 @@ import { createReducer, on, Action } from '@ngrx/store';
 
 import * as AppActions from '../actions/app.actions';
 import { AppEntity } from '../models/app.models';
+import copy from 'fast-copy';
 
 export const APP_FEATURE_KEY = 'app';
 
@@ -25,7 +26,7 @@ export const initialAppState: AppState = appAdapter.getInitialState({
 });
 
 const reducer = createReducer(
-  initialAppState,
+  { ...initialAppState },
   on(AppActions.initApp, (state) => ({
     ...state,
     loaded: false,
@@ -33,7 +34,7 @@ const reducer = createReducer(
   })),
 
   on(AppActions.loadAppSuccess, (state, { payload }) =>
-    appAdapter.setAll(payload, { ...state, loaded: true })
+    appAdapter.setAll(copy(payload), { ...state, loaded: true })
   ),
 
   on(AppActions.loadAppFailure, (state) => ({ ...state }))

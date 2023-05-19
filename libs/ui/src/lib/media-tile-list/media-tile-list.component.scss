@@ -6,11 +6,17 @@
 drag-scroll {
   height: 100%;
   width: 100%;
+  overflow: hidden;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 #heading {
   padding-left: 0.5rem;
   display: block;
+  overflow-wrap: none;
 }
 
 #media-items {

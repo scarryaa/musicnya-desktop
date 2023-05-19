@@ -162,7 +162,7 @@ declare namespace MusicKit {
      *
      * Note: This could result in an error if the user has not interacted with the player yet, as most browsers prevent audio playback without user interaction.
      * @returns void. */
-    play(): void;
+    play(): Promise<void>;
 
     /**Inserts the {@link MediaItem MediaItem(s)} defined by {@link QueueOptions} at the position indicated in the current {@link Queue}.
      * @param position The index position in the Queue to inser the new MediaItem(s) at. Position 0 is the first item in the Queue.

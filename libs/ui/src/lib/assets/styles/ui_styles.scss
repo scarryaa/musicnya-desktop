@@ -1,5 +1,6 @@
 :root {
   --font-weight-thin: 200;
+  --font-weight-slightly-thin: 300;
   --font-weight-base: 400;
   --font-weight-slightly-bold: 425;
   --font-weight-bold: 500;
@@ -34,9 +35,17 @@
   --font-color-white-faded: oklch(70% 0 0);
   --font-color-white-faded2: oklch(60% 0 0);
   --font-color-white-faded3: oklch(50% 0 0);
+
+  --nav-button-hover: oklch(0% 0 0 / 60%);
+  --nav-button-active: oklch(0% 0 0 / 30%);
+
+  --table-text-color: oklch(100% 0 0);
+  --table-faded-text-color: oklch(92.5% 0 0);
+  --table-header-color: oklch(87.5% 0 0);
 }
 
 @mixin lighten() {
+  --theme-color: white;
   --background-color: oklch(100% 0 0);
   --button-active-color: oklch(0% 0 0 / 50%);
   --font-color: oklch(0% 0 0);
@@ -55,6 +64,7 @@
 }
 
 @mixin darken() {
+  --theme-color: black;
   --background-color: oklch(20.02% 0 0);
   --button-active-color: oklch(100% 0 0 / 20%);
   --font-color: oklch(100% 0 0);

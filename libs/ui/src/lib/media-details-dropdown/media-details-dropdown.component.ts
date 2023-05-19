@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common';
   `,
   styleUrls: ['./media-details-dropdown.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MediaDetailsDropdownComponent implements AfterContentChecked {
   @ContentChild('content') content!: ElementRef;

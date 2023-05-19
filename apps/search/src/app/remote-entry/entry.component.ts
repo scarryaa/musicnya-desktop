@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NxWelcomeComponent } from './nx-welcome.component';
+import { SearchComponent } from '../search/search.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, NxWelcomeComponent],
-  selector: 'nyan-inc-search-entry',
-  template: `<nyan-inc-nx-welcome></nyan-inc-nx-welcome>`,
+  imports: [CommonModule, SearchComponent],
+  selector: 'musicnya-search-entry',
+  template: `<musicnya-search></musicnya-search>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RemoteEntryComponent {}

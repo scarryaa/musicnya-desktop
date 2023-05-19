@@ -7,7 +7,6 @@
   background-color: black;
   -webkit-app-region: drag;
   justify-content: space-between;
-  --wails-draggable: drag;
 
   i {
     color: white;
@@ -15,7 +14,7 @@
 }
 
 .titlebar-button {
-  --wails-draggable: none;
+  -webkit-app-region: no-drag;
   display: inline-flex;
   justify-content: center;
   align-items: center;

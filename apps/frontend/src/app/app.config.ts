@@ -15,6 +15,7 @@ import { AppEffects } from '../store/effects/app.effects';
 import { appRoutes } from './app.routes';
 import * as fromApp from '../store/reducers/app.reducer';
 import * as fromLayout from '../store/reducers/layout.reducer';
+import * as fromMusickit from '@nyan-inc/musickit-typescript';
 import { BrowserModule } from '@angular/platform-browser';
 import '@angular/compiler';
 import {
@@ -49,6 +50,7 @@ export const appConfig: ApplicationConfig = {
       {
         app: fromApp.appReducer,
         layout: fromLayout.layoutReducer,
+        musickit: fromMusickit.musickitReducer,
       },
       {
         runtimeChecks: {

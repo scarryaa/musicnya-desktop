@@ -39,7 +39,7 @@
             {
               "type": "anyComponentStyle",
               "maximumWarning": "2kb",
-              "maximumError": "4kb"
+              "maximumError": "6kb"
             }
           ],
           "outputHashing": "all",
@@ -62,7 +62,8 @@
       "executor": "@nx/angular:module-federation-dev-server",
       "options": {
         "port": 4200,
-        "publicHost": "http://localhost:4200"
+        "publicHost": "http://localhost:4200",
+        "proxyConfig": "apps/frontend/proxy.conf.json"
       },
       "configurations": {
         "production": {

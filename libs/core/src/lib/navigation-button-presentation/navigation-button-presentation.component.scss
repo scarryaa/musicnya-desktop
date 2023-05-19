@@ -1,0 +1,29 @@
+.navigation-button {
+  border-radius: 48px;
+  height: 2.5rem;
+  width: 2.5rem;
+  background-color: rgba(black, 0.8);
+
+  &:hover {
+    background-color: rgba(black, 0.9);
+
+    i {
+      color: var(--font-color);
+    }
+  }
+
+  &:active {
+    background-color: black;
+
+    i {
+      color: var(--font-color);
+    }
+  }
+
+  i {
+    padding-top: 0.3rem;
+    padding-left: 0.2rem;
+    font-size: var(--font-size-6xl);
+    color: var(--font-color-faded);
+  }
+}

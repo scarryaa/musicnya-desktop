@@ -1,0 +1,59 @@
+<table
+  cdk-table
+  coreDraggable="hello"
+  cdkDropList
+  [trackBy]="trackBy"
+  [dataSource]="dataSource"
+>
+  <!-- # Column -->
+  <ng-container cdkColumnDef="#">
+    <th id="id-table-header" cdk-header-cell *cdkHeaderCellDef>#</th>
+    <td class="id-content" cdk-cell *cdkCellDef="let song; let i = index">
+      <div>{{ i + 1 }}</div>
+      <div id="play-button-container">
+        <div id="play-button">
+          <i class="material-symbols-rounded">play_arrow</i>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+
+  <!-- Title Column -->
+  <ng-container cdkColumnDef="Title">
+    <th id="title-table-header" cdk-header-cell *cdkHeaderCellDef>Title</th>
+    <td class="title-content" cdk-cell *cdkCellDef="let song">
+      <span>{{ song.title }}</span>
+    </td>
+  </ng-container>
+
+  <!-- Album Column -->
+  <ng-container cdkColumnDef="Album">
+    <th id="album-table-header" cdk-header-cell *cdkHeaderCellDef>Album</th>
+    <td class="album-content" cdk-cell *cdkCellDef="let song">
+      <span>{{ song.album }}</span>
+    </td>
+  </ng-container>
+
+  <!-- Duration Column -->
+  <ng-container cdkColumnDef="Duration">
+    <th id="duration-table-header" cdk-header-cell *cdkHeaderCellDef>
+      Duration
+    </th>
+    <td class="duration-content" cdk-cell *cdkCellDef="let song">
+      <div id="like-button-container">
+        <div id="like-button">
+          <i class="material-symbols-outlined">favorite</i>
+        </div>
+      </div>
+      <span>{{ song.duration }}</span>
+      <div id="options-button-container">
+        <div id="options-button">
+          <i class="material-symbols-rounded">more_horiz</i>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+  <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+</table>

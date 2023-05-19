@@ -12,12 +12,18 @@ import {
 } from '@angular/core';
 import { HeadingComponent } from '../heading/heading.component';
 import { DragScrollModule } from 'ngx-drag-scroll';
-import { AlbumTileModule } from '../album-tile/album-tile.component';
+import { AlbumTileLargeModule } from '../album-tile/album-tile-large.component';
+import { AlbumTileLargeSmartModule } from '../album-tile/album-tile-large.smart.component';
 
 @Component({
   selector: 'ui-media-tile-list',
   standalone: true,
-  imports: [CommonModule, HeadingComponent, AlbumTileModule, DragScrollModule],
+  imports: [
+    CommonModule,
+    HeadingComponent,
+    AlbumTileLargeSmartModule,
+    DragScrollModule,
+  ],
   template: ` <ui-heading id="heading" size="medium">{{
       listTitle
     }}</ui-heading>
@@ -36,18 +42,11 @@ import { AlbumTileModule } from '../album-tile/album-tile.component';
           drag-scroll-item
           *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8, 9]; let i = index"
           [id]="'media-item-' + i"
-          [tileSize]="8"
           #items
           [clickEnabled]="clickEnabled"
-          [titleRouterLink]="'/media-details'"
-          [artistsRouterLink]="''"
           mediaTitle="Test Album"
-          [artists]="['guy']"
-          [showArtists]="true"
-          (playEmitter)="playEmitter.emit($event)"
           artworkRouterLink="/media-details"
-          source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
-          [hoverUnderline]="true"
+          imageSource="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
         ></ui-album-tile-large>
       </div>
     </drag-scroll>`,

@@ -1,5 +1,11 @@
 <musicnya-title-bar></musicnya-title-bar>
 <div id="app-wrapper">
+  <div id="navigation-buttons-wrapper">
+    <musicnya-navigation-buttons
+      [ngClass]="{ 'drawer-expanded': (drawerOpen$ | async)! }"
+      id="navigation-buttons"
+    ></musicnya-navigation-buttons>
+  </div>
   <musicnya-drawer
     [width]="width"
     (drawerOpened$)="toggleDrawer($event)"

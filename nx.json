@@ -12,6 +12,9 @@
       }
     }
   },
+  "cli": {
+    "defaultCollection": "nx-electron"
+  },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
@@ -56,5 +59,6 @@
     "@nx/angular:component": {
       "style": "scss"
     }
-  }
+  },
+  "defaultProject": "electron"
 }

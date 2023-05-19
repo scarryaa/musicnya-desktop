@@ -7,7 +7,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { DragScrollModule } from 'ngx-drag-scroll';
 import { Subject, Subscription } from 'rxjs';
-import { MusickitFacade } from '@nyan-inc/musickit-typescript';
+import {
+  MusickitAPIService,
+  MusickitFacade,
+} from '@nyan-inc/musickit-typescript';
 import { HeadingComponent, MediaTileListComponent } from '@nyan-inc/ui';
 
 @Component({
@@ -25,12 +28,12 @@ import { HeadingComponent, MediaTileListComponent } from '@nyan-inc/ui';
 })
 export class HomeComponent implements OnDestroy {
   musickitFacade = inject(MusickitFacade);
+  musickit = inject(MusickitAPIService);
   subs: Subscription = new Subscription();
   _destroy$: Subject<void> = new Subject<void>();
 
   play(object: { album: string }) {
-    this.musickitFacade.setQueue(object);
-    this.musickitFacade.play();
+    this.musickitFacade.setQueue({ ...object, startPlaying: true });
   }
 
   ngOnDestroy(): void {

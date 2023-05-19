@@ -4,40 +4,41 @@ import {
   MusickitState,
   musickitAdapter,
 } from './musickit.reducer';
+import copy from 'fast-copy';
 
 // Lookup the 'Musickit' feature state managed by NgRx
 export const selectMusickitState =
   createFeatureSelector<MusickitState>(MUSICKIT_FEATURE_KEY);
 
-const { selectAll, selectEntities } = musickitAdapter.getSelectors();
+const { selectAll, selectEntities } = copy(musickitAdapter.getSelectors());
 
 export const selectMusickitLoaded = createSelector(
   selectMusickitState,
-  (state: MusickitState) => state.loaded
+  (state: MusickitState) => copy(state.loaded)
 );
 
 export const selectMusickitError = createSelector(
   selectMusickitState,
-  (state: MusickitState) => state.error
+  (state: MusickitState) => copy(state.error)
 );
 
 export const selectAllMusickit = createSelector(
   selectMusickitState,
-  (state: MusickitState) => selectAll(state)
+  (state: MusickitState) => copy(selectAll(state))
 );
 
 export const selectMusickitEntities = createSelector(
   selectMusickitState,
-  (state: MusickitState) => selectEntities(state)
+  (state: MusickitState) => copy(selectEntities(state))
 );
 
 export const selectSelectedId = createSelector(
   selectMusickitState,
-  (state: MusickitState) => state.selectedId
+  (state: MusickitState) => copy(state.selectedId)
 );
 
 export const selectEntity = createSelector(
   selectMusickitEntities,
   selectSelectedId,
-  (entities, selectedId) => (selectedId ? entities[selectedId] : undefined)
+  (entities, selectedId) => copy(selectedId ? entities[selectedId] : undefined)
 );

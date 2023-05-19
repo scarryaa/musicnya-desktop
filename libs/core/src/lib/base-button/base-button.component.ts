@@ -12,6 +12,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { BaseComponent } from '../base-component';
 import { Router, RouterModule } from '@angular/router';
+import { DisableChildFocusDirective } from '../disable-child-focus.directive';
 
 @Component({
   selector: 'core-base-button',
@@ -24,6 +25,7 @@ import { Router, RouterModule } from '@angular/router';
       [tabIndex]="tabIndex"
       #button
       [style.transition]="transition"
+      coreDisableChildFocus
     >
       <i
         class="material-symbols-rounded text-5xl"
@@ -62,7 +64,7 @@ export class BaseButtonComponent extends BaseComponent {
 }
 
 @NgModule({
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, DisableChildFocusDirective],
   exports: [BaseButtonComponent],
   declarations: [BaseButtonComponent],
 })

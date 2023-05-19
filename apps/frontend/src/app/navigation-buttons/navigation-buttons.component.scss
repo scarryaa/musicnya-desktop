@@ -1,0 +1,16 @@
+:host {
+  margin-top: 0.4rem;
+  margin-inline: 1rem;
+  display: flex;
+  position: fixed;
+  top: 0;
+  width: auto;
+  height: auto;
+  gap: 0.8rem;
+
+  #navigation-button-forward {
+    i {
+      padding-left: 0.4rem;
+    }
+  }
+}

@@ -1,11 +1,23 @@
 import { Injectable, inject } from '@angular/core';
 import { createEffect, Actions, ofType, concatLatestFrom } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { switchMap, catchError, of, mergeMap, tap, map, filter } from 'rxjs';
+import {
+  switchMap,
+  catchError,
+  of,
+  mergeMap,
+  tap,
+  map,
+  filter,
+  from,
+  forkJoin,
+  Observable,
+} from 'rxjs';
 import { MusickitAPIService } from '../musickit-api/musickit-api.service';
 import * as MusickitActions from './musickit.actions';
 import * as MusickitFeature from './musickit.reducer';
 import { MusickitState } from './musickit.reducer';
+import copy from 'fast-copy';
 
 @Injectable({ providedIn: 'root' })
 export class MusickitEffects {
@@ -16,15 +28,12 @@ export class MusickitEffects {
   init$ = createEffect(() =>
     this.actions.pipe(
       ofType(MusickitActions.initMusickit),
-      tap(
-        (payload) =>
-          void this.musickit.initMusicKit(payload.payload.config.developerToken)
+      switchMap((payload) =>
+        this.musickit.initMusicKit(payload.payload.config.developerToken)
       ),
-      map(
-        () => MusickitActions.loadMusickitSuccess(),
-        catchError((error) =>
-          of(MusickitActions.loadMusickitFailure({ payload: { error } }))
-        )
+      switchMap(() => of(MusickitActions.loadMusickitSuccess())),
+      catchError((error) =>
+        of(MusickitActions.loadMusickitFailure({ payload: { error } }))
       )
     )
   );
@@ -51,8 +60,8 @@ export class MusickitEffects {
   play$ = createEffect(() =>
     this.actions.pipe(
       ofType(MusickitActions.play),
-      tap(() => this.musickit.instance.play()),
-      switchMap(() => of(MusickitActions.playSuccess())),
+      switchMap(() => this.musickit.play()),
+      switchMap((value) => of(MusickitActions.playSuccess())),
       catchError((error) => {
         console.error('Error', error);
         return of(MusickitActions.playFailure({ payload: { error } }));
@@ -63,13 +72,25 @@ export class MusickitEffects {
   setQueue$ = createEffect(() =>
     this.actions.pipe(
       ofType(MusickitActions.setQueue),
-      tap(
-        (action) => void this.musickit.instance.setQueue(action.payload.options)
-      ),
-      switchMap(() => of(MusickitActions.setQueueSuccess())),
-      catchError((error) => {
-        console.error('Error', error);
-        return of(MusickitActions.setQueueFailure({ payload: { error } }));
+      switchMap((action) => {
+        return from(
+          this.musickit.setQueue({
+            ...action.payload.options,
+          })
+        ).pipe(
+          switchMap((shouldPlay: boolean | undefined) => {
+            const actions = [];
+            actions.push(MusickitActions.setQueueSuccess());
+            if (shouldPlay) {
+              actions.push(MusickitActions.play());
+            }
+            return actions;
+          }),
+          catchError((error) => {
+            console.error('Error', error);
+            return of(MusickitActions.setQueueFailure);
+          })
+        );
       })
     )
   );

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  FooterModule,
   AlbumTileModule,
+  FooterModule,
   PlaybackControlsModule,
 } from '@nyan-inc/ui';
 

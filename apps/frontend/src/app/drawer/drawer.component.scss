@@ -35,7 +35,8 @@
 
   ::ng-deep core-base-button.active {
     button,
-    i {
+    i,
+    span {
       color: var(--font-color) !important;
     }
   }

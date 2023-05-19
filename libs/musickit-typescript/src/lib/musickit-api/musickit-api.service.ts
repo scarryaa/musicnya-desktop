@@ -4,8 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class MusickitAPIService {
-  constructor() {}
-
   instance!: MusicKit.MusicKitInstance;
 
   async initMusicKit(developmentToken: string) {
@@ -19,5 +17,16 @@ export class MusickitAPIService {
       sourceType: 24,
       suppressErrorDialog: false,
     });
+    return this.instance;
+  }
+
+  async setQueue(object: MusicKit.QueueOptions) {
+    return await this.instance
+      .setQueue({ ...object })
+      .then(() => object.startPlaying);
+  }
+
+  async play() {
+    return await this.instance.play();
   }
 }
