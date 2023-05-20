@@ -7,6 +7,7 @@
   --font-weight-medium-bold: 600;
   --font-weight-large-bold: 800;
   --font-size-reg: 1rem;
+  --font-size-hxl: 1.05rem;
   --font-size-xl: 1.15rem;
   --font-size-2xl: 1.3rem;
   --font-size-3xl: 1.45rem;
@@ -48,7 +49,10 @@
   --theme-color: white;
   --background-color: oklch(100% 0 0);
   --button-active-color: oklch(0% 0 0 / 50%);
+  --drawer-highlight-color: oklch(0% 0 0 / 10%);
+  --drawer-active-color: oklch(0% 0 0 / 20%);
   --font-color: oklch(0% 0 0);
+  --font-color-slightly-faded: oklch(10% 0 0);
   --font-color-faded: oklch(30% 0 0);
   --font-color-faded2: oklch(50% 0 0);
   --font-color-faded3: oklch(70% 0 0);
@@ -67,7 +71,10 @@
   --theme-color: black;
   --background-color: oklch(20.02% 0 0);
   --button-active-color: oklch(100% 0 0 / 20%);
+  --drawer-highlight-color: oklch(100% 0 0 / 10%);
+  --drawer-active-color: oklch(15% 0 0 / 100%);
   --font-color: oklch(100% 0 0);
+  --font-color-slightly-faded: oklch(90% 0 0);
   --font-color-faded: oklch(70% 0 0);
   --font-color-faded2: oklch(60% 0 0);
   --font-color-faded3: oklch(50% 0 0);

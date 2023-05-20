@@ -19,6 +19,7 @@ import { DragTooltipComponent } from '../drag-tooltip/drag-tooltip.component';
 export class DraggableDirective implements OnDestroy {
   private context: any = {};
   private dragging = false;
+  private firstClick = true;
   private componentRef: ComponentRef<any> | undefined = undefined;
   @Input() coreDraggable = '';
   mouseX = 0;
@@ -39,6 +40,7 @@ export class DraggableDirective implements OnDestroy {
         this.componentFactoryResolver.resolveComponentFactory(
           DragTooltipComponent
         );
+
       this.componentRef = componentFactory.create(this.injector);
       this.appRef.attachView(this.componentRef.hostView);
       const domElem = (this.componentRef.hostView as EmbeddedViewRef<any>)
@@ -46,12 +48,16 @@ export class DraggableDirective implements OnDestroy {
       document.body.appendChild(domElem);
       this.mouseX = event.clientX + 15;
       this.mouseY = event.clientY;
-      this.setTooltipComponentProperties();
+
+      if ((event.target as Element).attributes.getNamedItem('coreDraggable')) {
+        this.setTooltipComponentProperties((event.target as Element).innerHTML);
+      }
     }
   }
 
   @HostListener('mousemove', ['$event']) onMouseMove(event: MouseEvent): void {
     if (this.componentRef !== undefined && this.dragging) {
+      this.firstClick = false;
       this.mouseX = event.clientX + 15;
       this.mouseY = event.clientY;
       this.setTooltipComponentProperties();
@@ -61,13 +67,15 @@ export class DraggableDirective implements OnDestroy {
 
   @HostListener('mouseup') onMouseUp() {
     this.dragging = false;
+    this.firstClick = true;
     this.destroy();
   }
 
-  private setTooltipComponentProperties() {
-    console.log(this.componentRef);
+  private setTooltipComponentProperties(tooltip?: string) {
     if (this.componentRef !== undefined) {
-      this.componentRef.instance.tooltip = this.coreDraggable;
+      if (this.firstClick) {
+        this.componentRef.instance.tooltip = tooltip;
+      }
       this.componentRef.instance.left = this.mouseX;
       this.componentRef.instance.top = this.mouseY;
       this.componentRef.changeDetectorRef.detectChanges();

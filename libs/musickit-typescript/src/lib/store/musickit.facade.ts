@@ -13,6 +13,9 @@ export class MusickitFacade {
    * and expose them as observables through the facade.
    */
   loaded$ = this.store.pipe(select(MusickitSelectors.selectMusickitLoaded));
+  userPlaylists$ = this.store.pipe(
+    select(MusickitSelectors.selectUserPlaylists)
+  );
   allMusickit$ = this.store.pipe(select(MusickitSelectors.selectAllMusickit));
   selectedMusickit$ = this.store.pipe(select(MusickitSelectors.selectEntity));
 
@@ -24,9 +27,9 @@ export class MusickitFacade {
     this.store.dispatch(MusickitActions.initMusickit({ payload: { config } }));
   }
 
-  addEventListener(listener: any) {
+  addEventListener(event: any, callback: Function) {
     this.store.dispatch(
-      MusickitActions.addEventListener({ payload: { listener } })
+      MusickitActions.addEventListener({ payload: { event, callback } })
     );
   }
 
@@ -36,5 +39,9 @@ export class MusickitFacade {
 
   setQueue(options: MusicKit.QueueOptions) {
     this.store.dispatch(MusickitActions.setQueue({ payload: { options } }));
+  }
+
+  getUserPlaylists() {
+    this.store.dispatch(MusickitActions.getUserPlaylists());
   }
 }

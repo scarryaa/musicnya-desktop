@@ -44,54 +44,28 @@
   </ng-container>
   <ng-container footer>
     <ui-album-tile
-      class="outline-offset drawer-item"
-      source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
+      *ngFor="let playlist of userPlaylists | async; let i = index"
+      class="drawer-item"
+      [routerLink]="'/search'"
+      [tabIndex]="-1"
+      [source]="
+        (
+          playlist.attributes?.artwork?.url ??
+          playlist.relationships?.tracks.data[0]?.attributes?.artwork?.url ??
+          ''
+        )
+          .replace('{w}x{h}', '60x60')
+          .replace('{f}', 'png')
+      "
       [tileSize]="3"
-      mediaTitle="Test Album"
-      [artists]="['guy']"
-      [hoverUnderline]="false"
+      [artists]="[
+        playlist?.relationships?.catalog?.data[0]?.attributes?.curatorName ??
+          'Me'
+      ]"
       [showArtists]="true"
-    ></ui-album-tile>
-    <ui-album-tile
-      class="outline-offset drawer-item"
-      source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
-      [tileSize]="3"
-      mediaTitle="Test Album"
-      [artists]="['guy']"
-      [showArtists]="true"
-    ></ui-album-tile>
-    <ui-album-tile
-      class="outline-offset drawer-item"
-      source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
-      [tileSize]="3"
-      mediaTitle="Test Album"
-      [artists]="['guy']"
-      [showArtists]="true"
-    ></ui-album-tile>
-    <ui-album-tile
-      class="outline-offset drawer-item"
-      source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
-      [tileSize]="3"
-      mediaTitle="Test Album"
-      [artists]="['guy']"
-      [showArtists]="true"
-    ></ui-album-tile>
-    <ui-album-tile
-      class="outline-offset drawer-item"
-      source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
-      [tileSize]="3"
-      mediaTitle="Test Album"
-      [artists]="['guy']"
-      [showArtists]="true"
-    ></ui-album-tile>
-    <ui-album-tile
-      class="outline-offset drawer-item"
-      source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
-      [tileSize]="3"
-      mediaTitle="Test Album"
-      [artists]="['guy']"
-      [showArtists]="true"
-    ></ui-album-tile>
+      [mediaTitle]="playlist?.attributes?.name"
+    >
+    </ui-album-tile>
   </ng-container>
   <ng-content body-content></ng-content>
 </ui-drawer>

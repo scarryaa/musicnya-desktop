@@ -23,12 +23,7 @@ import {
 @Component({
   selector: 'ui-album-tile',
   template: `
-    <core-base-button
-      #button
-      [tabIndex]="0"
-      class="album-tile ui-drawer-item"
-      [ngClass]=""
-    >
+    <core-base-button #button class="album-tile ui-drawer-item">
       <img
         id="artwork"
         alt="{{ type }} art"
@@ -37,6 +32,7 @@ import {
         [src]="source"
         [ngClass]="{ 'hover-underline': hoverUnderline }"
         [routerLink]="artworkRouterLink"
+        [tabIndex]="-1"
       />
       <div
         id="album-info"
@@ -46,14 +42,22 @@ import {
         [ngClass]="{ 'hover-underline': hoverUnderline }"
       >
         <ng-container *ngIf="mediaTitle">
-          <span #span id="title" [routerLink]="titleRouterLink">{{
-            mediaTitle
-          }}</span></ng-container
+          <span
+            #span
+            id="title"
+            [routerLink]="titleRouterLink"
+            [tabIndex]="-1"
+            >{{ mediaTitle }}</span
+          ></ng-container
         >
         <ng-container *ngIf="showArtists">
-          <span #span id="artists" [routerLink]="artistsRouterLink">{{
-            artists | join
-          }}</span>
+          <span
+            #span
+            id="artists"
+            [routerLink]="artistsRouterLink"
+            [tabIndex]="-1"
+            >{{ artists | join }}</span
+          >
         </ng-container>
       </div>
     </core-base-button>

@@ -74,6 +74,7 @@ const reducer = createReducer(
     ...state,
     error: error,
   })),
+
   on(MusickitActions.addEventListenerSuccess, (state) => ({
     ...state,
   })),
@@ -84,6 +85,7 @@ const reducer = createReducer(
       error: error,
     })
   ),
+
   on(MusickitActions.play, (state) => ({
     ...state,
   })),
@@ -94,6 +96,7 @@ const reducer = createReducer(
     ...state,
     error: error,
   })),
+
   on(MusickitActions.setQueue, (state) => ({
     ...state,
   })),
@@ -103,7 +106,25 @@ const reducer = createReducer(
   on(MusickitActions.setQueueFailure, (state, { payload: { error } }) => ({
     ...state,
     error: error,
-  }))
+  })),
+
+  on(MusickitActions.getUserPlaylists, (state) => ({
+    ...state,
+  })),
+  on(
+    MusickitActions.getUserPlaylistsSuccess,
+    (state, { payload: { data } }) => ({
+      ...state,
+      userPlaylists: data,
+    })
+  ),
+  on(
+    MusickitActions.getUserPlaylistsFailure,
+    (state, { payload: { error } }) => ({
+      ...state,
+      error: error,
+    })
+  )
 );
 
 export function musickitReducer(

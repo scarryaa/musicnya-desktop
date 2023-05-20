@@ -11,3 +11,7 @@ export * from './lib/navigation-button-presentation/navigation-button-presentati
 export * from './lib/virtual-table/models';
 export * from './lib/draggable/draggable.directive';
 export * from './lib/drag-tooltip/drag-tooltip.component';
+export * from './lib/tooltip/tooltip.component';
+export * from './lib/tooltip/tooltip.directive';
+export * from './lib/color/color.service';
+export * from './lib/electron/window.service';

@@ -178,7 +178,10 @@
 
     #dropdown-content-wrapper {
       position: relative;
-      background: linear-gradient(transparent 1.09rem, teal 1.09rem);
+      background: linear-gradient(
+        transparent 1.09rem,
+        var(--backgroundColor) 1.09rem
+      );
 
       .dropdown-content {
         max-width: 100%;

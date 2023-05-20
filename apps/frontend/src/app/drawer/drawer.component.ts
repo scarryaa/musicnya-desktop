@@ -1,3 +1,4 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import {
   Component,
@@ -7,6 +8,7 @@ import {
   Input,
   Output,
   SimpleChanges,
+  OnDestroy,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import {
@@ -18,7 +20,9 @@ import {
   AlbumTileModule,
   DrawerToggleDirective,
 } from '@nyan-inc/ui';
-import { Subject } from 'rxjs';
+import { Observable, Subject, Subscription, map, of, tap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { MusickitFacade } from '@nyan-inc/musickit-typescript';
 
 @Component({
   selector: 'musicnya-drawer',
@@ -31,14 +35,25 @@ import { Subject } from 'rxjs';
     RouterModule,
     DrawerToggleDirective,
     DisableChildTabIndexDirective,
+    DragDropModule,
   ],
   templateUrl: './drawer.component.html',
   styleUrls: ['./drawer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DrawerComponent extends EventTarget implements OnChanges {
-  constructor(private changeReference: ChangeDetectorRef) {
+export class DrawerComponent
+  extends EventTarget
+  implements OnChanges, OnDestroy
+{
+  userPlaylists: Observable<any[] | undefined>;
+
+  constructor(
+    private changeReference: ChangeDetectorRef,
+    private musickitFacade: MusickitFacade
+  ) {
     super();
+
+    this.userPlaylists = this.musickitFacade.userPlaylists$;
   }
 
   @Input() width?: number;
@@ -53,4 +68,6 @@ export class DrawerComponent extends EventTarget implements OnChanges {
     this.open = changes['open'].currentValue as boolean;
     this.changeReference.markForCheck();
   }
+
+  ngOnDestroy(): void {}
 }

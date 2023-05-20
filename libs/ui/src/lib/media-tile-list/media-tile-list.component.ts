@@ -45,7 +45,7 @@ import { AlbumTileLargeSmartModule } from '../album-tile/album-tile-large.smart.
           #items
           [clickEnabled]="clickEnabled"
           mediaTitle="Test Album"
-          artworkRouterLink="/media-details"
+          artworkRouterLink="/media"
           imageSource="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
         ></ui-album-tile-large>
       </div>

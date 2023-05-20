@@ -5,5 +5,6 @@ import { Directive, HostBinding } from '@angular/core';
   standalone: true,
 })
 export class DisableChildTabIndexDirective {
-  @HostBinding('tabindex') tabIndex = -1;
+  @HostBinding('tabIndex') tabIndex = -1;
+  @HostBinding('tabindex') tabindex = -1;
 }

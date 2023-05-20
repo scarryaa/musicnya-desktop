@@ -1,10 +1,13 @@
 <div
   id="page-wrapper"
-  [style.background]="'linear-gradient(transparent 14.09rem, teal 10rem)'"
+  [style.background]="
+    'linear-gradient(transparent 14.09rem, var(--backgroundColor) 10rem)'
+  "
 >
   <div id="media-details-wrapper">
     <ui-album-tile-large
       id="media-cover-artwork"
+      #mediaCover
       imageSource="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
       [showPlayButton]="false"
       [tileSize]="12"
@@ -82,7 +85,7 @@
   </div>
 
   <div id="media-content-wrapper">
-    <div id="media-content" [style.backgroundColor]="'teal'">
+    <div id="media-content" [style.backgroundColor]="mediaColor?.hex">
       <ui-virtual-table></ui-virtual-table>
     </div>
   </div>

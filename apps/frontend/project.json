@@ -164,6 +164,13 @@
         }
       },
       "defaultConfiguration": "production"
+    },
+    "add_token": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "ts-node ./scripts/setenv.ts"
+      }
     }
   }
 }

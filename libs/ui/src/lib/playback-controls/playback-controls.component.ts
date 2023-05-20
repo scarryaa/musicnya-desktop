@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SliderModule } from '../slider/slider.component';
-import { BaseButtonComponent, BaseButtonModule } from '@nyan-inc/core'
+import {
+  BaseButtonComponent,
+  BaseButtonModule,
+  TooltipComponent,
+  TooltipDirectiveModule,
+} from '@nyan-inc/core';
 
 @Component({
   selector: 'ui-playback-controls',
@@ -27,6 +32,7 @@ import { BaseButtonComponent, BaseButtonModule } from '@nyan-inc/core'
       </core-base-button
       ><core-base-button
         #button
+        [coreTooltip]="'Play'"
         [tabIndex]="0"
         class="album-tile ui-drawer-item core-base-button-rounded"
         icon="play_circle"
@@ -77,6 +83,7 @@ export class PlaybackControlsComponent extends BaseButtonComponent {}
     </core-base-button>
     <core-base-button
       #button
+      [coreTooltip]="'Mute'"
       [tabIndex]="0"
       class="album-tile ui-drawer-item core-base-button-rounded"
       icon="volume_down"
@@ -93,7 +100,13 @@ export class PlaybackControlsComponent extends BaseButtonComponent {}
 export class MiscellaneousControlsComponent extends BaseButtonComponent {}
 
 @NgModule({
-  imports: [CommonModule, BaseButtonModule, SliderModule],
+  imports: [
+    CommonModule,
+    BaseButtonModule,
+    SliderModule,
+    TooltipDirectiveModule,
+    TooltipComponent,
+  ],
   exports: [PlaybackControlsComponent, MiscellaneousControlsComponent],
   declarations: [PlaybackControlsComponent, MiscellaneousControlsComponent],
 })

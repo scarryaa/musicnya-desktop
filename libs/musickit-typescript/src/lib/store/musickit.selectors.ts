@@ -37,6 +37,11 @@ export const selectSelectedId = createSelector(
   (state: MusickitState) => copy(state.selectedId)
 );
 
+export const selectUserPlaylists = createSelector(
+  selectMusickitState,
+  (state: MusickitState) => copy(state.userPlaylists)
+);
+
 export const selectEntity = createSelector(
   selectMusickitEntities,
   selectSelectedId,

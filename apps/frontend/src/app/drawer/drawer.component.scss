@@ -3,41 +3,62 @@
     margin-block: 0.7rem;
   }
 
+  ui-album-tile {
+    margin-block: 0 !important;
+
+    ::ng-deep {
+      #album-info {
+        #title,
+        #artists {
+          font-family: 'Inter' !important;
+        }
+
+        #title {
+          color: var(--font-color-slightly-faded);
+        }
+      }
+    }
+  }
+
   #baseComponent {
     margin-left: 1.6rem;
     transition: width 0.6s cubic-bezier(0.165, 1, 0.165, 1), opacity 0.1s linear,
       padding 0.6s cubic-bezier(0.165, 1, 0.165, 1);
   }
 
-  ::ng-deep #footer-wrapper #baseComponent {
-    :focus-visible {
-      img {
-        filter: brightness(1.15);
-      }
+  ::ng-deep #footer-wrapper {
+    div {
+      padding-block: 0.7rem !important;
     }
 
-    &:hover {
-      img {
-        filter: brightness(1.15);
-      }
+    > :hover {
+      background-color: var(--drawer-highlight-color);
     }
 
-    &:active {
-      img {
-        filter: brightness(0.85) !important;
+    #baseComponent {
+      border-radius: 4px;
+
+      :focus-visible {
+        > :hover {
+          background-color: var(--drawer-highlight-color);
+        }
       }
+
+      &:active {
+        background-color: var(--drawer-active-color);
+      }
+
+      margin-left: 0.4725rem;
+      transition: width 0.6s cubic-bezier(0.165, 1, 0.165, 1),
+        opacity 0.1s linear, padding 0.6s cubic-bezier(0.165, 1, 0.165, 1);
     }
 
-    margin-left: 0.4725rem;
-    transition: width 0.6s cubic-bezier(0.165, 1, 0.165, 1), opacity 0.1s linear,
-      padding 0.6s cubic-bezier(0.165, 1, 0.165, 1);
-  }
-
-  ::ng-deep core-base-button.active {
-    button,
-    i,
-    span {
-      color: var(--font-color) !important;
+    ::ng-deep core-base-button.active {
+      button,
+      i,
+      span {
+        color: var(--font-color) !important;
+      }
     }
   }
 }

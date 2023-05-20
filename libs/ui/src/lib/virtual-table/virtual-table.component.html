@@ -1,7 +1,8 @@
 <table
   cdk-table
-  coreDraggable="hello"
   cdkDropList
+  id="media-table"
+  [cdkDropListConnectedTo]="['user-playlists']"
   [trackBy]="trackBy"
   [dataSource]="dataSource"
 >
@@ -55,5 +56,19 @@
   </ng-container>
 
   <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
-  <tr cdk-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+  <tr
+    cdk-row
+    cdkDrag
+    (cdkDragStarted)="onDragStart($event)"
+    #mediaItem
+    [cdkDragData]="row"
+    *cdkRowDef="let row; let i = index; columns: displayedColumns"
+    (click)="selection.toggle(i)"
+    [ngClass]="{ selected: selection.isSelected(i) }"
+  >
+    <div id="drag-placeholder" *cdkDragPlaceholder></div>
+    <div *cdkDragPreview class="tooltip">
+      {{ dragData.title + ', ' + dragData.artists }}
+    </div>
+  </tr>
 </table>

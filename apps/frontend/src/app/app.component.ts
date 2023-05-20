@@ -27,8 +27,10 @@ import { MusickitFacade } from '@nyan-inc/musickit-typescript';
 import {
   DraggableDirective,
   NavigationButtonSmartModule,
+  WindowRefService,
 } from '@nyan-inc/core';
 import { NavigationButtonsComponent } from './navigation-buttons/navigation-buttons.component';
+import { HttpService } from './http/http.service';
 
 @Component({
   standalone: true,
@@ -48,6 +50,7 @@ import { NavigationButtonsComponent } from './navigation-buttons/navigation-butt
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit, OnDestroy, AfterContentInit {
+  private _window: any;
   drawerOpen$: Observable<boolean>;
   width!: number;
   subs: Subscription = new Subscription();
@@ -58,20 +61,35 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentInit {
 
   constructor(
     private store: Store<AppState & LayoutState>,
-    private musickitFacade: MusickitFacade
+    private musickitFacade: MusickitFacade,
+    private http: HttpService,
+    private windowService: WindowRefService
   ) {
     this.drawerOpen$ = this.store.pipe(select(fromLayout.getDrawerOpen));
+    this._window = windowService.nativeWindow;
+    (window as any).api.cookies((event: any, cookies: any) => {
+      console.log('[appIPC] recv-cookies');
+      Object.keys(cookies).forEach((key) => {
+        console.log(key, cookies[key]);
+        localStorage.setItem(key, cookies[key]);
+      });
+    });
   }
 
-  @HostListener('click', ['$event']) onClick(event: Event) {
-    const elementId = event.target as Element;
-    console.log(elementId);
+  @HostListener('mousedown', ['$event']) onClick(event: MouseEvent) {
+    if (event.button === 0 && event.target) {
+      if (event.target) console.log(event.target as Element);
+    }
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this.http.getConfig();
+    const DEV_TOKEN = this.http.DEV_TOKEN;
+
     this.store.dispatch(AppActions.initApp());
+
     this.musickitFacade.init({
-      developerToken: '[redacted]',
+      developerToken: DEV_TOKEN,
       app: {
         name: 'Apple Music',
         build: '1978.4.1',
@@ -84,6 +102,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentInit {
 
   ngAfterContentInit(): void {
     console.log(this.draggables);
+    let cookies: any;
   }
 
   ngOnDestroy(): void {

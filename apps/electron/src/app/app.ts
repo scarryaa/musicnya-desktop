@@ -2,7 +2,18 @@
 /* eslint-disable unicorn/prefer-module */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { BrowserWindow, shell, screen, Menu } from 'electron';
+import {
+  app,
+  ShareMenu,
+  Menu,
+  BrowserWindow,
+  shell,
+  screen,
+  dialog,
+  nativeTheme,
+} from 'electron';
+const ipcMain = require('electron').ipcMain;
+const ipcRenderer = require('electron').ipcRenderer;
 import { rendererAppName, rendererAppPort } from './constants';
 import { environment } from '../environments/environment';
 import { format, join } from 'node:path';
@@ -43,30 +54,29 @@ export default class App {
   private static setHeadersConfig() {
     App.mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
       async (details, callback) => {
-        details.requestHeaders['sec-fetch-site'] = 'same-site';
-        details.requestHeaders['DNT'] = '1';
-
         if (details.url === 'https://buy.itunes.apple.com/account/web/info') {
-          details.requestHeaders['Access-Control-Request-Headers'] =
-            'media-user-token';
-          const itspod = (await App.mainWindow.webContents.executeJavaScript(
+          details.requestHeaders['sec-fetch-site'] = 'same-site';
+          details.requestHeaders['DNT'] = '1';
+          let itspod = await App.mainWindow.webContents.executeJavaScript(
             `window.localStorage.getItem("music.ampwebplay.itspod")`
-          )) as string;
-          if (itspod != undefined) {
+          );
+          if (itspod != null)
             details.requestHeaders['Cookie'] = `itspod=${itspod}`;
-          }
-        } else if (details.url.includes('apple.com')) {
+        }
+        if (details.url.includes('apple.com')) {
+          details.requestHeaders['DNT'] = '1';
           details.requestHeaders['authority'] = 'amp-api.music.apple.com';
           details.requestHeaders['origin'] = 'https://beta.music.apple.com';
           details.requestHeaders['referer'] = 'https://beta.music.apple.com';
+          details.requestHeaders['sec-fetch-dest'] = 'empty';
+          details.requestHeaders['sec-fetch-mode'] = 'cors';
+          details.requestHeaders['sec-fetch-site'] = 'same-site';
         }
-
         if (details.url.startsWith('https://music.163.com')) {
           details.requestHeaders['Referer'] = 'https://music.163.com/';
           details.requestHeaders['user-agent'] =
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) musicnya/1.0.0 Chrome/96.0.4664.45 Electron/16.0.0 Safari/537.36';
         }
-
         if (details.url.includes('https://qq.com')) {
           (details.requestHeaders['Accept'] = '*/*'),
             (details.requestHeaders['Accept-Encoding'] = 'gzip, deflate, br'),
@@ -77,7 +87,6 @@ export default class App {
               'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X; zh-CN) AppleWebKit/537.51.1 (');
           ('KHTML, like Gecko) Mobile/17D50 UCBrowser/12.8.2.1268 Mobile AliApp(TUnionSDK/0.1.20.3) ');
         }
-
         if (
           details.url.includes(
             'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
@@ -92,6 +101,11 @@ export default class App {
           ('KHTML, like Gecko) Mobile/17D50 UCBrowser/12.8.2.1268 Mobile AliApp(TUnionSDK/0.1.20.3) ');
           details.requestHeaders['Referer'] =
             'https://y.qq.com/portal/player.html';
+        }
+        if (details.url.startsWith('https://amp-api.music.apple.com')) {
+          details.requestHeaders['authority'] = 'amp-api.music.apple.com';
+          details.requestHeaders['origin'] = 'https://beta.music.apple.com';
+          details.requestHeaders['referer'] = 'https://beta.music.apple.com';
         }
         callback({ requestHeaders: details.requestHeaders });
       }
@@ -185,7 +199,7 @@ export default class App {
       height: height,
       minWidth: 900,
       minHeight: 615,
-      show: false,
+      show: true,
       frame: false,
       fullscreenable: true,
       fullscreen: false,
@@ -199,7 +213,7 @@ export default class App {
         defaultFontFamily: { standard: 'Haskoy', sansSerif: 'InterDisplay' },
         devTools: App.isDevelopmentMode(),
         experimentalFeatures: App.isDevelopmentMode(),
-        nodeIntegration: false,
+        nodeIntegration: true,
         contextIsolation: true,
         backgroundThrottling: true,
         preload: join(__dirname, 'main.preload.js'),
@@ -211,6 +225,10 @@ export default class App {
     // if main window is ready to show, close the splash window and show the main window
     App.mainWindow.once('ready-to-show', () => {
       App.mainWindow.show();
+    });
+
+    ipcMain.on('auth-window', (_event) => {
+      AuthWindow(App.mainWindow);
     });
 
     // handle all external redirects in a new browser window
@@ -233,9 +251,7 @@ export default class App {
     if (App.application.isPackaged) {
       App.mainWindow.loadURL(
         format({
-          pathname: join(__dirname, '..', rendererAppName, 'index.html'),
-          protocol: 'file:',
-          slashes: true,
+          name: join(__dirname, '..', rendererAppName, 'index.html'),
         })
       );
     } else {
@@ -255,5 +271,142 @@ export default class App {
     App.application.on('window-all-closed', App.onWindowAllClosed); // Quit when all windows are closed.
     App.application.on('ready', App.onReady); // App is ready to load data
     App.application.on('activate', App.onActivate); // App is activated
+  }
+}
+
+function AuthWindow(win: BrowserWindow) {
+  // create a BrowserWindow
+  const authWindow = new BrowserWindow({
+    width: 500,
+    height: 600,
+    show: false,
+    titleBarOverlay: {
+      color: '#1d1d1f',
+      symbolColor: '#ffffff',
+    },
+    titleBarStyle: 'hidden',
+    darkTheme: true,
+    resizable: false,
+    webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: true,
+      allowRunningInsecureContent: true,
+      webSecurity: false,
+      preload: join(__dirname, 'main.preload.js'),
+      nodeIntegrationInWorker: false,
+      experimentalFeatures: true,
+    },
+  });
+  // set user agent
+  authWindow.webContents.setUserAgent(
+    `Mozilla/5.0 (Macintosh; Intel Mac OS X 13_3_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15`
+  );
+
+  // show the window
+  authWindow.loadURL('https://beta.music.apple.com/');
+  const cookieKeys = [
+    'itspod',
+    'pltvcid',
+    'pldfltcid',
+    'itua',
+    'media-user-token',
+    'acn1',
+    'dslang',
+  ];
+
+  ipcMain.on('auth-window-ready', async (_event) => {
+    authWindow.show();
+  });
+
+  ipcMain.on('auth-completed', async (_event) => {
+    await getCookies().then((cookies) => {
+      console.log(cookies);
+      win.webContents.send('recv-cookies', cookies);
+      authWindow.close();
+    });
+  });
+
+  const overlayStyling = `
+.hehehe {
+  position: fixed;
+  top:0;
+  left:0;
+  width: 100px;
+  height: 100px;
+  background: #1d1d1f;
+  z-index: 99999;
+}
+.titlebar {
+  height: 30px;
+  position: fixed;
+  top:0;
+  left:0;
+  right:0;
+  -webkit-app-region: drag;
+  z-index: 99999;
+}`;
+
+  authWindow.webContents.executeJavaScript(`
+  let tOut = setInterval(async ()=>{
+    try {
+      if(typeof MusicKit === 'undefined') return;
+      MusicKit.getInstance().addEventListener(MusicKit.Events.authorizationStatusDidChange, ()=>{
+        if(MusicKit.getInstance().isAuthorized) {
+          window.api.send('auth-completed')
+        }
+      })
+      clearInterval(tOut)
+    }catch(e) {}
+  }, 500)
+let tOut2 = setInterval(()=>{
+  try {
+    const el = document.querySelector('.signin');
+    if(el) {
+      el.click();
+      window.api.send('auth-window-ready');
+      clearInterval(tOut2);
+    }
+  }catch(e) {}
+}, 500)
+let styling = \`${overlayStyling}\`;
+(()=>{
+  const titleBarEl = document.createElement('div')
+  const overlayEl = document.createElement('div')
+  titleBarEl.classList.add('titlebar')
+  overlayEl.classList.add('hehehe')
+  const styleTag = document.createElement('style')
+  styleTag.innerHTML = styling
+  document.head.appendChild(styleTag)
+  document.body.appendChild(overlayEl)
+  document.body.appendChild(titleBarEl)
+})()
+`);
+
+  async function getCookies(): Promise<{ [key: string]: string }> {
+    return new Promise((res, rej) => {
+      authWindow.webContents.session.cookies
+        .get({})
+        .then((cookies) => {
+          // for each cookie
+          const toRenderer: {
+            [key: string]: string;
+          } = {};
+          for (let i = 0; i < cookieKeys.length; i++) {
+            const key = cookieKeys[i];
+            // find the cookie
+            const cookie = cookies.find((cookie) => cookie.name === key);
+            // if cookie exists
+            if (cookie) {
+              toRenderer[`music.ampwebplay.${cookie.name}`] = cookie.value;
+            }
+          }
+          res(toRenderer);
+        })
+        .catch((error) => {
+          console.log(error);
+          rej();
+        });
+    });
   }
 }

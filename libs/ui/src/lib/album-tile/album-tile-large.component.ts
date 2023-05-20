@@ -18,11 +18,14 @@ import {
   JoinPipeModule,
 } from '@nyan-inc/core';
 import { MediaPlayInfo } from './models';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'ui-album-tile-large-presentation',
   template: `
     <core-base-button
+      cdkDrag
+      [cdkDragStartDelay]="500"
       [tabIndex]="0"
       class="album-tile-large"
       [style.pointerEvents]="clickEnabled ? 'auto' : 'none'"
@@ -136,6 +139,7 @@ export class AlbumTileLargeComponent
     JoinPipeModule,
     DisableChildFocusDirective,
     DisableChildTabIndexDirective,
+    DragDropModule,
   ],
   exports: [AlbumTileLargeComponent],
   declarations: [AlbumTileLargeComponent],

@@ -17,7 +17,7 @@ export const loadMusickitFailure = createAction(
 
 export const addEventListener = createAction(
   '[MusicKit/API] Add Event Listener',
-  props<{ payload: { listener: any } }>()
+  props<{ payload: { event: any; callback: Function } }>()
 );
 
 export const addEventListenerSuccess = createAction(
@@ -35,6 +35,30 @@ export const playSuccess = createAction('[Musickit/API] Play Success');
 
 export const playFailure = createAction(
   '[Musickit/API] Play Failure',
+  props<{ payload: { error: any } }>()
+);
+
+export const getUserPlaylists = createAction(
+  '[MusicKit/API] Get User Playlists'
+);
+
+export const getUserPlaylistsSuccess = createAction(
+  '[Musickit/API] Get User Playlists Success',
+  props<{ payload: { data: MusicKit.LibraryPlaylists[] } }>()
+);
+
+export const getUserPlaylistsDetailsSuccess = createAction(
+  '[Musickit/API] Get User Playlists Details Success',
+  props<{ payload: { data: MusicKit.LibraryPlaylists[] } }>()
+);
+
+export const getUserPlaylistsDetailsFailure = createAction(
+  '[Musickit/API] Get User Playlists Details Failure',
+  props<{ payload: { error: any } }>()
+);
+
+export const getUserPlaylistsFailure = createAction(
+  '[Musickit/API] Get User Playlists Failure',
   props<{ payload: { error: any } }>()
 );
 

@@ -104,10 +104,15 @@ table {
         visibility: visible !important;
       }
 
-      .id-content div {
-        visibility: hidden;
+      .id-content {
+        div {
+          visibility: hidden;
+        }
       }
+    }
 
+    &hover:hover,
+    &.selected {
       background-color: rgba(white, 0.2);
     }
 
@@ -134,7 +139,7 @@ table {
       visibility: hidden;
       position: absolute;
       top: -1.55rem;
-      left: -0.6rem;
+      left: -0.8rem;
 
       i {
         font-size: var(--font-size-5xl);
@@ -175,18 +180,25 @@ table {
   }
 }
 
-.cdk-drag-placeholder {
-  &::after {
-    content: 'hi';
-    position: absolute;
-    left: 50%;
-  }
-}
-
 .cdk-drag-preview {
-  display: none;
-
   #like-button {
     display: none;
   }
+}
+
+#drag-placeholder {
+  border: 1px solid red;
+  width: 92%;
+  position: absolute;
+}
+
+.tooltip {
+  background-color: black;
+  border-radius: 4px;
+  color: #ffffff;
+  font-family: Arial;
+  padding: 3px 6px;
+  font-size: 13px;
+  margin-top: 5px;
+  z-index: 99999;
 }

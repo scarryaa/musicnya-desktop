@@ -141,8 +141,8 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
       setTimeout(() =>
         item.setStyle(
           '#baseComponent #album-info',
-          'display',
-          this.collapsed ? 'none' : 'flex'
+          'visibility',
+          this.collapsed ? 'hhidden' : 'visible'
         )
       );
       this.changeReference.markForCheck();
@@ -157,13 +157,13 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
               item.setStyle(
                 '#baseComponent',
                 'width',
-                this.collapsed ? '30% ' : '90%'
+                this.collapsed ? '50% ' : '90%'
               );
               setTimeout(() =>
                 item.setStyle(
                   '#baseComponent #album-info',
-                  'display',
-                  this.collapsed ? 'none' : 'flex'
+                  'visibility',
+                  this.collapsed ? 'hhidden' : 'visible'
                 )
               );
             }
@@ -200,7 +200,7 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
           item.setStyle(
             'self, button',
             'width',
-            this._collapsed ? '60%' : '90%'
+            this._collapsed ? '50%' : '90%'
           );
         }
 
@@ -208,8 +208,8 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
           () =>
             item.setStyle(
               '#baseComponent #album-info',
-              'display',
-              this.collapsed ? 'none' : 'flex'
+              'visibility',
+              this.collapsed ? 'hhidden' : 'visible'
             ),
           this.collapsed ? 300 : 0
         );

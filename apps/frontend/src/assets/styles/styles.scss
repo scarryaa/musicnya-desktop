@@ -19,4 +19,9 @@ body {
 
 * {
   box-sizing: border-box;
+  -webkit-user-drag: none;
+}
+
+::ng-deep .cdk-drop-list-dragging .cdk-drag {
+  transition: 0;
 }

@@ -23,6 +23,14 @@
     }
   }
 
+  #album-info span {
+    font-size: var(--font-size-reg);
+
+    &#artists {
+      font-size: 0.9rem;
+    }
+  }
+
   core-base-button {
     border-radius: 4px;
   }
@@ -68,6 +76,7 @@
     align-items: center;
     justify-content: flex-start;
     color: var(--font-color);
+    line-height: 1.5 !important;
   }
 
   .album-tile-large {
@@ -96,7 +105,7 @@
     }
 
     #title-large {
-      font-size: var(--font-size-reg);
+      font-size: var(--font-size-hxl);
       color: var(--font-color);
       margin-top: 0.5rem;
     }
@@ -113,8 +122,8 @@
 
   #album-info,
   #album-info-large {
-    display: block;
     flex-direction: column;
+
     #artists,
     #title-large {
       width: min-content;
@@ -124,9 +133,9 @@
   }
 
   #album-info {
-    line-height: 1.2;
+    letter-spacing: var(--letter-spacing-nxl);
     align-items: flex-start;
-    padding-left: 1.05rem;
+    padding-left: 0.8rem;
     transition: opacity 0.1s linear, padding 0.2s linear;
   }
 

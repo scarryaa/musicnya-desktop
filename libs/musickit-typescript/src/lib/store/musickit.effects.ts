@@ -31,7 +31,11 @@ export class MusickitEffects {
       switchMap((payload) =>
         this.musickit.initMusicKit(payload.payload.config.developerToken)
       ),
-      switchMap(() => of(MusickitActions.loadMusickitSuccess())),
+      switchMap(() =>
+        of(MusickitActions.loadMusickitSuccess()).pipe(
+          switchMap(() => of(MusickitActions.getUserPlaylists()))
+        )
+      ),
       catchError((error) =>
         of(MusickitActions.loadMusickitFailure({ payload: { error } }))
       )
@@ -43,8 +47,8 @@ export class MusickitEffects {
       ofType(MusickitActions.addEventListener),
       tap((action) =>
         this.musickit.instance.addEventListener(
-          action.payload.listener.event,
-          action.payload.listener.function
+          action.payload.event,
+          action.payload.callback
         )
       ),
       switchMap(() => of(MusickitActions.addEventListenerSuccess())),
@@ -61,10 +65,49 @@ export class MusickitEffects {
     this.actions.pipe(
       ofType(MusickitActions.play),
       switchMap(() => this.musickit.play()),
-      switchMap((value) => of(MusickitActions.playSuccess())),
+      switchMap(() => of(MusickitActions.playSuccess())),
       catchError((error) => {
         console.error('Error', error);
         return of(MusickitActions.playFailure({ payload: { error } }));
+      })
+    )
+  );
+
+  getUserPlaylists$ = createEffect(() =>
+    this.actions.pipe(
+      ofType(MusickitActions.getUserPlaylists),
+      switchMap(() => this.musickit.getUserPlaylists()),
+      switchMap(async (response) => {
+        let [...expandedInfo] = await Promise.all(
+          response
+            .map((value) => value.href)
+            .map((value) => this.musickit.findByUrl(value))
+        );
+
+        console.log(expandedInfo);
+        let final = response.map((item, i) => ({
+          ...item,
+          ...expandedInfo[i].data.data[0],
+        }));
+
+        console.log(final);
+        return of(final as MusicKit.LibraryPlaylists[]);
+      }),
+      switchMap((value) => value),
+      switchMap((response: MusicKit.LibraryPlaylists[]) =>
+        of(
+          MusickitActions.getUserPlaylistsSuccess({
+            payload: {
+              data: response,
+            },
+          })
+        )
+      ),
+      catchError((error) => {
+        console.error('Error', error);
+        return of(
+          MusickitActions.getUserPlaylistsFailure({ payload: { error } })
+        );
       })
     )
   );

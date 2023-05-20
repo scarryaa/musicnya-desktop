@@ -1,5 +1,6 @@
 {
   "compileOnSave": false,
+  "include": ["./polyfills.ts"],
   "compilerOptions": {
     "rootDir": "./",
     "outDir": "./",

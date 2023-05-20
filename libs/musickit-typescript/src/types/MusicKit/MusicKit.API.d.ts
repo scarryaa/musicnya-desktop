@@ -648,6 +648,8 @@ declare namespace MusicKit {
         | PersonalRecommendation
         | Resource
         | Storefronts
+        | LibraryAlbums
+        | LibraryPlaylists
       >;
     };
   };

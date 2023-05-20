@@ -10,6 +10,7 @@ import { MediaPlayInfo } from './models';
 import { MusickitFacade } from '@nyan-inc/musickit-typescript';
 import { Router } from '@angular/router';
 import { MediaUtilities } from './media-type-converters';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'ui-album-tile-large',
@@ -45,9 +46,7 @@ export class AlbumTileLargeSmartComponent {
 
   //TODO move this to a deticated router class in core?
   async routeToMediaDetails(details: MediaPlayInfo) {
-    await this.router.navigate([
-      'media-details/' + details.type + '/' + details.id,
-    ]);
+    await this.router.navigate(['media/' + details.type + '/' + details.id]);
   }
 
   play(details: MediaPlayInfo) {

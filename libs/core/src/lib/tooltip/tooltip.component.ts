@@ -2,28 +2,26 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnChanges,
-  SimpleChanges,
+  ViewEncapsulation,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
-  selector: 'core-drag-tooltip',
+  selector: 'core-tooltip',
   standalone: true,
-  imports: [CommonModule, DragDropModule],
+  imports: [CommonModule],
   template: `<div
-    *cdkDragPreview
     class="tooltip"
     [style.left]="left + 'px'"
     [style.top]="top + 'px'"
   >
     {{ tooltip }}
   </div>`,
-  styleUrls: ['./drag-tooltip.component.scss'],
+  styleUrls: ['./tooltip.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DragTooltipComponent {
+export class TooltipComponent {
   constructor(public changeDetectorRef: ChangeDetectorRef) {}
   tooltip = '';
   left = 0;

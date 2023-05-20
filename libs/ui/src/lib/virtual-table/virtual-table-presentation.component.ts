@@ -12,7 +12,14 @@ import {
 import { CommonModule } from '@angular/common';
 import { CdkTableModule, DataSource } from '@angular/cdk/table';
 import { DragTooltipComponent, DraggableDirective, Song } from '@nyan-inc/core';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  CdkDragStart,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'ui-virtual-table-presentation',
@@ -22,13 +29,23 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VirtualTableComponent implements OnChanges {
+  selection = new SelectionModel<Song>(true, []);
+
   @Input() dataSource!: DataSource<Song>;
   @Input() data!: Song[];
   @Input() displayedColumns!: string[];
   @Output() readonly dropEmitter = new EventEmitter<Song[]>();
+  dragData: { title: string; artists: string[] } = { title: '', artists: [] };
 
   trackBy(index: number, song: Song) {
     return song.id;
+  }
+
+  onDragStart(event: CdkDragStart) {
+    console.log(event.source.data);
+    console.log(event.source);
+    this.dragData.title = event.source.data.title;
+    this.dragData.artists = event.source.data.artists;
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -47,8 +64,10 @@ export class VirtualTableComponent implements OnChanges {
   imports: [
     CommonModule,
     CdkTableModule,
-    DraggableDirective,
+    DragDropModule,
     DragTooltipComponent,
+    DraggableDirective,
+    ScrollingModule,
   ],
   exports: [VirtualTableComponent],
 })
