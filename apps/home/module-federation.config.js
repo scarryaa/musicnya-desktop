@@ -1,3 +1,7 @@
+var webpack = require('webpack');
+const ModuleFederationPlugin =
+  require('webpack').container.ModuleFederationPlugin;
+
 module.exports = {
   name: 'home',
   exposes: {

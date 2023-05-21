@@ -1,7 +1,7 @@
-export * from './lib/join.pipe';
-export * from './lib/drawer-event';
 export * from './lib/base-component';
 export * from './lib/base-button/base-button.component';
+export * from './lib/join.pipe';
+export * from './lib/drawer-event';
 export * from './lib/window-events.service';
 export * from './lib/disable-child-tabindex.directive';
 export * from './lib/disable-child-focus.directive';
@@ -15,3 +15,6 @@ export * from './lib/tooltip/tooltip.component';
 export * from './lib/tooltip/tooltip.directive';
 export * from './lib/color/color.service';
 export * from './lib/electron/window.service';
+export * from './lib/models/music.models';
+export * from './lib/models/music.types';
+export * from './lib/utils/musickit-mappings';

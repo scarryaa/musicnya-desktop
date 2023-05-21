@@ -43,10 +43,11 @@
     ></core-base-button> -->
   </ng-container>
   <ng-container footer>
-    <ui-album-tile
+    <!-- <ui-album-tile
       *ngFor="let playlist of userPlaylists | async; let i = index"
       class="drawer-item"
-      [routerLink]="'/search'"
+      (click)="getTracks(playlist.id)"
+      [routerLink]="'/media/' + playlist.type + '/' + playlist.id"
       [tabIndex]="-1"
       [source]="
         (
@@ -65,7 +66,7 @@
       [showArtists]="true"
       [mediaTitle]="playlist?.attributes?.name"
     >
-    </ui-album-tile>
+    </ui-album-tile> -->
   </ng-container>
   <ng-content body-content></ng-content>
 </ui-drawer>

@@ -16,14 +16,8 @@ import { DrawerComponent } from './drawer/drawer.component';
 import { FooterComponent } from './footer/footer.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { select, Store } from '@ngrx/store';
-import { AppState } from '../store/reducers/app.reducer';
-import * as AppActions from '../store/actions/app.actions';
 import { Observable, Subscription } from 'rxjs';
-import * as fromLayout from '../store/reducers/layout.reducer';
-import { LayoutState } from '../store/reducers/layout.reducer';
-import * as LayoutActions from '../store/actions/layout.actions';
 import { TitleBarComponent } from './title-bar/title-bar.component';
-import { MusickitFacade } from '@nyan-inc/musickit-typescript';
 import {
   DraggableDirective,
   NavigationButtonSmartModule,
@@ -31,6 +25,14 @@ import {
 } from '@nyan-inc/core';
 import { NavigationButtonsComponent } from './navigation-buttons/navigation-buttons.component';
 import { HttpService } from './http/http.service';
+import {
+  fromLayout,
+  AppActions,
+  LayoutActions,
+  AppState,
+  LayoutState,
+} from '@nyan-inc/shared/data-store';
+import { MusicAPIFacade } from '@nyan-inc/shared/data-store';
 
 @Component({
   standalone: true,
@@ -61,9 +63,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentInit {
 
   constructor(
     private store: Store<AppState & LayoutState>,
-    private musickitFacade: MusickitFacade,
     private http: HttpService,
-    private windowService: WindowRefService
+    private windowService: WindowRefService,
+    private musicAPIFacade: MusicAPIFacade
   ) {
     this.drawerOpen$ = this.store.pipe(select(fromLayout.getDrawerOpen));
     this._window = windowService.nativeWindow;
@@ -88,7 +90,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentInit {
 
     this.store.dispatch(AppActions.initApp());
 
-    this.musickitFacade.init({
+    this.musicAPIFacade.init({
       developerToken: DEV_TOKEN,
       app: {
         name: 'Apple Music',

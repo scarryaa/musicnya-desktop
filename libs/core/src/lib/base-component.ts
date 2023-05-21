@@ -1,14 +1,19 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
   HostBinding,
   Input,
+  NgModule,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
-@Directive()
-export abstract class BaseComponent {
+@Directive({
+  selector: 'base-component',
+})
+export class BaseComponent {
   constructor(
     private changeReference: ChangeDetectorRef,
     public elementReference: ElementRef,
@@ -49,3 +54,10 @@ export abstract class BaseComponent {
     return undefined;
   }
 }
+
+@NgModule({
+  imports: [CommonModule, RouterModule, DragDropModule],
+  declarations: [BaseComponent],
+  exports: [],
+})
+export class BaseModule {}

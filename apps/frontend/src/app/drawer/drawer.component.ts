@@ -21,8 +21,6 @@ import {
   DrawerToggleDirective,
 } from '@nyan-inc/ui';
 import { Observable, Subject, Subscription, map, of, tap } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { MusickitFacade } from '@nyan-inc/musickit-typescript';
 
 @Component({
   selector: 'musicnya-drawer',
@@ -45,15 +43,14 @@ export class DrawerComponent
   extends EventTarget
   implements OnChanges, OnDestroy
 {
-  userPlaylists: Observable<any[] | undefined>;
+  // userPlaylists: Observable<any[] | undefined>;
 
   constructor(
     private changeReference: ChangeDetectorRef,
-    private musickitFacade: MusickitFacade
   ) {
     super();
 
-    this.userPlaylists = this.musickitFacade.userPlaylists$;
+    // this.userPlaylists = this.musicAPIFacade.libraryPlaylists$;
   }
 
   @Input() width?: number;
@@ -62,6 +59,10 @@ export class DrawerComponent
 
   toggle() {
     this.drawerOpened$.next(this.open);
+  }
+
+  getTracks(id: number) {
+    // this.musicAPIFacade.getLibraryPlaylistSongs(id);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

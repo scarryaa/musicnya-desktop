@@ -7,10 +7,9 @@ import {
 } from '@angular/core';
 import { AlbumTileLargeModule } from './album-tile-large.component';
 import { MediaPlayInfo } from './models';
-import { MusickitFacade } from '@nyan-inc/musickit-typescript';
 import { Router } from '@angular/router';
 import { MediaUtilities } from './media-type-converters';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'ui-album-tile-large',
@@ -36,7 +35,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlbumTileLargeSmartComponent {
-  constructor(private musickit: MusickitFacade, private router: Router) {}
+  constructor(private router: Router) {}
 
   @Input() clickEnabled = true;
   @Input() imageSource = '';
@@ -51,8 +50,8 @@ export class AlbumTileLargeSmartComponent {
 
   play(details: MediaPlayInfo) {
     const queueOptions = MediaUtilities.convertToQueueItem(details);
-    this.musickit.setQueue(queueOptions);
-    this.musickit.play();
+    // this.musicFacade(queueOptions);
+    // this.musicFacade.play();
   }
 
   async routeToArtist(details: MediaPlayInfo) {
@@ -60,7 +59,7 @@ export class AlbumTileLargeSmartComponent {
   }
 }
 @NgModule({
-  imports: [CommonModule, AlbumTileLargeModule],
+  imports: [CommonModule, AlbumTileLargeModule, DragDropModule],
   exports: [AlbumTileLargeSmartComponent],
   declarations: [AlbumTileLargeSmartComponent],
 })
