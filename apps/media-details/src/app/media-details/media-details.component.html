@@ -1,15 +1,16 @@
-<div
-  id="page-wrapper"
-  [style.background]="
-    'linear-gradient(transparent 14.09rem, var(--backgroundColor) 10rem)'
-  "
->
-  <ng-container *ngrxLet="currentMedia$ as media">
+<ng-container *ngrxLet="state$ as media">
+  <div
+    *ngIf="media.loaded"
+    id="page-wrapper"
+    [style.background]="
+      'linear-gradient(transparent 14.09rem, transparent 10rem)'
+    "
+  >
     <div id="media-details-wrapper">
       <ui-album-tile-large
         id="media-cover-artwork"
         #mediaCover
-        [imageSource]="(media?.artwork?.url ?? media?.tracks?.[0]?.artwork?.url ?? '').replace('{w}x{h}', '400x400')
+        [imageSource]="(media?.currentMedia?.artwork?.url ?? media?.tracks?.[0]?.artwork?.url ?? '').replace('{w}x{h}', '400x400')
         .replace('{f}', 'png')"
         [showPlayButton]="false"
         [tileSize]="12"
@@ -17,8 +18,8 @@
       ></ui-album-tile-large>
       <div id="media-details">
         <div id="media-text">
-          <div id="media-title">{{ media?.title }}</div>
-          <span>{{ media?.duration }}</span>
+          <div id="media-title">{{ media?.currentMedia?.title }}</div>
+          <span>{{ media?.currentMedia?.duration }}</span>
         </div>
         <div id="media-buttons">
           <div id="media-buttons-wrapper">
@@ -70,31 +71,30 @@
       <ui-media-details-dropdown [showContent]="showAdditionalInfo">
         <div id="dropdown-content-wrapper">
           <div class="dropdown-content" #content>
-            <p>
-              <!-- <b>Genres: </b>{{ vm.genre ? (vm.genre | joinArrayPipe) : "None" }} -->
-              <b>Genres: </b> yeah idk
-            </p>
-            <p
-              id="dmedia-description"
-              [innerHTML]="
-                '\<span>\<b>Description: \</b>\</span>' +
-                (null ?? null ?? '\<span class=\'inline-block\'>None\</span>')
-              "
-            ></p>
+            <div class="content-wrapper">
+              <p>
+                <!-- <b>Genres: </b>{{ vm.genre ? (vm.genre | joinArrayPipe) : "None" }} -->
+                <b>Genres: </b> yeah idk
+              </p>
+              <p
+                id="dmedia-description"
+                [innerHTML]="
+                  '\<span>\<b>Description: \</b>\</span>' +
+                  (null ?? null ?? '\<span class=\'inline-block\'>None\</span>')
+                "
+              ></p>
+            </div>
           </div>
         </div>
       </ui-media-details-dropdown>
     </div>
 
     <div id="media-content-wrapper">
-      <div
-        id="media-content"
-        [style.backgroundColor]="
-          media?.artwork?.dominantColor ?? 'var(--backgroundColor)'
-        "
-      >
-        <ui-virtual-table [data]="media?.tracks!"></ui-virtual-table>
+      <div id="media-content">
+        <ui-virtual-table
+          [data]="media?.currentMedia?.tracks!"
+        ></ui-virtual-table>
       </div>
     </div>
-  </ng-container>
-</div>
+  </div>
+</ng-container>

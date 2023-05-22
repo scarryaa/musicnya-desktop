@@ -61,6 +61,7 @@ export const appConfig: ApplicationConfig = {
           strictActionWithinNgZone: true,
           strictActionTypeUniqueness: true,
         },
+        metaReducers: [...fromMusicAPI.metaReducers],
       }
     ),
     provideEffects([

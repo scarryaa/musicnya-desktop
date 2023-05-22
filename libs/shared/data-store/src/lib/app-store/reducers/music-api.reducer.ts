@@ -1,8 +1,15 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { createReducer, on, Action, createFeatureSelector } from '@ngrx/store';
+import {
+  createReducer,
+  on,
+  Action,
+  createFeatureSelector,
+  ActionReducer,
+  MetaReducer,
+} from '@ngrx/store';
 
 import * as AppActions from '../actions/app.actions';
-import copy from 'fast-copy';
+import copy, { State } from 'fast-copy';
 import { MusicAPIActions } from '../actions';
 import { MusicAPIEntity } from '../models/music-api.models';
 import { Album, LibraryAlbum, LibraryPlaylist, Playlist } from '@nyan-inc/core';
@@ -19,6 +26,22 @@ export interface MusicAPIState extends EntityState<MusicAPIEntity> {
   albums: Album[] | undefined;
   currentMedia: LibraryPlaylist | LibraryAlbum | Album | Playlist | undefined;
 }
+
+export function persistStateReducer(_reducer: ActionReducer<State>) {
+  const localStorageKey = MusicAPI_API_FEATURE_KEY;
+  return (state: State | undefined, action: Action) => {
+    if (state === undefined) {
+      const persisted = localStorage.getItem(localStorageKey);
+      return persisted ? JSON.parse(persisted) : _reducer(state, action);
+    }
+
+    const nextState = _reducer(state, action);
+    localStorage.setItem(localStorageKey, JSON.stringify(nextState));
+    return nextState;
+  };
+}
+
+export const metaReducers: MetaReducer<any>[] = [persistStateReducer];
 
 export interface MusicAPIPartialState {
   readonly [MusicAPI_API_FEATURE_KEY]: MusicAPIState;
@@ -121,10 +144,11 @@ const reducer = createReducer(
   })),
 
   // get media item
-  on(MusicAPIActions.getMediaItem, (state) => ({ ...state })),
+  on(MusicAPIActions.getMediaItem, (state) => ({ ...state, loaded: false })),
   on(MusicAPIActions.getMediaItemSuccess, (state, { payload }) => ({
     ...state,
     currentMedia: payload.data,
+    loaded: true,
   })),
   on(MusicAPIActions.getMediaItemFailure, (state, { payload }) => ({
     ...state,

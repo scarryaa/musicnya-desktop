@@ -15,6 +15,10 @@ table {
 
     &#duration-table-header {
       text-align: right;
+
+      i {
+        font-size: var(--font-size-2xl);
+      }
     }
   }
 
@@ -25,7 +29,6 @@ table {
     padding-inline: 1.25rem;
     text-align: left;
     direction: rtl;
-    color: var(--table-faded-text-color);
   }
 
   #id-table-header {
@@ -43,7 +46,6 @@ table {
   .album-content {
     width: 35%;
     max-width: 35%;
-    color: var(--table-faded-text-color);
   }
 
   #duration-table-header,
@@ -52,7 +54,6 @@ table {
     padding-right: 3rem;
     width: 10%;
     max-width: 10%;
-    color: var(--table-faded-text-color);
   }
 
   td {
@@ -113,7 +114,7 @@ table {
 
     &hover:hover,
     &.selected {
-      background-color: rgba(white, 0.2);
+      background-color: rgba(white, 0.4);
     }
 
     > td {
@@ -170,7 +171,7 @@ table {
       visibility: hidden;
       position: absolute;
       top: -0.1rem;
-      right: 3.5rem;
+      right: 3.25rem;
 
       i {
         font-size: var(--font-size-3xl);

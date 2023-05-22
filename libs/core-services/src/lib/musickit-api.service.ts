@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MediaItemType } from '@nyan-inc/shared';
 
 declare var MusicKit: any;
 
@@ -67,7 +66,7 @@ export class MusickitAPI {
    * Find by URL
    * @param url - The URL to find
    */
-  async findByUrl(type: MediaItemType, id: string): Promise<any> {
+  async findByUrl(type: any, id: string): Promise<any> {
     return await this.requestData(
       '/v1/' +
         (type.includes('library') ? 'me/' : 'catalog/us/') +
@@ -128,6 +127,6 @@ export class MusickitAPI {
 
   // Provide common query string for API endpoints
   getQueryString(): string {
-    return '?art[url]=f&extend[tracks]=name&extend[catalog]=id&fields[curators]=name,url&fields[songs]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls&format[resources]=flat&include=tracks,curator,catalog&include[songs]=artists&l=en-US&limit[tracks]=50';
+    return '?art[url]=f&extend[tracks]=name&extend[albums]=name&extend[catalog]=id&fields[curators]=name,url&fields[songs]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls&format[resources]=flat&include=tracks,curator,catalog&include[songs]=artists&l=en-US&limit[tracks]=50';
   }
 }

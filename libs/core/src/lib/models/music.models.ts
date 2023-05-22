@@ -77,7 +77,9 @@ export class LibraryPlaylist extends Playlist {}
 /**
  * Class representing a Song, which is a MediaItem.
  */
-export class Song extends MediaItem {}
+export class Song extends MediaItem {
+  album?: Album;
+}
 
 /**
  * Class representing a LibrarySong, which is a Song.

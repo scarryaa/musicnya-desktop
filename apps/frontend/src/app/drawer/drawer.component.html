@@ -47,7 +47,7 @@
       *ngFor="let playlist of libraryPlaylists$ | async; let i = index"
     >
       <ui-album-tile
-        *ngIf="playlist.artwork.url"
+        *ngIf="playlist.artwork?.url"
         class="drawer-item"
         (click)="getTracks(playlist.id)"
         [routerLink]="'/media/' + 'library-playlist' + '/' + playlist.id"

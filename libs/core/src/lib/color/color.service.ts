@@ -4,6 +4,7 @@ import {
   FastAverageColorResult,
   FastAverageColorIgnoredColor,
 } from 'fast-average-color';
+import { adjustColor } from '../utils/musickit-mappings';
 
 @Injectable({
   providedIn: 'root',
@@ -20,8 +21,8 @@ export class ColorService {
       mode: 'speed',
       algorithm: 'dominant',
       ignoredColor: [
-        [255, 255, 255, 255, 50],
-        [0, 0, 0, 255, 50],
+        [255, 255, 255, 255, 80],
+        [20, 20, 20, 255, 20],
       ],
     });
   }

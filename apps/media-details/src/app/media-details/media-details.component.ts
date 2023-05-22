@@ -17,6 +17,7 @@ import {
   VirtualTableSmartModule,
 } from '@nyan-inc/ui';
 import {
+  adjustColor,
   Album,
   BaseButtonModule,
   ColorService,
@@ -49,24 +50,28 @@ export class MediaDetailsComponent implements AfterViewInit {
   @ViewChild('mediaCover', { read: ElementRef })
   mediaCover!: ElementRef;
   mediaColor!: FastAverageColorResult | void;
-  currentMedia$: Observable<
-    LibraryPlaylist | Playlist | Album | LibraryAlbum | undefined
-  >;
+  state$: Observable<any>;
 
   constructor(
     private changeReference: ChangeDetectorRef,
     private musicAPIFacade: MusicAPIFacade
   ) {
-    this.currentMedia$ = this.musicAPIFacade.currentMedia$;
+    this.state$ = this.musicAPIFacade.state$;
   }
 
   async ngAfterViewInit(): Promise<void> {
-    this.changeReference.markForCheck();
-    this.currentMedia$.subscribe((media) => {
-      if (media) {
+    this.state$.subscribe((media) => {
+      if (!media.loaded) {
+        // TODO move this to a service
         document.documentElement.style.setProperty(
           '--backgroundColor',
-          media?.artwork?.dominantColor ?? 'var(--backgroundColor)'
+          '#151515'
+        );
+      } else if (media) {
+        document.documentElement.style.setProperty(
+          '--backgroundColor',
+          media?.currentMedia?.artwork?.dominantColor ??
+            'var(--backgroundColor)'
         );
       }
     });
@@ -78,5 +83,5 @@ export class MediaDetailsComponent implements AfterViewInit {
   }
 
   @HostBinding('style.background') backgroundGradient =
-    'radial-gradient(100% 100% at 25rem -2rem, oklch(100% 0 0 / 100%) 0, oklch(100% 0 0 / 40%) 8rem, oklch(0 0 0) 100%), var(--backgroundColor)';
+    'radial-gradient(100% 100% at 25rem -2rem, oklch(100% 0 0 / 100%) 0, oklch(100% 0 0 / 70%) 8rem, oklch(20% 0 0) 100%), var(--backgroundColor)';
 }

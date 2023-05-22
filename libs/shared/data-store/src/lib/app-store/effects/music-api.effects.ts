@@ -4,33 +4,20 @@ import {
   switchMap,
   catchError,
   map,
-  withLatestFrom,
   filter,
   mergeMap,
   from,
   tap,
   forkJoin,
-  pluck,
 } from 'rxjs';
 import { of } from 'rxjs';
 import { MusicAPIActions } from '../actions';
-import {
-  LibraryPlaylist,
-  fromMusickit,
-  MediaItem,
-  ColorService,
-} from '@nyan-inc/core';
+import { fromMusickit, ColorService, adjustColor } from '@nyan-inc/core';
 import { MusickitAPI } from '@yan-inc/core-services';
 import copy from 'fast-copy';
 import { Store } from '@ngrx/store';
-import {
-  RouterNavigatedAction,
-  RouterNavigationAction,
-  ROUTER_NAVIGATED,
-  ROUTER_NAVIGATION,
-} from '@ngrx/router-store';
+import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 import { TypedAction } from '@ngrx/store/src/models';
-import { FastAverageColorResult } from 'fast-average-color';
 
 @Injectable({ providedIn: 'root' })
 export class MusicAPIEffects {
@@ -178,12 +165,13 @@ export class MusicAPIEffects {
       ),
       mergeMap(fromMusickit),
       mergeMap((mediaItem) =>
-        from(
-          this.colorService.getAverageColor(mediaItem.artwork.url ?? '')
-        ).pipe(
+        from(this.colorService.getAverageColor(mediaItem.artwork.url!)).pipe(
           map((averageColor) => ({
             ...mediaItem,
-            artwork: { ...mediaItem.artwork, dominantColor: averageColor?.hex },
+            artwork: {
+              ...mediaItem.artwork,
+              dominantColor: averageColor?.hex!,
+            },
           }))
         )
       ),

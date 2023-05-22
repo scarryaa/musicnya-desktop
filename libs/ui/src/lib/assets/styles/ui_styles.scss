@@ -40,9 +40,9 @@
   --nav-button-hover: oklch(0% 0 0 / 60%);
   --nav-button-active: oklch(0% 0 0 / 30%);
 
-  --table-text-color: oklch(100% 0 0);
-  --table-faded-text-color: oklch(92.5% 0 0);
-  --table-header-color: oklch(87.5% 0 0);
+  --table-text-color: oklch(0% 0 0);
+  --table-faded-text-color: oklch(95.5% 0 0);
+  --table-header-color: oklch(0.5% 0 0);
 }
 
 @mixin lighten() {

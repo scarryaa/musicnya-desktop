@@ -38,7 +38,7 @@
   <!-- Duration Column -->
   <ng-container cdkColumnDef="Duration">
     <th id="duration-table-header" cdk-header-cell *cdkHeaderCellDef>
-      Duration
+      <i class="material-symbols-outlined">schedule</i>
     </th>
     <td class="duration-content" cdk-cell *cdkCellDef="let song">
       <div id="like-button-container">
@@ -46,7 +46,7 @@
           <i class="material-symbols-outlined">favorite</i>
         </div>
       </div>
-      <span>{{ song.duration }}</span>
+      <span>{{ song.duration | date : 'm:ss' }}</span>
       <div id="options-button-container">
         <div id="options-button">
           <i class="material-symbols-rounded">more_horiz</i>

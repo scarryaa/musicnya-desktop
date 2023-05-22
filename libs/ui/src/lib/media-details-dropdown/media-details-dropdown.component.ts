@@ -6,6 +6,8 @@ import {
   Component,
   ContentChild,
   ElementRef,
+  HostBinding,
+  HostListener,
   Input,
   NgModule,
   ViewEncapsulation,
@@ -15,11 +17,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'ui-media-details-dropdown',
   template: `
-    <div
-      id="more-info-content"
-      [style.opacity]="showContent ? 1 : 0"
-      [style.maxHeight.px]="showContent ? height : 0"
-    >
+    <div id="more-info-content" [style.maxHeight.px]="showContent ? height : 0">
       <ng-content></ng-content>
     </div>
   `,
@@ -27,9 +25,7 @@ import { CommonModule } from '@angular/common';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MediaDetailsDropdownComponent
-  implements AfterContentChecked, AfterViewInit
-{
+export class MediaDetailsDropdownComponent implements AfterContentChecked {
   @ContentChild('content') content!: ElementRef;
   @Input() showContent = false;
   showAdditionalInfo = false;
@@ -37,14 +33,8 @@ export class MediaDetailsDropdownComponent
 
   constructor(private changeDetectorReference: ChangeDetectorRef) {}
 
-  ngAfterViewInit(): void {
-    //TODO fix bug where this shows for a split second initially
-    this.changeDetectorReference.detectChanges();
-  }
-
   ngAfterContentChecked() {
     this.height = (this.content.nativeElement as HTMLElement).scrollHeight;
-    this.changeDetectorReference.detectChanges();
   }
 }
 

@@ -17,6 +17,10 @@ export class MusicAPIFacade {
   currentMedia$ = this.store
     .pipe(select(fromMusicAPI.getMusicAPIState))
     .pipe(map((value) => value.currentMedia));
+  loaded$ = this.store
+    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(map((value) => value.loaded));
+  state$ = this.store.pipe(select(fromMusicAPI.getMusicAPIState));
 
   constructor(private store: Store<MusicAPIState>) {}
 

@@ -85,6 +85,7 @@ export const determineTypeAndMap = (value: MusicKit.Resource) => {
     default:
       return {
         ...base,
+        album: (value as any).attributes?.albumName,
       };
   }
 };
