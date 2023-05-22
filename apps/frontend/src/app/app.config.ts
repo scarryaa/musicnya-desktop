@@ -7,7 +7,7 @@ import {
   withRouterConfig,
 } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
-import { provideRouterStore } from '@ngrx/router-store';
+import { provideRouterStore, routerReducer } from '@ngrx/router-store';
 import { provideStore, provideState } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -16,13 +16,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import '@angular/compiler';
 import {
   AppEffects,
-  MusicAPIEffects,
-  MusicEffects,
-  PreferencesEffects,
   fromApp,
   fromLayout,
   fromMusic,
-} from '@nyan-inc/shared/data-store';
+  fromMusicAPI,
+  fromPreferences,
+  MusicAPIEffects,
+  MusicEffects,
+  PreferencesEffects,
+} from '@nyan-inc/shared';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,6 +34,7 @@ export const appConfig: ApplicationConfig = {
       withHashLocation(),
       withRouterConfig({ urlUpdateStrategy: 'deferred' })
     ),
+    provideRouterStore(),
     importProvidersFrom(BrowserAnimationsModule),
     importProvidersFrom(BrowserModule),
     importProvidersFrom(
@@ -44,8 +47,10 @@ export const appConfig: ApplicationConfig = {
     provideStore(
       {
         app: fromApp.appReducer,
+        router: routerReducer,
         layout: fromLayout.layoutReducer,
         music: fromMusic.musicReducer,
+        musicApi: fromMusicAPI.musicAPIReducer,
       },
       {
         runtimeChecks: {
@@ -65,8 +70,12 @@ export const appConfig: ApplicationConfig = {
       PreferencesEffects,
     ]),
     provideStoreDevtools({ maxAge: 25, trace: true, traceLimit: 20 }),
-    provideRouterStore(),
     provideState(fromLayout.LAYOUT_FEATURE_KEY, fromLayout.layoutReducer),
     provideState(fromApp.APP_FEATURE_KEY, fromApp.appReducer),
+    provideState(fromMusic.MUSIC_FEATURE_KEY, fromMusic.musicReducer),
+    provideState(
+      fromMusicAPI.MusicAPI_API_FEATURE_KEY,
+      fromMusicAPI.musicAPIReducer
+    ),
   ],
 };

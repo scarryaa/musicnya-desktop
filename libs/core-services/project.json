@@ -1,7 +1,7 @@
 {
-  "name": "musickit",
+  "name": "core-services",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/musickit/src",
+  "sourceRoot": "libs/core-services/src",
   "prefix": "nyan-inc",
   "tags": [],
   "projectType": "library",
@@ -10,14 +10,14 @@
       "executor": "@nx/angular:package",
       "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
       "options": {
-        "project": "libs/musickit/ng-package.json"
+        "project": "libs/core-services/ng-package.json"
       },
       "configurations": {
         "production": {
-          "tsConfig": "libs/musickit/tsconfig.lib.prod.json"
+          "tsConfig": "libs/core-services/tsconfig.lib.prod.json"
         },
         "development": {
-          "tsConfig": "libs/musickit/tsconfig.lib.json"
+          "tsConfig": "libs/core-services/tsconfig.lib.json"
         }
       },
       "defaultConfiguration": "production"
@@ -26,7 +26,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/musickit/jest.config.ts",
+        "jestConfig": "libs/core-services/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
@@ -40,7 +40,10 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/musickit/**/*.ts", "libs/musickit/**/*.html"]
+        "lintFilePatterns": [
+          "libs/core-services/**/*.ts",
+          "libs/core-services/**/*.html"
+        ]
       }
     }
   }

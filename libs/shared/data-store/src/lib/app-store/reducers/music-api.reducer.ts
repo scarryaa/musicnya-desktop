@@ -1,19 +1,23 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { createReducer, on, Action } from '@ngrx/store';
+import { createReducer, on, Action, createFeatureSelector } from '@ngrx/store';
 
 import * as AppActions from '../actions/app.actions';
 import copy from 'fast-copy';
 import { MusicAPIActions } from '../actions';
 import { MusicAPIEntity } from '../models/music-api.models';
-import { LibraryPlaylist } from '@nyan-inc/core';
+import { Album, LibraryAlbum, LibraryPlaylist, Playlist } from '@nyan-inc/core';
 
-export const MusicAPI_API_FEATURE_KEY = 'MusicAPI_api';
+export const MusicAPI_API_FEATURE_KEY = 'MusicAPI';
 
 export interface MusicAPIState extends EntityState<MusicAPIEntity> {
   selectedId?: string | number;
   loaded: boolean;
-  error?: string | null;
-  libraryPlaylists: LibraryPlaylist[];
+  error?: string | Error | null;
+  libraryPlaylists: LibraryPlaylist[] | undefined;
+  playlists: Playlist[] | undefined;
+  libraryAlbums: LibraryAlbum[] | undefined;
+  albums: Album[] | undefined;
+  currentMedia: LibraryPlaylist | LibraryAlbum | Album | Playlist | undefined;
 }
 
 export interface MusicAPIPartialState {
@@ -27,7 +31,11 @@ export const initialMusicAPIState: MusicAPIState =
   MusicAPIAdapter.getInitialState({
     // set initial required properties
     loaded: false,
-    libraryPlaylists: [],
+    libraryPlaylists: undefined,
+    libraryAlbums: undefined,
+    playlists: undefined,
+    albums: undefined,
+    currentMedia: undefined,
   });
 
 const reducer = createReducer(
@@ -37,15 +45,98 @@ const reducer = createReducer(
     loaded: false,
     error: undefined,
   })),
-
   on(MusicAPIActions.initSuccess, (state) =>
     MusicAPIAdapter.setMany([], { ...state, loaded: true })
   ),
+  on(MusicAPIActions.initFailure, (state) => ({ ...state })),
 
-  on(MusicAPIActions.initFailure, (state) => ({ ...state }))
+  on(MusicAPIActions.getLibraryPlaylists, (state) => ({ ...state })),
+  on(MusicAPIActions.getLibraryPlaylistsSuccess, (state, { payload }) => ({
+    ...state,
+    libraryPlaylists: copy(payload.data),
+  })),
+  on(MusicAPIActions.getLibraryPlaylistsFailure, (state, { payload }) => ({
+    ...state,
+    error: payload.error,
+  })),
+
+  // get playlist
+  on(MusicAPIActions.getPlaylist, (state) => ({ ...state })),
+  on(MusicAPIActions.getPlaylistSuccess, (state, { payload }) => ({
+    ...state,
+    playlists: {
+      ...state.playlists!,
+      [payload.data.id]: payload.data,
+    },
+  })),
+  on(MusicAPIActions.getPlaylistFailure, (state, { payload }) => ({
+    ...state,
+    error: payload.error,
+  })),
+
+  // set current media
+  on(MusicAPIActions.setCurrentMedia, (state, { payload }) => ({
+    ...state,
+    currentMedia: payload.data,
+  })),
+  on(MusicAPIActions.setCurrentMediaSuccess, (state) => ({
+    ...state,
+  })),
+  on(MusicAPIActions.setCurrentMediaFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  })),
+
+  on(MusicAPIActions.getLibraryPlaylistSongs, (state) => ({ ...state })),
+  on(MusicAPIActions.getLibraryPlaylistSongsSuccess, (state, { payload }) => ({
+    ...state,
+    libraryPlaylist: payload.playlist,
+  })),
+  on(MusicAPIActions.getLibraryPlaylistSongsFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  })),
+
+  // get library item on navigation
+  on(MusicAPIActions.getLibraryPlaylist, (state) => ({
+    ...state,
+  })),
+  on(MusicAPIActions.getLibraryPlaylistSuccess, (state, { payload }) => ({
+    ...state,
+    currentMedia: payload.data,
+  })),
+  on(MusicAPIActions.getLibraryPlaylistFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  })),
+
+  // get from url
+  on(MusicAPIActions.getFromUrl, (state) => ({ ...state })),
+  on(MusicAPIActions.getFromUrlSuccess, (state, { payload }) => ({
+    ...state,
+  })),
+  on(MusicAPIActions.getFromUrlFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  })),
+
+  // get media item
+  on(MusicAPIActions.getMediaItem, (state) => ({ ...state })),
+  on(MusicAPIActions.getMediaItemSuccess, (state, { payload }) => ({
+    ...state,
+    currentMedia: payload.data,
+  })),
+  on(MusicAPIActions.getMediaItemFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  }))
 );
 
-export function MusicAPIReducer(
+export const getMusicAPIState = createFeatureSelector<MusicAPIState>(
+  MusicAPI_API_FEATURE_KEY
+);
+
+export function musicAPIReducer(
   state: MusicAPIState | undefined,
   action: Action
 ) {

@@ -3,7 +3,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostBinding,
+  Input,
   NgModule,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { DisplayedColumns, Song } from '@nyan-inc/core';
 import { SongDataSource } from './song-data-source';
@@ -15,28 +18,26 @@ import { DataSource } from '@angular/cdk/table';
   template: `<ui-virtual-table-presentation
     [dataSource]="dataSource"
     [displayedColumns]="displayedColumns"
-    [data]="songArray"
+    [data]="data"
     (dropEmitter)="handleDrop($event)"
   ></ui-virtual-table-presentation>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VirtualTableSmartComponent {
+export class VirtualTableSmartComponent implements OnChanges {
   displayedColumns = DisplayedColumns;
   dataSource!: DataSource<Song>;
-  songArray: Song[];
+  @Input() data!: Song[];
 
   @HostBinding('style.width.%') width = '100';
 
   constructor() {
-    this.songArray = new Array(200).fill({
-      title: 'The Song',
-      album: 'The Album',
-      artists: ['Guy'],
-      duration: 100,
-      imageSource: '',
-    }) as Song[];
+    this.dataSource = new SongDataSource(this.data);
+  }
 
-    this.dataSource = new SongDataSource(this.songArray);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data']) {
+      this.dataSource = new SongDataSource(changes['data'].currentValue);
+    }
   }
 
   handleDrop(data: Song[]) {

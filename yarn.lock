@@ -2233,6 +2233,13 @@
   dependencies:
     tslib "^2.0.0"
 
+"@ngrx/component@^16.0.0":
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/component/-/component-16.0.0.tgz#a150f1bbc93f1babf91a14f75881b4bedb17c96a"
+  integrity sha512-wHIpj9spSzYh4yt/wU55zsyEzE+JPVDAewSBoBUCJ0tuQhi5G3Qy36xXxrqNSnlYVC4dSR8ylFcan6gvn3coCw==
+  dependencies:
+    tslib "^2.0.0"
+
 "@ngrx/effects@^16.0.0":
   version "16.0.0"
   resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-16.0.0.tgz#932c1fa2d2e98be78ab14d9fb9d308277aaf98f9"
@@ -2746,11 +2753,6 @@
     tslib "^2.3.0"
     yargs "^17.6.2"
     yargs-parser "21.1.1"
-
-"@nyan-inc/musickit@file:dist/libs/musickit":
-  version "0.0.0"
-  dependencies:
-    tslib "^2.3.0"
 
 "@parcel/watcher@2.0.4":
   version "2.0.4"

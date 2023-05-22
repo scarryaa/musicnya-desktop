@@ -243,6 +243,7 @@
     width: 100%;
 
     #media-content {
+      mask: linear-gradient(to bottom, var(--backgroundColor) 20%, white 20%);
       padding: 1rem;
       position: absolute;
       top: 1.09rem;

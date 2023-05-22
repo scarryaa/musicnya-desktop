@@ -10,7 +10,6 @@ export class PreferencesEffects {
 
   getPreferences$ = createEffect(() =>
     this.actions$.pipe(
-      tap((action) => console.log(action)),
       ofType(PreferencesActions.getPreferences),
       switchMap(() => of(PreferencesActions.getPreferencesSuccess())),
       catchError((error: Error) => {
@@ -24,7 +23,6 @@ export class PreferencesEffects {
 
   setPreferences$ = createEffect(() =>
     this.actions$.pipe(
-      tap((action) => console.log(action)),
       ofType(PreferencesActions.setPreferences),
       switchMap(() => of(PreferencesActions.setPreferencesSuccess())),
       catchError((error: Error) => {

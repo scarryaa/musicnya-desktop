@@ -836,10 +836,19 @@ export declare module MusicKit {
     id: string;
     type: string;
     href: string;
-    attributes?: Record<string, any>;
-    relationships?:
-      | Record<string, Relationship<Resource> | Array<Relationship<Resource>>>
-      | { contents: { data: Array<Resource> } };
+    attributes?: {
+      name?: string;
+      artistName?: string;
+      artwork?: {
+        url?: string;
+      };
+      durationInMillis?: number;
+    };
+    relationships?: {
+      tracks?: {
+        data?: Resource[];
+      };
+    };
     meta?: Record<string, any>;
     views?: Record<string, View<Resource>>;
   }

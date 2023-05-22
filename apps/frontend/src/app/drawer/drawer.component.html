@@ -43,30 +43,23 @@
     ></core-base-button> -->
   </ng-container>
   <ng-container footer>
-    <!-- <ui-album-tile
-      *ngFor="let playlist of userPlaylists | async; let i = index"
-      class="drawer-item"
-      (click)="getTracks(playlist.id)"
-      [routerLink]="'/media/' + playlist.type + '/' + playlist.id"
-      [tabIndex]="-1"
-      [source]="
-        (
-          playlist.attributes?.artwork?.url ??
-          playlist.relationships?.tracks.data[0]?.attributes?.artwork?.url ??
-          ''
-        )
-          .replace('{w}x{h}', '60x60')
-          .replace('{f}', 'png')
-      "
-      [tileSize]="3"
-      [artists]="[
-        playlist?.relationships?.catalog?.data[0]?.attributes?.curatorName ??
-          'Me'
-      ]"
-      [showArtists]="true"
-      [mediaTitle]="playlist?.attributes?.name"
+    <ng-container
+      *ngFor="let playlist of libraryPlaylists$ | async; let i = index"
     >
-    </ui-album-tile> -->
+      <ui-album-tile
+        *ngIf="playlist.artwork.url"
+        class="drawer-item"
+        (click)="getTracks(playlist.id)"
+        [routerLink]="'/media/' + 'library-playlist' + '/' + playlist.id"
+        [tabIndex]="-1"
+        [source]="(playlist.artwork?.url ?? playlist?.tracks?.[0]?.artwork?.url ?? '')"
+        [tileSize]="3"
+        [artists]="playlist?.artists ?? ['Me']"
+        [showArtists]="true"
+        [mediaTitle]="playlist?.title ?? ''"
+      >
+      </ui-album-tile>
+    </ng-container>
   </ng-container>
   <ng-content body-content></ng-content>
 </ui-drawer>

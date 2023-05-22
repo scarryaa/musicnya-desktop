@@ -1,13 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
+import { MusickitAPI } from '@yan-inc/core-services';
 import { switchMap, catchError, of, tap, from } from 'rxjs';
 import { MusicActions, MusicAPIActions } from '../actions';
-import { MusickitAPIService } from '@nyan-inc/musickit-typescript';
 
 @Injectable({ providedIn: 'root' })
 export class MusicEffects {
   private actions$ = inject(Actions);
-  private musickit = inject(MusickitAPIService);
+  private musickit = inject(MusickitAPI);
 
   // addListener$ = createEffect(() =>
   //   this.actions$.pipe(

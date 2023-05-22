@@ -11,10 +11,10 @@ export class AppEffects {
     this.actions$.pipe(
       tap((action) => console.log(action)),
       ofType(AppActions.initApp),
-      switchMap(() => of(AppActions.loadAppSuccess())),
+      switchMap(() => of(AppActions.initAppSuccess())),
       catchError((error: Error) => {
         tap(() => console.error(error));
-        return of(AppActions.loadAppFailure({ error }));
+        return of(AppActions.initAppFailure({ error }));
       })
     )
   );

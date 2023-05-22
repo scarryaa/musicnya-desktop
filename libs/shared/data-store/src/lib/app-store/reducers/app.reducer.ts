@@ -25,16 +25,15 @@ export const initialAppState: AppState = appAdapter.getInitialState({
 });
 
 const reducer = createReducer(
-  { ...initialAppState },
+  initialAppState,
   on(AppActions.initApp, (state) => ({
     ...state,
     loaded: false,
     error: undefined,
   })),
+  on(AppActions.initAppSuccess, (state) => ({ ...state })),
 
-  on(AppActions.loadAppSuccess, (state) => ({ ...state })),
-
-  on(AppActions.loadAppFailure, (state) => ({ ...state }))
+  on(AppActions.initAppFailure, (state) => ({ ...state }))
 );
 
 export function appReducer(state: AppState | undefined, action: Action) {

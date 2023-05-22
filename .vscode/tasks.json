@@ -1,0 +1,7 @@
+{
+  "label": "build:main",
+  "type": "shell",
+  "script": "build:main",
+  "group": "build",
+  "problemMatcher": ["$eslint-stylish"]
+}

@@ -45,7 +45,7 @@ export class AlbumTileLargeSmartComponent {
 
   //TODO move this to a deticated router class in core?
   async routeToMediaDetails(details: MediaPlayInfo) {
-    await this.router.navigate(['media/' + details.type + '/' + details.id]);
+    await this.router.navigate(['media/' + 'album' + '/' + details.id]);
   }
 
   play(details: MediaPlayInfo) {

@@ -26,13 +26,17 @@ import {
 import { NavigationButtonsComponent } from './navigation-buttons/navigation-buttons.component';
 import { HttpService } from './http/http.service';
 import {
-  fromLayout,
   AppActions,
-  LayoutActions,
   AppState,
+  fromLayout,
+  LayoutActions,
   LayoutState,
-} from '@nyan-inc/shared/data-store';
-import { MusicAPIFacade } from '@nyan-inc/shared/data-store';
+  MusicActions,
+  MusicAPIActions,
+  MusicAPIFacade,
+  MusicAPIState,
+  MusicState,
+} from '@nyan-inc/shared';
 
 @Component({
   standalone: true,
@@ -51,7 +55,7 @@ import { MusicAPIFacade } from '@nyan-inc/shared/data-store';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit, OnDestroy, AfterContentInit {
+export class AppComponent implements OnInit, OnDestroy {
   private _window: any;
   drawerOpen$: Observable<boolean>;
   width!: number;
@@ -62,6 +66,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentInit {
   draggables!: QueryList<DraggableDirective>;
 
   constructor(
+    //TODO convert to facade
     private store: Store<AppState & LayoutState>,
     private http: HttpService,
     private windowService: WindowRefService,
@@ -69,13 +74,15 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentInit {
   ) {
     this.drawerOpen$ = this.store.pipe(select(fromLayout.getDrawerOpen));
     this._window = windowService.nativeWindow;
-    (window as any).api.cookies((event: any, cookies: any) => {
-      console.log('[appIPC] recv-cookies');
-      Object.keys(cookies).forEach((key) => {
-        console.log(key, cookies[key]);
-        localStorage.setItem(key, cookies[key]);
+    if (windowService.isElectron()) {
+      (window as any).api.cookies((event: any, cookies: any) => {
+        console.log('[appIPC] recv-cookies');
+        Object.keys(cookies).forEach((key) => {
+          console.log(key, cookies[key]);
+          localStorage.setItem(key, cookies[key]);
+        });
       });
-    });
+    }
   }
 
   @HostListener('mousedown', ['$event']) onClick(event: MouseEvent) {
@@ -100,11 +107,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterContentInit {
       sourceType: 24,
       suppressErrorDialog: false,
     });
-  }
-
-  ngAfterContentInit(): void {
-    console.log(this.draggables);
-    let cookies: any;
   }
 
   ngOnDestroy(): void {

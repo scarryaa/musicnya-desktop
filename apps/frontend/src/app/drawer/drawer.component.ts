@@ -9,17 +9,21 @@ import {
   Output,
   SimpleChanges,
   OnDestroy,
+  OnInit,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import {
   BaseButtonModule,
   DisableChildTabIndexDirective,
+  LibraryPlaylist,
 } from '@nyan-inc/core';
+import { MusicAPIFacade } from '@nyan-inc/shared';
 import {
   DrawerModule,
   AlbumTileModule,
   DrawerToggleDirective,
 } from '@nyan-inc/ui';
+import copy from 'fast-copy';
 import { Observable, Subject, Subscription, map, of, tap } from 'rxjs';
 
 @Component({
@@ -41,29 +45,30 @@ import { Observable, Subject, Subscription, map, of, tap } from 'rxjs';
 })
 export class DrawerComponent
   extends EventTarget
-  implements OnChanges, OnDestroy
+  implements OnChanges, OnDestroy, OnInit
 {
-  // userPlaylists: Observable<any[] | undefined>;
+  libraryPlaylists$: any;
 
   constructor(
     private changeReference: ChangeDetectorRef,
+    public musicAPIFacade: MusicAPIFacade
   ) {
     super();
-
-    // this.userPlaylists = this.musicAPIFacade.libraryPlaylists$;
   }
 
   @Input() width?: number;
   @Input() open = false;
   @Output() readonly drawerOpened$: Subject<boolean> = new Subject();
 
+  ngOnInit(): void {
+    this.libraryPlaylists$ = this.musicAPIFacade.libraryPlaylists$;
+  }
+
   toggle() {
     this.drawerOpened$.next(this.open);
   }
 
-  getTracks(id: number) {
-    // this.musicAPIFacade.getLibraryPlaylistSongs(id);
-  }
+  getTracks(id: string) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.open = changes['open'].currentValue as boolean;

@@ -6,6 +6,8 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -14,8 +16,18 @@ import {
   MediaDetailsDropdownModule,
   VirtualTableSmartModule,
 } from '@nyan-inc/ui';
-import { BaseButtonModule, ColorService } from '@nyan-inc/core';
+import {
+  Album,
+  BaseButtonModule,
+  ColorService,
+  LibraryAlbum,
+  LibraryPlaylist,
+  Playlist,
+} from '@nyan-inc/core';
 import { FastAverageColorResult } from 'fast-average-color';
+import { MusicAPIFacade } from '@nyan-inc/shared';
+import { map, Observable } from 'rxjs';
+import { LetDirective } from '@ngrx/component';
 
 @Component({
   standalone: true,
@@ -25,6 +37,7 @@ import { FastAverageColorResult } from 'fast-average-color';
     BaseButtonModule,
     MediaDetailsDropdownModule,
     VirtualTableSmartModule,
+    LetDirective,
   ],
   selector: 'musicnya-media-details',
   templateUrl: './media-details.component.html',
@@ -36,26 +49,27 @@ export class MediaDetailsComponent implements AfterViewInit {
   @ViewChild('mediaCover', { read: ElementRef })
   mediaCover!: ElementRef;
   mediaColor!: FastAverageColorResult | void;
+  currentMedia$: Observable<
+    LibraryPlaylist | Playlist | Album | LibraryAlbum | undefined
+  >;
 
   constructor(
     private changeReference: ChangeDetectorRef,
-    private color: ColorService
-  ) {}
+    private musicAPIFacade: MusicAPIFacade
+  ) {
+    this.currentMedia$ = this.musicAPIFacade.currentMedia$;
+  }
 
   async ngAfterViewInit(): Promise<void> {
-    this.mediaColor = await this.color
-      .getAverageColor(
-        (this.mediaCover.nativeElement as HTMLElement).getAttribute(
-          'imagesource'
-        ) ?? ''
-      )
-      .then((result) => result);
-
-    document.body.style.setProperty(
-      '--backgroundColor',
-      this.mediaColor?.hex ?? '#000'
-    );
     this.changeReference.markForCheck();
+    this.currentMedia$.subscribe((media) => {
+      if (media) {
+        document.documentElement.style.setProperty(
+          '--backgroundColor',
+          media?.artwork?.dominantColor ?? 'var(--backgroundColor)'
+        );
+      }
+    });
   }
 
   toggleShowContent() {

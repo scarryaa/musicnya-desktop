@@ -1,6 +1,6 @@
 {
   "compileOnSave": false,
-  "include": ["./polyfills.ts"],
+  "include": ["types/**/*.d.ts"],
   "compilerOptions": {
     "outDir": "./",
     "sourceMap": true,
@@ -20,11 +20,12 @@
       "@nyan-inc/musickit-typescript": [
         "libs/musickit-typescript/src/index.ts"
       ],
-      "@nyan-inc/shared/data-store": ["libs/shared/data-store/src/index.ts"],
-      "@nyan-inc/test": ["libs/test/src/index.ts"],
-      "@nyan-inc/ui": ["libs/ui/src/index.ts"]
+      "@nyan-inc/shared": ["libs/shared/data-store/src/index.ts"],
+      "@nyan-inc/ui": ["libs/ui/src/index.ts"],
+      "@yan-inc/core-services": ["libs/core-services/src/index.ts"]
     }
   },
+  "typeRoots": ["types", "node_modules/@types"],
   "angularCompilerOptions": {
     "strictTemplates": true
   },
