@@ -1,16 +1,18 @@
 import { Artwork } from './music.types';
 
+export type MediaTypes =
+  | 'song'
+  | 'album'
+  | 'playlist'
+  | 'artist'
+  | 'station'
+  | 'music-video'
+  | 'library-playlist'
+  | 'library-album';
+
 /**
  * Enum for the different types of media items
  */
-export enum Types {
-  Playlist,
-  LibraryPlaylist,
-  Song,
-  LibrarySong,
-  MusicVideo,
-  Undefined,
-}
 
 /**
  * Base class for all media items
@@ -22,6 +24,7 @@ export class MediaItem {
   id: string;
   href: string;
   duration?: number;
+  type?: MediaTypes;
 
   constructor({
     artwork,

@@ -13,7 +13,16 @@
       <div>{{ i + 1 }}</div>
       <div id="play-button-container">
         <div id="play-button">
-          <i class="material-symbols-rounded">play_arrow</i>
+          <svg id="play" viewBox="0 0 24 24">
+            <path
+              (click)="handleClick($event)"
+              id="play-icon"
+              d="M8,5.14V19.14L19,12.14L8,5.14Z"
+              fill="black"
+              stroke="none"
+              transform="translate(0, 0)"
+            ></path>
+          </svg>
         </div>
       </div>
     </td>
@@ -23,7 +32,15 @@
   <ng-container cdkColumnDef="Title">
     <th id="title-table-header" cdk-header-cell *cdkHeaderCellDef>Title</th>
     <td class="title-content" cdk-cell *cdkCellDef="let song">
-      <span>{{ song.title }}</span>
+      <ui-album-tile
+        [artists]="song.artists"
+        [showArtists]="true"
+        [mediaTitle]="song.title"
+        [source]="song.artwork?.url"
+        [tileSize]="2.5"
+        [showArt]="showAlbums"
+      ></ui-album-tile>
+      <div id="title-info-container"></div>
     </td>
   </ng-container>
 
@@ -41,15 +58,31 @@
       <i class="material-symbols-outlined">schedule</i>
     </th>
     <td class="duration-content" cdk-cell *cdkCellDef="let song">
-      <div id="like-button-container">
-        <div id="like-button">
-          <i class="material-symbols-outlined">favorite</i>
+      <div id="duration-options-container">
+        <div id="like-button-container">
+          <div id="like-button">
+            <svg id="like-button" viewBox="0 -960 960 960">
+              <path
+                (click)="handleClick($event)"
+                style="
+                  fill: white;
+                  fill-opacity: 0;
+                  fill-rule: nonzero;
+                  stroke: currentColor;
+                  stroke-width: 70;
+                  stroke-dasharray: none;
+                  stroke-opacity: 1;
+                "
+                d="m 439,-156 -53,-49 C 303.33333,-281.66667 231.66667,-354.83333 171,-424.5 110.33333,-494.16667 80,-567 80,-643 c 0,-60 20.16667,-110.16667 60.5,-150.5 40.33333,-40.33333 90.16667,-60.5 149.5,-60.5 34,0 67.66667,8.16667 101,24.5 18.22546,8.93047 35.35477,20.99993 51.38793,36.20838 13.29057,12.60693 17.00926,29.23973 37.61207,28.40068 22.84194,-0.93024 28.47972,-17.62658 43.06734,-30.73386 15.70871,-14.1146 31.68626,-25.40633 47.93266,-33.8752 31.33333,-16.33333 64.33333,-24.5 99,-24.5 59.33333,0 109.16667,20.16667 149.5,60.5 40.33333,40.33333 60.5,90.5 60.5,150.5 0,76 -30.33333,148.83333 -91,218.5 -60.66667,69.66667 -132.33333,142.83333 -215,219.5 l -53,49 c -11.33333,10.66667 -25,16 -41,16 -16,0 -29.66667,-5.33333 -41,-16 z"
+              />
+            </svg>
+          </div>
         </div>
-      </div>
-      <span>{{ song.duration | date : 'm:ss' }}</span>
-      <div id="options-button-container">
-        <div id="options-button">
-          <i class="material-symbols-rounded">more_horiz</i>
+        <span>{{ song.duration | date : 'm:ss' }}</span>
+        <div id="options-button-container">
+          <div id="options-button">
+            <i class="material-symbols-rounded">more_horiz</i>
+          </div>
         </div>
       </div>
     </td>
@@ -63,8 +96,8 @@
     #mediaItem
     [cdkDragData]="row"
     *cdkRowDef="let row; let i = index; columns: displayedColumns"
-    (click)="selection.toggle(i)"
-    [ngClass]="{ selected: selection.isSelected(i) }"
+    (click)="clickEmitter.emit(i)"
+    [ngClass]="{ selected: selected.isSelected(i) }"
   >
     <div id="drag-placeholder" *cdkDragPlaceholder></div>
     <div *cdkDragPreview class="tooltip">

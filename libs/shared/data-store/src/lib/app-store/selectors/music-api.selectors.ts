@@ -7,24 +7,14 @@ import {
 
 export const getMusicAPI = createFeatureSelector(MusicAPI_API_FEATURE_KEY);
 
-export const getLibraryAlbums = select(
+export const getMediaCache = select(
   getMusicAPI,
-  (state: MusicAPIState) => state.libraryAlbums
+  (state: MusicAPIState) => state.mediaCache
 );
 
 export const getLibraryPlaylists = select(
   getMusicAPI,
   (state: MusicAPIState) => state.libraryPlaylists
-);
-
-export const getPlaylists = select(
-  getMusicAPI,
-  (state: MusicAPIState) => state.playlists
-);
-
-export const getAlbums = select(
-  getMusicAPI,
-  (state: MusicAPIState) => state.libraryAlbums
 );
 
 export const getLibraryPlaylistSongs = createSelector(

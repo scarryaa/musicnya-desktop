@@ -29,6 +29,7 @@ import { FastAverageColorResult } from 'fast-average-color';
 import { MusicAPIFacade } from '@nyan-inc/shared';
 import { map, Observable } from 'rxjs';
 import { LetDirective } from '@ngrx/component';
+import Color from 'colorjs.io';
 
 @Component({
   standalone: true,
@@ -72,6 +73,19 @@ export class MediaDetailsComponent implements AfterViewInit {
           '--backgroundColor',
           media?.currentMedia?.artwork?.dominantColor ??
             'var(--backgroundColor)'
+        );
+
+        const color = new Color(
+          media?.currentMedia?.artwork?.dominantColor ?? '#000'
+        ).to('oklch');
+
+        (color as any).c -= 0.1;
+
+        (color as any).l = 0.905;
+
+        document.documentElement.style.setProperty(
+          '--backgroundColorLight',
+          color.toString()
         );
       }
     });

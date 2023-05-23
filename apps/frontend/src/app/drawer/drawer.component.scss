@@ -53,7 +53,7 @@
         opacity 0.1s linear, padding 0.6s cubic-bezier(0.165, 1, 0.165, 1);
     }
 
-    ::ng-deep core-base-button.active {
+    core-base-button.active {
       button,
       i,
       span {

@@ -92,6 +92,7 @@
     <div id="media-content-wrapper">
       <div id="media-content">
         <ui-virtual-table
+          [mediaType]="media?.currentMediaType"
           [data]="media?.currentMedia?.tracks!"
         ></ui-virtual-table>
       </div>

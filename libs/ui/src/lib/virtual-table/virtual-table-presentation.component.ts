@@ -11,7 +11,12 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkTableModule, DataSource } from '@angular/cdk/table';
-import { DragTooltipComponent, DraggableDirective, Song } from '@nyan-inc/core';
+import {
+  DragTooltipComponent,
+  DraggableDirective,
+  Song,
+  MediaTypes,
+} from '@nyan-inc/core';
 import {
   CdkDragDrop,
   CdkDragStart,
@@ -20,6 +25,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SelectionModel } from '@angular/cdk/collections';
+import { AlbumTileModule } from '../album-tile/album-tile.component';
 
 @Component({
   selector: 'ui-virtual-table-presentation',
@@ -29,16 +35,21 @@ import { SelectionModel } from '@angular/cdk/collections';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VirtualTableComponent implements OnChanges {
-  selection = new SelectionModel<Song>(true, []);
-
   @Input() dataSource!: DataSource<Song>;
   @Input() data!: Song[];
   @Input() displayedColumns!: string[];
+  @Input() showAlbums = true;
+  @Input() selected = new SelectionModel<Song>(true, []);
   @Output() readonly dropEmitter = new EventEmitter<Song[]>();
+  @Output() readonly clickEmitter = new EventEmitter<Song>();
   dragData: { title: string; artists: string[] } = { title: '', artists: [] };
 
   trackBy(index: number, song: Song) {
     return song.id;
+  }
+
+  handleClick(event: MouseEvent) {
+    event.stopPropagation();
   }
 
   onDragStart(event: CdkDragStart) {
@@ -68,6 +79,7 @@ export class VirtualTableComponent implements OnChanges {
     DragTooltipComponent,
     DraggableDirective,
     ScrollingModule,
+    AlbumTileModule,
   ],
   exports: [VirtualTableComponent],
 })

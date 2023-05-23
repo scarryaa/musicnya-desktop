@@ -12,7 +12,12 @@ import {
 } from 'rxjs';
 import { of } from 'rxjs';
 import { MusicAPIActions } from '../actions';
-import { fromMusickit, ColorService, adjustColor } from '@nyan-inc/core';
+import {
+  fromMusickit,
+  ColorService,
+  adjustColor,
+  MediaTypes,
+} from '@nyan-inc/core';
 import { MusickitAPI } from '@yan-inc/core-services';
 import copy from 'fast-copy';
 import { Store } from '@ngrx/store';
@@ -139,13 +144,19 @@ export class MusicAPIEffects {
       ofType(ROUTER_NAVIGATED),
       map((router) => router.payload?.routerState?.root?.firstChild?.params),
       filter((params: RouteParams) => !!params.id && !!params.type),
-      map((params: RouteParams) =>
+      mergeMap((params: RouteParams) => [
         MusicAPIActions.getMediaItem({
           payload: {
-            type: params.type as MediaItemType,
+            type: params.type as MediaTypes,
             id: params.id,
           },
-        })
+        }),
+        MusicAPIActions.setCurrentViewType({
+          payload: { type: params.type, id: params.id },
+        }),
+      ]),
+      catchError((error) =>
+        of(MusicAPIActions.getMediaItemFailure({ payload: { error } }))
       )
     )
   );
@@ -158,7 +169,7 @@ export class MusicAPIEffects {
       switchMap(
         (
           action: TypedAction<string> & {
-            payload: { type: MediaItemType; id: string };
+            payload: { type: MediaTypes; id: string };
           }
         ) =>
           from(this.musickit.findByUrl(action.payload.type, action.payload.id))
@@ -180,6 +191,12 @@ export class MusicAPIEffects {
           payload: { data: copy(mediaItem) },
         })
       ),
+      map((action) => {
+        const mediaItem = action.payload.data;
+        return MusicAPIActions.setCurrentMedia({
+          payload: { data: copy(mediaItem) },
+        });
+      }),
       catchError((error) =>
         of(MusicAPIActions.getMediaItemFailure({ payload: { error } }))
       )
@@ -244,19 +261,27 @@ export class MusicAPIEffects {
       )
     )
   );
+
+  // sets the current media type
+  setCurrentViewType$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(MusicAPIActions.setCurrentViewType),
+      map((action) =>
+        MusicAPIActions.setCurrentViewTypeSuccess({
+          payload: {
+            type: copy(action.payload.type),
+            id: copy(action.payload.id),
+          },
+        })
+      ),
+      catchError((error) =>
+        of(MusicAPIActions.setCurrentViewTypeFailure({ payload: { error } }))
+      )
+    )
+  );
 }
 
 interface RouteParams {
   id: string;
-  type: MediaItemType;
+  type: MediaTypes;
 }
-
-export type MediaItemType =
-  | 'songs'
-  | 'albums'
-  | 'playlists'
-  | 'artists'
-  | 'stations'
-  | 'music-videos'
-  | 'library-playlists'
-  | 'library-albums';

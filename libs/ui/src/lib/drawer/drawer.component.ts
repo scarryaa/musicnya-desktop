@@ -58,7 +58,7 @@ import { BaseComponent } from '@nyan-inc/core';
         </div>
         <div class="ui-drawer-footer">
           <!-- TODO: move this out of library -->
-          <ng-scrollbar class="drawer-scroller" [autoHeightDisabled]="true">
+          <ng-scrollbar class="drawer-scroller" [autoHeightDisabled]="false">
             <div id="footer-wrapper">
               <ng-content select="[footer]"></ng-content>
             </div>
@@ -77,6 +77,7 @@ import { BaseComponent } from '@nyan-inc/core';
         class="content-scroller"
         trackClass="scrollbar"
         thumbClass="scrollbar-thumb"
+        [autoHeightDisabled]="true"
       >
         <ng-content select="[body-content]"></ng-content>
       </ng-scrollbar>

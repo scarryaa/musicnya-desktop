@@ -5,9 +5,9 @@ import {
   LibraryPlaylist,
   LibrarySong,
   MediaItem,
+  MediaTypes,
   Playlist,
 } from '@nyan-inc/core';
-import { MediaItemType } from '@nyan-inc/shared';
 import { MusicKit } from 'types/musickit';
 import { MusicAPIEntity } from '../models/music-api.models';
 
@@ -92,7 +92,7 @@ export const getFromUrlFailure = createAction(
 export const setCurrentMedia = createAction(
   '[Music/API] Set Current Media',
   props<{
-    payload: { data: LibraryPlaylist | Playlist | Album | LibraryAlbum };
+    payload: { data: MediaItem };
   }>()
 );
 export const setCurrentMediaSuccess = createAction(
@@ -228,7 +228,7 @@ export const removeAlbumFailure = createAction(
 // get media item
 export const getMediaItem = createAction(
   '[Music/API] Get Media Item',
-  props<{ payload: { type: MediaItemType; id: string } }>()
+  props<{ payload: { type: MediaTypes; id: string } }>()
 );
 export const getMediaItemSuccess = createAction(
   '[Music/API] Get Media Item Success',
@@ -236,5 +236,19 @@ export const getMediaItemSuccess = createAction(
 );
 export const getMediaItemFailure = createAction(
   '[Music/API] Get Media Item Failure',
+  props<{ payload: { error: Error } }>()
+);
+
+// set current view type
+export const setCurrentViewType = createAction(
+  '[Music/API] Set Current View Type',
+  props<{ payload: { type: MediaTypes; id: string } }>()
+);
+export const setCurrentViewTypeSuccess = createAction(
+  '[Music/API] Set Current View Type Success',
+  props<{ payload: { type: MediaTypes; id: string } }>()
+);
+export const setCurrentViewTypeFailure = createAction(
+  '[Music/API] Set Current View Type Failure',
   props<{ payload: { error: Error } }>()
 );

@@ -25,6 +25,7 @@ import {
   template: `
     <core-base-button #button class="album-tile ui-drawer-item">
       <img
+        *ngIf="showArt"
         id="artwork"
         alt="{{ type }} art"
         [style.max-width.rem]="tileSize"
@@ -74,6 +75,7 @@ export class AlbumTileComponent extends BaseComponent {
   @Input() tileSize = 2;
   @Input() showArtists = this.artists ? true : false;
   @Input() hoverUnderline = false;
+  @Input() showArt = true;
   @ViewChildren('span', { read: ElementRef })
   spanElements!: QueryList<ElementRef>;
   @Input() titleRouterLink = '';

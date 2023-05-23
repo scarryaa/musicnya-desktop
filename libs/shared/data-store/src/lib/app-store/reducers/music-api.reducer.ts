@@ -12,19 +12,25 @@ import * as AppActions from '../actions/app.actions';
 import copy, { State } from 'fast-copy';
 import { MusicAPIActions } from '../actions';
 import { MusicAPIEntity } from '../models/music-api.models';
-import { Album, LibraryAlbum, LibraryPlaylist, Playlist } from '@nyan-inc/core';
+import {
+  Album,
+  LibraryAlbum,
+  LibraryPlaylist,
+  MediaItem,
+  MediaTypes,
+  Playlist,
+} from '@nyan-inc/core';
 
 export const MusicAPI_API_FEATURE_KEY = 'MusicAPI';
 
 export interface MusicAPIState extends EntityState<MusicAPIEntity> {
   selectedId?: string | number;
   loaded: boolean;
-  error?: string | Error | null;
   libraryPlaylists: LibraryPlaylist[] | undefined;
-  playlists: Playlist[] | undefined;
-  libraryAlbums: LibraryAlbum[] | undefined;
-  albums: Album[] | undefined;
-  currentMedia: LibraryPlaylist | LibraryAlbum | Album | Playlist | undefined;
+  error?: string | Error | null;
+  mediaCache?: MediaItem[];
+  currentMediaType?: MediaTypes;
+  currentMedia?: LibraryPlaylist | LibraryAlbum | Album | Playlist;
 }
 
 export function persistStateReducer(_reducer: ActionReducer<State>) {
@@ -58,7 +64,9 @@ export const initialMusicAPIState: MusicAPIState =
     libraryAlbums: undefined,
     playlists: undefined,
     albums: undefined,
+    mediaCache: undefined,
     currentMedia: undefined,
+    currentMediaType: undefined,
   });
 
 const reducer = createReducer(
@@ -83,24 +91,11 @@ const reducer = createReducer(
     error: payload.error,
   })),
 
-  // get playlist
-  on(MusicAPIActions.getPlaylist, (state) => ({ ...state })),
-  on(MusicAPIActions.getPlaylistSuccess, (state, { payload }) => ({
-    ...state,
-    playlists: {
-      ...state.playlists!,
-      [payload.data.id]: payload.data,
-    },
-  })),
-  on(MusicAPIActions.getPlaylistFailure, (state, { payload }) => ({
-    ...state,
-    error: payload.error,
-  })),
-
   // set current media
   on(MusicAPIActions.setCurrentMedia, (state, { payload }) => ({
     ...state,
     currentMedia: payload.data,
+    loaded: true,
   })),
   on(MusicAPIActions.setCurrentMediaSuccess, (state) => ({
     ...state,
@@ -147,10 +142,24 @@ const reducer = createReducer(
   on(MusicAPIActions.getMediaItem, (state) => ({ ...state, loaded: false })),
   on(MusicAPIActions.getMediaItemSuccess, (state, { payload }) => ({
     ...state,
-    currentMedia: payload.data,
-    loaded: true,
+    mediaCache: state.mediaCache
+      ? [...state.mediaCache, payload.data]
+      : [payload.data],
   })),
   on(MusicAPIActions.getMediaItemFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  })),
+
+  // set current view type
+  on(MusicAPIActions.setCurrentViewType, (state, { payload }) => ({
+    ...state,
+  })),
+  on(MusicAPIActions.setCurrentViewTypeSuccess, (state, { payload }) => ({
+    ...state,
+    currentMediaType: payload.type,
+  })),
+  on(MusicAPIActions.setCurrentViewTypeFailure, (state, { payload }) => ({
     ...state,
     payload: payload.error,
   }))

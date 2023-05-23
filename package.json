@@ -32,6 +32,7 @@
     "@ngrx/store-devtools": "^16.0.0",
     "@nguniversal/express-engine": "~16.0.0",
     "@nx/angular": "16.2.1",
+    "colorjs.io": "^0.4.3",
     "cors": "~2.8.5",
     "dotenv": "^16.0.3",
     "dotenv-webpack": "^8.0.1",
