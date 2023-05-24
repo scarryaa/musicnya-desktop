@@ -45,7 +45,9 @@
   justify-content: flex-start;
   justify-self: flex-start;
 
-  #titlebar-file-menu {
+  #titlebar-file-menu,
+  #titlebar-apple-menu,
+  #titlebar-spotify-menu {
     margin-top: 2px;
     margin-left: 1rem;
 
@@ -68,6 +70,56 @@
       i {
         color: var(--font-color-active);
       }
+    }
+  }
+
+  #titlebar-apple-menu,
+  #titlebar-spotify-menu {
+    position: absolute;
+    width: 25px;
+    height: 30px;
+    right: 7.5rem;
+    padding-inline: 0.3rem;
+    border-radius: 0;
+
+    svg {
+      path {
+        fill: var(--font-color-faded3);
+      }
+    }
+
+    &:hover {
+      background-color: oklch(100% 0 0 / 20%);
+
+      svg {
+        path {
+          fill: var(--font-color-faded);
+        }
+      }
+    }
+
+    &:active {
+      background-color: oklch(100% 0 0 / 20%);
+
+      svg {
+        path {
+          fill: var(--font-color-active);
+        }
+      }
+    }
+  }
+
+  #titlebar-apple-menu {
+    svg {
+      margin-top: -2px;
+    }
+  }
+
+  #titlebar-spotify-menu {
+    right: 9.75rem;
+
+    svg {
+      margin-top: 0px;
     }
   }
 }

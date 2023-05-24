@@ -231,6 +231,22 @@ export default class App {
       AuthWindow(App.mainWindow);
     });
 
+    ipcMain.on('close-window', async (event) => {
+      App.mainWindow.close();
+    });
+
+    ipcMain.on('minimize-window', async (event) => {
+      App.mainWindow.minimize();
+    });
+
+    ipcMain.on('maximize-window', async (event) => {
+      App.mainWindow.maximize();
+    });
+
+    ipcMain.on('clear-local-storage', async (event) => {
+      App.mainWindow.webContents.session.clearStorageData();
+    });
+
     // handle all external redirects in a new browser window
     // App.mainWindow.webContents.on('will-navigate', App.onRedirect);
     // App.mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options) => {

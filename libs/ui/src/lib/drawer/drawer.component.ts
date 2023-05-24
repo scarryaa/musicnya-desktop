@@ -57,12 +57,7 @@ import { BaseComponent } from '@nyan-inc/core';
           </div>
         </div>
         <div class="ui-drawer-footer">
-          <!-- TODO: move this out of library -->
-          <ng-scrollbar class="drawer-scroller" [autoHeightDisabled]="false">
-            <div id="footer-wrapper">
-              <ng-content select="[footer]"></ng-content>
-            </div>
-          </ng-scrollbar>
+          <ng-content select="[footer]"></ng-content>
         </div>
       </div>
     </div>
@@ -105,7 +100,6 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
     descendants: true,
   })
   items!: QueryList<BaseComponent>;
-  @ViewChild('scrollbar') scrollbar!: NgScrollbar;
   @ContentChild(DrawerToggleDirective)
   drawerToggle!: DrawerToggleDirective;
   _drawerItems: Array<BaseComponent> = [];
@@ -113,19 +107,6 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
 
   ngAfterContentInit(): void {
     this._drawerItems = [...this.items];
-
-    this.subs.add(
-      this.router.events
-        .pipe(
-          filter(
-            (event): event is NavigationEnd => event instanceof NavigationEnd
-          ),
-          map<NavigationEnd, void>(async () => {
-            await this.scrollbar.scrollTo({ top: 0, duration: 300 });
-          })
-        )
-        .subscribe()
-    );
 
     this.subs.add(
       this.drawerToggle.drawerOpen$

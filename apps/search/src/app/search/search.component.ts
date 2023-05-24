@@ -11,10 +11,5 @@ import { WindowRefService } from '@nyan-inc/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent {
-  private _window: any;
-
-  constructor(private windowService: WindowRefService) {
-    this._window = this.windowService.nativeWindow;
-    (window as any).api.send('auth-window', 'auth-window');
-  }
+  constructor() {}
 }

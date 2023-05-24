@@ -43,23 +43,26 @@
     ></core-base-button> -->
   </ng-container>
   <ng-container footer>
-    <ng-container
-      *ngFor="let playlist of libraryPlaylists$ | async; let i = index"
-    >
-      <ui-album-tile
-        *ngIf="playlist?.artwork?.url"
-        class="drawer-item"
-        (click)="getTracks(playlist?.id)"
-        [routerLink]="'/media/' + 'library-playlist' + '/' + playlist?.id"
-        [tabIndex]="-1"
-        [source]="(playlist?.artwork?.url ?? playlist?.tracks?.[0]?.artwork?.url ?? '')"
-        [tileSize]="3"
-        [artists]="playlist?.artists ?? ['Me']"
-        [showArtists]="true"
-        [mediaTitle]="playlist?.title ?? ''"
-      >
-      </ui-album-tile>
-    </ng-container>
+    <ng-scrollbar class="drawer-scroller" [autoHeightDisabled]="false">
+      <div id="footer-wrapper">
+        <ng-container
+          *ngFor="let playlist of libraryPlaylists$ | async; let i = index"
+        >
+          <ui-album-tile
+            *ngIf="playlist?.artwork?.url"
+            class="drawer-item"
+            [routerLink]="'/media/' + 'library-playlist' + '/' + playlist?.id"
+            [tabIndex]="-1"
+            [source]="(playlist?.artwork?.url ?? playlist?.tracks?.[0]?.artwork?.url ?? '')"
+            [tileSize]="3"
+            [artists]="playlist?.artists ?? ['Me']"
+            [showArtists]="true"
+            [mediaTitle]="playlist?.title ?? ''"
+          >
+          </ui-album-tile>
+        </ng-container>
+      </div>
+    </ng-scrollbar>
   </ng-container>
   <ng-content body-content></ng-content>
 </ui-drawer>

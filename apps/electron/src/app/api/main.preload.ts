@@ -18,6 +18,10 @@ contextBridge.exposeInMainWorld('api', {
       'readytobeshown',
       'signedin',
       'closed',
+      'close-window',
+      'minimize-window',
+      'maximize-window',
+      'clear-local-storage',
     ];
     if (validChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
@@ -33,6 +37,10 @@ contextBridge.exposeInMainWorld('api', {
       'signedin',
       'closed',
       'recv-cookies',
+      'close-window',
+      'minimize-window',
+      'maximize-window',
+      'clear-local-storage',
     ];
     if (validChannels.includes(channel)) {
       // Deliberately strip event as it includes `sender`

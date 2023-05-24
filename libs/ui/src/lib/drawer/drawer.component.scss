@@ -28,14 +28,6 @@
     width: inherit;
   }
 
-  .ui-drawer-footer {
-    height: inherit;
-    min-height: 0;
-    width: inherit;
-    flex: 1;
-    border-radius: 10px;
-  }
-
   ::ng-deep {
     .ui-drawer #header-wrapper span,
     .ui-drawer #content-wrapper span {
@@ -109,19 +101,6 @@
     align-items: flex-start;
     display: flex;
     flex-direction: column;
-  }
-
-  #footer-wrapper {
-    align-items: flex-start;
-    display: flex;
-    flex-direction: column;
-    margin-top: -0.5rem;
-
-    overflow: hidden;
-
-    &:first-child {
-      padding-top: 1rem;
-    }
   }
 
   .drawer-content-wrapper {

@@ -10,21 +10,23 @@ import {
   SimpleChanges,
   OnDestroy,
   OnInit,
+  ViewChild,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { NavigationEnd, RouterModule } from '@angular/router';
 import {
   BaseButtonModule,
   DisableChildTabIndexDirective,
   LibraryPlaylist,
 } from '@nyan-inc/core';
-import { MusicAPIFacade } from '@nyan-inc/shared';
+import { MusicAPIFacade, RouterFacade } from '@nyan-inc/shared';
 import {
   DrawerModule,
   AlbumTileModule,
   DrawerToggleDirective,
 } from '@nyan-inc/ui';
 import copy from 'fast-copy';
-import { Observable, Subject, Subscription, map, of, tap } from 'rxjs';
+import { NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
+import { Observable, Subject, Subscription, map, of, tap, filter } from 'rxjs';
 
 @Component({
   selector: 'musicnya-drawer',
@@ -38,6 +40,7 @@ import { Observable, Subject, Subscription, map, of, tap } from 'rxjs';
     DrawerToggleDirective,
     DisableChildTabIndexDirective,
     DragDropModule,
+    NgScrollbarModule,
   ],
   templateUrl: './drawer.component.html',
   styleUrls: ['./drawer.component.scss'],
@@ -51,7 +54,8 @@ export class DrawerComponent
 
   constructor(
     private changeReference: ChangeDetectorRef,
-    public musicAPIFacade: MusicAPIFacade
+    public musicAPIFacade: MusicAPIFacade,
+    private routerFacade: RouterFacade
   ) {
     super();
   }
@@ -59,16 +63,38 @@ export class DrawerComponent
   @Input() width?: number;
   @Input() open = false;
   @Output() readonly drawerOpened$: Subject<boolean> = new Subject();
+  subs = new Subscription();
+
+  @ViewChild('scrollbar') scrollbar!: NgScrollbar;
 
   ngOnInit(): void {
     this.libraryPlaylists$ = this.musicAPIFacade.libraryPlaylists$;
+
+    this.subs.add(
+      this.routerFacade.routerNavigation$
+        .pipe(
+          map(() => async () => {
+            console.log('e');
+            await this.scrollbar.scrollTo({ top: 0, duration: 300 });
+          })
+        )
+        .subscribe()
+    );
+
+    this.subs.add(
+      this.routerFacade.routerNavigated$
+        .pipe(
+          map(() => {
+            this.changeReference.detectChanges();
+          })
+        )
+        .subscribe()
+    );
   }
 
   toggle() {
     this.drawerOpened$.next(this.open);
   }
-
-  getTracks(id: string) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.open = changes['open'].currentValue as boolean;
