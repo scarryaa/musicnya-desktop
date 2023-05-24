@@ -42,7 +42,7 @@ export const getLibraryAlbums = createAction(
 );
 export const getLibraryAlbumsSuccess = createAction(
   '[Music/API] Get Library Albums Success',
-  props<{ payload: { data: LibraryAlbum } }>()
+  props<{ payload: { data: LibraryAlbum[] } }>()
 );
 export const getLibraryAlbumsFailure = createAction(
   '[Music/API] Get Library Albums Failure',

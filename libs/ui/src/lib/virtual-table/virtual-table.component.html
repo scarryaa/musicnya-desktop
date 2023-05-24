@@ -81,7 +81,17 @@
         <span>{{ song.duration | date : 'm:ss' }}</span>
         <div id="options-button-container">
           <div id="options-button">
-            <i class="material-symbols-rounded">more_horiz</i>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 32 24"
+              (click)="handleClick($event)"
+            >
+              <g stroke="currentColor" fill="currentColor" stroke-width="3">
+                <circle cx="4" cy="12" r="2" />
+                <circle cx="16" cy="12" r="2" />
+                <circle cx="28" cy="12" r="2" />
+              </g>
+            </svg>
           </div>
         </div>
       </div>

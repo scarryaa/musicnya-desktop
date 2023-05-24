@@ -19,6 +19,13 @@
       <div id="media-details">
         <div id="media-text">
           <div id="media-title">{{ media?.currentMedia?.title }}</div>
+          <div id="media-songs">
+            <span>{{ media?.currentMedia?.tracks?.length }} songs,</span>
+            <span>{{ media?.currentMedia?.duration }}</span>
+          </div>
+          <div id="media-artist">
+            {{ media?.currentMedia?.artists[0] }}
+          </div>
           <span>{{ media?.currentMedia?.duration }}</span>
         </div>
         <div id="media-buttons">

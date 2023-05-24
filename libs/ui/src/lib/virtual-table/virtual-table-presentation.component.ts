@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostListener,
   Input,
   NgModule,
   OnChanges,
@@ -69,7 +70,6 @@ export class VirtualTableComponent implements OnChanges {
     this.dataSource = changes['dataSource'].currentValue as DataSource<Song>;
   }
 }
-
 @NgModule({
   declarations: [VirtualTableComponent],
   imports: [

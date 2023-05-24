@@ -9,6 +9,7 @@ import {
   from,
   tap,
   forkJoin,
+  take,
 } from 'rxjs';
 import { of } from 'rxjs';
 import { MusicAPIActions } from '../actions';
@@ -43,27 +44,6 @@ export class MusicAPIEffects {
       ]),
       catchError((error) =>
         of(MusicAPIActions.initFailure({ payload: { error } }))
-      )
-    )
-  );
-
-  // Fetches a library playlist if it's not in the store
-  getLibraryPlaylist$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(MusicAPIActions.getLibraryPlaylist),
-      switchMap((action: { payload: { playlistId: string } }) =>
-        from(this.musickit.getLibraryPlaylist(action.payload.playlistId)).pipe(
-          map((result: any | any[] | undefined) => result)
-        )
-      ),
-      map(fromMusickit),
-      map((playlist) =>
-        MusicAPIActions.getLibraryPlaylistSuccess({
-          payload: { data: copy(playlist[0]) },
-        })
-      ),
-      catchError((error) =>
-        of(MusicAPIActions.getLibraryPlaylistFailure({ payload: { error } }))
       )
     )
   );
@@ -162,43 +142,28 @@ export class MusicAPIEffects {
   );
 
   // Fetches media item based on the type and id
-  // Fetches media item based on the type and id
+  // look in the media cache and libvrary playlists
+  // if not found, fetch from musickit api
   getMediaItem$ = createEffect(() =>
     this.actions$.pipe(
       ofType(MusicAPIActions.getMediaItem),
-      switchMap(
-        (
-          action: TypedAction<string> & {
-            payload: { type: MediaTypes; id: string };
-          }
-        ) =>
-          from(this.musickit.findByUrl(action.payload.type, action.payload.id))
-      ),
-      mergeMap(fromMusickit),
-      mergeMap((mediaItem) =>
-        from(this.colorService.getAverageColor(mediaItem.artwork.url!)).pipe(
-          map((averageColor) => ({
-            ...mediaItem,
-            artwork: {
-              ...mediaItem.artwork,
-              dominantColor: averageColor?.hex!,
-            },
-          }))
+      mergeMap((action) =>
+        this.store.select('mediaCache').pipe(
+          take(1),
+          map((mediaCache) => {
+            const mediaItem = mediaCache[action.payload.id];
+
+            if (mediaItem) {
+              return MusicAPIActions.getMediaItemSuccess({
+                payload: { data: copy(mediaItem) },
+              });
+            }
+
+            return MusicAPIActions.getLibraryPlaylist({
+              payload: { playlistId: action.payload.id },
+            });
+          })
         )
-      ),
-      map((mediaItem) =>
-        MusicAPIActions.getMediaItemSuccess({
-          payload: { data: copy(mediaItem) },
-        })
-      ),
-      map((action) => {
-        const mediaItem = action.payload.data;
-        return MusicAPIActions.setCurrentMedia({
-          payload: { data: copy(mediaItem) },
-        });
-      }),
-      catchError((error) =>
-        of(MusicAPIActions.getMediaItemFailure({ payload: { error } }))
       )
     )
   );

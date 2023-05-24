@@ -211,7 +211,7 @@ table {
   #play-button-container {
     position: relative;
     top: -1.7rem;
-    left: 0.3rem;
+    left: 0.4rem;
 
     #play-button {
       visibility: hidden;
@@ -223,7 +223,6 @@ table {
         display: block;
 
         path {
-          margin-left: -2rem;
           fill: currentColor;
         }
       }
@@ -234,6 +233,8 @@ table {
     position: relative;
 
     #options-button {
+      width: 1.2rem;
+      top: 0.1rem;
       visibility: hidden;
       position: absolute;
       right: -2rem;

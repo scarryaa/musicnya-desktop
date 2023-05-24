@@ -42,22 +42,22 @@ export const fromMusickit = (
 // Maps a MusicKit.Resource object to a MediaItem object depending on its type
 export const determineTypeAndMap = (value: MusicKit.Resource) => {
   const base: MediaItem = {
-    id: value.id,
-    artists: (value as any).attributes?.curatorName ?? [
-      value.attributes?.['artistName'],
+    id: value?.id,
+    artists: (value as any)?.attributes?.curatorName ?? [
+      value?.attributes?.['artistName'],
     ],
     artwork: {
       dominantColor: undefined,
       url: formatArtworkUrl(
-        value.attributes?.['artwork']?.url ??
-          (value as any).songs?.[0]?.attributes?.artwork?.url ??
-          value.relationships?.tracks?.data?.[0]?.attributes?.artwork?.url,
+        value?.attributes?.['artwork']?.url ??
+          (value as any)?.songs?.[0]?.attributes?.artwork?.url ??
+          value?.relationships?.tracks?.data?.[0]?.attributes?.artwork?.url,
         300
       ),
     },
-    duration: value.attributes?.['durationInMillis'],
-    title: value.attributes?.['name'] ?? '',
-    href: value.href,
+    duration: value?.attributes?.['durationInMillis'],
+    title: value?.attributes?.['name'] ?? '',
+    href: value?.href,
   };
 
   // Depending on the type of MusicKit object, map to different MediaItem objects
@@ -69,6 +69,16 @@ export const determineTypeAndMap = (value: MusicKit.Resource) => {
         tracks: fromMusickit(
           (value as any).songs ?? value.relationships?.tracks?.data
         ),
+        // add up the total duration of all tracks
+        duration:
+          (value as any).songs?.reduce(
+            (acc: number, cur: any) => acc + cur.attributes?.durationInMillis,
+            0
+          ) ??
+          (value as any).tracks.reduce(
+            (acc: number, cur: any) => acc + cur.duration,
+            0
+          ),
       };
     case 'library-playlists':
     case 'playlists':
@@ -79,6 +89,15 @@ export const determineTypeAndMap = (value: MusicKit.Resource) => {
         tracks: fromMusickit(
           (value as any).songs ?? value.relationships?.tracks?.data
         ),
+        duration:
+          (value as any).songs?.reduce(
+            (acc: number, cur: any) => acc + cur.attributes?.durationInMillis,
+            0
+          ) ??
+          (value as any).tracks?.reduce(
+            (acc: number, cur: any) => acc + cur.duration,
+            0
+          ),
       };
     case 'library-songs':
     case 'songs':
