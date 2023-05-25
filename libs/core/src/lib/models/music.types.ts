@@ -17,6 +17,9 @@ export type Playlist = MediaItem & {
  */
 export type Album = MediaItem & {
   songs?: Array<Song>;
+  genres?: Array<string>;
+  releaseDate?: string;
+  releaseYear?: string;
 };
 
 /**

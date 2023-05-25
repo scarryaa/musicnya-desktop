@@ -16,7 +16,12 @@ import {
   MediaDetailsDropdownModule,
   VirtualTableSmartModule,
 } from '@nyan-inc/ui';
-import { adjustColor, Album, BaseButtonModule } from '@nyan-inc/core';
+import {
+  adjustColor,
+  Album,
+  BaseButtonModule,
+  ColorService,
+} from '@nyan-inc/core';
 import { FastAverageColorResult } from 'fast-average-color';
 import { MusicAPIFacade } from '@nyan-inc/shared';
 import { map, Observable } from 'rxjs';
@@ -47,13 +52,14 @@ export class MediaDetailsComponent implements AfterViewInit {
 
   constructor(
     private changeReference: ChangeDetectorRef,
-    private musicAPIFacade: MusicAPIFacade
+    private musicAPIFacade: MusicAPIFacade,
+    private color: ColorService
   ) {
     this.state$ = this.musicAPIFacade.state$;
   }
 
   async ngAfterViewInit(): Promise<void> {
-    this.state$.subscribe((media) => {
+    this.state$.subscribe(async (media) => {
       if (!media.loaded) {
         // TODO move this to a service
         document.documentElement.style.setProperty(
@@ -61,24 +67,25 @@ export class MediaDetailsComponent implements AfterViewInit {
           '#151515'
         );
       } else if (media) {
-        document.documentElement.style.setProperty(
-          '--backgroundColor',
-          `#${media?.currentMedia?.artwork?.dominantColor}` ??
-            'var(--backgroundColor)'
-        );
+        await this.color
+          .getAverageColor(media?.currentMedia?.artwork?.url)
+          .then((foundColor) => {
+            document.documentElement.style.setProperty(
+              '--backgroundColor',
+              `${foundColor?.hex}` ?? 'var(--backgroundColor)'
+            );
 
-        const color = new Color(
-          `#${media?.currentMedia?.artwork?.dominantColor}`
-        ).to('oklch');
+            const color = new Color(`${foundColor?.hex}`).to('oklch');
 
-        (color as any).c -= 0.1;
+            (color as any).c -= 0.1;
 
-        (color as any).l = 0.905;
+            (color as any).l = 0.905;
 
-        document.documentElement.style.setProperty(
-          '--backgroundColorLight',
-          color.toString()
-        );
+            document.documentElement.style.setProperty(
+              '--backgroundColorLight',
+              color.toString()
+            );
+          });
       }
     });
   }

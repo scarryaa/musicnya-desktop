@@ -18,16 +18,27 @@
       <div id="media-details">
         <div id="media-text">
           <div id="media-title">{{ media?.currentMedia?.title }}</div>
-          <div id="media-songs">
-            <span>{{ media?.currentMedia?.songs?.length }} songs, </span>
+          <div id="media-artist-year">
             <span
-              >{{ media?.currentMedia?.duration / 1000 | date : 'h:mm:ss' }}
-            </span>
+              *ngIf="
+                (media?.currentMedia?.type === 'library-playlist' &&
+                  media.currentMedia.curator) ||
+                (media.currentMedia?.type !== 'library-playlist' &&
+                  media?.currentMedia?.curator) ||
+                media?.currentMedia?.artists
+              "
+              >{{
+                media?.currentMedia.type === 'library-playlist'
+                  ? media?.currentMedia?.curator
+                  : media?.currentMedia?.artists ?? 'Unknown Artist'
+              }}</span
+            ><span *ngIf="media.currentMedia?.releaseYear"
+              ><span class="seperator"> • </span>
+              <span id="year">{{
+                media?.currentMedia?.releaseYear
+              }}</span></span
+            >
           </div>
-          <div id="media-artist">
-            {{ media?.currentMedia?.artists }}
-          </div>
-          <span>{{ media?.currentMedia?.duration }}</span>
         </div>
         <div id="media-buttons">
           <div id="media-buttons-wrapper">
@@ -80,17 +91,24 @@
         <div id="dropdown-content-wrapper">
           <div class="dropdown-content" #content>
             <div class="content-wrapper">
-              <p>
-                <!-- <b>Genres: </b>{{ vm.genre ? (vm.genre | joinArrayPipe) : "None" }} -->
-                <b>Genres: </b> yeah idk
-              </p>
-              <p
-                id="dmedia-description"
-                [innerHTML]="
-                  '\<span>\<b>Description: \</b>\</span>' +
-                  (null ?? null ?? '\<span class=\'inline-block\'>None\</span>')
-                "
-              ></p>
+              <div id="media-songs-genre-description">
+                <span id="songs-count"
+                  >{{ media?.currentMedia?.songs?.length }} songs,
+                </span>
+                <span>{{ media?.currentMedia?.duration | date : 'm:ss' }}</span>
+                <p *ngIf="media?.currentMedia?.genres" id="genres">
+                  <!-- replace this with a pipe -->
+                  {{ media?.currentMedia?.genres.join(', ') }}
+                </p>
+                <p
+                  *ngIf="
+                    media?.currentMedia?.description ||
+                    media.currentMedia?.shortDescription
+                  "
+                  id="media-description"
+                  [innerHTML]="media.currentMedia?.description"
+                ></p>
+              </div>
             </div>
           </div>
         </div>
@@ -101,7 +119,7 @@
       <div id="media-content">
         <ui-virtual-table
           [mediaType]="media?.currentMediaType"
-          [data]="media?.currentMedia?.songs!"
+          [data]="media?.currentMedia?.songs"
         ></ui-virtual-table>
       </div>
     </div>

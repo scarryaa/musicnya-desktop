@@ -18,6 +18,7 @@ import {
   MediaTypes,
   LibraryPlaylist,
   LibrarySong,
+  MediaItem,
 } from '@nyan-inc/core';
 import copy from 'fast-copy';
 import { select, Store } from '@ngrx/store';

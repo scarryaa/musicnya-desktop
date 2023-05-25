@@ -1,4 +1,5 @@
 :host {
+  --drop-shadow: drop-shadow(0 0 2px oklch(0% 0 0 / 20%));
   position: relative;
   display: block;
   padding-top: 4rem;
@@ -12,6 +13,10 @@
   right: 0;
   left: 0;
   background-blend-mode: multiply;
+
+  .seperator {
+    font-size: var(--font-size-l) !important;
+  }
 
   #media-details-wrapper {
     padding-inline: 1rem;
@@ -27,42 +32,34 @@
       font-size: var(--font-size-xl);
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
       margin-left: 1.5rem;
+      justify-content: space-between;
     }
 
     #media-text {
       font-family: 'InterDisplay';
-      filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.4));
+      filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.2));
 
       #media-title {
         font-size: var(--font-size-6xl);
         font-weight: var(--font-weight-large-bold);
-        margin-bottom: 0.5rem;
+        margin-top: 4rem;
       }
 
-      #media-title {
-        font-size: var(--font-size-6xl);
-        font-weight: var(--font-weight-large-bold);
-        margin-bottom: 0.5rem;
-      }
+      #media-artist-year {
+        margin-top: 0.3rem;
 
-      div,
-      span {
-        display: block;
-        margin-bottom: 1rem;
-      }
-
-      #media-songs span {
-        display: inline-block;
+        #year {
+          color: var(--font-color-slightly-faded);
+        }
       }
     }
 
     ::ng-deep #media-buttons {
+      flex-grow: 1 1;
       display: flex;
       flex-direction: row;
       width: 100%;
-      align-content: space-between;
 
       #media-buttons-wrapper {
         display: flex;
@@ -73,12 +70,7 @@
         margin-right: 1rem;
 
         button {
-          background: var(--backgroundColorLight)
-            linear-gradient(
-              to bottom,
-              rgba(255, 255, 255, 0.603) 100%,
-              var(--backgroundColorLight) 100%
-            );
+          background: var(--backgroundColorLight);
         }
 
         &#play-button {
@@ -230,17 +222,13 @@
         max-width: 100%;
         min-height: 0;
         padding-inline: 3rem;
+        padding-block: 2rem;
         word-wrap: normal;
         white-space: wrap;
         border-radius: 4px;
 
         .content-wrapper {
-          padding-block: 1rem;
-        }
-
-        span {
-          padding: 1rem;
-          display: inline-block;
+          padding-block: 0rem;
         }
       }
     }
@@ -304,7 +292,29 @@
       top: 1.1rem;
       display: flex;
       width: 100%;
-      min-height: 36vh;
+      min-height: 75vh;
+    }
+  }
+
+  #media-songs-genre-description {
+    color: var(--font-color-black);
+    font-weight: var(--font-weight-bold);
+    background-color: var(--backgroundColorLight);
+
+    #genres {
+      padding: 0;
+      margin-top: 0.2rem;
+    }
+
+    #songs-count {
+      font-weight: var(--font-weight-bold);
+      color: var(--font-color-black);
+    }
+
+    span,
+    div,
+    p {
+      filter: var(--drop-shadow);
     }
   }
 }

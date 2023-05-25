@@ -2,6 +2,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
+  Album,
+  LibraryAlbum,
+  LibraryPlaylist,
   MediaItem,
   MKAlbums,
   MKArtists,
@@ -11,6 +14,9 @@ import {
   MKPlaylists,
   MKSongs,
   MKStations,
+  MusicVideo,
+  Playlist,
+  Song,
 } from './music.types';
 
 export const isArray = <T>(input: any | any[]): input is any[] =>
@@ -39,34 +45,34 @@ export const isMediaItem = (
         item.type.includes(item.type);
 };
 
-export const isLibraryAlbum = (item: any): item is MKLibraryAlbums => {
+export const isLibraryAlbum = (item: any): item is LibraryAlbum => {
   return item && item?.['type'] && item?.['type'] === 'library-album';
 };
 
-export const isLibraryPlaylist = (item: any): item is MKLibraryPlaylists => {
+export const isLibraryPlaylist = (item: any): item is LibraryPlaylist => {
   return item && item?.['type'] && item?.['type'] === 'library-playlist';
 };
 
-export const isPlaylist = (item: any): item is MKPlaylists => {
+export const isPlaylist = (item: any): item is Playlist => {
   return item && item?.['type'] && item?.['type'] === 'playlist';
 };
 
-export const isAlbum = (item: any): item is MKAlbums => {
+export const isAlbum = (item: any): item is Album => {
   return item && item?.['type'] && item?.['type'] === 'album';
 };
 
-export const isSong = (item: any): item is MKSongs => {
+export const isSong = (item: any): item is Song => {
   return item && item?.['type'] && item?.['type'] === 'song';
 };
 
-export const isMusicVideo = (item: any): item is MKMusicVideos => {
+export const isMusicVideo = (item: any): item is MusicVideo => {
   return item && item?.['type'] && item?.['type'] === 'music-video';
 };
 
-export const isArtist = (item: any): item is MKArtists => {
-  return item && item?.['type'] && item?.['type'] === 'artist';
-};
+// export const isArtist = (item: any): item is Artist => {
+//   return item && item?.['type'] && item?.['type'] === 'artist';
+// };
 
-export const isStation = (item: any): item is MKStations => {
-  return item && item?.['type'] && item?.['type'] === 'station';
-};
+// export const isStation = (item: any): item is Station => {
+//   return item && item?.['type'] && item?.['type'] === 'station';
+// };
