@@ -1,28 +1,26 @@
-import { inject, Injector } from '@angular/core';
-import { from, map, take } from 'rxjs';
-import { MusicKit } from 'types/musickit';
-import { ColorService } from '../color/color.service';
+import { isArray, isLibraryAlbum, isMediaItem } from '../models/music.guards';
 import {
+  MediaItem,
+  LibraryPlaylist,
+  Playlist,
   Album,
   LibraryAlbum,
-  LibraryPlaylist,
-  LibrarySong,
-  MediaItem,
-  Playlist,
   Song,
-} from '../models/music.models';
-
-type MKMediaItem =
-  | MusicKit.LibraryAlbums
-  | MusicKit.LibraryPlaylists
-  | MusicKit.LibrarySongs
-  | MusicKit.Albums
-  | MusicKit.Playlists
-  | MusicKit.Songs;
+  LibrarySong,
+  MediaTypes,
+  MKMediaItem,
+  MKArtists,
+  MKLibrarySongs,
+  MKSongs,
+  MKMusicVideos,
+  MKLibraryPlaylists,
+  MKAlbums,
+} from '../models/music.types';
+import { formatArtworkUrl } from './music-utils';
 
 // Maps MusicKit object(s) to MediaItem object(s)
 export const fromMusickit = (
-  item: MusicKit.Resource | MusicKit.Resource[] | undefined
+  item: MKMediaItem | MKMediaItem[] | MediaItem[] | MediaItem
 ):
   | MediaItem[]
   | LibraryPlaylist[]
@@ -31,128 +29,143 @@ export const fromMusickit = (
   | LibraryAlbum[]
   | Song[]
   | LibrarySong[] => {
-  const array = Array.isArray(item) ? item : [item];
-  const mapped = array.map((value) => determineTypeAndMap(value!));
+  if (!item) {
+    return [] as MediaItem[] | LibraryPlaylist[] | Playlist[];
+  }
 
-  if (!mapped) throw new Error('Unable to map MusicKit object to MediaItem.');
+  const array = item && isArray(item) ? item : [item];
+  const mapped = array.map((value: MKMediaItem | MediaItem) =>
+    determineTypeAndMap(value)
+  );
 
+  if (!mapped) {
+    throw new Error('Unable to map MusicKit object to MediaItem.');
+  }
   return mapped;
 };
 
-// Maps a MusicKit.Resource object to a MediaItem object depending on its type
-export const determineTypeAndMap = (value: MusicKit.Resource) => {
-  const base: MediaItem = {
-    id: value?.id,
-    artists: (value as any)?.attributes?.curatorName ?? [
-      value?.attributes?.['artistName'],
-    ],
-    artwork: {
-      dominantColor: undefined,
-      url: formatArtworkUrl(
-        value?.attributes?.['artwork']?.url ??
-          (value as any)?.songs?.[0]?.attributes?.artwork?.url ??
-          value?.relationships?.tracks?.data?.[0]?.attributes?.artwork?.url,
-        300
-      ),
-    },
-    duration: value?.attributes?.['durationInMillis'],
-    title: value?.attributes?.['name'] ?? '',
-    href: value?.href,
+// Maps a MusicKit object to a MediaItem object depending on its type
+export const determineTypeAndMap = (
+  item:
+    | MediaItem
+    | MKMediaItem
+    | MKLibrarySongs
+    | MKSongs
+    | MKMusicVideos
+    | MKLibraryPlaylists
+):
+  | Song
+  | LibrarySong
+  | MediaItem
+  | LibraryAlbum
+  | Album
+  | LibraryPlaylist
+  | Playlist => {
+  if (isMediaItem(item)) {
+    return item;
+  }
+
+  const baseItem: MediaItem = {
+    type: item.type.slice(0, -1) as MediaTypes,
+    id: item.id as string,
+    title: item.attributes?.name,
+    duration: 0,
   };
 
   // Depending on the type of MusicKit object, map to different MediaItem objects
-  switch (value.type) {
-    case 'library-albums':
-    case 'albums':
-      return <LibraryAlbum>{
-        ...base,
-        tracks: fromMusickit(
-          (value as any).songs ?? value.relationships?.tracks?.data
-        ),
-        // add up the total duration of all tracks
-        duration:
-          (value as any).songs?.reduce(
-            (acc: number, cur: any) => acc + cur.attributes?.durationInMillis,
-            0
-          ) ??
-          (value as any).tracks.reduce(
-            (acc: number, cur: any) => acc + cur.duration,
-            0
+  if (isLibraryAlbum(item)) {
+    return {
+      ...baseItem,
+      artists: item?.relationships.artists.data.map(
+        (artist: MKArtists) => artist.attributes?.name
+      ),
+      artwork: {
+        dominantColor: item?.attributes?.artwork.bgColor ?? undefined,
+        url: formatArtworkUrl(item?.attributes?.artwork?.url, 400),
+      },
+    } as LibraryAlbum;
+  } else {
+    switch (item.type) {
+      case 'library-playlists': {
+        console.log(item);
+        return {
+          ...baseItem,
+          songs:
+            (item?.['songs'] as Song[]) ?? item?.relationships?.tracks?.data,
+          artwork: {
+            dominantColor: (item['songs'] as Song[])?.[0]?.artwork
+              ?.dominantColor,
+            url: formatArtworkUrl(
+              (item?.['songs'] as Song[])?.[0]?.artwork?.url,
+              400
+            ),
+          },
+        } as LibraryPlaylist;
+      }
+      case 'library-songs': {
+        return {
+          ...baseItem,
+          artists: [item?.attributes?.artistName] as string[],
+          album:
+            item?.attributes?.albumName ??
+            item?.relationships?.albums?.data?.map(
+              (album: MKAlbums) => album.attributes?.name
+            ),
+          artwork: {
+            dominantColor:
+              item?.relationships?.catalog?.data[0]?.attributes?.artwork
+                .bgColor ??
+              item?.attributes?.artwork.bgColor ??
+              undefined,
+            url: formatArtworkUrl(item?.attributes?.artwork?.url, 400),
+          },
+        } as LibrarySong;
+      }
+      case 'songs': {
+        return {
+          ...baseItem,
+          artists: item?.relationships?.artists?.data?.map(
+            (artist: MKArtists) => artist.attributes?.name
           ),
-      };
-    case 'library-playlists':
-    case 'playlists':
-      return <LibraryPlaylist>{
-        ...base,
-        artists: (value as any).attributes?.curatorName ??
-          (value as any).attributes?.artistName ?? ['Me'],
-        tracks: fromMusickit(
-          (value as any).songs ?? value.relationships?.tracks?.data
-        ),
-        duration:
-          (value as any).songs?.reduce(
-            (acc: number, cur: any) => acc + cur.attributes?.durationInMillis,
-            0
-          ) ??
-          (value as any).tracks?.reduce(
-            (acc: number, cur: any) => acc + cur.duration,
-            0
+          artwork: {
+            dominantColor: item?.attributes?.artwork.bgColor ?? '',
+            url: formatArtworkUrl(item?.attributes?.artwork.url, 400),
+          },
+        } as Song;
+      }
+      case 'playlists': {
+        return {
+          ...baseItem,
+          artists: item?.relationships?.curator?.data?.map(
+            (artist) => artist.attributes?.name
           ),
-      };
-    case 'library-songs':
-    case 'songs':
-    default:
-      return {
-        ...base,
-        album: (value as any).attributes?.albumName,
-      };
+          artwork: {
+            dominantColor: item?.attributes?.artwork?.bgColor,
+            url: formatArtworkUrl(item.attributes?.artwork?.url, 400),
+          },
+        } as Playlist;
+      }
+      case 'albums': {
+        return {
+          ...baseItem,
+          artists:
+            item?.relationships?.artists?.data?.map(
+              (artist: MKArtists) => artist.attributes?.name ?? ''
+            ) ?? undefined,
+          songs:
+            (item?.['songs'] as Song[]) ?? item?.relationships?.tracks?.data,
+          artwork: {
+            dominantColor: item?.attributes?.artwork.bgColor ?? undefined,
+            url: formatArtworkUrl(
+              (item?.['songs'] as Song[])?.[0]?.artwork?.url,
+              400
+            ),
+          },
+        } as Album;
+      }
+      default: {
+        return baseItem;
+      }
+    }
   }
-};
-
-// helper function to replace the {w}x{h} in the url with the desired size
-export const formatArtworkUrl = (url: string | undefined, size?: number) => {
-  if (!url) return undefined;
-  return url
-    .replace('{w}x{h}', `${size || 64}x${size || 64}`)
-    .replace('{f}', 'webp');
-};
-
-// helper function to ligtent or darken a color
-export const adjustColor = (color: string, amount: number): string => {
-  let usePound = false;
-
-  if (color[0] === '#') {
-    color = color.slice(1);
-    usePound = true;
-  }
-
-  const num = parseInt(color, 16);
-
-  let r = num >> 16;
-  let g = (num >> 8) & 0x00ff;
-  let b = num & 0x0000ff;
-
-  let max = Math.max(r, g, b);
-  let min = Math.min(r, g, b);
-
-  // Calculate distance to white (255) or black (0)
-  let distance = amount > 0 ? 255 - max : min;
-
-  // If the adjustment amount is greater than the distance, cap the adjustment
-  if (Math.abs(amount) > distance) {
-    amount = distance * (amount > 0 ? 1 : -1);
-  }
-
-  r += amount;
-  g += amount;
-  b += amount;
-
-  if (r > 255) r = 255;
-  else if (r < 0) r = 0;
-  if (g > 255) g = 255;
-  else if (g < 0) g = 0;
-  if (b > 255) b = 255;
-  else if (b < 0) b = 0;
-
-  return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
 };

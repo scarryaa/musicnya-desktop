@@ -833,24 +833,7 @@ export declare module MusicKit {
    * https://developer.apple.com/documentation/applemusicapi/resource
    */
   interface Resource {
-    id: string;
-    type: string;
-    href: string;
-    attributes?: {
-      name?: string;
-      artistName?: string;
-      artwork?: {
-        url?: string;
-      };
-      durationInMillis?: number;
-    };
-    relationships?: {
-      tracks?: {
-        data?: Resource[];
-      };
-    };
-    meta?: Record<string, any>;
-    views?: Record<string, View<Resource>>;
+    [key: string]: any;
   }
 
   /**
@@ -885,7 +868,7 @@ export declare module MusicKit {
    * https://developer.apple.com/documentation/applemusicapi/songs-um8
    */
   interface Songs extends Resource {
-    id: MusicItemID;
+    id: string;
     type: 'songs';
     attributes?: {
       albumName: string;

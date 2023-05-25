@@ -1,17 +1,17 @@
 {
   "compileOnSave": false,
-  "include": ["types/**/*.d.ts"],
   "compilerOptions": {
-    "outDir": "./",
+    "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "ES2022",
+    "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom", "esnext.asynciterable"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
@@ -25,9 +25,5 @@
       "@yan-inc/core-services": ["libs/core-services/src/index.ts"]
     }
   },
-  "typeRoots": ["types", "node_modules/@types"],
-  "angularCompilerOptions": {
-    "strictTemplates": true
-  },
-  "exclude": ["node_modules", "tmp", "frontend"]
+  "exclude": ["node_modules", "tmp"]
 }

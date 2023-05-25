@@ -48,17 +48,6 @@ export class MusickitAPI {
   async getLibraryPlaylists(): Promise<any[]> {
     return await this.requestData(
       '/v1/me/library/playlist-folders/p.playlistsroot/children?art%5Burl%5D=f&include=name%2CcanDelete%2CcanEdit&l=en-US&offset=0&omit%5Bresource%5D=autos&platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls'
-    ).then(
-      async (data) =>
-        await Promise.all(
-          data.map(async (item: any) => {
-            const tracks = await this.requestData(item.href);
-            return {
-              ...item,
-              tracks: tracks,
-            };
-          })
-        )
     );
   }
 

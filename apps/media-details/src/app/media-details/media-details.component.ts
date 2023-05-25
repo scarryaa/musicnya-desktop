@@ -16,15 +16,7 @@ import {
   MediaDetailsDropdownModule,
   VirtualTableSmartModule,
 } from '@nyan-inc/ui';
-import {
-  adjustColor,
-  Album,
-  BaseButtonModule,
-  ColorService,
-  LibraryAlbum,
-  LibraryPlaylist,
-  Playlist,
-} from '@nyan-inc/core';
+import { adjustColor, Album, BaseButtonModule } from '@nyan-inc/core';
 import { FastAverageColorResult } from 'fast-average-color';
 import { MusicAPIFacade } from '@nyan-inc/shared';
 import { map, Observable } from 'rxjs';
@@ -71,12 +63,12 @@ export class MediaDetailsComponent implements AfterViewInit {
       } else if (media) {
         document.documentElement.style.setProperty(
           '--backgroundColor',
-          media?.currentMedia?.artwork?.dominantColor ??
+          `#${media?.currentMedia?.artwork?.dominantColor}` ??
             'var(--backgroundColor)'
         );
 
         const color = new Color(
-          media?.currentMedia?.artwork?.dominantColor ?? '#000'
+          `#${media?.currentMedia?.artwork?.dominantColor}`
         ).to('oklch');
 
         (color as any).c -= 0.1;

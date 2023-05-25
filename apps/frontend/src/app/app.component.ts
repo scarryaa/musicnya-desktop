@@ -74,13 +74,15 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {
     this.drawerOpen$ = this.store.pipe(select(fromLayout.getDrawerOpen));
     this._window = windowService.nativeWindow;
+    // TODO fix this
     if (windowService.isElectron()) {
       (window as any).api.cookies((event: any, cookies: any) => {
+        console.log((window as any).api.cookies);
         console.log('[appIPC] recv-cookies');
-        Object.keys(cookies).forEach((key) => {
+        for (const key of Object.keys(cookies)) {
           console.log(key, cookies[key]);
           localStorage.setItem(key, cookies[key]);
-        });
+        }
       });
     }
   }

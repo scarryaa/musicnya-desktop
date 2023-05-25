@@ -10,8 +10,7 @@
       <ui-album-tile-large
         id="media-cover-artwork"
         #mediaCover
-        [imageSource]="(media?.currentMedia?.artwork?.url ?? media?.tracks?.[0]?.artwork?.url ?? '').replace('{w}x{h}', '400x400')
-        .replace('{f}', 'png')"
+        [imageSource]="media?.currentMedia?.artwork?.url"
         [showPlayButton]="false"
         [tileSize]="12"
         [showInfo]="false"
@@ -20,11 +19,13 @@
         <div id="media-text">
           <div id="media-title">{{ media?.currentMedia?.title }}</div>
           <div id="media-songs">
-            <span>{{ media?.currentMedia?.tracks?.length }} songs,</span>
-            <span>{{ media?.currentMedia?.duration }}</span>
+            <span>{{ media?.currentMedia?.songs?.length }} songs, </span>
+            <span
+              >{{ media?.currentMedia?.duration / 1000 | date : 'h:mm:ss' }}
+            </span>
           </div>
           <div id="media-artist">
-            {{ media?.currentMedia?.artists[0] }}
+            {{ media?.currentMedia?.artists }}
           </div>
           <span>{{ media?.currentMedia?.duration }}</span>
         </div>
@@ -100,7 +101,7 @@
       <div id="media-content">
         <ui-virtual-table
           [mediaType]="media?.currentMediaType"
-          [data]="media?.currentMedia?.tracks!"
+          [data]="media?.currentMedia?.songs!"
         ></ui-virtual-table>
       </div>
     </div>

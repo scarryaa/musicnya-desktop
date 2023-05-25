@@ -7,30 +7,28 @@ import {
   filter,
   mergeMap,
   from,
-  tap,
+  withLatestFrom,
   forkJoin,
-  take,
+  concatMap,
 } from 'rxjs';
 import { of } from 'rxjs';
 import { MusicAPIActions } from '../actions';
 import {
   fromMusickit,
-  ColorService,
-  adjustColor,
   MediaTypes,
+  LibraryPlaylist,
+  LibrarySong,
 } from '@nyan-inc/core';
-import { MusickitAPI } from '@yan-inc/core-services';
 import copy from 'fast-copy';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { ROUTER_NAVIGATED } from '@ngrx/router-store';
-import { TypedAction } from '@ngrx/store/src/models';
+import { MusickitAPI } from '@yan-inc/core-services';
 
 @Injectable({ providedIn: 'root' })
 export class MusicAPIEffects {
-  private store = inject(Store);
+  private store = inject(Store<MusickitAPI>);
   private actions$ = inject(Actions);
   private musickit = inject(MusickitAPI);
-  private colorService = inject(ColorService);
 
   init$ = createEffect(() =>
     this.actions$.pipe(
@@ -48,50 +46,56 @@ export class MusicAPIEffects {
     )
   );
 
-  // Fetches library playlists if they're not in the store
+  // Checks the store for library playlists and if they're not there, fetches them from Musickit API
   getLibraryPlaylists$ = createEffect(() =>
     this.actions$.pipe(
       ofType(MusicAPIActions.getLibraryPlaylists),
-      mergeMap((action) =>
-        from(this.musickit.getLibraryPlaylists()).pipe(
-          mergeMap((playlists) =>
-            forkJoin(
-              playlists.map(
-                (playlist) =>
+      withLatestFrom(this.store.pipe(select('libraryPlaylists'))),
+      switchMap(([action, libraryPlaylists]: [any, LibraryPlaylist[]]) => {
+        if (libraryPlaylists && libraryPlaylists.length !== 0) {
+          console.log('library playlists already in store');
+          return of(
+            MusicAPIActions.getLibraryPlaylistsSuccess({
+              payload: { data: libraryPlaylists },
+            })
+          );
+        } else {
+          // get library playlists and then songs
+          return from(this.musickit.getLibraryPlaylists()).pipe(
+            switchMap((playlists: LibraryPlaylist[]) =>
+              forkJoin(
+                playlists.map((playlist) =>
                   from(this.musickit.getLibraryPlaylistSongs(playlist.id)).pipe(
-                    map((songs) => ({ ...playlist, songs }))
-                  ),
-                tap((value) => console.log(value))
+                    map(fromMusickit),
+                    map((songs) => ({
+                      ...playlist,
+                      songs,
+                    }))
+                  )
+                )
+              )
+            ),
+            map(fromMusickit),
+            map((playlists) =>
+              MusicAPIActions.getLibraryPlaylistsSuccess({
+                payload: { data: playlists },
+              })
+            ),
+            catchError((error) =>
+              of(
+                MusicAPIActions.getLibraryPlaylistsFailure({
+                  payload: { error },
+                })
               )
             )
-          )
-        )
-      ),
-      map((value) => fromMusickit(value)),
-      tap((value) => console.log(value)),
-      map((playlists) =>
-        MusicAPIActions.getLibraryPlaylistsSuccess({
-          payload: { data: copy(playlists) },
-        })
-      ),
+          );
+        }
+      }),
       catchError((error) =>
         of(MusicAPIActions.getLibraryPlaylistsFailure({ payload: { error } }))
       )
     )
   );
-
-  // // Checks if the playlists have songs and if not, fetches songs from Musickit API
-  // private checkAndFetchSongsForPlaylists = (playlists: LibraryPlaylist[]) => {
-  //   const playlistsWithSongProperty = playlists.filter(
-  //     (playlist) => playlist.tracks && playlist.tracks.length
-  //   );
-
-  //   if (!playlistsWithSongProperty.length) {
-  //     this.store.dispatch(
-  //       MusicAPIActions.getLibraryPlaylistSongs({ payload: { playlist: playlist } })
-  //     );
-  //   }
-  // };
 
   // // Fetches library albums if they're not in the store
   // getLibraryAlbums$ = createEffect(() =>
@@ -142,28 +146,79 @@ export class MusicAPIEffects {
   );
 
   // Fetches media item based on the type and id
-  // look in the media cache and libvrary playlists
-  // if not found, fetch from musickit api
+  // look in the media cache and library playlists
+  // if not found, fetch from musickit api by url
   getMediaItem$ = createEffect(() =>
     this.actions$.pipe(
       ofType(MusicAPIActions.getMediaItem),
-      mergeMap((action) =>
-        this.store.select('mediaCache').pipe(
-          take(1),
-          map((mediaCache) => {
-            const mediaItem = mediaCache[action.payload.id];
+      withLatestFrom(
+        this.store.pipe(select('musicApi', 'mediaCache')),
+        this.store.pipe(select('musicApi', 'libraryPlaylists'))
+      ),
+      switchMap(([action, mediaCache, libraryPlaylists]: any) => {
+        const { type, id } = action.payload;
+        const foundInCache = mediaCache?.[type]?.find(
+          (item: any) => item.id === action.payload.id
+        );
 
-            if (mediaItem) {
-              return MusicAPIActions.getMediaItemSuccess({
-                payload: { data: copy(mediaItem) },
-              });
-            }
+        if (foundInCache) {
+          console.log('Found in cache');
+          return of(
+            MusicAPIActions.getMediaItemSuccess({
+              payload: { data: copy(foundInCache) },
+            }),
+            MusicAPIActions.setCurrentMedia({ payload: { data: foundInCache } })
+          );
+        } else {
+          const foundInLibrary = libraryPlaylists?.find(
+            (playlist: any) => playlist.id === id
+          );
 
-            return MusicAPIActions.getLibraryPlaylist({
-              payload: { playlistId: action.payload.id },
-            });
-          })
-        )
+          if (foundInLibrary) {
+            console.log('Found in library playlists');
+            return of(
+              MusicAPIActions.getMediaItemSuccess({
+                payload: { data: copy(foundInLibrary) },
+              }),
+              MusicAPIActions.setCurrentMedia({
+                payload: { data: foundInLibrary },
+              })
+            );
+          } else {
+            console.log("Didn't find in cache or library");
+            return from(this.musickit.findByUrl(type, id)).pipe(
+              map((item) => fromMusickit(item)),
+              map((data) =>
+                MusicAPIActions.getMediaItemSuccess({
+                  payload: { data: copy(data[0]) },
+                })
+              ),
+              concatMap((data) =>
+                of(
+                  data,
+                  MusicAPIActions.setCurrentMedia({
+                    payload: { data: data.payload.data },
+                  })
+                )
+              ),
+              catchError((error) =>
+                of(MusicAPIActions.getMediaItemFailure({ payload: { error } }))
+              )
+            );
+          }
+        }
+      })
+    )
+  );
+
+  // sets the current media item and returns it
+  setCurrentMedia$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(MusicAPIActions.setCurrentMedia),
+      map((action) => action.payload),
+      map((payload) => MusicAPIActions.setCurrentMediaSuccess()),
+      catchError((error) =>
+        of(MusicAPIActions.setCurrentMediaFailure({ payload: { error } }))
       )
     )
   );
@@ -172,20 +227,27 @@ export class MusicAPIEffects {
   getLibraryPlaylistSongs$ = createEffect(() =>
     this.actions$.pipe(
       ofType(MusicAPIActions.getLibraryPlaylistSongs),
-      switchMap((action) =>
-        this.musickit.getLibraryPlaylistSongs(action.payload.playlist.id)
-      ),
-      map(fromMusickit),
-      map((songs) =>
-        MusicAPIActions.getLibraryPlaylistSongsSuccess({
-          payload: { playlist: copy(songs[0]) },
-        })
-      ),
-      catchError((error) =>
-        of(
-          MusicAPIActions.getLibraryPlaylistSongsFailure({ payload: { error } })
-        )
-      )
+      switchMap((action) => {
+        return from(
+          this.musickit.getLibraryPlaylistSongs(action.payload.playlist.id)
+        ).pipe(
+          map((songs: LibrarySong[]) =>
+            MusicAPIActions.getLibraryPlaylistSongsSuccess({
+              payload: {
+                playlist: action.payload.playlist,
+                songs,
+              },
+            })
+          ),
+          catchError((error) =>
+            of(
+              MusicAPIActions.getLibraryPlaylistSongsFailure({
+                payload: { error },
+              })
+            )
+          )
+        );
+      })
     )
   );
 
@@ -209,23 +271,23 @@ export class MusicAPIEffects {
   // );
 
   // Fetches library album
-  getLibraryAlbum$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(MusicAPIActions.getLibraryAlbum),
-      switchMap((action) =>
-        this.musickit.getLibraryAlbum(action.payload.albumId)
-      ),
-      map(fromMusickit),
-      map((album) =>
-        MusicAPIActions.getLibraryAlbumSuccess({
-          payload: { data: copy(album[0]) },
-        })
-      ),
-      catchError((error) =>
-        of(MusicAPIActions.getLibraryAlbumFailure({ payload: { error } }))
-      )
-    )
-  );
+  // getLibraryAlbum$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType(MusicAPIActions.getLibraryAlbum),
+  //     switchMap((action) =>
+  //       this.musickit.getLibraryAlbum(action.payload.albumId)
+  //     ),
+  //     map(fromMusickit),
+  //     map((album) =>
+  //       MusicAPIActions.getLibraryAlbumSuccess({
+  //         payload: { data: copy(album[0]) },
+  //       })
+  //     ),
+  //     catchError((error) =>
+  //       of(MusicAPIActions.getLibraryAlbumFailure({ payload: { error } }))
+  //     )
+  //   )
+  // );
 
   // sets the current media type
   setCurrentViewType$ = createEffect(() =>
@@ -245,6 +307,8 @@ export class MusicAPIEffects {
     )
   );
 }
+
+// utility functions
 
 interface RouteParams {
   id: string;

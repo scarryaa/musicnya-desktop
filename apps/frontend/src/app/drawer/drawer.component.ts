@@ -12,11 +12,10 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { NavigationEnd, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import {
   BaseButtonModule,
   DisableChildTabIndexDirective,
-  LibraryPlaylist,
 } from '@nyan-inc/core';
 import { MusicAPIFacade, RouterFacade } from '@nyan-inc/shared';
 import {
@@ -24,9 +23,8 @@ import {
   AlbumTileModule,
   DrawerToggleDirective,
 } from '@nyan-inc/ui';
-import copy from 'fast-copy';
 import { NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
-import { Observable, Subject, Subscription, map, of, tap, filter } from 'rxjs';
+import { Subject, Subscription, map } from 'rxjs';
 
 @Component({
   selector: 'musicnya-drawer',
@@ -74,7 +72,6 @@ export class DrawerComponent
       this.routerFacade.routerNavigation$
         .pipe(
           map(() => async () => {
-            console.log('e');
             await this.scrollbar.scrollTo({ top: 0, duration: 300 });
           })
         )

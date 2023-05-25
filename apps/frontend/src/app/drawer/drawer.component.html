@@ -49,11 +49,10 @@
           *ngFor="let playlist of libraryPlaylists$ | async; let i = index"
         >
           <ui-album-tile
-            *ngIf="playlist?.artwork?.url"
             class="drawer-item"
             [routerLink]="'/media/' + 'library-playlist' + '/' + playlist?.id"
             [tabIndex]="-1"
-            [source]="(playlist?.artwork?.url ?? playlist?.tracks?.[0]?.artwork?.url ?? '')"
+            [source]="playlist.artwork?.url"
             [tileSize]="3"
             [artists]="playlist?.artists ?? ['Me']"
             [showArtists]="true"

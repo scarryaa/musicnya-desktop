@@ -4,7 +4,6 @@ import {
   FastAverageColorResult,
   FastAverageColorIgnoredColor,
 } from 'fast-average-color';
-import { adjustColor } from '../utils/musickit-mappings';
 
 @Injectable({
   providedIn: 'root',

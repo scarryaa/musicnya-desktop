@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  HostListener,
   Input,
   NgModule,
   OnChanges,
@@ -12,12 +11,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkTableModule, DataSource } from '@angular/cdk/table';
-import {
-  DragTooltipComponent,
-  DraggableDirective,
-  Song,
-  MediaTypes,
-} from '@nyan-inc/core';
+import { DragTooltipComponent, DraggableDirective, Song } from '@nyan-inc/core';
 import {
   CdkDragDrop,
   CdkDragStart,
@@ -45,7 +39,7 @@ export class VirtualTableComponent implements OnChanges {
   @Output() readonly clickEmitter = new EventEmitter<Song>();
   dragData: { title: string; artists: string[] } = { title: '', artists: [] };
 
-  trackBy(index: number, song: Song) {
+  trackBy(_index: number, song: Song) {
     return song.id;
   }
 

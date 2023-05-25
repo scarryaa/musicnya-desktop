@@ -21,7 +21,7 @@ import {
   Playlist,
 } from '@nyan-inc/core';
 
-export const MusicAPI_API_FEATURE_KEY = 'MusicAPI';
+export const MusicAPI_API_FEATURE_KEY = 'musicApi';
 
 export interface MusicAPIState extends EntityState<MusicAPIEntity> {
   selectedId?: string | number;
@@ -34,7 +34,7 @@ export interface MusicAPIState extends EntityState<MusicAPIEntity> {
 }
 
 export function persistStateReducer(_reducer: ActionReducer<State>) {
-  const localStorageKey = MusicAPI_API_FEATURE_KEY;
+  const localStorageKey = 'state';
   return (state: State | undefined, action: Action) => {
     if (state === undefined) {
       const persisted = localStorage.getItem(localStorageKey);
@@ -108,7 +108,10 @@ const reducer = createReducer(
   on(MusicAPIActions.getLibraryPlaylistSongs, (state) => ({ ...state })),
   on(MusicAPIActions.getLibraryPlaylistSongsSuccess, (state, { payload }) => ({
     ...state,
-    libraryPlaylist: payload.playlist,
+    libraryPlaylist: {
+      ...payload.playlist,
+      songs: payload.songs,
+    },
   })),
   on(MusicAPIActions.getLibraryPlaylistSongsFailure, (state, { payload }) => ({
     ...state,

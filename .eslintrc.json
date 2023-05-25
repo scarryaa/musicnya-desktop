@@ -1,16 +1,17 @@
 {
-  "env": {
-    "es6": true
-  },
-  "root": true,
-  "ignorePatterns": ["**/*"],
-  "plugins": ["@nx", "unicorn", "@typescript-eslint"],
-  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "@angular-eslint",
+    "import",
+    "prettier",
+    "@nrwl/nx",
+    "unicorn"
+  ],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@nx/enforce-module-boundaries": [
+        "@nrwl/nx/enforce-module-boundaries": [
           "error",
           {
             "enforceBuildableLibDependency": true,
@@ -27,24 +28,8 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nx/typescript"],
-      "rules": {}
-    },
-    {
-      "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nx/javascript"],
-      "rules": {}
-    },
-    {
-      "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
-      "env": {
-        "jest": true
-      },
-      "rules": {}
-    },
-    {
-      "files": ["*.ts", "*.tsx"],
       "extends": [
+        "plugin:@nrwl/nx/typescript",
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
@@ -52,7 +37,8 @@
         "plugin:import/errors",
         "plugin:import/warnings",
         "plugin:import/typescript",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "plugin:unicorn/recommended"
       ],
       "rules": {
         "import/no-unresolved": "error",
@@ -113,20 +99,49 @@
           "@typescript-eslint/parser": [".ts", ".tsx"]
         },
         "import/resolver": {
-          "typescript": {}
-        },
-        "import/no-extraneous-dependencies": [
-          "error",
-          { "devDependencies": true }
-        ]
+          "typescript": {
+            "alwaysTryTypes": true
+          }
+        }
+      },
+      "parserOptions": {
+        "project": ["./tsconfig.base.json"]
       }
     },
     {
-      "files": ["*.ts", "*.tsx"],
-      "extends": [
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking"
-      ]
+      "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:@nrwl/nx/javascript"],
+      "rules": {}
+    },
+    {
+      "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+      "env": {
+        "jest": true
+      },
+      "rules": {}
+    },
+    {
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "rules": {
+        "@angular-eslint/template/no-call-expression": ["error"],
+        "@angular-eslint/template/use-track-by-function": ["error"],
+        "@angular-eslint/use-component-selector": ["error"],
+        "@angular-eslint/template/cyclomatic-complexity": ["error"],
+        "@angular-eslint/template/conditional-complexity": ["error"],
+        "@angular-eslint/template/no-negated-async": ["error"],
+        "@angular-eslint/template/no-distracting-elements": ["error"],
+        "@angular-eslint/template/no-autofocus": ["error"],
+        "@angular-eslint/template/no-any": ["error"],
+        "@angular-eslint/template/mouse-events-have-key-events": ["error"],
+        "@angular-eslint/template/click-events-have-key-events": ["error"],
+        "@angular-eslint/template/banana-in-box": ["error"],
+        "@angular-eslint/template/accessibility-valid-aria": ["error"],
+        "@angular-eslint/template/accessibility-table-scope": ["error"],
+        "@angular-eslint/template/accessibility-label-for": ["error"],
+        "@angular-eslint/template/accessibility-elements-content": ["error"],
+        "@angular-eslint/template/accessibility-alt-text": ["error"]
+      }
     }
   ]
 }

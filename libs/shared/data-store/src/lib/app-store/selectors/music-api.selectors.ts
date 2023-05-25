@@ -3,7 +3,7 @@ import {
   getMusicAPIState,
   MusicAPIState,
   MusicAPI_API_FEATURE_KEY,
-} from '../reducers/music-api.reducer';
+} from '../reducers/music-api.reducer.ts';
 
 export const getMusicAPI = createFeatureSelector(MusicAPI_API_FEATURE_KEY);
 
@@ -24,7 +24,7 @@ export const getLibraryPlaylistSongs = createSelector(
       return {
         ...state.libraryPlaylists.find(
           (playlist) => playlist.id === state.selectedId
-        )?.tracks,
+        )?.songs,
       };
     } else {
       return null;

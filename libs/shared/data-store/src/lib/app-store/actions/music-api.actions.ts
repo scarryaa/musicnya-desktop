@@ -56,7 +56,7 @@ export const getLibraryPlaylistSongs = createAction(
 );
 export const getLibraryPlaylistSongsSuccess = createAction(
   '[Music/API] Get Library Playlist Songs Success',
-  props<{ payload: { playlist: LibraryPlaylist } }>()
+  props<{ payload: { playlist: LibraryPlaylist; songs: LibrarySong[] } }>()
 );
 export const getLibraryPlaylistSongsFailure = createAction(
   '[Music/API] Get Library Playlist Songs Failure',

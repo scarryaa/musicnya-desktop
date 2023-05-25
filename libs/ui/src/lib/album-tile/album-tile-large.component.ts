@@ -15,6 +15,7 @@ import {
   BaseComponent,
   DisableChildFocusDirective,
   DisableChildTabIndexDirective,
+  FallbackImageDirective,
   JoinPipeModule,
 } from '@nyan-inc/core';
 import { MediaPlayInfo } from './models';
@@ -47,6 +48,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         </button>
       </div>
       <img
+        coreFallbackImage
         [style.pointerEvents]="clickEnabled ? 'auto' : 'none'"
         [style.width.rem]="tileSize"
         [style.height.rem]="tileSize"
@@ -102,7 +104,7 @@ export class AlbumTileLargeComponent
 
   @Input() mediaInfo!: { type: string; title: string; artists: string[] };
   @Input() playIds!: { mediaId: string; artists: string[] };
-  @Input() imageSource: string | undefined;
+  @Input() imageSource: string = '';
   @Input() clickEnabled = true;
   @Input() showPlayButton = true;
   @Input() playing = false;
@@ -140,6 +142,7 @@ export class AlbumTileLargeComponent
     DisableChildFocusDirective,
     DisableChildTabIndexDirective,
     DragDropModule,
+    FallbackImageDirective,
   ],
   exports: [AlbumTileLargeComponent],
   declarations: [AlbumTileLargeComponent],

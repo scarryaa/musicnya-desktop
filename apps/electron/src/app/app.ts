@@ -336,6 +336,7 @@ function AuthWindow(win: BrowserWindow) {
   });
 
   ipcMain.on('auth-completed', async (_event) => {
+    console.log('auth completed');
     await getCookies().then((cookies) => {
       console.log(cookies);
       win.webContents.send('recv-cookies', cookies);
@@ -364,6 +365,10 @@ function AuthWindow(win: BrowserWindow) {
 }`;
 
   authWindow.webContents.executeJavaScript(`
+  if (window.document.cookie) {
+    console.log(window.document.cookie.split(';'));
+    window.api.send('auth-completed');
+  }
   let tOut = setInterval(async ()=>{
     try {
       if(typeof MusicKit === 'undefined') return;
@@ -373,7 +378,9 @@ function AuthWindow(win: BrowserWindow) {
         }
       })
       clearInterval(tOut)
-    }catch(e) {}
+    }catch(e) {
+      console.log(e);
+    }
   }, 500)
 let tOut2 = setInterval(()=>{
   try {
@@ -381,9 +388,19 @@ let tOut2 = setInterval(()=>{
     if(el) {
       el.click();
       window.api.send('auth-window-ready');
+      window.session.defaultSession.cookies.get({})
+      .then((cookies) => {
+        console.log(cookies)
+      }).catch((error) => {
+        console.log(error)
+      })
       clearInterval(tOut2);
     }
-  }catch(e) {}
+  }catch(e) {
+    console.log(window.document.cookie.split(';'));
+    console.log(window.cookieStore);
+    console.log(e);
+  }
 }, 500)
 let styling = \`${overlayStyling}\`;
 (()=>{

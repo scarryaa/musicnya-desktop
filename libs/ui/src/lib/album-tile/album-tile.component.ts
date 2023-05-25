@@ -17,6 +17,7 @@ import {
   BaseButtonModule,
   BaseComponent,
   DisableChildTabIndexDirective,
+  FallbackImageDirective,
   JoinPipeModule,
 } from '@nyan-inc/core';
 
@@ -25,6 +26,7 @@ import {
   template: `
     <core-base-button #button class="album-tile ui-drawer-item">
       <img
+        coreFallbackImage
         *ngIf="showArt"
         id="artwork"
         alt="{{ type }} art"
@@ -57,7 +59,7 @@ import {
             id="artists"
             [routerLink]="artistsRouterLink"
             [tabIndex]="-1"
-            >{{ artists | join }}</span
+            >{{ artists }}</span
           >
         </ng-container>
       </div>
@@ -114,6 +116,7 @@ export class AlbumTileComponent extends BaseComponent {
     JoinPipeModule,
     BaseButtonModule,
     DisableChildTabIndexDirective,
+    FallbackImageDirective,
   ],
   exports: [AlbumTileComponent],
   declarations: [AlbumTileComponent],

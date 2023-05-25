@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WindowRefService } from '@nyan-inc/core';
 
 @Component({
   selector: 'musicnya-search',
@@ -10,6 +9,4 @@ import { WindowRefService } from '@nyan-inc/core';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchComponent {
-  constructor() {}
-}
+export class SearchComponent {}
