@@ -3,7 +3,7 @@ import {
   getMusicAPIState,
   MusicAPIState,
   MusicAPI_API_FEATURE_KEY,
-} from '../reducers/music-api.reducer.ts';
+} from '../reducers/music-api.reducer';
 
 export const getMusicAPI = createFeatureSelector(MusicAPI_API_FEATURE_KEY);
 

@@ -8,7 +8,6 @@ import {
 import { AlbumTileLargeModule } from './album-tile-large.component';
 import { MediaPlayInfo } from './models';
 import { Router } from '@angular/router';
-import { MediaUtilities } from './media-type-converters';
 import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -18,17 +17,12 @@ import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
       (playEmitter)="play($event)"
       (routeEmitter)="routeToMediaDetails($event)"
       [clickEnabled]="clickEnabled"
-      [playIds]="{ mediaId: '601140186', artists: ['0'] }"
       [imageSource]="imageSource"
       [showPlayButton]="showPlayButton"
       [tileSize]="tileSize"
       [imageSource]="imageSource"
       [showInfo]="showInfo"
-      [mediaInfo]="{
-        type: '',
-        title: 'The New Abnormal',
-        artists: ['The Strokes']
-      }"
+      [mediaInfo]="mediaInfo"
     ></ui-album-tile-large-presentation>
   `,
   styleUrls: ['./album-tile.component.scss'],
@@ -41,15 +35,24 @@ export class AlbumTileLargeSmartComponent {
   @Input() imageSource = '';
   @Input() showPlayButton = true;
   @Input() tileSize = 8;
+  @Input() mediaTitle = '';
   @Input() showInfo = true;
+  @Input() artists: string[] = [];
+  @Input() artworkRouterLink = '';
+  @Input() id = '';
+  @Input() mediaInfo = {
+    name: '',
+    type: '',
+    id: '',
+    artists: Array<string>(),
+  };
 
   //TODO move this to a deticated router class in core?
   async routeToMediaDetails(details: MediaPlayInfo) {
-    await this.router.navigate(['media/' + 'album' + '/' + details.id]);
+    await this.router.navigate(['media/' + details.type + '/' + details.id]);
   }
 
   play(details: MediaPlayInfo) {
-    const queueOptions = MediaUtilities.convertToQueueItem(details);
     // this.musicFacade(queueOptions);
     // this.musicFacade.play();
   }

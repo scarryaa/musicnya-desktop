@@ -24,6 +24,8 @@
   }
 
   #album-info span {
+    max-width: inherit;
+    max-height: inherit;
     font-size: var(--font-size-reg);
 
     &#artists {
@@ -83,6 +85,13 @@
     flex-direction: column;
     display: block;
 
+    #album-info-large div span {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      max-width: 100%;
+    }
+
     &:focus-within:not(:focus-visible) {
       #play-button {
         opacity: 0;
@@ -123,6 +132,8 @@
   #album-info,
   #album-info-large {
     flex-direction: column;
+    min-width: 8rem;
+    max-width: 10rem;
 
     #artists,
     #title-large {

@@ -52,7 +52,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         [style.pointerEvents]="clickEnabled ? 'auto' : 'none'"
         [style.width.rem]="tileSize"
         [style.height.rem]="tileSize"
-        alt="{{ mediaInfo.title + ' ' + mediaPlayInfo.type }} art"
+        alt="{{ mediaInfo.name + ' ' + mediaInfo.type }} art"
         id="artwork"
         [src]="imageSource"
         coreDisableChildTabIndex
@@ -67,17 +67,18 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         <div>
           <span
             id="title-large"
-            (keyUp.Space)="routeEmitter.emit(mediaPlayInfo)"
-            (click)="routeEmitter.emit(mediaPlayInfo)"
+            (keyUp.Space)="routeEmitter.emit(mediaInfo)"
+            (click)="routeEmitter.emit(mediaInfo)"
             [tabIndex]="0"
-            >{{ mediaInfo.title }}</span
+            [title]="mediaInfo.name"
+            >{{ mediaInfo.name }}</span
           >
         </div>
         <div>
           <span
             id="artists"
-            (keyUp.Space)="routeEmitter.emit(mediaPlayInfo)"
-            (click)="routeEmitter.emit(mediaPlayInfo)"
+            (keyUp.Space)="routeEmitter.emit(mediaInfo)"
+            (click)="routeEmitter.emit(mediaInfo)"
             [tabIndex]="0"
             >{{ mediaInfo.artists | join }}</span
           >
@@ -95,41 +96,39 @@ export class AlbumTileLargeComponent
 {
   @HostBinding('class') class = 'outline-offset';
 
-  public mediaPlayInfo: MediaPlayInfo = {
-    type: 'url',
-    artistIds: [''],
-    childIds: [''],
-    id: '',
-  };
-
-  @Input() mediaInfo!: { type: string; title: string; artists: string[] };
-  @Input() playIds!: { mediaId: string; artists: string[] };
   @Input() imageSource: string = '';
   @Input() clickEnabled = true;
   @Input() showPlayButton = true;
   @Input() playing = false;
   @Input() tileSize = 8;
   @Input() showInfo = true;
+  @Input() mediaInfo = {
+    name: '',
+    type: '',
+    id: '',
+    artists: Array<string>(),
+  };
 
-  @Output() readonly playEmitter = new EventEmitter<MediaPlayInfo>();
-  @Output() readonly routeEmitter = new EventEmitter<MediaPlayInfo>();
+  @Output() readonly playEmitter = new EventEmitter<any>();
+  @Output() readonly routeEmitter = new EventEmitter<any>();
 
   emitPlay(event: Event) {
     event.stopPropagation();
-    this.playEmitter.emit(this.mediaPlayInfo);
+    this.playEmitter.emit(this.mediaInfo);
   }
 
   emitRoute(event: Event) {
     event.preventDefault();
-    this.routeEmitter.emit(this.mediaPlayInfo);
+    this.routeEmitter.emit(this.mediaInfo);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes) {
-      this.mediaPlayInfo = {
-        type: 'album',
-        id: changes['playIds']?.currentValue.mediaId,
-        artistIds: changes['playIds']?.currentValue.artists,
+      this.mediaInfo = {
+        name: changes['mediaInfo']?.currentValue?.name,
+        type: changes['mediaInfo']?.currentValue?.type,
+        id: changes['mediaInfo']?.currentValue?.id,
+        artists: changes['mediaInfo']?.currentValue?.artists,
       };
     }
   }

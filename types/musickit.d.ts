@@ -3,7 +3,7 @@
  * It is also a global variable on the window object, and a namespace for other utils and enums.
  * @see MusicKit Docs: [Configuring MusicKit on the Web](https://js-cdn.music.apple.com/musickit/v3/docs/iframe.html?path=/story/get-started--page#configuring-musickit-on-the-web)
  * @see {@link MusicKitInstance} for the configured instance.*/
-export declare module MusicKit {
+export declare namespace MusicKit {
   /**The MusicKitConfiguration object is passed to the MusicKit.configure() method above and supports the following properties. */
 
   /**A set of configuration parameters for your app during the authorization flow.
@@ -833,7 +833,13 @@ export declare module MusicKit {
    * https://developer.apple.com/documentation/applemusicapi/resource
    */
   interface Resource {
-    [key: string]: any;
+    id: string;
+    href?: string;
+    type: string;
+    attributes?: Record<string, any>;
+    relationships?: Record<string, Relationship<any>>;
+    meta?: Record<string, any>;
+    views: Record<string, View<any>>;
   }
 
   /**
@@ -1286,6 +1292,7 @@ export declare module MusicKit {
    */
   interface PersonalRecommendation extends Resource {
     type: 'personal-recommendation';
+    id: string;
     attributes?: {
       kind: 'music-recommendations' | 'recently-played' | 'unknown';
       nextUpdateDate: string;

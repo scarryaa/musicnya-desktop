@@ -1,8 +1,20 @@
-<ui-media-tile-list
-  (playEmitter)="play($event)"
-  listTitle="Recently Played"
-></ui-media-tile-list>
-<ui-media-tile-list
-  (playEmitter)="play($event)"
-  listTitle="Recently Played"
-></ui-media-tile-list>
+<ng-container *ngrxLet="state$ as media">
+  <ng-container>
+    <!-- Home Recommendations -->
+    <ui-media-tile-list
+      (playEmitter)="play($event)"
+      [listTitle]="media.homeTileLists?.[1]?.title || 'Recently Played'"
+      [listData]="media.homeTileLists?.[1]?.data || []"
+    ></ui-media-tile-list>
+    <ng-container *ngIf="media.homeTileLists?.[0]?.data as dataList">
+      <ui-media-tile-list
+        *ngFor="let item of dataList; let i = index"
+        (playEmitter)="play($event)"
+        [listTitle]="
+          item?.attributes?.title?.stringForDisplay || 'Recently Played'
+        "
+        [listData]="item?.relationships?.contents?.data || []"
+      ></ui-media-tile-list>
+    </ng-container>
+  </ng-container>
+</ng-container>

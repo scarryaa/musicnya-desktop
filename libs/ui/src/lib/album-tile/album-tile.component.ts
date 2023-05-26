@@ -82,7 +82,7 @@ export class AlbumTileComponent extends BaseComponent {
   spanElements!: QueryList<ElementRef>;
   @Input() titleRouterLink = '';
   @Input() artistsRouterLink = '';
-  @Input() artworkRouterLink = '';
+  @Input() artworkRouterLink!: string;
 
   @ViewChildren('button', { read: ElementRef })
   buttonElements!: QueryList<ElementRef>;

@@ -33,10 +33,10 @@
     <th id="title-table-header" cdk-header-cell *cdkHeaderCellDef>Title</th>
     <td class="title-content" cdk-cell *cdkCellDef="let song">
       <ui-album-tile
-        [artists]="song.artists"
+        [artists]="song.attributes?.artistName"
         [showArtists]="true"
-        [mediaTitle]="song.title"
-        [source]="song.artwork?.url"
+        [mediaTitle]="song.attributes?.name"
+        [source]="song.attributes?.artwork?.url"
         [tileSize]="2.5"
         [showArt]="showAlbums"
       ></ui-album-tile>
@@ -48,7 +48,7 @@
   <ng-container cdkColumnDef="Album">
     <th id="album-table-header" cdk-header-cell *cdkHeaderCellDef>Album</th>
     <td class="album-content" cdk-cell *cdkCellDef="let song">
-      <span>{{ song.album }}</span>
+      <span>{{ song.attributes?.albumName }}</span>
     </td>
   </ng-container>
 
@@ -78,7 +78,7 @@
             </svg>
           </div>
         </div>
-        <span>{{ song.duration | date : 'm:ss' }}</span>
+        <span>{{ song.attributes?.durationInMillis | date : 'm:ss' }}</span>
         <div id="options-button-container">
           <div id="options-button">
             <svg

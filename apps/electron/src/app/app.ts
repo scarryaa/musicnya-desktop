@@ -421,6 +421,7 @@ let styling = \`${overlayStyling}\`;
       authWindow.webContents.session.cookies
         .get({})
         .then((cookies) => {
+          console.log('from app:', cookies);
           // for each cookie
           const toRenderer: {
             [key: string]: string;

@@ -11,7 +11,11 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkTableModule, DataSource } from '@angular/cdk/table';
-import { DragTooltipComponent, DraggableDirective, Song } from '@nyan-inc/core';
+import {
+  DragTooltipComponent,
+  DraggableDirective,
+  Songs,
+} from '@nyan-inc/core';
 import {
   CdkDragDrop,
   CdkDragStart,
@@ -30,16 +34,16 @@ import { AlbumTileModule } from '../album-tile/album-tile.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VirtualTableComponent implements OnChanges {
-  @Input() dataSource!: DataSource<Song>;
-  @Input() data!: Song[];
+  @Input() dataSource!: DataSource<Songs>;
+  @Input() data!: Songs[];
   @Input() displayedColumns!: string[];
   @Input() showAlbums = true;
-  @Input() selected = new SelectionModel<Song>(true, []);
-  @Output() readonly dropEmitter = new EventEmitter<Song[]>();
-  @Output() readonly clickEmitter = new EventEmitter<Song>();
+  @Input() selected = new SelectionModel<Songs>(true, []);
+  @Output() readonly dropEmitter = new EventEmitter<Songs[]>();
+  @Output() readonly clickEmitter = new EventEmitter<Songs>();
   dragData: { title: string; artists: string[] } = { title: '', artists: [] };
 
-  trackBy(_index: number, song: Song) {
+  trackBy(_index: number, song: Songs) {
     return song.id;
   }
 
@@ -61,7 +65,7 @@ export class VirtualTableComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.dataSource = changes['dataSource'].currentValue as DataSource<Song>;
+    this.dataSource = changes['dataSource'].currentValue as DataSource<Songs>;
   }
 }
 @NgModule({

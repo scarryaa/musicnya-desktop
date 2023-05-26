@@ -6,7 +6,7 @@ declare var MusicKit: any;
   providedIn: 'root',
 })
 export class MusickitAPI {
-  instance!: any;
+  _instance!: any;
 
   /**
    * Initialize MusicKit
@@ -43,6 +43,18 @@ export class MusickitAPI {
   }
 
   /**
+   * Get the instance
+   */
+
+  public get instance(): any {
+    return this._instance;
+  }
+
+  public set instance(instance: any) {
+    this._instance = instance;
+  }
+
+  /**
    * Get library playlists
    */
   async getLibraryPlaylists(): Promise<any[]> {
@@ -60,7 +72,7 @@ export class MusickitAPI {
       '/v1/' +
         (type.includes('library') ? 'me/' : 'catalog/us/') +
         type.split('-').join('/') +
-        's/' +
+        '/' +
         `${id}${this.getQueryString()}`
     );
   }
@@ -112,6 +124,22 @@ export class MusickitAPI {
     return this.requestData(
       `/v1/catalog/us/artists/${id}${this.getQueryString()}`
     );
+  }
+
+  async getRecentlyPlayed(): Promise<any> {
+    const req = await this.requestData(
+      `/v1/me/recent/played${this.getQueryString()}&limit=20`
+    );
+    console.log(req);
+    return req;
+  }
+
+  async getRecommendations(): Promise<any> {
+    const req = await this.requestData(
+      `/v1/me/recommendations${this.getQueryString()}?include[albums]=artists&extend=editorialArtwork,editorialVideo,offers,trackCount&limit[albums]=10`
+    );
+    console.log(req);
+    return req;
   }
 
   // Provide common query string for API endpoints

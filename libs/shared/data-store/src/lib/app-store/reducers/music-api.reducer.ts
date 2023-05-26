@@ -13,12 +13,14 @@ import copy, { State } from 'fast-copy';
 import { MusicAPIActions } from '../actions';
 import { MusicAPIEntity } from '../models/music-api.models';
 import {
-  Album,
-  LibraryAlbum,
-  LibraryPlaylist,
+  Albums,
+  LibraryAlbums,
+  LibraryPlaylists,
   MediaItem,
-  MediaTypes,
-  Playlist,
+  MediaItemTypes,
+  PersonalRecommendation,
+  Playlists,
+  Resource,
 } from '@nyan-inc/core';
 
 export const MusicAPI_API_FEATURE_KEY = 'musicApi';
@@ -26,11 +28,16 @@ export const MusicAPI_API_FEATURE_KEY = 'musicApi';
 export interface MusicAPIState extends EntityState<MusicAPIEntity> {
   selectedId?: string | number;
   loaded: boolean;
-  libraryPlaylists: LibraryPlaylist[] | undefined;
+  musickitLoaded: boolean;
+  libraryPlaylists: LibraryPlaylists[] | undefined;
   error?: string | Error | null;
   mediaCache?: MediaItem[];
-  currentMediaType?: MediaTypes;
-  currentMedia?: LibraryPlaylist | LibraryAlbum | Album | Playlist;
+  currentMediaType?: MediaItemTypes;
+  currentMedia?: Resource;
+  homeTileLists: Array<{
+    title: string;
+    data?: Resource[] | PersonalRecommendation[];
+  }>;
 }
 
 export function persistStateReducer(_reducer: ActionReducer<State>) {
@@ -60,6 +67,7 @@ export const initialMusicAPIState: MusicAPIState =
   MusicAPIAdapter.getInitialState({
     // set initial required properties
     loaded: false,
+    musickitLoaded: false,
     libraryPlaylists: undefined,
     libraryAlbums: undefined,
     playlists: undefined,
@@ -67,17 +75,27 @@ export const initialMusicAPIState: MusicAPIState =
     mediaCache: undefined,
     currentMedia: undefined,
     currentMediaType: undefined,
+    homeTileLists: [
+      {
+        data: [{ id: '', type: 'library-playlists', href: '' }],
+        title: 'eeeee',
+      },
+    ],
   });
 
 const reducer = createReducer(
   { ...initialMusicAPIState },
-  on(AppActions.initApp, (state) => ({
+  on(MusicAPIActions.init, (state) => ({
     ...state,
     loaded: false,
     error: undefined,
   })),
   on(MusicAPIActions.initSuccess, (state) =>
-    MusicAPIAdapter.setMany([], { ...state, loaded: true })
+    MusicAPIAdapter.setMany([], {
+      ...state,
+      loaded: true,
+      musickitLoaded: true,
+    })
   ),
   on(MusicAPIActions.initFailure, (state) => ({ ...state })),
 
@@ -145,9 +163,10 @@ const reducer = createReducer(
   on(MusicAPIActions.getMediaItem, (state) => ({ ...state, loaded: false })),
   on(MusicAPIActions.getMediaItemSuccess, (state, { payload }) => ({
     ...state,
-    mediaCache: state.mediaCache
-      ? [...state.mediaCache, payload.data]
-      : [payload.data],
+    mediaCache: [
+      ...(state.mediaCache ?? Array.prototype.concat(payload.data)),
+      payload.data,
+    ],
   })),
   on(MusicAPIActions.getMediaItemFailure, (state, { payload }) => ({
     ...state,
@@ -165,7 +184,29 @@ const reducer = createReducer(
   on(MusicAPIActions.setCurrentViewTypeFailure, (state, { payload }) => ({
     ...state,
     payload: payload.error,
-  }))
+  })),
+
+  // set recommendations and recently played
+  on(MusicAPIActions.getRecommendationsAndRecentlyPlayed, (state) => ({
+    ...state,
+  })),
+  on(
+    MusicAPIActions.getRecommendationsAndRecentlyPlayedSuccess,
+    (state, { payload }) => ({
+      ...state,
+      homeTileLists: [
+        { title: 'Recommendations', data: payload.data.recommendations },
+        { title: 'Recently Played', data: payload.data.recentlyPlayed },
+      ],
+    })
+  ),
+  on(
+    MusicAPIActions.getRecommendationsAndRecentlyPlayedFailure,
+    (state, { payload }) => ({
+      ...state,
+      payload: payload.error,
+    })
+  )
 );
 
 export const getMusicAPIState = createFeatureSelector<MusicAPIState>(

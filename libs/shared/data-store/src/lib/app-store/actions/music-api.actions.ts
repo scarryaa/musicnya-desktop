@@ -1,12 +1,13 @@
 import { createAction, props } from '@ngrx/store';
 import {
-  Album,
-  LibraryAlbum,
-  LibraryPlaylist,
-  LibrarySong,
+  Albums,
+  LibraryAlbums,
+  LibraryPlaylists,
+  LibrarySongs,
   MediaItem,
-  MediaTypes,
-  Playlist,
+  MediaItemTypes,
+  PersonalRecommendation,
+  Playlists,
 } from '@nyan-inc/core';
 import { MusicKit } from 'types/musickit';
 import { MusicAPIEntity } from '../models/music-api.models';
@@ -28,7 +29,7 @@ export const getLibraryPlaylists = createAction(
 );
 export const getLibraryPlaylistsSuccess = createAction(
   '[Music/API] Get Library Playlists Success',
-  props<{ payload: { data: LibraryPlaylist[] } }>()
+  props<{ payload: { data: LibraryPlaylists[] } }>()
 );
 export const getLibraryPlaylistsFailure = createAction(
   '[Music/API] Get Library Playlists Failure',
@@ -42,7 +43,7 @@ export const getLibraryAlbums = createAction(
 );
 export const getLibraryAlbumsSuccess = createAction(
   '[Music/API] Get Library Albums Success',
-  props<{ payload: { data: LibraryAlbum[] } }>()
+  props<{ payload: { data: LibraryAlbums[] } }>()
 );
 export const getLibraryAlbumsFailure = createAction(
   '[Music/API] Get Library Albums Failure',
@@ -52,11 +53,11 @@ export const getLibraryAlbumsFailure = createAction(
 // Library Playlist Songs Actions
 export const getLibraryPlaylistSongs = createAction(
   '[Music/API] Get Library Playlist Songs',
-  props<{ payload: { playlist: LibraryPlaylist } }>()
+  props<{ payload: { playlist: LibraryPlaylists } }>()
 );
 export const getLibraryPlaylistSongsSuccess = createAction(
   '[Music/API] Get Library Playlist Songs Success',
-  props<{ payload: { playlist: LibraryPlaylist; songs: LibrarySong[] } }>()
+  props<{ payload: { playlist: LibraryPlaylists; songs: LibrarySongs[] } }>()
 );
 export const getLibraryPlaylistSongsFailure = createAction(
   '[Music/API] Get Library Playlist Songs Failure',
@@ -66,11 +67,11 @@ export const getLibraryPlaylistSongsFailure = createAction(
 // Library Album Songs Actions
 export const getLibraryAlbumSongs = createAction(
   '[Music/API] Get Library Album Songs',
-  props<{ payload: { playlists: LibraryAlbum[] } }>()
+  props<{ payload: { playlists: LibraryAlbums[] } }>()
 );
 export const getLibraryAlbumSongsSuccess = createAction(
   '[Music/API] Get Library Album Songs Success',
-  props<{ payload: { playlists: LibraryAlbum[] } }>()
+  props<{ payload: { playlists: LibraryAlbums[] } }>()
 );
 export const getLibraryAlbumSongsFailure = createAction(
   '[Music/API] Get Library Album Songs Failure',
@@ -81,7 +82,7 @@ export const getLibraryAlbumSongsFailure = createAction(
 export const getFromUrl = createAction('[Music/API] Get From Url');
 export const getFromUrlSuccess = createAction(
   '[Music/API] Get From Url Success',
-  props<{ payload: { data: LibrarySong[] } }>()
+  props<{ payload: { data: LibrarySongs[] } }>()
 );
 export const getFromUrlFailure = createAction(
   '[Music/API] Get From Url Failure',
@@ -110,7 +111,7 @@ export const getLibraryPlaylist = createAction(
 );
 export const getLibraryPlaylistSuccess = createAction(
   '[Music/API] Get Library Playlist Success',
-  props<{ payload: { data: LibraryPlaylist } }>()
+  props<{ payload: { data: LibraryPlaylists } }>()
 );
 export const getLibraryPlaylistFailure = createAction(
   '[Music/API] Get Library Playlist Failure',
@@ -124,7 +125,7 @@ export const getLibrarySong = createAction(
 );
 export const getLibrarySongSuccess = createAction(
   '[Music/API] Get Library Song Success',
-  props<{ payload: { data: LibrarySong } }>()
+  props<{ payload: { data: LibrarySongs } }>()
 );
 export const getLibrarySongFailure = createAction(
   '[Music/API] Get Library Song Failure',
@@ -138,7 +139,7 @@ export const getLibraryAlbum = createAction(
 );
 export const getLibraryAlbumSuccess = createAction(
   '[Music/API] Get Library Album Success',
-  props<{ payload: { data: LibraryAlbum } }>()
+  props<{ payload: { data: LibraryAlbums } }>()
 );
 export const getLibraryAlbumFailure = createAction(
   '[Music/API] Get Library Album Failure',
@@ -166,7 +167,7 @@ export const getAlbum = createAction(
 );
 export const getAlbumSuccess = createAction(
   '[Music/API] Get Album Success',
-  props<{ payload: { data: Album } }>()
+  props<{ payload: { data: Albums } }>()
 );
 export const getAlbumFailure = createAction(
   '[Music/API] Get Album Failure',
@@ -180,7 +181,7 @@ export const getPlaylist = createAction(
 );
 export const getPlaylistSuccess = createAction(
   '[Music/API] Get Playlist Success',
-  props<{ payload: { data: Playlist } }>()
+  props<{ payload: { data: Playlists } }>()
 );
 export const getPlaylistFailure = createAction(
   '[Music/API] Get Playlist Failure',
@@ -194,7 +195,7 @@ export const getLibraryPlaylistOnNavigation = createAction(
 );
 export const getLibraryPlaylistOnNavigationSuccess = createAction(
   '[Music/API] Get Library Playlist On Navigation Success',
-  props<{ payload: { data: LibraryPlaylist } }>()
+  props<{ payload: { data: LibraryPlaylists } }>()
 );
 export const getLibraryPlaylistOnNavigationFailure = createAction(
   '[Music/API] Get Library Playlist On Navigation Failure',
@@ -204,7 +205,7 @@ export const getLibraryPlaylistOnNavigationFailure = createAction(
 // Add Album Actions
 export const addAlbum = createAction(
   '[Music/API] Add Album',
-  props<{ payload: { data: LibraryAlbum } }>()
+  props<{ payload: { data: LibraryAlbums } }>()
 );
 export const addAlbumSuccess = createAction('[Music/API] Add Album Success');
 export const addAlbumFailure = createAction(
@@ -228,7 +229,7 @@ export const removeAlbumFailure = createAction(
 // get media item
 export const getMediaItem = createAction(
   '[Music/API] Get Media Item',
-  props<{ payload: { type: MediaTypes; id: string } }>()
+  props<{ payload: { type: MediaItemTypes; id: string } }>()
 );
 export const getMediaItemSuccess = createAction(
   '[Music/API] Get Media Item Success',
@@ -242,13 +243,59 @@ export const getMediaItemFailure = createAction(
 // set current view type
 export const setCurrentViewType = createAction(
   '[Music/API] Set Current View Type',
-  props<{ payload: { type: MediaTypes; id: string } }>()
+  props<{ payload: { type: MediaItemTypes; id: string } }>()
 );
 export const setCurrentViewTypeSuccess = createAction(
   '[Music/API] Set Current View Type Success',
-  props<{ payload: { type: MediaTypes; id: string } }>()
+  props<{ payload: { type: MediaItemTypes; id: string } }>()
 );
 export const setCurrentViewTypeFailure = createAction(
   '[Music/API] Set Current View Type Failure',
+  props<{ payload: { error: Error } }>()
+);
+
+// Get Recommendations Actions
+export const getRecommendations = createAction(
+  '[Music/API] Get Recommendations'
+);
+export const getRecommendationsSuccess = createAction(
+  '[Music/API] Get Recommendations Success',
+  props<{ payload: { data: MediaItem[] } }>()
+);
+export const getRecommendationsFailure = createAction(
+  '[Music/API] Get Recommendations Failure',
+  props<{ payload: { error: Error } }>()
+);
+
+// Get recently played Actions
+export const getRecentlyPlayed = createAction(
+  '[Music/API] Get Recently Played'
+);
+export const getRecentlyPlayedSuccess = createAction(
+  '[Music/API] Get Recently Played Success',
+  props<{ payload: { data: MediaItem[] } }>()
+);
+export const getRecentlyPlayedFailure = createAction(
+  '[Music/API] Get Recently Played Failure',
+  props<{ payload: { error: Error } }>()
+);
+
+// Get Recommendations and Recently Played Actions
+export const getRecommendationsAndRecentlyPlayed = createAction(
+  '[Music/API] Get Recommendations and Recently Played'
+);
+export const getRecommendationsAndRecentlyPlayedSuccess = createAction(
+  '[Music/API] Get Recommendations and Recently Played Success',
+  props<{
+    payload: {
+      data: {
+        recommendations: PersonalRecommendation[];
+        recentlyPlayed: MediaItem[];
+      };
+    };
+  }>()
+);
+export const getRecommendationsAndRecentlyPlayedFailure = createAction(
+  '[Music/API] Get Recommendations and Recently Played Failure',
   props<{ payload: { error: Error } }>()
 );

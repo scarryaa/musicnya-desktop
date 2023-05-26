@@ -20,7 +20,6 @@ import {
   fromLayout,
   fromMusic,
   fromMusicAPI,
-  fromPreferences,
   MusicAPIEffects,
   MusicEffects,
   PreferencesEffects,
@@ -32,7 +31,10 @@ export const appConfig: ApplicationConfig = {
       appRoutes,
       withEnabledBlockingInitialNavigation(),
       withHashLocation(),
-      withRouterConfig({ urlUpdateStrategy: 'deferred' })
+      withRouterConfig({
+        urlUpdateStrategy: 'deferred',
+        onSameUrlNavigation: 'ignore',
+      })
     ),
     provideRouterStore(),
     importProvidersFrom(BrowserAnimationsModule),

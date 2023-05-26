@@ -14,6 +14,12 @@ import { HeadingComponent } from '../heading/heading.component';
 import { DragScrollModule } from 'ngx-drag-scroll';
 import { AlbumTileLargeModule } from '../album-tile/album-tile-large.component';
 import { AlbumTileLargeSmartModule } from '../album-tile/album-tile-large.smart.component';
+import {
+  LibraryPlaylists,
+  LibraryAlbums,
+  Albums,
+  Playlists,
+} from '@nyan-inc/core';
 
 @Component({
   selector: 'ui-media-tile-list',
@@ -24,9 +30,7 @@ import { AlbumTileLargeSmartModule } from '../album-tile/album-tile-large.smart.
     AlbumTileLargeSmartModule,
     DragScrollModule,
   ],
-  template: ` <ui-heading id="heading" size="medium">{{
-      listTitle
-    }}</ui-heading>
+  template: `<ui-heading id="heading" size="medium">{{ listTitle }}</ui-heading>
     <drag-scroll
       passive
       id="media-items"
@@ -40,13 +44,23 @@ import { AlbumTileLargeSmartModule } from '../album-tile/album-tile-large.smart.
       <div>
         <ui-album-tile-large
           drag-scroll-item
-          *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8, 9]; let i = index"
-          [id]="'media-item-' + i"
+          *ngFor="let item of listData; let i = index"
+          [id]="listData[i].id"
           #items
           [clickEnabled]="clickEnabled"
-          mediaTitle="Test Album"
-          artworkRouterLink="/media"
-          imageSource="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
+          [mediaTitle]="listData[i].attributes?.name ?? ''"
+          [artworkRouterLink]="
+            '/media/' + listData[i].relationships?.contents?.data[i]?.type ||
+            listData[i].type + '/' + listData[i].id
+          "
+          [mediaInfo]="{
+            name: listData[i].attributes?.name,
+            type: listData[i].type,
+            id: listData[i].id,
+            artists: [listData[i].attributes?.artistName]
+          }"
+          [artists]="[listData[i].attributes?.artistName] || []"
+          [imageSource]="listData[i].attributes?.artwork?.url ?? ''"
         ></ui-album-tile-large>
       </div>
     </drag-scroll>`,
@@ -58,6 +72,7 @@ export class MediaTileListComponent {
   @ViewChildren('items', { read: ElementRef })
   mediaItems!: QueryList<ElementRef>;
   @Input() listTitle!: string;
+  @Input() listData!: any[];
   @Input() clickEnabled = true;
   @Output() readonly playEmitter: EventEmitter<{ album: string }> =
     new EventEmitter();

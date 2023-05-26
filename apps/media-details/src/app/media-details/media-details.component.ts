@@ -6,25 +6,17 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
-  OnChanges,
-  SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  AlbumTileComponent,
   AlbumTileLargeSmartModule,
   MediaDetailsDropdownModule,
   VirtualTableSmartModule,
 } from '@nyan-inc/ui';
-import {
-  adjustColor,
-  Album,
-  BaseButtonModule,
-  ColorService,
-} from '@nyan-inc/core';
+import { BaseButtonModule, ColorService } from '@nyan-inc/core';
 import { FastAverageColorResult } from 'fast-average-color';
 import { MusicAPIFacade } from '@nyan-inc/shared';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { LetDirective } from '@ngrx/component';
 import Color from 'colorjs.io';
 
@@ -58,24 +50,22 @@ export class MediaDetailsComponent implements AfterViewInit {
     this.state$ = this.musicAPIFacade.state$;
   }
 
-  async ngAfterViewInit(): Promise<void> {
+  ngAfterViewInit(): void {
     this.state$.subscribe(async (media) => {
-      if (!media.loaded) {
-        // TODO move this to a service
-        document.documentElement.style.setProperty(
-          '--backgroundColor',
-          '#151515'
-        );
-      } else if (media) {
+      // TODO move this to a service
+      if (media.loaded && media) {
         await this.color
-          .getAverageColor(media?.currentMedia?.artwork?.url)
+          .getAverageColor(
+            media?.currentMedia?.attributes?.artwork?.url ||
+              media?.currentMedia?.songs?.[0]?.attributes?.artwork?.url
+          )
           .then((foundColor) => {
             document.documentElement.style.setProperty(
               '--backgroundColor',
-              `${foundColor?.hex}` ?? 'var(--backgroundColor)'
+              `${(foundColor as any)?.hex}` ?? 'var(--backgroundColor)'
             );
 
-            const color = new Color(`${foundColor?.hex}`).to('oklch');
+            const color = new Color(`${(foundColor as any)?.hex}`).to('oklch');
 
             (color as any).c -= 0.1;
 

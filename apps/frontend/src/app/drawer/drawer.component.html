@@ -52,11 +52,11 @@
             class="drawer-item"
             [routerLink]="'/media/' + 'library-playlist' + '/' + playlist?.id"
             [tabIndex]="-1"
-            [source]="playlist.artwork?.url"
+            [source]="playlist.attributes?.artwork?.url || playlist.songs?.[0]?.attributes?.artwork?.url"
             [tileSize]="3"
-            [artists]="playlist?.artists ?? ['Me']"
+            [artists]="playlist?.attributes?.artists || ['Me']"
             [showArtists]="true"
-            [mediaTitle]="playlist?.title ?? ''"
+            [mediaTitle]="playlist?.attributes?.name || ''"
           >
           </ui-album-tile>
         </ng-container>

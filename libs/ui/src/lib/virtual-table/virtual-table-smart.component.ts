@@ -8,7 +8,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { DisplayedColumns, Song, MediaTypes } from '@nyan-inc/core';
+import { DisplayedColumns, MediaItemTypes, Songs } from '@nyan-inc/core';
 import { SongDataSource } from './song-data-source';
 import { VirtualTableModule } from './virtual-table-presentation.component';
 import { DataSource } from '@angular/cdk/table';
@@ -29,11 +29,11 @@ import { SelectionModel } from '@angular/cdk/collections';
 })
 export class VirtualTableSmartComponent implements OnChanges {
   displayedColumns = DisplayedColumns;
-  dataSource!: DataSource<Song>;
-  selection = new SelectionModel<Song>(true, []);
+  dataSource!: DataSource<Songs>;
+  selection = new SelectionModel<Songs>(true, []);
   showAlbums = true;
-  @Input() data!: Song[];
-  @Input() mediaType?: MediaTypes;
+  @Input() data!: Songs[];
+  @Input() media!: MediaItemTypes;
 
   @HostBinding('style.width.%') width = '100';
 
@@ -46,21 +46,21 @@ export class VirtualTableSmartComponent implements OnChanges {
       this.dataSource = new SongDataSource(changes['data'].currentValue);
     }
 
-    if (changes['mediaType']) {
-      this.mediaType = changes['mediaType'].currentValue;
+    if (changes['media']) {
+      this.media = changes['media'].currentValue;
 
-      if (this.mediaType === 'album' || this.mediaType === 'library-album') {
+      if (this.media === 'albums' || this.media === 'library-albums') {
         this.displayedColumns = ['#', 'Title', 'Duration'];
         this.showAlbums = false;
       }
     }
   }
 
-  handleDrop(data: Song[]) {
+  handleDrop(data: Songs[]) {
     this.dataSource = new SongDataSource(data);
   }
 
-  handleClick(event: Song) {
+  handleClick(event: Songs) {
     this.selection.toggle(event);
   }
 }

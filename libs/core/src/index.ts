@@ -16,7 +16,5 @@ export * from './lib/tooltip/tooltip.directive';
 export * from './lib/color/color.service';
 export * from './lib/electron/window.service';
 export * from './lib/models/music.types';
-export * from './lib/utils/musickit-mappings';
-export * from './lib/models/music.guards';
 export * from './lib/utils/music-utils';
 export * from './lib/fallback-image.directive';

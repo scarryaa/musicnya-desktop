@@ -10,29 +10,33 @@
       <ui-album-tile-large
         id="media-cover-artwork"
         #mediaCover
-        [imageSource]="media?.currentMedia?.artwork?.url"
+        [imageSource]="media?.currentMedia?.attributes?.artwork?.url || media?.currentMedia?.songs?.[0]?.attributes?.artwork?.url"
         [showPlayButton]="false"
         [tileSize]="12"
         [showInfo]="false"
+        [id]="media?.currentMedia?.id"
       ></ui-album-tile-large>
       <div id="media-details">
         <div id="media-text">
-          <div id="media-title">{{ media?.currentMedia?.title }}</div>
+          <div id="media-title">
+            {{ media.currentMedia?.attributes?.name }}
+          </div>
           <div id="media-artist-year">
             <span
               *ngIf="
-                (media?.currentMedia?.type === 'library-playlist' &&
-                  media.currentMedia.curator) ||
-                (media.currentMedia?.type !== 'library-playlist' &&
-                  media?.currentMedia?.curator) ||
-                media?.currentMedia?.artists
+                (media?.currentMedia?.type === 'library-playlists' &&
+                  media?.currentMedia?.attributes?.curator) ||
+                (media.type !== 'library-playlists' &&
+                  media?.currentMedia?.attributes?.curator) ||
+                media?.currentMedia?.attributes?.artistName
               "
               >{{
-                media?.currentMedia.type === 'library-playlist'
-                  ? media?.currentMedia?.curator
-                  : media?.currentMedia?.artists ?? 'Unknown Artist'
+                media?.currentMedia.type === 'library-playlists'
+                  ? media?.curator
+                  : media?.currentMedia?.attributes?.artistName ??
+                    'Unknown Artist'
               }}</span
-            ><span *ngIf="media.currentMedia?.releaseYear"
+            ><span *ngIf="media?.currentMedia?.releaseYear"
               ><span class="seperator"> • </span>
               <span id="year">{{
                 media?.currentMedia?.releaseYear
@@ -118,8 +122,11 @@
     <div id="media-content-wrapper">
       <div id="media-content">
         <ui-virtual-table
-          [mediaType]="media?.currentMediaType"
-          [data]="media?.currentMedia?.songs"
+          [media]="media?.currentMedia?.type"
+          [data]="
+            media?.currentMedia?.songs ||
+            media?.currentMedia?.relationships?.tracks?.data
+          "
         ></ui-virtual-table>
       </div>
     </div>

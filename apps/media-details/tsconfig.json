@@ -5,5 +5,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
+  "angularCompilerOptions": {
+    "strictTemplates": true
+  },
   "include": ["**/*.ts"]
 }

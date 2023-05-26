@@ -14,7 +14,7 @@ export class QueueOptions {
 }
 
 export interface IMediaPlayInfo {
-  type: MediaType;
+  type: string;
   id: string;
   childIds?: string[];
   artistIds: string[];
