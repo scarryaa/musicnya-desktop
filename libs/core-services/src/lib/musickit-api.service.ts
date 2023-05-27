@@ -144,6 +144,6 @@ export class MusickitAPI {
 
   // Provide common query string for API endpoints
   getQueryString(): string {
-    return '?art[url]=f&extend[tracks]=name&extend[albums]=name&extend[catalog]=id&fields[curators]=name,url&fields[songs]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls&format[resources]=flat&include=tracks,curator,catalog&include[songs]=artists&l=en-US&limit[tracks]=50';
+    return '?art[url]=f&extend[tracks]=name&extend[albums]=name&extend[catalog]=id&fields[album]=name[curators]=name,url&fields[songs]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls&format[resources]=flat&include=tracks,curator,catalog&include[songs]=artists,albums&l=en-US&limit[tracks]=50';
   }
 }

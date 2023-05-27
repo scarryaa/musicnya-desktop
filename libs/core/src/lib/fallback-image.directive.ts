@@ -52,7 +52,7 @@ export class FallbackImageDirective implements OnInit, OnChanges {
       this.src
     ) {
       this.elementReference.nativeElement.src = this.src;
-      requestAnimationFrame(this.detectChanges);
+      this.changeDetectorReference.detectChanges();
     }
   }
 

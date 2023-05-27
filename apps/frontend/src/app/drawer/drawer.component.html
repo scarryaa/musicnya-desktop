@@ -51,7 +51,7 @@
           <ui-album-tile
             coreFallbackImage
             class="drawer-item"
-            [routerLink]="'/media/' + 'library-playlist' + '/' + playlist?.id"
+            [routerLink]="'/media/' + 'library-playlist' + '/' + playlist.id"
             [tabIndex]="-1"
             [source]="playlist.attributes?.artwork?.url || playlist.songs?.[0]?.attributes?.artwork?.url"
             [tileSize]="3"

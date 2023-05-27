@@ -5,7 +5,6 @@ import {
   OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DragScrollModule } from 'ngx-drag-scroll';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { HeadingComponent, MediaTileListComponent } from '@nyan-inc/ui';
 import { MusicAPIFacade } from '@nyan-inc/shared';
@@ -17,7 +16,6 @@ import { LetDirective } from '@ngrx/component';
     CommonModule,
     HeadingComponent,
     MediaTileListComponent,
-    DragScrollModule,
     LetDirective,
   ],
   selector: 'musicnya-home',

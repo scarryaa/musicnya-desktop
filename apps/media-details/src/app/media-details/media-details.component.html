@@ -11,7 +11,10 @@
         id="media-cover-artwork"
         #mediaCover
         [showZoom]="true"
-        [showEditOverlay]="media?.currentMedia?.type === 'library-playlists'"
+        [showEditOverlay]="
+          media?.currentMedia?.type === 'library-playlists' &&
+          media?.currentMedia?.attributes?.canEdit
+        "
         [imageSource]="media?.currentMedia?.attributes?.artwork?.url || media?.currentMedia?.songs?.[0]?.attributes?.artwork?.url"
         [showPlayButton]="false"
         [tileSize]="12"
@@ -44,10 +47,11 @@
                   : media?.currentMedia?.attributes?.artistName ||
                     'Unknown Artist'
               }}</span
-            ><span *ngIf="media?.currentMedia?.releaseYear"
+            ><span *ngIf="media?.currentMedia?.attributes?.releaseDate"
               ><span class="seperator"> • </span>
+              <!-- TODO make a pipe for this -->
               <span id="year">{{
-                media?.currentMedia?.releaseYear
+                media?.currentMedia?.attributes?.releaseDate.substring(0, 4)
               }}</span></span
             >
           </div>
@@ -107,7 +111,9 @@
                 <span id="songs-count"
                   >{{
                     media?.currentMedia?.attributes?.trackCount ||
-                      media?.currentMedia?.relationships?.tracks?.data?.length
+                      media?.currentMedia?.relationships?.tracks?.data
+                        ?.length ||
+                      media?.currentMedia?.songs?.length
                   }}
                   songs
                 </span>

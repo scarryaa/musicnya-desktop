@@ -1,3 +1,15 @@
+.hide-before {
+  &::before {
+    display: none !important;
+  }
+}
+
+.hide-after {
+  &::after {
+    display: none !important;
+  }
+}
+
 .title-hover {
   #title {
     cursor: pointer;
@@ -62,11 +74,37 @@ table {
     text-align: left;
   }
 
+  #title-table-header {
+    padding-left: 1.6rem;
+  }
+
   &#title-table-header,
   .title-content {
+    padding-left: 1rem;
     text-align: left;
     width: 90%;
     max-width: 90% !important;
+
+    &::before {
+      color: var(--backgroundColor);
+      font-family: 'Material Symbols Rounded';
+      content: '\e01e';
+      margin-left: -1.4rem;
+      position: absolute;
+      display: inline-block;
+      width: 1.6rem;
+    }
+
+    &::after {
+      color: var(--backgroundColor);
+      font-family: 'Material Symbols Rounded';
+      content: '\e063';
+      margin-left: -1.4rem;
+      margin-top: -1.2rem;
+      position: absolute;
+      display: inline-block;
+      width: 1.6rem;
+    }
 
     ui-album-tile {
       display: block;

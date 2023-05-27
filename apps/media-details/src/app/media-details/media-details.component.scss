@@ -289,6 +289,14 @@
     white-space: pre-wrap;
   }
 
+  ui-album-tile-large {
+    padding: 0;
+
+    // TODO hacky fix
+    min-width: 12rem;
+    min-height: 12rem;
+  }
+
   #page-wrapper {
     background: var(--backgroundColorLight);
     height: inherit;

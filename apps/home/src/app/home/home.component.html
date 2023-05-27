@@ -5,6 +5,7 @@
       (playEmitter)="play($event)"
       [listTitle]="media.homeTileLists?.[1]?.title || 'Recently Played'"
       [listData]="media.homeTileLists?.[1]?.data || []"
+      [showMore]="media.homeTileLists?.[1]?.showMore || false"
     ></ui-media-tile-list>
     <ng-container *ngIf="media.homeTileLists?.[0]?.data as dataList">
       <ui-media-tile-list

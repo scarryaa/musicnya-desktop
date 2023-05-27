@@ -290,7 +290,7 @@ export const getRecommendationsAndRecentlyPlayedSuccess = createAction(
     payload: {
       data: {
         recommendations: PersonalRecommendation[];
-        recentlyPlayed: MediaItem[];
+        recentlyPlayed: PersonalRecommendation[];
       };
     };
   }>()

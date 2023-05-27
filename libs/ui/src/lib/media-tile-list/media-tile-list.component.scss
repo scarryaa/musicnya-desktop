@@ -1,16 +1,12 @@
+.hide {
+  &::after {
+    display: none !important;
+  }
+}
+
 :host {
   padding-inline: 3rem;
   display: block;
-}
-
-drag-scroll {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 #heading {
@@ -20,24 +16,57 @@ drag-scroll {
 }
 
 #media-items {
-  #album-tile-container {
-    display: flex;
+  flex-direction: row;
+  display: flex;
+}
+
+#list-wrapper {
+  display: flex;
+  flex-direction: row;
+
+  &::after {
+    content: '\e5cc';
+    font-family: 'Material Symbols Rounded';
+    color: var(--font-color);
+    font-size: var(--font-size-6xl);
+    font-weight: var(--font-weight-bold);
+    margin-block: 0.05rem;
+    margin-inline: 0.4rem;
+    text-decoration: none;
+  }
+}
+
+#album-tile-container {
+  &::-webkit-scrollbar {
+    display: none !important;
   }
 
-  ui-album-tile-large {
-    padding-top: 1rem;
-    padding-inline: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  -webkit-box-orient: horizontal;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  border-radius: 0.5rem;
+}
 
-    img {
-      min-width: 10rem !important;
-      max-width: 100% !important;
-      min-height: 10rem !important;
-      max-height: 100% !important;
-    }
+ui-album-tile-large {
+  padding-top: 1rem;
+  padding-inline: 0.5rem;
 
-    #artists,
-    #title {
-      cursor: pointer !important;
-    }
+  img {
+    min-width: 10rem !important;
+    max-width: 100% !important;
+    min-height: 10rem !important;
+    max-height: 100% !important;
+  }
+
+  #artists,
+  #title {
+    cursor: pointer !important;
   }
 }

@@ -209,6 +209,10 @@ export interface PersonalRecommendation {
   href: string;
   attributes?: {
     nextUpdateDate?: string;
+    reason?: string;
+    reasonType?: string;
+    recommendationType?: string;
+    type: string;
   };
   relationships?: {
     contents: Relationship;

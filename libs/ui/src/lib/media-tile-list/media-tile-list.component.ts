@@ -11,8 +11,8 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { HeadingComponent } from '../heading/heading.component';
-import { DragScrollModule } from 'ngx-drag-scroll';
 import { AlbumTileLargeSmartModule } from '../album-tile/album-tile-large.smart.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'ui-media-tile-list',
@@ -21,42 +21,35 @@ import { AlbumTileLargeSmartModule } from '../album-tile/album-tile-large.smart.
     CommonModule,
     HeadingComponent,
     AlbumTileLargeSmartModule,
-    DragScrollModule,
+    RouterModule,
   ],
-  template: `<ui-heading id="heading" size="medium">{{ listTitle }}</ui-heading>
-    <drag-scroll
-      passive
-      id="media-items"
-      #dragScroll
-      [drag-scroll-y-disabled]="true"
-      [scrollbar-hidden]="false"
-      [snap-disabled]="true"
-      (dragStart)="this.clickEnabled = false"
-      (dragEnd)="this.clickEnabled = true"
+  template: `<div
+      id="list-wrapper"
+      [ngClass]="{ hide: !showMore }"
+      [routerLink]="showMore ? '/show-more/' + listTitle : undefined"
     >
-      <div id="album-tile-container">
-        <ui-album-tile-large
-          drag-scroll-item
-          *ngFor="let item of listData; let i = index"
-          [id]="listData[i].id"
-          #items
-          [clickEnabled]="clickEnabled"
-          [mediaTitle]="listData[i].attributes?.name ?? ''"
-          [artworkRouterLink]="
-            '/media/' + listData[i].relationships?.contents?.data[i]?.type ||
-            listData[i].type + '/' + listData[i].id
-          "
-          [mediaInfo]="{
-            name: listData[i].attributes?.name,
-            type: listData[i].type,
-            id: listData[i].id,
-            artists: [listData[i].attributes?.artistName]
-          }"
-          [artists]="[listData[i].attributes?.artistName] || []"
-          [imageSource]="listData[i].attributes?.artwork?.url ?? ''"
-        ></ui-album-tile-large>
-      </div>
-    </drag-scroll>`,
+      <ui-heading id="heading" size="medium">{{ listTitle }}</ui-heading>
+    </div>
+    <div id="album-tile-container">
+      <ui-album-tile-large
+        *ngFor="let item of listData; let i = index"
+        [id]="listData[i].id"
+        #items
+        [clickEnabled]="clickEnabled"
+        [mediaTitle]="listData[i].attributes?.name ?? ''"
+        [artworkRouterLink]="
+          '/media/' + listData[i].type + '/' + listData[i].id
+        "
+        [mediaInfo]="{
+          name: listData[i].attributes.name,
+          type: listData[i].type,
+          id: listData[i].id,
+          artists: [listData[i].attributes.artistName]
+        }"
+        [artists]="[listData[i].attributes?.artistName] || []"
+        [imageSource]="listData[i].attributes?.artwork?.url ?? ''"
+      ></ui-album-tile-large>
+    </div>`,
   styleUrls: ['./media-tile-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,6 +57,7 @@ import { AlbumTileLargeSmartModule } from '../album-tile/album-tile-large.smart.
 export class MediaTileListComponent {
   @ViewChildren('items', { read: ElementRef })
   mediaItems!: QueryList<ElementRef>;
+  @Input() showMore = false;
   @Input() listTitle!: string;
   @Input() listData!: any[];
   @Input() clickEnabled = true;

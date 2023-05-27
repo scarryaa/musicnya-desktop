@@ -31,7 +31,15 @@
   <!-- Title Column -->
   <ng-container cdkColumnDef="Title">
     <th id="title-table-header" cdk-header-cell *cdkHeaderCellDef>Title</th>
-    <td class="title-content" cdk-cell *cdkCellDef="let song">
+    <td
+      class="title-content"
+      [ngClass]="{
+        'hide-before': song?.attributes?.contentRating !== 'explicit',
+        'hide-after': song?.type !== 'music-videos'
+      }"
+      cdk-cell
+      *cdkCellDef="let song"
+    >
       <ui-album-tile
         [artists]="song.attributes?.artistName"
         [showArtists]="true"
@@ -49,10 +57,10 @@
   <ng-container cdkColumnDef="Album">
     <th id="album-table-header" cdk-header-cell *cdkHeaderCellDef>Album</th>
     <td class="album-content" cdk-cell *cdkCellDef="let song">
-      <!-- TODO improve this -->
       <span
+        *ngIf="showAlbums"
         [routerLink]="
-          '/media/albums/' + song.attributes?.url?.split('/')?.[6].split('?')?.[0]
+          '/media/albums/' + (song.relationships?.albums?.data?.[0]?.id || song.relationships?.catalog?.data?.[0]?.relationships?.albums?.data?.[0]?.id)
         "
         [title]="song.attributes?.albumName"
         >{{ song.attributes?.albumName }}</span
