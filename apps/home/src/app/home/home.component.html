@@ -8,7 +8,7 @@
     ></ui-media-tile-list>
     <ng-container *ngIf="media.homeTileLists?.[0]?.data as dataList">
       <ui-media-tile-list
-        *ngFor="let item of dataList; let i = index"
+        *ngFor="let item of dataList; let i = index; trackBy: trackBy"
         (playEmitter)="play($event)"
         [listTitle]="
           item?.attributes?.title?.stringForDisplay || 'Recently Played'

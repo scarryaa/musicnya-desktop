@@ -23,7 +23,7 @@
 
   #baseComponent {
     margin-left: 1.6rem;
-    transition: width 0.6s cubic-bezier(0.165, 1, 0.165, 1), opacity 0.1s linear,
+    transition: transform 0.6s cubic-bezier(0.165, 1, 0.165, 1),
       padding 0.6s cubic-bezier(0.165, 1, 0.165, 1);
   }
 
@@ -50,8 +50,8 @@
       }
 
       margin-left: 0.4725rem;
-      transition: width 0.6s cubic-bezier(0.165, 1, 0.165, 1),
-        opacity 0.1s linear, padding 0.6s cubic-bezier(0.165, 1, 0.165, 1);
+      transition: transform 0.6s cubic-bezier(0.165, 1, 0.165, 1),
+        padding 0.6s cubic-bezier(0.165, 1, 0.165, 1);
     }
 
     core-base-button.active {
@@ -77,8 +77,7 @@
     border-radius: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    height: 100%;
-    overflow: hidden;
+    height: 100% !important;
   }
 
   #footer-wrapper {
@@ -93,13 +92,17 @@
       padding-top: 1rem;
     }
 
-    .ui-drawer-footer {
-      background-color: var(--background-color);
-      height: inherit;
-      min-height: 0;
-      width: inherit;
-      flex: 1;
-      border-radius: 10px;
+    &:last-child {
+      padding-bottom: 0.5rem;
     }
+  }
+
+  ::ng-deep .ui-drawer-footer {
+    background-color: var(--background-color);
+    min-height: 0;
+    width: inherit;
+    flex: 1;
+    border-radius: 10px;
+    height: 100vh !important;
   }
 }

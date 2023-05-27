@@ -1,7 +1,7 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on, Action } from '@ngrx/store';
+import { MusicActions } from '../actions';
 
-import * as AppActions from '../actions/app.actions';
 import { MusicEntity } from '../models/music.models';
 
 export const MUSIC_FEATURE_KEY = 'music';
@@ -27,7 +27,7 @@ export const initialMusicState: MusicState = musicAdapter.getInitialState({
 
 const reducer = createReducer(
   { ...initialMusicState },
-  on(AppActions.initApp, (state) => ({
+  on(MusicActions.musicInit, (state) => ({
     ...state,
     loaded: false,
     error: undefined,

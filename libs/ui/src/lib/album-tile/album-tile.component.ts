@@ -26,7 +26,7 @@ import {
   template: `
     <core-base-button #button class="album-tile ui-drawer-item">
       <img
-        coreFallbackImage
+        defaultImage="/assets/images/music-note.webp"
         *ngIf="showArt"
         id="artwork"
         alt="{{ type }} art"

@@ -49,6 +49,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
       </div>
       <img
         coreFallbackImage
+        preloadImage
         [style.pointerEvents]="clickEnabled ? 'auto' : 'none'"
         [style.width.rem]="tileSize"
         [style.height.rem]="tileSize"

@@ -5,10 +5,8 @@ import {
   OnInit,
   OnDestroy,
   HostListener,
-  ContentChild,
   QueryList,
   ContentChildren,
-  AfterContentInit,
   ElementRef,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -25,18 +23,12 @@ import {
 } from '@nyan-inc/core';
 import { NavigationButtonsComponent } from './navigation-buttons/navigation-buttons.component';
 import { HttpService } from './http/http.service';
-import {
-  AppActions,
-  AppState,
-  fromLayout,
-  LayoutActions,
-  LayoutState,
-  MusicActions,
-  MusicAPIActions,
-  MusicAPIFacade,
-  MusicAPIState,
-  MusicState,
-} from '@nyan-inc/shared';
+import { MusicAPIFacade } from '@nyan-inc/shared';
+import * as AppActions from '../store/actions/app.actions';
+import * as LayoutActions from '../store/actions/layout.actions';
+import * as fromLayout from '../store/reducers/layout.reducer';
+import { AppState } from '../store/reducers/app.reducer';
+import { LayoutState } from '../store/reducers/layout.reducer';
 
 @Component({
   standalone: true,
@@ -86,8 +78,8 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('mousedown', ['$event']) onClick(event: MouseEvent) {
-    if (event.button === 0 && event.target) {
-      if (event.target) console.log(event.target as Element);
+    if (event.button === 0 && event.target && event.target) {
+      console.log(event.target as Element);
     }
   }
 

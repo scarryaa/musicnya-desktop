@@ -1,7 +1,5 @@
 import { Action } from '@ngrx/store';
 
-import * as AppActions from './actions/app.actions';
-import { AppEntity } from './models/app.models';
 import { AppState, initialAppState, appReducer } from './app.reducer';
 
 describe('App Reducer', () => {

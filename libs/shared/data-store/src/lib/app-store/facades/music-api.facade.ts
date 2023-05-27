@@ -20,6 +20,15 @@ export class MusicAPIFacade implements OnDestroy {
   loaded$ = this.store
     .pipe(select(fromMusicAPI.getMusicAPIState))
     .pipe(map((value) => value.loaded));
+  musickitLoaded$ = this.store
+    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(map((value) => value.musickitLoaded));
+  recommendations$ = this.store
+    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(map((value) => value.homeTileLists[1]));
+  recentlyPlayed$ = this.store
+    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(map((value) => value.homeTileLists[0]));
   state$ = this.store.pipe(select(fromMusicAPI.getMusicAPIState));
 
   constructor(private store: Store<MusicAPIState>) {}

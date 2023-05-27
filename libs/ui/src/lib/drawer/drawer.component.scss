@@ -109,9 +109,9 @@
     overflow: hidden;
     border-radius: 0.5rem;
     position: fixed;
+    left: 5rem;
     top: 2rem;
     right: 0.5rem;
-    transition: left 0.6s cubic-bezier(0.165, 1, 0.165, 1);
   }
 
   ::ng-deep .ng-scroll-content {

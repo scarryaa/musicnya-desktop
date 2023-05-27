@@ -29,10 +29,11 @@ import {
   MediaItem,
   Songs,
 } from '@nyan-inc/core';
+import { MusicAPIState } from '../reducers/music-api.reducer';
 
 @Injectable({ providedIn: 'root' })
 export class MusicAPIEffects {
-  private store = inject(Store<MusickitAPI>);
+  private store = inject(Store<MusicAPIState>);
   private actions$ = inject(Actions);
   private musickit = inject(MusickitAPI);
 
@@ -97,7 +98,10 @@ export class MusicAPIEffects {
                           height: playlist.attributes?.artwork?.height || 0,
                           width: playlist.attributes?.artwork?.width || 0,
                           url: transformArtworkUrl(
-                            playlist.attributes?.artwork?.url || ''
+                            playlist.attributes?.artwork?.url ||
+                              songs?.[0]?.attributes?.artwork.url ||
+                              '',
+                            200
                           ),
                         },
                       },
@@ -108,7 +112,8 @@ export class MusicAPIEffects {
                           artwork: {
                             ...song.attributes?.artwork,
                             url: transformArtworkUrl(
-                              song.attributes?.artwork?.url || ''
+                              song.attributes?.artwork?.url || '',
+                              48
                             ),
                           },
                         },
@@ -187,75 +192,104 @@ export class MusicAPIEffects {
     )
   );
 
-  // Fetches user recommendations and recently played
-  // Fetches user recommendations and recently played
   getRecommendationsAndRecentlyPlayed$ = createEffect(() =>
     this.actions$.pipe(
       ofType(MusicAPIActions.getRecommendationsAndRecentlyPlayed),
-      switchMap((action) =>
-        forkJoin([
-          this.musickit.getRecommendations(),
-          this.musickit.getRecentlyPlayed(),
-        ]).pipe(
-          map(([recommendations, recentlyPlayed]) => {
-            // Modify recommendations and recentlyPlayed arrays
-            const modifiedRecommendations = recommendations.map(
-              (item: PersonalRecommendation) => ({
-                ...item,
-                relationships: {
-                  ...item.relationships,
-                  contents: {
-                    ...item.relationships?.contents,
-                    data: item.relationships?.contents?.data?.map(
-                      (item: Resource) => ({
-                        ...item,
-                        attributes: {
-                          ...item.attributes,
-                          artwork: {
-                            ...item.attributes?.artwork,
-                            url: transformArtworkUrl(
-                              item.attributes?.artwork?.url || ''
-                            ),
-                          },
-                        },
-                      })
-                    ),
-                  },
-                },
-              })
-            );
-
-            const modifiedRecentlyPlayed = recentlyPlayed.map(
-              (item: Resource) => ({
-                ...item,
-                attributes: {
-                  ...item.attributes,
-                  artwork: {
-                    ...item.attributes?.artwork,
-                    url: item.attributes?.artwork?.url
-                      .replace('{w}x{h}', '200x200')
-                      .replace('{f}', 'webp'),
-                  },
-                },
-              })
-            );
-
-            return MusicAPIActions.getRecommendationsAndRecentlyPlayedSuccess({
+      withLatestFrom(this.store.pipe(select('musicApi', 'homeTileLists'))),
+      tap((value) => console.log(value)),
+      switchMap(([action, payload]) => {
+        if (
+          payload &&
+          payload?.[0]?.data?.length &&
+          payload?.[1]?.data?.length
+        ) {
+          console.log('recommendations already in store');
+          console.log(payload);
+          return of(
+            MusicAPIActions.getRecommendationsAndRecentlyPlayedSuccess({
               payload: {
                 data: {
-                  recommendations: modifiedRecommendations,
-                  recentlyPlayed: modifiedRecentlyPlayed,
+                  recommendations: payload[0].data,
+                  recentlyPlayed: payload[1].data,
                 },
               },
-            });
-          }),
-          catchError((error) =>
-            of(
-              MusicAPIActions.getRecommendationsAndRecentlyPlayedFailure({
-                payload: { error },
-              })
+            })
+          );
+        } else {
+          console.log('recommendations are not in store');
+          return forkJoin([
+            this.musickit.getRecommendations(),
+            this.musickit.getRecentlyPlayed(),
+          ]).pipe(
+            map(([recommendations, recentlyPlayed]) => {
+              const modifiedRecommendations = recommendations.map(
+                (item: PersonalRecommendation) => ({
+                  ...item,
+                  relationships: {
+                    ...item.relationships,
+                    contents: {
+                      ...item.relationships?.contents,
+                      data: item.relationships?.contents?.data?.map(
+                        (item: Resource) => ({
+                          ...item,
+                          attributes: {
+                            ...item.attributes,
+                            artwork: {
+                              ...item.attributes?.artwork,
+                              url: transformArtworkUrl(
+                                item.attributes?.artwork?.url || '',
+                                200
+                              ),
+                            },
+                          },
+                        })
+                      ),
+                    },
+                  },
+                })
+              );
+
+              const modifiedRecentlyPlayed = recentlyPlayed.map(
+                (item: Resource) => ({
+                  ...item,
+                  attributes: {
+                    ...item.attributes,
+                    artwork: {
+                      ...item.attributes?.artwork,
+                      url: item.attributes?.artwork?.url
+                        .replace('{w}x{h}', '200x200')
+                        .replace('{f}', 'webp'),
+                    },
+                  },
+                })
+              );
+
+              return MusicAPIActions.getRecommendationsAndRecentlyPlayedSuccess(
+                {
+                  payload: {
+                    data: {
+                      recommendations: modifiedRecommendations,
+                      recentlyPlayed: modifiedRecentlyPlayed,
+                    },
+                  },
+                }
+              );
+            }),
+            catchError((error) =>
+              of(
+                MusicAPIActions.getRecommendationsAndRecentlyPlayedFailure({
+                  payload: { error },
+                })
+              )
             )
-          )
+          );
+        }
+      }),
+      catchError((error) =>
+        of(
+          MusicAPIActions.getRecommendationsAndRecentlyPlayedFailure({
+            payload: { error },
+          })
         )
       )
     )
@@ -355,7 +389,7 @@ export class MusicAPIEffects {
                 if (firstItem && firstItem.attributes?.artwork?.url) {
                   firstItem.attributes.artwork.url =
                     firstItem.attributes?.artwork.url
-                      .replace('{w}x{h}', '200x200')
+                      .replace('{w}x{h}', '400x400')
                       .replace('{f}', 'webp');
                 }
 
@@ -366,7 +400,7 @@ export class MusicAPIEffects {
                       if (track.attributes?.artwork?.url) {
                         track.attributes.artwork.url =
                           track.attributes?.artwork.url
-                            .replace('{w}x{h}', '200x200')
+                            .replace('{w}x{h}', '400x400')
                             .replace('{f}', 'webp');
                       }
                     }
@@ -440,7 +474,10 @@ export class MusicAPIEffects {
                   ...song.attributes?.artwork,
                   height: song.attributes?.artwork.height || 0,
                   width: song.attributes?.artwork.width || 0,
-                  url: transformArtworkUrl(song.attributes?.artwork?.url || ''),
+                  url: transformArtworkUrl(
+                    song.attributes?.artwork?.url || '',
+                    40
+                  ),
                 },
               },
             }));
@@ -528,6 +565,6 @@ interface RouteParams {
   type: MediaItemTypes;
 }
 
-const transformArtworkUrl = (url: string) => {
-  return url.replace('{w}x{h}', '200x200').replace('{f}', 'webp');
+const transformArtworkUrl = (url: string, size: number) => {
+  return url.replace('{w}x{h}', `${size}x${size}`).replace('{f}', 'webp');
 };

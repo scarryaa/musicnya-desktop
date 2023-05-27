@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { MusicKit } from 'types/musickit';
-import { MusicEntity } from '../models/music.models';
+
+export const musicInit = createAction('[Music] Init');
 
 export const setQueue = createAction(
   '[Music] Set Queue',

@@ -6,6 +6,9 @@ import { CommonModule } from '@angular/common';
 })
 export class JoinPipe implements PipeTransform {
   transform<T extends any[]>(array: T): string {
+    if (!array) {
+      return '';
+    }
     return array.join(', ');
   }
 }

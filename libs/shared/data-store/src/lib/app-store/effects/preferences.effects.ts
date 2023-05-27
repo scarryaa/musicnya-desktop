@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { switchMap, catchError, of, tap } from 'rxjs';
-import * as AppActions from '../actions/app.actions';
 import { PreferencesActions } from '../actions';
 
 @Injectable({ providedIn: 'root' })

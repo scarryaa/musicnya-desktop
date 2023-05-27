@@ -69,10 +69,11 @@ export class DrawerComponent
     this.libraryPlaylists$ = this.musicAPIFacade.libraryPlaylists$;
 
     this.subs.add(
-      this.routerFacade.routerNavigation$
+      this.routerFacade.routerNavigated$
         .pipe(
           map(() => async () => {
-            await this.scrollbar.scrollTo({ top: 0, duration: 300 });
+            console.log(this.scrollbar);
+            return this.scrollbar.scrollTo({ top: 0, duration: 300 });
           })
         )
         .subscribe()

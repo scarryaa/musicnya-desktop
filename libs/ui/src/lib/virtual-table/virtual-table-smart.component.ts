@@ -12,6 +12,7 @@ import { DisplayedColumns, MediaItemTypes, Songs } from '@nyan-inc/core';
 import { SongDataSource } from './song-data-source';
 import { VirtualTableModule } from './virtual-table-presentation.component';
 import { DataSource } from '@angular/cdk/table';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
@@ -52,6 +53,9 @@ export class VirtualTableSmartComponent implements OnChanges {
       if (this.media === 'albums' || this.media === 'library-albums') {
         this.displayedColumns = ['#', 'Title', 'Duration'];
         this.showAlbums = false;
+      } else {
+        this.displayedColumns = ['#', 'Title', 'Album', 'Duration'];
+        this.showAlbums = true;
       }
     }
   }

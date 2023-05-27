@@ -45,4 +45,8 @@ export class HomeComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this._destroy$.next();
   }
+
+  trackBy(index: number, item: any): any {
+    return item.id;
+  }
 }

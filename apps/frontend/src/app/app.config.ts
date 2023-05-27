@@ -15,15 +15,15 @@ import { appRoutes } from './app.routes';
 import { BrowserModule } from '@angular/platform-browser';
 import '@angular/compiler';
 import {
-  AppEffects,
-  fromApp,
-  fromLayout,
   fromMusic,
   fromMusicAPI,
   MusicAPIEffects,
   MusicEffects,
   PreferencesEffects,
 } from '@nyan-inc/shared';
+import * as fromApp from '../store/reducers/app.reducer';
+import * as fromLayout from '../store/reducers/layout.reducer';
+import { AppEffects } from '../store/effects/app.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -63,7 +63,6 @@ export const appConfig: ApplicationConfig = {
           strictActionWithinNgZone: true,
           strictActionTypeUniqueness: true,
         },
-        metaReducers: [...fromMusicAPI.metaReducers],
       }
     ),
     provideEffects([
@@ -72,7 +71,6 @@ export const appConfig: ApplicationConfig = {
       MusicAPIEffects,
       PreferencesEffects,
     ]),
-    provideStoreDevtools({ maxAge: 25, trace: true, traceLimit: 20 }),
     provideState(fromLayout.LAYOUT_FEATURE_KEY, fromLayout.layoutReducer),
     provideState(fromApp.APP_FEATURE_KEY, fromApp.appReducer),
     provideState(fromMusic.MUSIC_FEATURE_KEY, fromMusic.musicReducer),

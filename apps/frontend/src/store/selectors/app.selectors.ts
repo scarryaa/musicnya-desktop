@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { APP_FEATURE_KEY, AppState, appAdapter } from './reducers/app.reducer';
 import copy from 'fast-copy';
+import { AppState, APP_FEATURE_KEY, appAdapter } from '../reducers/app.reducer';
 
 // Lookup the 'App' feature state managed by NgRx
 export const selectAppState = createFeatureSelector<AppState>(APP_FEATURE_KEY);

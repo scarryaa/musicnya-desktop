@@ -43,7 +43,11 @@
     ></core-base-button> -->
   </ng-container>
   <ng-container footer>
-    <ng-scrollbar class="drawer-scroller" [autoHeightDisabled]="false">
+    <ng-scrollbar
+      #scrollbar
+      class="drawer-scroller"
+      [autoHeightDisabled]="false"
+    >
       <div id="footer-wrapper">
         <ng-container
           *ngFor="let playlist of libraryPlaylists$ | async; let i = index"

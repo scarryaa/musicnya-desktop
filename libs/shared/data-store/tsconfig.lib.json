@@ -12,6 +12,11 @@
     "jest.config.ts",
     "src/**/*.test.ts"
   ],
-  "include": ["src/**/*.ts", "src/index.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/index.ts",
+    "../../../apps/frontend/src/store/actions/layout.actions.ts",
+    "../../../apps/frontend/src/store/reducers/layout.reducer.ts"
+, "../../../apps/frontend/src/store/models/layout.models.ts"  ],
   "main": "dist/index.js"
 }

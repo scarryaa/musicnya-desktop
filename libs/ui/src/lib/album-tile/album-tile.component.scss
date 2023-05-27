@@ -147,11 +147,6 @@
     letter-spacing: var(--letter-spacing-nxl);
     align-items: flex-start;
     padding-left: 0.8rem;
-    transition: opacity 0.1s linear, padding 0.2s linear;
-  }
-
-  span {
-    transition: opacity 0.1s linear, padding 0.1s linear;
   }
 }
 

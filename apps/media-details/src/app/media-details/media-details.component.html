@@ -1,6 +1,6 @@
 <ng-container *ngrxLet="state$ as media">
   <div
-    *ngIf="media.loaded"
+    [style.opacity]="media?.loaded ? 1 : 0"
     id="page-wrapper"
     [style.background]="
       'linear-gradient(transparent 14.09rem, transparent 10rem)'
@@ -15,6 +15,7 @@
         [tileSize]="12"
         [showInfo]="false"
         [id]="media?.currentMedia?.id"
+        [clickEnabled]="false"
       ></ui-album-tile-large>
       <div id="media-details">
         <div id="media-text">

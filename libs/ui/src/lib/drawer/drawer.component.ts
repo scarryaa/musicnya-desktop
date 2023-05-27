@@ -27,7 +27,6 @@ import { BaseComponent } from '@nyan-inc/core';
       [style.--width]="(collapsed ? collapsedWidth : width) + 'rem'"
       [ngClass]="drawerStyleClass"
       [style]="drawerStyle"
-      [style.transition]="transition"
       [ngClass]="{
         'drawer-collapsed': _collapsed,
         'drawer-expanded': !_collapsed
@@ -36,7 +35,6 @@ import { BaseComponent } from '@nyan-inc/core';
     >
       <div
         class="drawer-wrapper"
-        [style.transition]="transition"
         [ngClass]="{
           'drawer-collapsed': _collapsed,
           'drawer-expanded': !_collapsed
@@ -94,7 +92,6 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
   @Input() drawerStyle!: string;
   @Input() width = 14;
   @Input() collapsedWidth = 5;
-  @Input() transition = 'width 0.6s cubic-bezier(0.165, 1, 0.165, 1)';
 
   @ContentChildren(BaseComponent, {
     descendants: true,

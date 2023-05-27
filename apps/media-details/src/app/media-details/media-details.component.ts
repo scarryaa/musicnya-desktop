@@ -53,7 +53,16 @@ export class MediaDetailsComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.state$.subscribe(async (media) => {
       // TODO move this to a service
-      if (media.loaded && media) {
+      if (!media.loaded) {
+        document.documentElement.style.setProperty(
+          '--backgroundColor',
+          'var(--backgroundColor)'
+        );
+        document.documentElement.style.setProperty(
+          '--backgroundColorLight',
+          'var(--backgroundColorLight)'
+        );
+      } else if (media.loaded && media) {
         await this.color
           .getAverageColor(
             media?.currentMedia?.attributes?.artwork?.url ||

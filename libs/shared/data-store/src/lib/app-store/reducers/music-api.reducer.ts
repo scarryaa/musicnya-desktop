@@ -8,7 +8,6 @@ import {
   MetaReducer,
 } from '@ngrx/store';
 
-import * as AppActions from '../actions/app.actions';
 import copy, { State } from 'fast-copy';
 import { MusicAPIActions } from '../actions';
 import { MusicAPIEntity } from '../models/music-api.models';

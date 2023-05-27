@@ -1,7 +1,6 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on, Action } from '@ngrx/store';
 
-import * as AppActions from '../actions/app.actions';
 import copy from 'fast-copy';
 import { PreferencesActions } from '../actions';
 import { PreferencesEntity } from '../models/preferences.models';
@@ -29,7 +28,7 @@ export const initialPreferencesState: PreferencesState =
 
 const reducer = createReducer(
   { ...initialPreferencesState },
-  on(AppActions.initApp, (state) => ({
+  on(PreferencesActions.prefsInit, (state) => ({
     ...state,
     loaded: false,
     error: undefined,
