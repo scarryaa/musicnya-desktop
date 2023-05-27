@@ -14,8 +14,12 @@ import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
   selector: 'ui-album-tile-large',
   template: `
     <ui-album-tile-large-presentation
+      [ngClass]="{ zoom: isZoomed }"
       (playEmitter)="play($event)"
+      (zoomEmitter)="zoom($event)"
       (routeEmitter)="routeToMediaDetails($event)"
+      [showEditOverlay]="showEditOverlay"
+      [showZoom]="showZoom"
       [clickEnabled]="clickEnabled"
       [imageSource]="imageSource"
       [showPlayButton]="showPlayButton"
@@ -30,7 +34,10 @@ import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
 })
 export class AlbumTileLargeSmartComponent {
   constructor(private router: Router) {}
+  isZoomed = false;
 
+  @Input() showEditOverlay = false;
+  @Input() showZoom = false;
   @Input() clickEnabled = true;
   @Input() imageSource = '';
   @Input() showPlayButton = true;
@@ -50,6 +57,10 @@ export class AlbumTileLargeSmartComponent {
   //TODO move this to a deticated router class in core?
   async routeToMediaDetails(details: MediaPlayInfo) {
     await this.router.navigate(['media/' + details.type + '/' + details.id]);
+  }
+
+  zoom(event: Event) {
+    this.isZoomed = !this.isZoomed;
   }
 
   play(details: MediaPlayInfo) {

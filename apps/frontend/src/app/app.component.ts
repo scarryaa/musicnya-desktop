@@ -79,7 +79,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   @HostListener('mousedown', ['$event']) onClick(event: MouseEvent) {
     if (event.button === 0 && event.target && event.target) {
-      console.log(event.target as Element);
+      // console.log(event.target as Element);
     }
   }
 

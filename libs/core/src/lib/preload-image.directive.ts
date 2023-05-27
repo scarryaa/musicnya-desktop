@@ -2,6 +2,7 @@ import { Directive, Input, ElementRef, OnInit } from '@angular/core';
 
 @Directive({
   selector: 'img[corePreloadImage]',
+  standalone: true,
 })
 export class PreloadImageDirective implements OnInit {
   @Input() src!: string;

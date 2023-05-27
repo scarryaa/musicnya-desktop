@@ -2,6 +2,7 @@ import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   provideRouter,
+  RouteReuseStrategy,
   withEnabledBlockingInitialNavigation,
   withHashLocation,
   withRouterConfig,
@@ -24,6 +25,7 @@ import {
 import * as fromApp from '../store/reducers/app.reducer';
 import * as fromLayout from '../store/reducers/layout.reducer';
 import { AppEffects } from '../store/effects/app.effects';
+import { CacheRouteReuseStrategy } from '@nyan-inc/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -36,6 +38,10 @@ export const appConfig: ApplicationConfig = {
         onSameUrlNavigation: 'ignore',
       })
     ),
+    {
+      provide: RouteReuseStrategy,
+      useClass: CacheRouteReuseStrategy,
+    },
     provideRouterStore(),
     importProvidersFrom(BrowserAnimationsModule),
     importProvidersFrom(BrowserModule),

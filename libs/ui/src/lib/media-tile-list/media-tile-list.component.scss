@@ -20,16 +20,19 @@ drag-scroll {
 }
 
 #media-items {
+  #album-tile-container {
+    display: flex;
+  }
+
   ui-album-tile-large {
     padding-top: 1rem;
     padding-inline: 0.5rem;
 
     img {
-      width: 100% !important;
-      height: 100% !important;
-
-      min-width: 8rem;
-      max-width: 10rem;
+      min-width: 10rem !important;
+      max-width: 100% !important;
+      min-height: 10rem !important;
+      max-height: 100% !important;
     }
 
     #artists,

@@ -173,10 +173,11 @@ export default class App {
     if (rendererAppName) {
       App.initMainWindow();
       App.loadMainWindow();
-      if (App.isDevelopmentMode()) {
-        App.mainWindow.webContents.openDevTools();
-      }
       App.setHeadersConfig();
+    }
+
+    if (App.isDevelopmentMode()) {
+      App.mainWindow.webContents.openDevTools();
     }
   }
 

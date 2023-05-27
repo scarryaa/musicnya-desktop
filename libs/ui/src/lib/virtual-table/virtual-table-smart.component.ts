@@ -14,6 +14,7 @@ import { VirtualTableModule } from './virtual-table-presentation.component';
 import { DataSource } from '@angular/cdk/table';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SelectionModel } from '@angular/cdk/collections';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'ui-virtual-table',
@@ -71,7 +72,7 @@ export class VirtualTableSmartComponent implements OnChanges {
 
 @NgModule({
   declarations: [VirtualTableSmartComponent],
-  imports: [CommonModule, VirtualTableModule],
+  imports: [CommonModule, VirtualTableModule, RouterModule],
   exports: [VirtualTableSmartComponent],
 })
 export class VirtualTableSmartModule {}

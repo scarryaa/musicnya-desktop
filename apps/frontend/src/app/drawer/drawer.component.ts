@@ -11,11 +11,13 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  AfterViewInit,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import {
   BaseButtonModule,
   DisableChildTabIndexDirective,
+  FallbackImageDirective,
 } from '@nyan-inc/core';
 import { MusicAPIFacade, RouterFacade } from '@nyan-inc/shared';
 import {
@@ -24,7 +26,7 @@ import {
   DrawerToggleDirective,
 } from '@nyan-inc/ui';
 import { NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
-import { Subject, Subscription, map } from 'rxjs';
+import { Subject, Subscription, map, tap } from 'rxjs';
 
 @Component({
   selector: 'musicnya-drawer',
@@ -39,6 +41,7 @@ import { Subject, Subscription, map } from 'rxjs';
     DisableChildTabIndexDirective,
     DragDropModule,
     NgScrollbarModule,
+    FallbackImageDirective,
   ],
   templateUrl: './drawer.component.html',
   styleUrls: ['./drawer.component.scss'],
@@ -52,8 +55,7 @@ export class DrawerComponent
 
   constructor(
     private changeReference: ChangeDetectorRef,
-    public musicAPIFacade: MusicAPIFacade,
-    private routerFacade: RouterFacade
+    public musicAPIFacade: MusicAPIFacade
   ) {
     super();
   }
@@ -67,27 +69,6 @@ export class DrawerComponent
 
   ngOnInit(): void {
     this.libraryPlaylists$ = this.musicAPIFacade.libraryPlaylists$;
-
-    this.subs.add(
-      this.routerFacade.routerNavigated$
-        .pipe(
-          map(() => async () => {
-            console.log(this.scrollbar);
-            return this.scrollbar.scrollTo({ top: 0, duration: 300 });
-          })
-        )
-        .subscribe()
-    );
-
-    this.subs.add(
-      this.routerFacade.routerNavigated$
-        .pipe(
-          map(() => {
-            this.changeReference.detectChanges();
-          })
-        )
-        .subscribe()
-    );
   }
 
   toggle() {
@@ -99,5 +80,7 @@ export class DrawerComponent
     this.changeReference.markForCheck();
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
 }

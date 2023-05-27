@@ -10,6 +10,8 @@
       <ui-album-tile-large
         id="media-cover-artwork"
         #mediaCover
+        [showZoom]="true"
+        [showEditOverlay]="media?.currentMedia?.type === 'library-playlists'"
         [imageSource]="media?.currentMedia?.attributes?.artwork?.url || media?.currentMedia?.songs?.[0]?.attributes?.artwork?.url"
         [showPlayButton]="false"
         [tileSize]="12"
@@ -19,22 +21,27 @@
       ></ui-album-tile-large>
       <div id="media-details">
         <div id="media-text">
-          <div id="media-title">
+          <div id="media-title" [title]="media.currentMedia?.attributes?.name">
             {{ media.currentMedia?.attributes?.name }}
           </div>
           <div id="media-artist-year">
             <span
+              [title]="media?.currentMedia?.attributes.artistName"
+              [ngClass]="{
+                'can-hover': media?.currentMedia?.attributes.artistName
+              }"
+              id="artist"
               *ngIf="
-                (media?.currentMedia?.type === 'library-playlists' &&
-                  media?.currentMedia?.attributes?.curator) ||
-                (media.type !== 'library-playlists' &&
-                  media?.currentMedia?.attributes?.curator) ||
+                (media?.currentMedia?.type === 'playlists' &&
+                  media?.currentMedia?.attributes?.curatorName) ||
+                (media.type !== 'playlists' &&
+                  media?.currentMedia?.attributes?.curatorName) ||
                 media?.currentMedia?.attributes?.artistName
               "
               >{{
-                media?.currentMedia.type === 'library-playlists'
-                  ? media?.curator
-                  : media?.currentMedia?.attributes?.artistName ??
+                media?.currentMedia.type === 'playlists'
+                  ? media?.currentMedia?.attributes?.curatorName
+                  : media?.currentMedia?.attributes?.artistName ||
                     'Unknown Artist'
               }}</span
             ><span *ngIf="media?.currentMedia?.releaseYear"
@@ -98,21 +105,45 @@
             <div class="content-wrapper">
               <div id="media-songs-genre-description">
                 <span id="songs-count"
-                  >{{ media?.currentMedia?.songs?.length }} songs,
+                  >{{
+                    media?.currentMedia?.attributes?.trackCount ||
+                      media?.currentMedia?.relationships?.tracks?.data?.length
+                  }}
+                  songs
                 </span>
                 <span>{{ media?.currentMedia?.duration | date : 'm:ss' }}</span>
-                <p *ngIf="media?.currentMedia?.genres" id="genres">
-                  <!-- replace this with a pipe -->
-                  {{ media?.currentMedia?.genres.join(', ') }}
+                <p
+                  *ngIf="media?.currentMedia?.attributes?.genreNames"
+                  id="genres"
+                >
+                  {{ media?.currentMedia?.attributes?.genreNames.join(', ') }}
                 </p>
                 <p
                   *ngIf="
-                    media?.currentMedia?.description ||
-                    media.currentMedia?.shortDescription
+                    media?.currentMedia?.attributes?.editorialNotes?.standard ||
+                    media?.currentMedia?.attributes?.editorialNotes?.short
                   "
                   id="media-description"
-                  [innerHTML]="media.currentMedia?.description"
+                  [innerHTML]="
+                    media?.currentMedia?.attributes?.editorialNotes?.standard ||
+                    media?.currentMedia?.attributes?.editorialNotes?.short
+                  "
                 ></p>
+                <p *ngIf="media?.currentMedia?.attributes?.releaseDate">
+                  {{ media?.currentMedia?.attributes?.releaseDate }}
+                </p>
+                <p
+                  id="recordLabel"
+                  *ngIf="media?.currentMedia?.attributes?.recordLabel"
+                >
+                  {{ media?.currentMedia?.attributes?.recordLabel }}
+                </p>
+                <p
+                  id="copyright"
+                  *ngIf="media?.currentMedia?.attributes?.copyright"
+                >
+                  {{ media?.currentMedia?.attributes?.copyright }}
+                </p>
               </div>
             </div>
           </div>

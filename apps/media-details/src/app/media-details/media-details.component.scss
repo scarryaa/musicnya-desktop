@@ -1,3 +1,11 @@
+.can-hover {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 :host {
   --drop-shadow: drop-shadow(0 0 2px oklch(0% 0 0 / 20%));
   position: relative;
@@ -43,13 +51,16 @@
       filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.2));
       display: -webkit-box;
       -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
 
       #media-title {
         font-size: var(--font-size-6xl);
         font-weight: var(--font-weight-large-bold);
         margin-top: 2rem;
+        display: -webkit-inline-box;
+        -webkit-box-orient: vertical;
+        line-clamp: 2;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
       }
 
       #media-artist-year {
@@ -315,6 +326,11 @@
     #songs-count {
       font-weight: var(--font-weight-bold);
       color: var(--font-color-black);
+    }
+
+    #recordLabel,
+    #copyright {
+      margin: 0;
     }
 
     span,

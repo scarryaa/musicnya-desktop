@@ -39,6 +39,7 @@
         [source]="song.attributes?.artwork?.url"
         [tileSize]="2.5"
         [showArt]="showAlbums"
+        [ngClass]="{ 'artist-hover': true, 'title-hover': showAlbums }"
       ></ui-album-tile>
       <div id="title-info-container"></div>
     </td>
@@ -48,7 +49,14 @@
   <ng-container cdkColumnDef="Album">
     <th id="album-table-header" cdk-header-cell *cdkHeaderCellDef>Album</th>
     <td class="album-content" cdk-cell *cdkCellDef="let song">
-      <span>{{ song.attributes?.albumName }}</span>
+      <!-- TODO improve this -->
+      <span
+        [routerLink]="
+          '/media/albums/' + song.attributes?.url?.split('/')?.[6].split('?')?.[0]
+        "
+        [title]="song.attributes?.albumName"
+        >{{ song.attributes?.albumName }}</span
+      >
     </td>
   </ng-container>
 

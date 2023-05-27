@@ -17,6 +17,7 @@ import {
   DisableChildTabIndexDirective,
   FallbackImageDirective,
   JoinPipeModule,
+  PreloadImageDirective,
 } from '@nyan-inc/core';
 import { MediaPlayInfo } from './models';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -24,12 +25,29 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 @Component({
   selector: 'ui-album-tile-large-presentation',
   template: `
+    <i
+      (click)="emitZoom($event)"
+      (keyup.Space)="emitZoom($event)"
+      id="zoom-icon"
+      *ngIf="showZoom"
+      class="material-symbols-rounded"
+      >zoom_out_map</i
+    >
+    <div class="edit-overlay" *ngIf="showEditOverlay">
+      <button
+        class="edit-button"
+        (click)="emitEdit($event)"
+        (keyup.Space)="emitEdit($event)"
+      >
+        <i class="material-symbols-rounded">edit</i>
+        <span>Edit Playlist Info</span>
+      </button>
+    </div>
     <core-base-button
       cdkDrag
       [cdkDragStartDelay]="500"
       [tabIndex]="0"
       class="album-tile-large"
-      [style.pointerEvents]="clickEnabled ? 'auto' : 'none'"
       (keyUp.Space)="emitRoute($event)"
       (click)="emitRoute($event)"
       coreDisableChildFocus
@@ -49,6 +67,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
       </div>
       <img
         coreFallbackImage
+        loading="lazy"
         preloadImage
         [style.pointerEvents]="clickEnabled ? 'auto' : 'none'"
         [style.width.rem]="tileSize"
@@ -59,13 +78,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         coreDisableChildTabIndex
         coreDisableChildFocus
       />
-      <div
-        [ngClass]="{ 'hover-underline': true }"
-        id="album-info-large"
-        *ngIf="showInfo"
-        coreDisableChildTabIndex
-      >
-        <div>
+      <div id="album-info-large" *ngIf="showInfo" coreDisableChildTabIndex>
+        <div [ngClass]="{ 'hover-underline': true }">
           <span
             id="title-large"
             (keyUp.Space)="routeEmitter.emit(mediaInfo)"
@@ -75,12 +89,13 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
             >{{ mediaInfo.name }}</span
           >
         </div>
-        <div>
+        <div [ngClass]="{ 'hover-underline': true }">
           <span
             id="artists"
             (keyUp.Space)="routeEmitter.emit(mediaInfo)"
             (click)="routeEmitter.emit(mediaInfo)"
             [tabIndex]="0"
+            [title]="mediaInfo.artists"
             >{{ mediaInfo.artists | join }}</span
           >
         </div>
@@ -97,6 +112,8 @@ export class AlbumTileLargeComponent
 {
   @HostBinding('class') class = 'outline-offset';
 
+  @Input() showEditOverlay = false;
+  @Input() showZoom = false;
   @Input() imageSource: string = '';
   @Input() clickEnabled = true;
   @Input() showPlayButton = true;
@@ -112,15 +129,27 @@ export class AlbumTileLargeComponent
 
   @Output() readonly playEmitter = new EventEmitter<any>();
   @Output() readonly routeEmitter = new EventEmitter<any>();
+  @Output() readonly editEmitter = new EventEmitter<any>();
+  @Output() readonly zoomEmitter = new EventEmitter<any>();
 
   emitPlay(event: Event) {
     event.stopPropagation();
     this.playEmitter.emit(this.mediaInfo);
   }
 
+  emitEdit(event: Event) {
+    event.stopPropagation();
+    this.editEmitter.emit();
+  }
+
   emitRoute(event: Event) {
     event.preventDefault();
     this.routeEmitter.emit(this.mediaInfo);
+  }
+
+  emitZoom(event: Event) {
+    event.preventDefault();
+    this.zoomEmitter.emit();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -143,6 +172,7 @@ export class AlbumTileLargeComponent
     DisableChildTabIndexDirective,
     DragDropModule,
     FallbackImageDirective,
+    PreloadImageDirective,
   ],
   exports: [AlbumTileLargeComponent],
   declarations: [AlbumTileLargeComponent],

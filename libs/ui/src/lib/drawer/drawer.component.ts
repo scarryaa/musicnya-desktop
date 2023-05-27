@@ -93,6 +93,7 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
   @Input() width = 14;
   @Input() collapsedWidth = 5;
 
+  @ViewChild('scrollbar') scrollbar!: NgScrollbar;
   @ContentChildren(BaseComponent, {
     descendants: true,
   })
@@ -104,6 +105,23 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
 
   ngAfterContentInit(): void {
     this._drawerItems = [...this.items];
+
+    this.subs.add(
+      this.router.events
+        .pipe(
+          filter(
+            (event) =>
+              event instanceof NavigationStart || event instanceof NavigationEnd
+          ),
+          map((event) => event instanceof NavigationStart),
+          tap((value) => {
+            if (value) {
+              this.scrollbar.scrollTo({ top: 0, left: 0, duration: 0 });
+            }
+          })
+        )
+        .subscribe()
+    );
 
     this.subs.add(
       this.drawerToggle.drawerOpen$

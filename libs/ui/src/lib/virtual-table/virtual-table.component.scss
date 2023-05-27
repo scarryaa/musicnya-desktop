@@ -1,3 +1,23 @@
+.title-hover {
+  #title {
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.artist-hover {
+  #artists {
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
 table {
   --drop-shadow: drop-shadow(0 0 2px oklch(0% 0 0 / 20%));
   width: 100%;
@@ -45,17 +65,18 @@ table {
   &#title-table-header,
   .title-content {
     text-align: left;
-    width: 40%;
-    max-width: 170px;
+    width: 90%;
+    max-width: 90% !important;
 
     ui-album-tile {
-      img {
-        filter: var(--drop-shadow);
+      display: block;
+
+      button {
+        max-width: calc(100% - 5rem);
       }
 
-      core-base-button button {
-        max-width: 100%;
-        width: 100%;
+      img {
+        filter: var(--drop-shadow);
       }
 
       #title {
@@ -68,9 +89,8 @@ table {
       }
 
       div#album-info {
+        max-width: 100%;
         padding-left: 0.6rem !important;
-        width: 75%;
-        max-width: 75% !important;
 
         span {
           display: block !important;
@@ -118,6 +138,7 @@ table {
 
     #duration-options-container {
       display: flex;
+      place-content: flex-end;
       flex-direction: row;
       margin-top: 0.2rem;
       margin-left: -5rem;
@@ -134,13 +155,6 @@ table {
 
     &.duration-content {
       text-align: right;
-    }
-
-    &.title-content {
-      span:hover {
-        text-decoration: underline;
-        cursor: pointer;
-      }
     }
 
     &.album-content {

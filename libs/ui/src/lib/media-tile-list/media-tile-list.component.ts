@@ -12,14 +12,7 @@ import {
 } from '@angular/core';
 import { HeadingComponent } from '../heading/heading.component';
 import { DragScrollModule } from 'ngx-drag-scroll';
-import { AlbumTileLargeModule } from '../album-tile/album-tile-large.component';
 import { AlbumTileLargeSmartModule } from '../album-tile/album-tile-large.smart.component';
-import {
-  LibraryPlaylists,
-  LibraryAlbums,
-  Albums,
-  Playlists,
-} from '@nyan-inc/core';
 
 @Component({
   selector: 'ui-media-tile-list',
@@ -41,7 +34,7 @@ import {
       (dragStart)="this.clickEnabled = false"
       (dragEnd)="this.clickEnabled = true"
     >
-      <div>
+      <div id="album-tile-container">
         <ui-album-tile-large
           drag-scroll-item
           *ngFor="let item of listData; let i = index"

@@ -25,6 +25,7 @@ import {
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AlbumTileModule } from '../album-tile/album-tile.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'ui-virtual-table-presentation',
@@ -78,6 +79,7 @@ export class VirtualTableComponent implements OnChanges {
     DraggableDirective,
     ScrollingModule,
     AlbumTileModule,
+    RouterModule,
   ],
   exports: [VirtualTableComponent],
 })

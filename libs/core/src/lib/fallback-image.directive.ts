@@ -23,8 +23,10 @@ export class FallbackImageDirective implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
-    (this.elementReference.nativeElement as HTMLImageElement).src =
-      this._fallback;
+    if (!this.elementReference.nativeElement.src) {
+      (this.elementReference.nativeElement as HTMLImageElement).src =
+        this._fallback;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -55,6 +57,6 @@ export class FallbackImageDirective implements OnInit, OnChanges {
   }
 
   detectChanges = () => {
-    this.changeDetectorReference.detectChanges();
+    this.changeDetectorReference.markForCheck();
   };
 }

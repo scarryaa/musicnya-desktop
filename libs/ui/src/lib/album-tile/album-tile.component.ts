@@ -26,6 +26,7 @@ import {
   template: `
     <core-base-button #button class="album-tile ui-drawer-item">
       <img
+        loading="lazy"
         defaultImage="/assets/images/music-note.webp"
         *ngIf="showArt"
         id="artwork"
@@ -42,12 +43,16 @@ import {
         #span
         *ngIf="mediaTitle || showArtists"
         [style.display]="showArtists ? 'flex' : 'block'"
-        [ngClass]="{ 'hover-underline': hoverUnderline }"
       >
         <ng-container *ngIf="mediaTitle">
           <span
+            [ngClass]="{
+              'hover-underline':
+                titleRouterLink !== undefined ? hoverUnderline : false
+            }"
             #span
             id="title"
+            [title]="mediaTitle"
             [routerLink]="titleRouterLink"
             [tabIndex]="-1"
             >{{ mediaTitle }}</span
@@ -55,8 +60,10 @@ import {
         >
         <ng-container *ngIf="showArtists">
           <span
+            [ngClass]="{ 'hover-underline': hoverUnderline }"
             #span
             id="artists"
+            [title]="artists"
             [routerLink]="artistsRouterLink"
             [tabIndex]="-1"
             >{{ artists }}</span
@@ -80,7 +87,7 @@ export class AlbumTileComponent extends BaseComponent {
   @Input() showArt = true;
   @ViewChildren('span', { read: ElementRef })
   spanElements!: QueryList<ElementRef>;
-  @Input() titleRouterLink = '';
+  @Input() titleRouterLink: string | undefined;
   @Input() artistsRouterLink = '';
   @Input() artworkRouterLink!: string;
 

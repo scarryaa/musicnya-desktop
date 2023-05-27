@@ -72,7 +72,7 @@ export class MusicAPIEffects {
           return from(this.musickit.getLibraryPlaylists()).pipe(
             switchMap((playlists: LibraryPlaylists[]) =>
               forkJoin(
-                playlists.map((playlist) =>
+                playlists.map((playlist, index) =>
                   from(this.musickit.getLibraryPlaylistSongs(playlist.id)).pipe(
                     map((songs: Songs[]) => ({
                       ...playlist,
@@ -105,7 +105,7 @@ export class MusicAPIEffects {
                           ),
                         },
                       },
-                      songs: songs.map((song: Songs) => ({
+                      songs: songs.map((song: Songs, index) => ({
                         ...song,
                         attributes: {
                           ...(song?.attributes ?? {}),
@@ -223,14 +223,14 @@ export class MusicAPIEffects {
           ]).pipe(
             map(([recommendations, recentlyPlayed]) => {
               const modifiedRecommendations = recommendations.map(
-                (item: PersonalRecommendation) => ({
+                (item: PersonalRecommendation, index: number) => ({
                   ...item,
                   relationships: {
                     ...item.relationships,
                     contents: {
                       ...item.relationships?.contents,
                       data: item.relationships?.contents?.data?.map(
-                        (item: Resource) => ({
+                        (item: Resource, index) => ({
                           ...item,
                           attributes: {
                             ...item.attributes,
@@ -250,7 +250,7 @@ export class MusicAPIEffects {
               );
 
               const modifiedRecentlyPlayed = recentlyPlayed.map(
-                (item: Resource) => ({
+                (item: Resource, index: number) => ({
                   ...item,
                   attributes: {
                     ...item.attributes,
@@ -450,7 +450,7 @@ export class MusicAPIEffects {
           this.musickit.getLibraryPlaylistSongs(action.payload.playlist.id)
         ).pipe(
           map((songs: LibrarySongs[]) => {
-            const updatedSongs = songs.map((song) => ({
+            const updatedSongs = songs.map((song, index) => ({
               ...song,
               attributes: {
                 ...song.attributes,

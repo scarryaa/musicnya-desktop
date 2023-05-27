@@ -19,3 +19,4 @@ export * from './lib/models/music.types';
 export * from './lib/utils/music-utils';
 export * from './lib/fallback-image.directive';
 export * from './lib/preload-image.directive';
+export * from './lib/cache-route-reuse.strategy';

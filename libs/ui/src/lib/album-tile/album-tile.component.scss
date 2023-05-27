@@ -1,4 +1,28 @@
 :host {
+  z-index: 98;
+  position: relative;
+
+  &.zoom {
+    img {
+      position: fixed;
+      z-index: 9999;
+      top: 50%;
+      left: 50%;
+      transition: transform 0.5s ease-out;
+      transform: translate(150%, 12.5%) scale(2.5);
+    }
+  }
+
+  &:hover {
+    #zoom-icon {
+      opacity: 1 !important;
+    }
+
+    .edit-overlay {
+      opacity: 1;
+    }
+  }
+
   &:not(.ui-button-no-hover) {
     &:hover:not(:disabled),
     &:focus:not(:disabled) {
@@ -24,7 +48,6 @@
   }
 
   #album-info span {
-    max-width: inherit;
     max-height: inherit;
     font-size: var(--font-size-reg);
 
@@ -33,8 +56,49 @@
     }
   }
 
+  #zoom-icon {
+    top: 0.25rem;
+    right: 0.25rem;
+    opacity: 0;
+    position: absolute;
+    z-index: 200;
+    background-color: rgba(black, 0.8);
+    border-radius: 50%;
+    padding: 0.4rem;
+    font-size: var(--font-size-3xl);
+    color: var(--font-color-faded);
+
+    &:hover {
+      color: var(--font-color);
+    }
+  }
+
   core-base-button {
     border-radius: 4px;
+  }
+
+  .edit-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background-color: rgba(black, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    z-index: 99;
+
+    .edit-button {
+      justify-content: center;
+    }
+
+    i {
+      align-self: center;
+      color: var(--font-color);
+      font-size: var(--font-size-6xl);
+    }
   }
 
   #artwork {
@@ -84,12 +148,13 @@
   .album-tile-large {
     flex-direction: column;
     display: block;
+    overflow: hidden;
 
     #album-info-large div span {
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
-      max-width: 100%;
+      max-width: 100% !important;
     }
 
     &:focus-within:not(:focus-visible) {
@@ -132,8 +197,6 @@
   #album-info,
   #album-info-large {
     flex-direction: column;
-    min-width: 8rem;
-    max-width: 10rem;
 
     #artists,
     #title-large {
@@ -141,6 +204,11 @@
       outline-offset: 0.1rem;
       border-radius: 4px;
     }
+  }
+
+  #album-info-large {
+    min-width: 8rem;
+    max-width: 10rem;
   }
 
   #album-info {
