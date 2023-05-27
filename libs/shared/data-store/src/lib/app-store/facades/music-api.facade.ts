@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { filter, map, Subscription, take } from 'rxjs';
-import { MusicKit } from 'types/musickit';
+import type { MusicKit } from '../../../types';
 import { MusicAPIActions } from '../actions';
 import { fromMusicAPI } from '../reducers';
 import { MusicAPIState } from '../reducers/music-api.reducer';
@@ -20,9 +20,6 @@ export class MusicAPIFacade implements OnDestroy {
   loaded$ = this.store
     .pipe(select(fromMusicAPI.getMusicAPIState))
     .pipe(map((value) => value.loaded));
-  musickitLoaded$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(map((value) => value.musickitLoaded));
   recommendations$ = this.store
     .pipe(select(fromMusicAPI.getMusicAPIState))
     .pipe(map((value) => value.homeTileLists[1]));
@@ -37,31 +34,32 @@ export class MusicAPIFacade implements OnDestroy {
     this.subs.unsubscribe();
   }
 
-  init(config: MusicKit.MusicKitConfiguration) {
-    this.store.dispatch(MusicAPIActions.init({ payload: { config: config } }));
-  }
-
   getRecommendations() {
     this.subs.add(
-      this.state$
-        .pipe(filter((state) => state.musickitLoaded))
-        .subscribe(() =>
-          this.store.dispatch(MusicAPIActions.getRecommendations())
-        )
+      this.state$.subscribe(() =>
+        this.store.dispatch(MusicAPIActions.getRecommendations())
+      )
     );
   }
 
   getRecommendationsAndRecentlyPlayed() {
     this.subs.add(
       this.state$
-        .pipe(
-          filter((state) => state.musickitLoaded),
-          take(1)
-        )
+        .pipe(take(1))
         .subscribe(() =>
           this.store.dispatch(
             MusicAPIActions.getRecommendationsAndRecentlyPlayed()
           )
+        )
+    );
+  }
+
+  getLibraryPlaylists() {
+    this.subs.add(
+      this.state$
+        .pipe(take(1))
+        .subscribe(() =>
+          this.store.dispatch(MusicAPIActions.getLibraryPlaylists())
         )
     );
   }

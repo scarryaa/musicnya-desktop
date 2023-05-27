@@ -27,7 +27,6 @@ export const MusicAPI_API_FEATURE_KEY = 'musicApi';
 export interface MusicAPIState extends EntityState<MusicAPIEntity> {
   selectedId?: string | number;
   loaded: boolean;
-  musickitLoaded: boolean;
   libraryPlaylists: LibraryPlaylists[] | undefined;
   error?: string | Error | null;
   mediaCache?: MediaItem[];
@@ -66,7 +65,6 @@ export const initialMusicAPIState: MusicAPIState =
   MusicAPIAdapter.getInitialState({
     // set initial required properties
     loaded: false,
-    musickitLoaded: false,
     libraryPlaylists: undefined,
     libraryAlbums: undefined,
     playlists: undefined,
@@ -74,30 +72,11 @@ export const initialMusicAPIState: MusicAPIState =
     mediaCache: undefined,
     currentMedia: undefined,
     currentMediaType: undefined,
-    homeTileLists: [
-      {
-        data: [{ id: '', type: 'library-playlists', href: '' }],
-        title: 'eeeee',
-      },
-    ],
+    homeTileLists: [{ title: '', data: undefined }],
   });
 
 const reducer = createReducer(
   { ...initialMusicAPIState },
-  on(MusicAPIActions.init, (state) => ({
-    ...state,
-    loaded: false,
-    error: undefined,
-  })),
-  on(MusicAPIActions.initSuccess, (state) =>
-    MusicAPIAdapter.setMany([], {
-      ...state,
-      loaded: true,
-      musickitLoaded: true,
-    })
-  ),
-  on(MusicAPIActions.initFailure, (state) => ({ ...state })),
-
   on(MusicAPIActions.getLibraryPlaylists, (state) => ({ ...state })),
   on(MusicAPIActions.getLibraryPlaylistsSuccess, (state, { payload }) => ({
     ...state,

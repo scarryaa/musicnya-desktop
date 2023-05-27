@@ -10,9 +10,7 @@ import {
   withLatestFrom,
   forkJoin,
   concatMap,
-  zip,
   tap,
-  take,
 } from 'rxjs';
 import { of } from 'rxjs';
 import { MusicAPIActions } from '../actions';
@@ -37,23 +35,6 @@ export class MusicAPIEffects {
   private actions$ = inject(Actions);
   private musickit = inject(MusickitAPI);
 
-  init$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(MusicAPIActions.init),
-      switchMap((action) =>
-        this.musickit.initMusicKit(action.payload.config.developerToken)
-      ),
-      filter((musickit) => musickit.instance !== null),
-      mergeMap(() => [
-        MusicAPIActions.initSuccess(),
-        MusicAPIActions.getLibraryPlaylists(),
-      ]),
-      catchError((error) =>
-        of(MusicAPIActions.initFailure({ payload: { error } }))
-      )
-    )
-  );
-
   // Checks the store for library playlists and if they're not there, fetches them from Musickit API
   getLibraryPlaylists$ = createEffect(() =>
     this.actions$.pipe(
@@ -68,6 +49,7 @@ export class MusicAPIEffects {
             })
           );
         } else {
+          console.log('fetching library playlists from musickit api');
           // get library playlists and then songs
           return from(this.musickit.getLibraryPlaylists()).pipe(
             switchMap((playlists: LibraryPlaylists[]) =>

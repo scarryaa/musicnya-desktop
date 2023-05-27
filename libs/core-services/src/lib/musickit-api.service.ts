@@ -1,29 +1,15 @@
 import { Injectable } from '@angular/core';
-
-declare var MusicKit: any;
+import type { MusicKit } from '../types/musickit';
+import { MusickitBase } from './musickit-base.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MusickitAPI {
-  _instance!: any;
+  private _instance!: MusicKit.MusicKitInstance;
 
-  /**
-   * Initialize MusicKit
-   * @param developmentToken - The development token
-   */
-  async initMusicKit(developmentToken: string) {
-    this.instance = await MusicKit.configure({
-      developerToken: developmentToken,
-      app: {
-        name: 'Apple Music',
-        build: '1978.4.1',
-        version: '1.0',
-      },
-      sourceType: 24,
-      suppressErrorDialog: false,
-    });
-    return this.instance;
+  constructor(private musickit: MusickitBase) {
+    this.instance = this.musickit.instance;
   }
 
   /**
@@ -47,7 +33,7 @@ export class MusickitAPI {
    */
 
   public get instance(): any {
-    return this._instance;
+    return this.musickit.instance;
   }
 
   public set instance(instance: any) {
@@ -79,7 +65,7 @@ export class MusickitAPI {
 
   // Fetch the data from the music api
   async requestData(url: string): Promise<any> {
-    const result = await MusicKit.getInstance().api.v3.music(url);
+    const result = await this.instance.api.v3.music(url);
     return result.data.data;
   }
 

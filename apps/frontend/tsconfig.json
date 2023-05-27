@@ -27,5 +27,5 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true
   },
-  "include": ["../../types/**/*.d.ts"]
+  "include": ["../../types/**/*.d.ts", "../../types/musickit.ts"]
 }

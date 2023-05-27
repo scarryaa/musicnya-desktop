@@ -9,19 +9,7 @@ import {
   PersonalRecommendation,
   Playlists,
 } from '@nyan-inc/core';
-import { MusicKit } from 'types/musickit';
 import { MusicAPIEntity } from '../models/music-api.models';
-
-// Initialization Actions
-export const init = createAction(
-  '[Music/API] Init',
-  props<{ payload: { config: MusicKit.MusicKitConfiguration } }>()
-);
-export const initSuccess = createAction('[Music/API] Init Success');
-export const initFailure = createAction(
-  '[Music/API] Init Failure',
-  props<{ payload: { error: Error } }>()
-);
 
 // Library Playlists Actions
 export const getLibraryPlaylists = createAction(

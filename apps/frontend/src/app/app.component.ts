@@ -22,13 +22,14 @@ import {
   WindowRefService,
 } from '@nyan-inc/core';
 import { NavigationButtonsComponent } from './navigation-buttons/navigation-buttons.component';
-import { HttpService } from './http/http.service';
+import { HttpService } from '../../../../libs/core/src/lib/http/http.service';
 import { MusicAPIFacade } from '@nyan-inc/shared';
 import * as AppActions from '../store/actions/app.actions';
 import * as LayoutActions from '../store/actions/layout.actions';
 import * as fromLayout from '../store/reducers/layout.reducer';
 import { AppState } from '../store/reducers/app.reducer';
 import { LayoutState } from '../store/reducers/layout.reducer';
+import { MusickitBase } from '@yan-inc/core-services';
 
 @Component({
   standalone: true,
@@ -62,10 +63,10 @@ export class AppComponent implements OnInit, OnDestroy {
     private store: Store<AppState & LayoutState>,
     private http: HttpService,
     private windowService: WindowRefService,
-    private musicAPIFacade: MusicAPIFacade
+    private musicAPIFacade: MusicAPIFacade,
+    private musickit: MusickitBase
   ) {
     this.drawerOpen$ = this.store.pipe(select(fromLayout.getDrawerOpen));
-    this._window = windowService.nativeWindow;
     // TODO fix this
     (window as any).api.cookies((event: any, cookies: any) => {
       console.log((window as any).api.cookies);
@@ -88,17 +89,9 @@ export class AppComponent implements OnInit, OnDestroy {
     const DEV_TOKEN = this.http.DEV_TOKEN;
 
     this.store.dispatch(AppActions.initApp());
-
-    this.musicAPIFacade.init({
-      developerToken: DEV_TOKEN,
-      app: {
-        name: 'Apple Music',
-        build: '1978.4.1',
-        version: '1.0',
-      },
-      sourceType: 24,
-      suppressErrorDialog: false,
-    });
+    setTimeout(() => {
+      this.musicAPIFacade.getLibraryPlaylists();
+    }, 1000);
   }
 
   ngOnDestroy(): void {

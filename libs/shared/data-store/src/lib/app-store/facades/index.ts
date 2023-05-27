@@ -1,5 +1,5 @@
-import { MusicFacade } from './music.facade';
+import { PlayerFacade } from './player.facade';
 import { MusicAPIFacade } from './music-api.facade';
 import { RouterFacade } from './router.facade';
 
-export { MusicAPIFacade, MusicFacade, RouterFacade };
+export { MusicAPIFacade, PlayerFacade, RouterFacade };

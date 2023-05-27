@@ -35,7 +35,13 @@
       class="title-content"
       [ngClass]="{
         'hide-before': song?.attributes?.contentRating !== 'explicit',
-        'hide-after': song?.type !== 'music-videos'
+        'hide-after': song?.type !== 'music-videos',
+        'center-before':
+          song?.attributes?.contentRating === 'explicit' &&
+          song?.type !== 'music-videos',
+        'center-after':
+          song?.attributes?.contentRating !== 'explicit' &&
+          song?.type === 'music-videos'
       }"
       cdk-cell
       *cdkCellDef="let song"

@@ -10,8 +10,6 @@
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node"
   },
-  "files": [],
-  "include": [],
   "references": [
     {
       "path": "./tsconfig.lib.json"
@@ -20,6 +18,7 @@
       "path": "./tsconfig.spec.json"
     }
   ],
+  "files": ["index.ts", "./types/index.ts"],
   "extends": "../../tsconfig.base.json",
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

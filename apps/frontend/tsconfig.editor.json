@@ -3,7 +3,8 @@
   "include": [
     "src/**/*.ts",
     "../../polyfills.ts",
-    "../../libs/shared/data-store/src/lib/app-store/facades/music.facade.ts"
+    "../../libs/shared/data-store/src/lib/app-store/facades/player.facade.ts",
+    "../../libs/core/src/lib/http/http.service.ts"
   ],
   "compilerOptions": {},
   "composite": true

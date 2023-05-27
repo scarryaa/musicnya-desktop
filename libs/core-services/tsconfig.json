@@ -9,8 +9,8 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true
   },
-  "files": [],
-  "include": [],
+  "types": ["node"],
+  "typesRoot": ["node_modules/@types", "./types"],
   "references": [
     {
       "path": "./tsconfig.lib.json"

@@ -1,3 +1,15 @@
+.center-before {
+  &::before {
+    margin-top: 0.6rem;
+  }
+}
+
+.center-after {
+  &::after {
+    margin-top: -1.9rem !important;
+  }
+}
+
 .hide-before {
   &::before {
     display: none !important;
@@ -88,6 +100,8 @@ table {
     &::before {
       color: var(--backgroundColor);
       font-family: 'Material Symbols Rounded';
+      filter: var(--drop-shadow);
+      font-variation-settings: 'FILL' 1 !important;
       content: '\e01e';
       margin-left: -1.4rem;
       position: absolute;
@@ -96,8 +110,10 @@ table {
     }
 
     &::after {
-      color: var(--backgroundColor);
+      color: rgb(199, 67, 67);
       font-family: 'Material Symbols Rounded';
+      filter: var(--drop-shadow);
+      font-variation-settings: 'FILL' 1 !important;
       content: '\e063';
       margin-left: -1.4rem;
       margin-top: -1.2rem;

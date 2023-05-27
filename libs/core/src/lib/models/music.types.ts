@@ -1,4 +1,4 @@
-import { MusicKit } from 'types/musickit';
+import { MusicKit } from '../../types/musickit';
 
 export interface Artwork {
   bgColor?: string;

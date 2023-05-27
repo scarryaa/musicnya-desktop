@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { MusicKit } from 'types/musickit';
+import type { MusicKit } from '../../../types';
 
 export const musicInit = createAction('[Music] Init');
 
