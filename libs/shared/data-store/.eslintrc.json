@@ -1,8 +1,10 @@
 {
   "ignorePatterns": ["!**/*"],
-  "plugins": ["@angular-eslint", "@angular-template"],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": ["./tsconfig.json"]
+    "project": ["./tsconfig.*?.json"],
+    "tsconfigRootDir": "__dirname",
+    "createDefaultProgram": true
   },
   "overrides": [
     {

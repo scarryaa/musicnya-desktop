@@ -88,7 +88,7 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
 
   _collapsed = true;
   _offset = 1;
-  @Input() drawerStyleClass!: string;
+  @Input() drawerStyleClass: string = '';
   @Input() drawerStyle!: string;
   @Input() width = 14;
   @Input() collapsedWidth = 5;

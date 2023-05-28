@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
-import { Musickit, MusickitAPI, MusickitBase } from '@yan-inc/core-services';
+import { select, Store } from '@ngrx/store';
+import { Musickit } from '@yan-inc/core-services';
 import {
   switchMap,
   catchError,
@@ -13,20 +13,15 @@ import {
   withLatestFrom,
 } from 'rxjs';
 import { MusicKit } from '../../../types';
-import { MusicActions, MusicAPIActions } from '../actions';
+import { MusicActions } from '../actions';
 import { fromMusic } from '../reducers';
 
-@Injectable({ providedIn: 'root' })
-export class MusicEffects {
-  private actions$ = inject(Actions);
-  private music = inject(Musickit);
-  private store = inject(Store);
-
-  addListener$ = createEffect(() =>
-    this.actions$.pipe(
+export const addListener$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.addEventListener),
       tap((action) =>
-        this.music._instance.addEventListener(
+        music._instance.addEventListener(
           action.payload.event,
           action.payload.callback
         )
@@ -36,14 +31,16 @@ export class MusicEffects {
         console.error('Error', error);
         return of(MusicActions.addEventListenerFailure({ payload: { error } }));
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  removeListener$ = createEffect(() =>
-    this.actions$.pipe(
+export const removeListener$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.removeEventListener),
       tap((action) =>
-        this.music._instance.removeEventListener(
+        music._instance.removeEventListener(
           action.payload.event,
           action.payload.callback
         )
@@ -55,14 +52,16 @@ export class MusicEffects {
           MusicActions.removeEventListenerFailure({ payload: { error } })
         );
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  setQueue$ = createEffect(() =>
-    this.actions$.pipe(
+export const setQueue$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.setQueue),
       switchMap((action) =>
-        from(this.music.setQueue(action.payload.options as any))
+        from(music.setQueue(action.payload.options as any))
       ),
       switchMap((shouldPlay) => {
         const actions = [];
@@ -76,15 +75,17 @@ export class MusicEffects {
         console.error('Error', error);
         return of(MusicActions.setQueueFailure);
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  shufflePlay$ = createEffect(() =>
-    this.actions$.pipe(
+export const shufflePlay$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.shufflePlay),
       concatMap(async (action) => [
-        (this.music.instance.shuffleMode = 1),
-        await this.music.setQueue({
+        (music.instance.shuffleMode = 1),
+        await music.setQueue({
           ...action.payload.options,
           startPlaying: true,
         } as any),
@@ -94,14 +95,16 @@ export class MusicEffects {
         console.error('Error', error);
         return of(MusicActions.shufflePlayFailure);
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  setQueueThenPlay$ = createEffect(() =>
-    this.actions$.pipe(
+export const setQueueThenPlay$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.setQueueThenPlay),
       concatMap(async (action) => [
-        await this.music.setQueue({
+        await music.setQueue({
           ...action.payload.options,
           startPlaying: true,
         } as any),
@@ -111,45 +114,50 @@ export class MusicEffects {
         console.error('Error', error);
         return of(MusicActions.setQueueThenPlayFailure);
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  play$ = createEffect(() =>
-    this.actions$.pipe(
+export const play$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    music = inject(Musickit),
+    store = inject(Store)
+  ) =>
+    actions$.pipe(
       ofType(MusicActions.play),
-      withLatestFrom(
-        this.store.select(fromMusic.MUSIC_FEATURE_KEY, 'currentItem')
-      ),
-      filter(([action, currentItem]) => currentItem !== null),
-      switchMap(() => from(this.music.play())),
+      withLatestFrom(store.pipe(select(() => fromMusic.getCurrentItem))),
+      filter(([, currentItem]) => currentItem !== null),
+      switchMap(() => from(music.play())),
       switchMap(() => of(MusicActions.playSuccess())),
       catchError((error) => {
         console.error('Error', error);
         return of(MusicActions.playFailure);
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  setShuffleMode$ = createEffect(() =>
-    this.actions$.pipe(
+export const setShuffleMode$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.setShuffleMode),
       tap(() => {
         if (
-          this.music.instance.shuffleMode.valueOf() ===
+          music.instance.shuffleMode.valueOf() ===
           MusicKit.PlayerShuffleMode.off
         ) {
-          (this.music.instance.shuffleMode as any) =
+          (music.instance.shuffleMode as any) =
             MusicKit.PlayerShuffleMode.songs;
         } else {
-          (this.music.instance.shuffleMode as any) =
-            MusicKit.PlayerShuffleMode.off;
+          (music.instance.shuffleMode as any) = MusicKit.PlayerShuffleMode.off;
         }
       }),
       switchMap(() =>
         of(
           MusicActions.setShuffleModeSuccess({
             payload: {
-              shuffleMode: this.music.instance.shuffleMode.valueOf() as any,
+              shuffleMode: music.instance.shuffleMode.valueOf() as any,
             },
           })
         )
@@ -158,35 +166,32 @@ export class MusicEffects {
         console.error('Error', error);
         return of(MusicActions.setShuffleModeFailure({ payload: { error } }));
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  setRepeatMode$ = createEffect(() =>
-    this.actions$.pipe(
+export const setRepeatMode$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.setRepeatMode),
       tap(() => {
         if (
-          this.music.instance.repeatMode.valueOf() ===
-          MusicKit.PlayerRepeatMode.none
+          music.instance.repeatMode.valueOf() === MusicKit.PlayerRepeatMode.none
         ) {
-          (this.music.instance.repeatMode as any) =
-            MusicKit.PlayerRepeatMode.one;
+          (music.instance.repeatMode as any) = MusicKit.PlayerRepeatMode.one;
         } else if (
-          this.music.instance.repeatMode.valueOf() ===
-          MusicKit.PlayerRepeatMode.one
+          music.instance.repeatMode.valueOf() === MusicKit.PlayerRepeatMode.one
         ) {
-          (this.music.instance.repeatMode as any) =
-            MusicKit.PlayerRepeatMode.all;
+          (music.instance.repeatMode as any) = MusicKit.PlayerRepeatMode.all;
         } else {
-          (this.music.instance.repeatMode as any) =
-            MusicKit.PlayerRepeatMode.none;
+          (music.instance.repeatMode as any) = MusicKit.PlayerRepeatMode.none;
         }
       }),
       switchMap(() =>
         of(
           MusicActions.setRepeatModeSuccess({
             payload: {
-              repeatMode: this.music.instance.repeatMode.valueOf() as any,
+              repeatMode: music.instance.repeatMode.valueOf() as any,
             },
           })
         )
@@ -195,108 +200,124 @@ export class MusicEffects {
         console.error('Error', error);
         return of(MusicActions.setRepeatModeFailure({ payload: { error } }));
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  pause$ = createEffect(() =>
-    this.actions$.pipe(
+export const pause$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.pause),
-      switchMap(() => from(this.music.pause())),
+      switchMap(() => from(music.pause())),
       switchMap(() => of(MusicActions.pauseSuccess())),
       catchError((error) => {
         console.error('Error', error);
         return of(MusicActions.pauseFailure);
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  skipToNextItem$ = createEffect(() =>
-    this.actions$.pipe(
+export const skipToNextItem$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.skipToNextItem),
-      switchMap(() => from(this.music.skipToNextItem())),
+      switchMap(() => from(music.skipToNextItem())),
       switchMap(() => of(MusicActions.skipToNextItemSuccess())),
       catchError((error) => {
         console.error('Error', error);
         return of(MusicActions.skipToNextItemFailure);
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  skipToPreviousItem$ = createEffect(() =>
-    this.actions$.pipe(
+export const skipToPreviousItem$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.skipToPreviousItem),
-      switchMap(() => from(this.music.skipToPreviousItem())),
+      switchMap(() => from(music.skipToPreviousItem())),
       switchMap(() => of(MusicActions.skipToPreviousItemSuccess())),
       catchError((error) => {
         console.error('Error', error);
         return of(MusicActions.skipToPreviousItemFailure);
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  changeToMediaAtIndex$ = createEffect(() =>
-    this.actions$.pipe(
+export const changeToMediaAtIndex$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.changeToMediaAtIndex),
       switchMap((action) =>
-        from(this.music.changeToMediaAtIndex(action.payload.index))
+        from(music.changeToMediaAtIndex(action.payload.index))
       ),
       switchMap(() => of(MusicActions.changeToMediaAtIndexSuccess())),
       catchError((error) => {
         console.error('Error', error);
         return of(MusicActions.changeToMediaAtIndexFailure);
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  seekToTime$ = createEffect(() =>
-    this.actions$.pipe(
+export const seekToTime$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.seekToTime),
-      switchMap((action) => from(this.music.seekToTime(action.payload.time))),
+      switchMap((action) => from(music.seekToTime(action.payload.time))),
       switchMap(() => of(MusicActions.seekToTimeSuccess())),
       catchError((error) => {
         console.error('Error', error);
         return of(MusicActions.seekToTimeFailure);
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  setQueueFromMediaItems$ = createEffect(() =>
-    this.actions$.pipe(
+export const setQueueFromMediaItems$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.setQueueFromMediaItems),
       switchMap((action) =>
-        from(this.music.setQueueFromMediaItems(action.payload.items as any))
+        from(music.setQueueFromMediaItems(action.payload.items as any))
       ),
       switchMap(() => of(MusicActions.setQueueFromMediaItemsSuccess())),
       catchError((error) => {
         console.error('Error', error);
         return of(MusicActions.setQueueFromMediaItemsFailure);
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  setQueueFromSongIDs$ = createEffect(() =>
-    this.actions$.pipe(
+export const setQueueFromSongIDs$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.setQueueFromSongIDs),
       switchMap((action) =>
-        from(this.music.setQueueFromSongIDs(action.payload.ids))
+        from(music.setQueueFromSongIDs(action.payload.ids))
       ),
       switchMap(() => of(MusicActions.setQueueFromSongIDsSuccess())),
       catchError((error) => {
         console.error('Error', error);
         return of(MusicActions.setQueueFromSongIDsFailure);
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  setVolume$ = createEffect(() =>
-    this.actions$.pipe(
+export const setVolume$ = createEffect(
+  (actions$ = inject(Actions), music = inject(Musickit)) =>
+    actions$.pipe(
       ofType(MusicActions.setVolume),
-      switchMap((action) => from(this.music.setVolume(action.payload.volume))),
+      switchMap((action) => from(music.setVolume(action.payload.volume))),
       switchMap(() => of(MusicActions.setVolumeSuccess())),
       catchError((error) => {
         console.error('Error', error);
         return of(MusicActions.setVolumeFailure);
       })
-    )
-  );
-}
+    ),
+  { functional: true }
+);

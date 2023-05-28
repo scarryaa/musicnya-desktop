@@ -17,6 +17,7 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
   }
 
   retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {
+    // eslint-disable-next-line unicorn/no-null
     return this.storedRouteHandles.get(this.getPath(route)) || null;
   }
 
@@ -31,7 +32,7 @@ export class CacheRouteReuseStrategy implements RouteReuseStrategy {
 
   shouldDetach(route: ActivatedRouteSnapshot): boolean {
     const path = this.getPath(route);
-    if (this.allowRetriveCache.hasOwnProperty(path)) {
+    if (Object.hasOwn(this.allowRetriveCache, path)) {
       return true;
     }
     return false;

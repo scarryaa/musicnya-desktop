@@ -1,5 +1,3 @@
-import * as MusicActions from './music.actions';
-import * as MusicAPIActions from './music-api.actions';
-import * as PreferencesActions from './preferences.actions';
-
-export { MusicAPIActions, MusicActions, PreferencesActions };
+export * as MusicAPIActions from './music-api.actions';
+export * as MusicActions from './music.actions';
+export * as PreferencesActions from './preferences.actions';

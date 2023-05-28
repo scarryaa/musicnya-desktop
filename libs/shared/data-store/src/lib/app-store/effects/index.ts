@@ -1,3 +1,3 @@
-import * as MusicAPIEffects from './music-api.effects';
-import * as MusicEffects from './music.effects';
-import * as PreferencesEffects from './preferences.effects';
+export * as musicEffects from './music.effects';
+export * as preferencesEffects from './preferences.effects';
+export * as musicAPIEffects from './music-api.effects';

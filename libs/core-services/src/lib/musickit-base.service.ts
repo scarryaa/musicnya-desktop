@@ -1,9 +1,8 @@
-import { Inject, Injectable, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Injectable } from '@angular/core';
 import { HttpService } from '@nyan-inc/core';
 import type { MusicKit as Music } from '../types';
 
-declare var MusicKit: typeof Music;
+declare const MusicKit: typeof Music;
 
 @Injectable({
   providedIn: 'root',
@@ -16,9 +15,9 @@ export class MusickitBase {
   }
 
   async init(): Promise<void> {
-    await this.http.getConfig().then((res) => {
-      this.initMusicKit(res).then(async (res) => {
-        this.instance = res;
+    await this.http.getConfig().then((result) => {
+      this.initMusicKit(result).then(async (result) => {
+        this.instance = result;
         this.instance.volume = 0.05;
         this.instance.clearQueue();
         this.instance.stop();

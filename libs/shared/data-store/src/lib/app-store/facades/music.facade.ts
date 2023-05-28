@@ -1,11 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { filter, map, Subscription, take } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { MusicKit } from '../../../types';
 import { processMediaType } from '../../models/helpers';
 import { MusicActions } from '../actions';
 import { fromMusic } from '../reducers';
-import { MusicAPIState } from '../reducers/music-api.reducer';
 import { MusicState } from '../reducers/music.reducer';
 
 @Injectable({
@@ -60,11 +59,11 @@ export class MusicFacade implements OnDestroy {
     this.store.dispatch(MusicActions.setVolume({ payload: { volume } }));
   }
 
-  setQueue(queue: MusicKit.MediaItem[]) {
+  setQueue() {
     this.store.dispatch(MusicActions.setQueue({ payload: { options: {} } }));
   }
 
-  setQueueThenPlay(type: string, id: string, shuffle: boolean = false) {
+  setQueueThenPlay(type: string, id: string) {
     type = processMediaType(type, id);
 
     this.store.dispatch(
@@ -74,7 +73,7 @@ export class MusicFacade implements OnDestroy {
     );
   }
 
-  shufflePlay(type: string, id: string, shuffle: boolean = true) {
+  shufflePlay(type: string, id: string) {
     type = processMediaType(type, id);
 
     this.store.dispatch(

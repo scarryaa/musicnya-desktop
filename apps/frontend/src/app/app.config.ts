@@ -21,10 +21,10 @@ import '@angular/compiler';
 import {
   fromMusic,
   fromMusicAPI,
-  MusicAPIEffects,
-  MusicEffects,
+  musicAPIEffects,
+  musicEffects,
   MusicEventListeners,
-  PreferencesEffects,
+  preferencesEffects,
 } from '@nyan-inc/shared';
 import * as fromApp from '../store/reducers/app.reducer';
 import * as fromLayout from '../store/reducers/layout.reducer';
@@ -87,9 +87,9 @@ export const appConfig: ApplicationConfig = {
     ),
     provideEffects([
       AppEffects,
-      MusicEffects,
-      MusicAPIEffects,
-      PreferencesEffects,
+      musicAPIEffects,
+      musicEffects,
+      preferencesEffects,
     ]),
     provideState(fromLayout.LAYOUT_FEATURE_KEY, fromLayout.layoutReducer),
     provideState(fromApp.APP_FEATURE_KEY, fromApp.appReducer),

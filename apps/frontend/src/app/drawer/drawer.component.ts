@@ -11,7 +11,6 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
-  AfterViewInit,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import {
@@ -19,14 +18,14 @@ import {
   DisableChildTabIndexDirective,
   FallbackImageDirective,
 } from '@nyan-inc/core';
-import { MusicAPIFacade, RouterFacade } from '@nyan-inc/shared';
+import { MusicAPIFacade } from '@nyan-inc/shared';
 import {
   DrawerModule,
   AlbumTileModule,
   DrawerToggleDirective,
 } from '@nyan-inc/ui';
 import { NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
-import { Subject, Subscription, map, tap } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'musicnya-drawer',

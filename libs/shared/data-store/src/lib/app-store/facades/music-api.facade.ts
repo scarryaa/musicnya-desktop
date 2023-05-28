@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { filter, map, Subscription, take } from 'rxjs';
-import type { MusicKit } from '../../../types';
+import { map, Subscription, take } from 'rxjs';
 import { MusicAPIActions } from '../actions';
 import { fromMusicAPI } from '../reducers';
 import { MusicAPIState } from '../reducers/music-api.reducer';

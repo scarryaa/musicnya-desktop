@@ -19,7 +19,6 @@ import { TitleBarComponent } from './title-bar/title-bar.component';
 import {
   DraggableDirective,
   NavigationButtonSmartModule,
-  WindowRefService,
 } from '@nyan-inc/core';
 import { NavigationButtonsComponent } from './navigation-buttons/navigation-buttons.component';
 import { HttpService } from '../../../../libs/core/src/lib/http/http.service';
@@ -66,7 +65,6 @@ export class AppComponent implements OnInit, OnDestroy {
     //TODO convert to facade
     private store: Store<AppState & LayoutState & MusicState>,
     private http: HttpService,
-    private windowService: WindowRefService,
     private musicAPIFacade: MusicAPIFacade,
     private musickit: MusickitBase
   ) {

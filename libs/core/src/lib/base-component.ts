@@ -2,7 +2,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
-  Directive,
+  Component,
   ElementRef,
   HostBinding,
   Input,
@@ -10,8 +10,9 @@ import {
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
-@Directive({
-  selector: 'base-component',
+@Component({
+  selector: 'core-base-component',
+  template: ``,
 })
 export class BaseComponent {
   constructor(

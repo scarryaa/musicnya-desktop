@@ -12,13 +12,10 @@ import copy, { State } from 'fast-copy';
 import { MusicAPIActions } from '../actions';
 import { MusicAPIEntity } from '../models/music-api.models';
 import {
-  Albums,
-  LibraryAlbums,
   LibraryPlaylists,
   MediaItem,
   MediaItemTypes,
   PersonalRecommendation,
-  Playlists,
   Resource,
 } from '@nyan-inc/core';
 
@@ -129,7 +126,7 @@ const reducer = createReducer(
 
   // get from url
   on(MusicAPIActions.getFromUrl, (state) => ({ ...state })),
-  on(MusicAPIActions.getFromUrlSuccess, (state, { payload }) => ({
+  on(MusicAPIActions.getFromUrlSuccess, (state) => ({
     ...state,
   })),
   on(MusicAPIActions.getFromUrlFailure, (state, { payload }) => ({
@@ -142,7 +139,7 @@ const reducer = createReducer(
   on(MusicAPIActions.getMediaItemSuccess, (state, { payload }) => ({
     ...state,
     mediaCache: [
-      ...(state.mediaCache ?? Array.prototype.concat(payload.data)),
+      ...(state.mediaCache ?? [...Array.prototype, payload.data]),
       payload.data,
     ],
   })),
@@ -152,7 +149,7 @@ const reducer = createReducer(
   })),
 
   // set current view type
-  on(MusicAPIActions.setCurrentViewType, (state, { payload }) => ({
+  on(MusicAPIActions.setCurrentViewType, (state) => ({
     ...state,
   })),
   on(MusicAPIActions.setCurrentViewTypeSuccess, (state, { payload }) => ({

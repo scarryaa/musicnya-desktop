@@ -97,19 +97,19 @@ export class MusickitAPI {
   }
 
   async getRecentlyPlayed(): Promise<any> {
-    const req = await this.requestData(
+    const request = await this.requestData(
       `/v1/me/recent/played${this.getQueryString()}&limit=20`
     );
-    console.log(req);
-    return req;
+    console.log(request);
+    return request;
   }
 
   async getRecommendations(): Promise<any> {
-    const req = await this.requestData(
+    const request = await this.requestData(
       `/v1/me/recommendations${this.getQueryString()}?include[albums]=artists&extend=editorialArtwork,editorialVideo,offers,trackCount&limit[albums]=10`
     );
-    console.log(req);
-    return req;
+    console.log(request);
+    return request;
   }
 
   // Provide common query string for API endpoints

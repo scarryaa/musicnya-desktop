@@ -1,1 +1,2 @@
-import('./bootstrap').catch((err) => console.error(err));
+/* eslint-disable unicorn/prefer-top-level-await */
+import('./bootstrap').catch((error) => console.error(error));

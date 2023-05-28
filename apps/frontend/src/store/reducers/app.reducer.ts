@@ -1,8 +1,7 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { createReducer, on, Action, createSelector } from '@ngrx/store';
+import { createReducer, on, Action } from '@ngrx/store';
 
 import * as AppActions from '../actions/app.actions';
-import * as fromRouter from '@ngrx/router-store';
 import { AppEntity } from '../models/app.models';
 
 export const APP_FEATURE_KEY = 'app';

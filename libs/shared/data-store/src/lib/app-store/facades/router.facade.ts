@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { RouterReducerState, RouterState } from '@ngrx/router-store';
-import { createSelector, select, Store } from '@ngrx/store';
-import * as fromRouter from '@ngrx/router-store';
+import { RouterReducerState } from '@ngrx/router-store';
+import { select, Store } from '@ngrx/store';
 
 @Injectable({
   providedIn: 'root',

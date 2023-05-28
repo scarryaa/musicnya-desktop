@@ -1,20 +1,20 @@
 import { Action } from '@ngrx/store';
+import { AppEntity } from '../models/app.models';
+import * as AppActions from '../actions/app.actions';
 
 import { AppState, initialAppState, appReducer } from './app.reducer';
+const createAppEntity = (id: string, name = ''): AppEntity =>
+  ({ payload: { id, name } } as AppEntity);
 
 describe('App Reducer', () => {
-  const createAppEntity = (id: string, name = ''): AppEntity => ({
-    id,
-    name: name || `name-${id}`,
-  });
-
   describe('valid App actions', () => {
     it('loadAppSuccess should return the list of known App', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const app = [
         createAppEntity('PRODUCT-AAA'),
         createAppEntity('PRODUCT-zzz'),
       ];
-      const action = AppActions.loadAppSuccess({ app });
+      const action = AppActions.initAppSuccess();
 
       const result: AppState = appReducer(initialAppState, action);
 

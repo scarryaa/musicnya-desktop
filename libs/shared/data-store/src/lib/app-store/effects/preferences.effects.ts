@@ -1,14 +1,11 @@
-import { Injectable, inject } from '@angular/core';
+import { inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { switchMap, catchError, of, tap } from 'rxjs';
 import { PreferencesActions } from '../actions';
 
-@Injectable({ providedIn: 'root' })
-export class PreferencesEffects {
-  private actions$ = inject(Actions);
-
-  getPreferences$ = createEffect(() =>
-    this.actions$.pipe(
+export const getPreferences$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
       ofType(PreferencesActions.getPreferences),
       switchMap(() => of(PreferencesActions.getPreferencesSuccess())),
       catchError((error: Error) => {
@@ -17,11 +14,13 @@ export class PreferencesEffects {
           PreferencesActions.getPreferencesFailure({ payload: { error } })
         );
       })
-    )
-  );
+    ),
+  { functional: true }
+);
 
-  setPreferences$ = createEffect(() =>
-    this.actions$.pipe(
+export const setPreferences$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
       ofType(PreferencesActions.setPreferences),
       switchMap(() => of(PreferencesActions.setPreferencesSuccess())),
       catchError((error: Error) => {
@@ -30,6 +29,6 @@ export class PreferencesEffects {
           PreferencesActions.setPreferencesFailure({ payload: { error } })
         );
       })
-    )
-  );
-}
+    ),
+  { functional: true }
+);

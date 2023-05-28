@@ -6,7 +6,6 @@ import {
   createSelector,
   createFeatureSelector,
 } from '@ngrx/store';
-import { MediaItemTypes } from '@nyan-inc/core';
 import type { MusicKit } from '../../../types';
 import { MKMediaItemType } from '../../models/musickit.models';
 import { MusicActions } from '../actions';
@@ -26,25 +25,25 @@ interface MusicPlayerState {
   isPlaying: boolean;
   isPaused: boolean;
   isStopped: boolean;
-  isLiveStream: boolean | null;
-  isBuffering: boolean | null;
-  isWaiting: boolean | null;
-  isSeeking: boolean | null;
-  isStalled: boolean | null;
-  playbackBitrate: number | null;
-  playbackVolume: number | null;
+  isLiveStream: boolean | undefined;
+  isBuffering: boolean | undefined;
+  isWaiting: boolean | undefined;
+  isSeeking: boolean | undefined;
+  isStalled: boolean | undefined;
+  playbackBitrate: number | undefined;
+  playbackVolume: number | undefined;
   currentItem: MusicKit.MediaItem;
-  currentQueue: MusicKit.Queue | null;
-  currentQueueIndex: number | null;
-  currentQueueItems: MusicKit.MediaItem[] | null;
-  currentQueueDuration: number | null;
-  currentPlaybackDuration: number | null;
-  currentPlaybackTimeRemaining: number | null;
-  currentPlaybackTime: number | null;
-  currentPlaybackShuffleMode: MusicKit.PlayerShuffleMode | null;
-  currentPlaybackRepeatMode: MusicKit.PlayerRepeatMode | null;
+  currentQueue: MusicKit.Queue | undefined;
+  currentQueueIndex: number | undefined;
+  currentQueueItems: MusicKit.MediaItem[] | undefined;
+  currentQueueDuration: number | undefined;
+  currentPlaybackDuration: number | undefined;
+  currentPlaybackTimeRemaining: number | undefined;
+  currentPlaybackTime: number | undefined;
+  currentPlaybackShuffleMode: MusicKit.PlayerShuffleMode | undefined;
+  currentPlaybackRepeatMode: MusicKit.PlayerRepeatMode | undefined;
   currentPlaybackState: MusicKit.PlaybackStates;
-  currentPlaybackBufferedProgress: number | null;
+  currentPlaybackBufferedProgress: number | undefined;
 }
 
 export interface MusicPartialState {
@@ -58,38 +57,38 @@ export const initialMusicState: MusicState = musicAdapter.getInitialState({
   // set initial required properties
   loaded: false,
   libraryPlaylists: [],
-  error: null,
+  error: undefined,
   mediaCache: [],
-  currentMediaType: null,
-  currentMedia: null,
+  currentMediaType: undefined,
+  currentMedia: undefined,
   homeTileLists: [],
   musicPlayer: {
     isPlaying: false,
     isPaused: false,
     isStopped: false,
-    isLiveStream: null,
-    isBuffering: null,
-    isWaiting: null,
-    isSeeking: null,
-    isStalled: null,
-    playbackBitrate: null,
-    playbackVolume: null,
+    isLiveStream: undefined,
+    isBuffering: undefined,
+    isWaiting: undefined,
+    isSeeking: undefined,
+    isStalled: undefined,
+    playbackBitrate: undefined,
+    playbackVolume: undefined,
     currentItem: {
       href: '',
       id: '',
       type: MKMediaItemType.songs as unknown as MusicKit.MediaItemType,
     },
-    currentQueue: null,
-    currentQueueIndex: null,
-    currentQueueItems: null,
-    currentQueueDuration: null,
-    currentPlaybackDuration: null,
-    currentPlaybackTimeRemaining: null,
-    currentPlaybackTime: null,
-    currentPlaybackShuffleMode: null,
-    currentPlaybackRepeatMode: null,
+    currentQueue: undefined,
+    currentQueueIndex: undefined,
+    currentQueueItems: undefined,
+    currentQueueDuration: undefined,
+    currentPlaybackDuration: undefined,
+    currentPlaybackTimeRemaining: undefined,
+    currentPlaybackTime: undefined,
+    currentPlaybackShuffleMode: undefined,
+    currentPlaybackRepeatMode: undefined,
     currentPlaybackState: 0,
-    currentPlaybackBufferedProgress: null,
+    currentPlaybackBufferedProgress: undefined,
   },
 });
 
@@ -272,7 +271,7 @@ const reducer = createReducer(
     error: error,
   })),
 
-  on(MusicActions.setQueue, (state, { payload: { options } }) => ({
+  on(MusicActions.setQueue, (state) => ({
     ...state,
     loaded: false,
     error: undefined,
@@ -291,7 +290,7 @@ const reducer = createReducer(
     error: error,
   })),
 
-  on(MusicActions.setQueueThenPlay, (state, { payload: { options } }) => ({
+  on(MusicActions.setQueueThenPlay, (state) => ({
     ...state,
     loaded: false,
     error: undefined,
@@ -399,7 +398,7 @@ const reducer = createReducer(
     error: error,
   })),
 
-  on(MusicActions.setQueueFromSongIDs, (state, { payload: { ids } }) => ({
+  on(MusicActions.setQueueFromSongIDs, (state) => ({
     ...state,
     loaded: false,
     error: undefined,
@@ -539,7 +538,3 @@ export const getMusicState =
 export function musicReducer(state: MusicState | undefined, action: Action) {
   return reducer(state, action);
 }
-
-let setAll = (obj: any, val: any) =>
-  Object.keys(obj).forEach((k) => (obj[k] = val));
-let setNull = (obj: any) => setAll(obj, null);

@@ -14,7 +14,6 @@ import {
   TooltipComponent,
   TooltipDirectiveModule,
 } from '@nyan-inc/core';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'ui-playback-controls',
@@ -36,7 +35,7 @@ import { Observable } from 'rxjs';
         >{{
           dragging
             ? (slider.value * 1000 | date : 'mm:ss')
-            : (playbackTime.currentPlaybackTime * 1000 | date : 'mm:ss')
+            : (playbackTime.currentPlaybackTime * 1000 || 0 | date : 'mm:ss')
         }}
       </span>
       <span id="duration">{{

@@ -1,7 +1,5 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on, Action } from '@ngrx/store';
-
-import copy from 'fast-copy';
 import { PreferencesActions } from '../actions';
 import { PreferencesEntity } from '../models/preferences.models';
 
@@ -34,7 +32,7 @@ const reducer = createReducer(
     error: undefined,
   })),
 
-  on(PreferencesActions.prefsInitSuccess, (state, { payload }) => ({
+  on(PreferencesActions.prefsInitSuccess, (state) => ({
     ...state,
   })),
 
