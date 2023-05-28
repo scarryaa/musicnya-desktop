@@ -1,4 +1,8 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import {
+  ApplicationConfig,
+  APP_INITIALIZER,
+  importProvidersFrom,
+} from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   provideRouter,
@@ -20,6 +24,7 @@ import {
   fromMusicAPI,
   MusicAPIEffects,
   MusicEffects,
+  MusicEventListeners,
   PreferencesEffects,
 } from '@nyan-inc/shared';
 import * as fromApp from '../store/reducers/app.reducer';
@@ -29,6 +34,16 @@ import { CacheRouteReuseStrategy } from '@nyan-inc/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (eventListeners: MusicEventListeners) => () => {
+        document.addEventListener('DOMContentLoaded', () => {
+          eventListeners.addEventListeners();
+        });
+      },
+      deps: [MusicEventListeners],
+      multi: true,
+    },
     provideRouter(
       appRoutes,
       withEnabledBlockingInitialNavigation(),

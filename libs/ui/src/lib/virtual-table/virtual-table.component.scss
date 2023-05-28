@@ -80,7 +80,6 @@ table {
 
   #id-table-header,
   .id-content {
-    color: var(--table-faded-text-color);
     width: 1rem;
     max-width: 1rem;
     padding-inline: 1.25rem;
@@ -144,7 +143,6 @@ table {
 
       #title {
         max-width: 100%;
-        color: black !important;
       }
 
       #artists {
@@ -298,10 +296,6 @@ table {
         width: 1.55rem;
         height: 2rem;
         display: block;
-
-        path {
-          fill: currentColor;
-        }
       }
     }
   }
@@ -371,4 +365,26 @@ table {
   font-size: 13px;
   margin-top: 5px;
   z-index: 99999;
+}
+
+.font-color {
+  #title {
+    color: black !important;
+  }
+}
+
+.font-faded-color {
+  color: var(--table-faded-text-color) !important;
+
+  div {
+    color: var(--table-faded-text-color) !important;
+  }
+}
+
+.accent-color {
+  color: var(--accent-color, red) !important;
+
+  #title {
+    color: var(--accent-color, red) !important;
+  }
 }

@@ -2,17 +2,18 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   HostBinding,
   Input,
   NgModule,
   OnChanges,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import { DisplayedColumns, MediaItemTypes, Songs } from '@nyan-inc/core';
 import { SongDataSource } from './song-data-source';
 import { VirtualTableModule } from './virtual-table-presentation.component';
 import { DataSource } from '@angular/cdk/table';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SelectionModel } from '@angular/cdk/collections';
 import { RouterModule } from '@angular/router';
 
@@ -24,8 +25,13 @@ import { RouterModule } from '@angular/router';
     [data]="data"
     (dropEmitter)="handleDrop($event)"
     (clickEmitter)="handleClick($event)"
+    (doubleClickEmitter)="handleDoubleClick($event)"
     [showAlbums]="showAlbums"
+    [playingSong]="playingSong"
     [selected]="selection"
+    [playing]="playing"
+    (playEmitter)="unpauseEmitter.emit()"
+    (pauseEmitter)="pauseEmitter.emit()"
   ></ui-virtual-table-presentation>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -36,6 +42,12 @@ export class VirtualTableSmartComponent implements OnChanges {
   showAlbums = true;
   @Input() data!: Songs[];
   @Input() media!: MediaItemTypes;
+  @Input() playingSong: string | undefined = undefined;
+  @Input() playing = false;
+
+  @Output() unpauseEmitter = new EventEmitter();
+  @Output() pauseEmitter = new EventEmitter();
+  @Output() doubleClickEmitter = new EventEmitter<Songs>();
 
   @HostBinding('style.width.%') width = '100';
 
@@ -67,6 +79,10 @@ export class VirtualTableSmartComponent implements OnChanges {
 
   handleClick(event: Songs) {
     this.selection.toggle(event);
+  }
+
+  handleDoubleClick(event: Songs) {
+    this.doubleClickEmitter.emit(event);
   }
 }
 

@@ -1,14 +1,26 @@
 import { Injectable, inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { Musickit, MusickitAPI, MusickitBase } from '@yan-inc/core-services';
-import { switchMap, catchError, of, tap, from, concatMap } from 'rxjs';
+import {
+  switchMap,
+  catchError,
+  of,
+  tap,
+  from,
+  concatMap,
+  filter,
+  withLatestFrom,
+} from 'rxjs';
 import { MusicKit } from '../../../types';
 import { MusicActions, MusicAPIActions } from '../actions';
+import { fromMusic } from '../reducers';
 
 @Injectable({ providedIn: 'root' })
 export class MusicEffects {
   private actions$ = inject(Actions);
   private music = inject(Musickit);
+  private store = inject(Store);
 
   addListener$ = createEffect(() =>
     this.actions$.pipe(
@@ -105,6 +117,10 @@ export class MusicEffects {
   play$ = createEffect(() =>
     this.actions$.pipe(
       ofType(MusicActions.play),
+      withLatestFrom(
+        this.store.select(fromMusic.MUSIC_FEATURE_KEY, 'currentItem')
+      ),
+      filter(([action, currentItem]) => currentItem !== null),
       switchMap(() => from(this.music.play())),
       switchMap(() => of(MusicActions.playSuccess())),
       catchError((error) => {

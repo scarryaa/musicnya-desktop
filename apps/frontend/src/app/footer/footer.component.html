@@ -5,9 +5,9 @@
         <ui-album-tile
           [tabIndex]="-1"
           id="media-tile"
-          [source]="item.artworkURL"
-          [mediaTitle]="item.title"
-          [artists]="[item.artistName]"
+          [source]="item.attributes?.['artwork']?.url.replace('{w}x{h}', '300x300').replace('{f}', '{webp}')"
+          [mediaTitle]="item.attributes?.['name']"
+          [artists]="[item.attributes?.['artistName']!]"
           [showArtists]="true"
           [tileSize]="3.5"
           [hoverUnderline]="true"
@@ -17,12 +17,13 @@
     </ng-container>
     <ng-container center>
       <ui-playback-controls
-        (playEmitter)="vm.playing$ ? vm.pause() : vm.play()"
+        (playEmitter)="vm.play()"
+        (pauseEmitter)="vm.pause()"
         (nextEmitter)="vm.nextTrack()"
         (previousEmitter)="vm.previousTrack()"
         (repeatEmitter)="vm.setRepeatMode()"
         (shuffleEmitter)="vm.setShuffleMode()"
-        [isPlaying]="vm.playing$ | async"
+        [playbackState]="(vm.currentPlaybackState$ | async)!"
         [shuffleMode]="vm.shuffleMode$ | async"
         [repeatMode]="vm.repeatMode$ | async"
         [playbackTime]="(vm.currentPlaybackTime$ | async) || 0"

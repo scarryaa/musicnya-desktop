@@ -4,11 +4,14 @@ import {
   ChangeDetectionStrategy,
   NgModule,
   Input,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { AlbumTileLargeModule } from './album-tile-large.component';
 import { Router } from '@angular/router';
 import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
 import { MediaPlayInfo } from '../models';
+import { MusicFacade } from '@nyan-inc/shared';
 
 @Component({
   selector: 'ui-album-tile-large',
@@ -32,8 +35,8 @@ import { MediaPlayInfo } from '../models';
   styleUrls: ['./album-tile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AlbumTileLargeSmartComponent {
-  constructor(private router: Router) {}
+export class AlbumTileLargeSmartComponent implements OnChanges {
+  constructor(private router: Router, private music: MusicFacade) {}
   isZoomed = false;
 
   @Input() showEditOverlay = false;
@@ -64,12 +67,17 @@ export class AlbumTileLargeSmartComponent {
   }
 
   play(details: MediaPlayInfo) {
-    // this.musicFacade(queueOptions);
-    // this.musicFacade.play();
+    this.music.setQueueThenPlay(details.type, details.id);
   }
 
   async routeToArtist(details: MediaPlayInfo) {
     await this.router.navigate(['artist' + '/' + details.artistIds[0]]);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['mediaInfo']) {
+      this.mediaInfo = changes['mediaInfo'].currentValue;
+    }
   }
 }
 @NgModule({

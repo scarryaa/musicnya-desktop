@@ -7,7 +7,7 @@ export class HttpService {
   DEV_TOKEN = 'UNDEFINED';
 
   getConfig(): Promise<string> {
-    return fetch('assets/config.json')
+    return fetch('./assets/config.json')
       .then((response) => response.json())
       .then((config: Config) => (this.DEV_TOKEN = config.DEV_TOKEN))
       .then(() => this.DEV_TOKEN)

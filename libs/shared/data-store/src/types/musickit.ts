@@ -574,56 +574,48 @@ export declare namespace MusicKit {
     constructor(options?: MediaItemOptions);
 
     /**A string of information about the album. */
-    readonly albumInfo: string;
+    readonly albumInfo?: string;
     readonly href: string;
     /**The title of the album. */
-    readonly albumName: string;
+    readonly albumName?: string;
     /**The artist for a media item. */
-    readonly artistName: string;
+    readonly artistName?: string;
     /**The artwork object for the media item. */
-    readonly artwork: Artwork;
+    readonly artwork?: Artwork;
     /**The artwork image for the media item. */
-    readonly artworkURL: string;
+    readonly artworkURL?: string;
     /**The attributes object for the media item. */
-    readonly attributes: Pick<
-      | MusicKit.Songs
-      | MusicKit.LibrarySongs
-      | MusicKit.Albums
-      | MusicKit.LibraryAlbums
-      | MusicKit.LibraryPlaylists
-      | MusicKit.Playlists,
-      'attributes'
-    >;
+    readonly attributes?: { [key: string]: any };
     /**The attributes object for the media item. */
-    readonly contentRating: string;
+    readonly contentRating?: string;
     /**The disc number where the media item appears. */
-    readonly discNumber: number;
+    readonly discNumber?: number;
     /**The identifier for the media item. */
     readonly id: string;
     /**A string of common information about the media item. */
-    readonly info: string;
+    readonly info?: string;
     /**A Boolean value that indicates whether the item has explicit lyrics or language. */
-    readonly isExplicitItem: boolean;
+    readonly isExplicitItem?: boolean;
     /**A Boolean value that indicated whether the item is playable. */
-    readonly isPlayable: boolean;
+    readonly isPlayable?: boolean;
     /**A Boolean value indicating whether the media item is prepared to play. */
-    readonly isPreparedToPlay: boolean;
+    readonly isPreparedToPlay?: boolean;
     /**The ISRC (International Standard Recording Code) for a media item. */
-    readonly isrc: string;
+    readonly isrc?: string;
     /**The playback duration of the media item. */
-    readonly playbackDuration: number;
+    readonly playbackDuration?: number;
     /**The playlist artwork image for the media item. */
-    readonly playlistArtworkURL: string;
+    readonly playlistArtworkURL?: string;
     /**The name of the playlist. */
-    readonly playlistName: string;
+    readonly playlistName?: string;
     /**The URL to an unencrypted preview of the media item. */
-    readonly previewURL: string;
+    readonly previewURL?: string;
     /**The release date of the media item. */
     readonly releaseDate?: Date | undefined;
     /**The name of the media item. */
-    readonly title: string;
+    readonly title?: string;
     /**The number of the media item in the album's track list. */
-    readonly trackNumber: number;
+    readonly trackNumber?: number;
     /**The number of the media item in the album's track list. */
     readonly type: MediaItemType;
 
@@ -631,7 +623,7 @@ export declare namespace MusicKit {
 
     /**Prepares a media item for playback.
      * @returns a void Promise. */
-    prepareToPlay(): Promise<void>;
+    prepareToPlay?(): Promise<void>;
   }
 
   /**An enum containing events for a {@link MusicKitinstance}.*/

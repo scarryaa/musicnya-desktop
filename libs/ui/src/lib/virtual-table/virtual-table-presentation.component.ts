@@ -40,15 +40,41 @@ export class VirtualTableComponent implements OnChanges {
   @Input() displayedColumns!: string[];
   @Input() showAlbums = true;
   @Input() selected = new SelectionModel<Songs>(true, []);
+  @Input() playingSong: string | undefined = undefined;
+  @Input() playing = false;
   @Output() readonly dropEmitter = new EventEmitter<Songs[]>();
   @Output() readonly clickEmitter = new EventEmitter<Songs>();
+  @Output() readonly doubleClickEmitter = new EventEmitter<Songs>();
+  @Output() readonly pauseEmitter = new EventEmitter();
+  @Output() readonly playEmitter = new EventEmitter();
+
   dragData: { title: string; artists: string[] } = { title: '', artists: [] };
 
   trackBy(_index: number, song: Songs) {
     return song.id;
   }
 
+  playSong(event: MouseEvent, clickedSong: number) {
+    this.doubleClickEmitter.emit(this.data[clickedSong]);
+    event.stopPropagation();
+  }
+
+  unpauseSong(event: MouseEvent) {
+    this.playEmitter.emit();
+    event.stopPropagation();
+  }
+
+  pauseSong(event: MouseEvent) {
+    this.pauseEmitter.emit();
+    event.stopPropagation();
+  }
+
   handleClick(event: MouseEvent) {
+    event.stopPropagation();
+  }
+
+  handleDoubleClick(event: MouseEvent, clickedSong: number) {
+    this.doubleClickEmitter.emit(this.data[clickedSong]);
     event.stopPropagation();
   }
 
@@ -66,7 +92,8 @@ export class VirtualTableComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.dataSource = changes['dataSource'].currentValue as DataSource<Songs>;
+    if (!changes['dataSource']?.currentValue) return;
+    this.dataSource = changes['dataSource']?.currentValue as DataSource<Songs>;
   }
 }
 @NgModule({

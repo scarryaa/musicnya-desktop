@@ -5,10 +5,10 @@ import {
   HostBinding,
   Input,
   Output,
-  EventEmitter,
   NgModule,
   OnChanges,
   SimpleChanges,
+  EventEmitter,
 } from '@angular/core';
 import {
   BaseButtonModule,
@@ -133,7 +133,10 @@ export class AlbumTileLargeComponent
 
   emitPlay(event: Event) {
     event.stopPropagation();
-    this.playEmitter.emit(this.mediaInfo);
+    this.playEmitter.emit({
+      type: this.mediaInfo.type,
+      id: this.mediaInfo.id,
+    });
   }
 
   emitEdit(event: Event) {

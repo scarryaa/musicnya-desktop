@@ -89,8 +89,8 @@ export class AppComponent implements OnInit, OnDestroy {
     await this.http.getConfig();
 
     this.store.dispatch(AppActions.initApp());
+
     this.musicAPIFacade.getLibraryPlaylists();
-    this.eventListeners.addEventListeners();
   }
 
   ngOnDestroy(): void {

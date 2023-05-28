@@ -56,7 +56,7 @@ export const setPlaybackDurationFailure = createAction(
 
 export const setPlaybackState = createAction(
   '[Music] Set Playback State',
-  props<{ payload: { playbackState: MusicKit.PlaybackStates } }>()
+  props<{ payload: { playbackState: number } }>()
 );
 export const setPlaybackStateSuccess = createAction(
   '[Music] Set Playback State Success'

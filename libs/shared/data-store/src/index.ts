@@ -15,3 +15,6 @@ export * from './lib/app-store/effects/music-api.effects';
 export * from './lib/app-store/effects/music.effects';
 export * from './lib/app-store/effects/preferences.effects';
 export * from './lib/app-store/music-event-listeners';
+
+export * from './lib/models/helpers';
+export * from './lib/models/musickit.models';

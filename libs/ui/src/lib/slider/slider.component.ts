@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -9,11 +10,14 @@ import {
   Input,
   NgModule,
   OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { debounceTime, fromEvent, Subscription, tap, throttleTime } from 'rxjs';
 
 @Component({
   selector: 'ui-slider',
@@ -30,7 +34,10 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SliderComponent implements OnChanges {
+export class SliderComponent implements AfterViewInit, OnChanges, OnDestroy {
+  private subscriptions: Subscription[] = [];
+  private isDragging = false;
+
   @Input() min = 0;
   @Input() max = 100;
   @Input() value = 0;
@@ -42,32 +49,51 @@ export class SliderComponent implements OnChanges {
 
   @ViewChild('slider', { read: ElementRef }) slider!: ElementRef;
 
-  @HostListener('input', ['$event'])
-  onInput(event: any) {
-    this.updateGradient();
-    this.dragging.emit(event.value);
-    this.value = event.target.value;
-    this.valueChange.emit(this.value);
-    this.updateGradient();
+  ngAfterViewInit() {
+    const inputEvents$ = fromEvent(this.slider.nativeElement, 'input');
+    const changeEvents$ = fromEvent(this.slider.nativeElement, 'change');
+
+    this.subscriptions.push(
+      inputEvents$
+        .pipe(
+          tap((event: any) => {
+            this.isDragging = true;
+            this.value = event.target.value;
+            this.updateGradient();
+          }),
+          throttleTime(50),
+          tap((event: any) => {
+            this.dragging.emit(this.value);
+          })
+        )
+        .subscribe(),
+
+      changeEvents$
+        .pipe(
+          tap((event: any) => {
+            this.isDragging = false;
+            this.value = event.target.value;
+            this.valueChange.emit(this.value);
+            this.dragStop.emit(this.value);
+            this.updateGradient();
+          })
+        )
+        .subscribe()
+    );
   }
 
-  @HostListener('change', ['$event.target'])
-  onChange(event: any) {
-    this.updateGradient();
-    this.dragging.emit(event.value);
-    this.dragStop.emit(event.value);
-    console.log('change', event);
-    this.value = event.value;
-    this.valueChange.emit(this.value);
-    this.updateGradient();
+  ngOnDestroy() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['value']) {
+    if (changes['value'] && !this.isDragging && this.slider?.nativeElement) {
       this.value = changes['value'].currentValue;
       this.valueChange.emit(this.value);
 
-      if (this.slider) this.updateGradient();
+      setTimeout(() => {
+        if (this.slider) this.updateGradient();
+      }, 200);
     }
   }
 

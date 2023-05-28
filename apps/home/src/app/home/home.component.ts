@@ -7,7 +7,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { HeadingComponent, MediaTileListComponent } from '@nyan-inc/ui';
-import { MusicAPIFacade } from '@nyan-inc/shared';
+import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
 import { LetDirective } from '@ngrx/component';
 
 @Component({
@@ -24,7 +24,10 @@ import { LetDirective } from '@ngrx/component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnDestroy, OnInit {
-  constructor(public musicAPIFacade: MusicAPIFacade) {
+  constructor(
+    public musicAPIFacade: MusicAPIFacade,
+    public music: MusicFacade
+  ) {
     this.state$ = this.musicAPIFacade.state$;
   }
 
@@ -36,8 +39,9 @@ export class HomeComponent implements OnDestroy, OnInit {
     this.musicAPIFacade.getRecommendationsAndRecentlyPlayed();
   }
 
-  play(object: { album: string }) {
-    // this.musickitFacade.setQueue({ ...object, startPlaying: true });
+  play(type: string, id: string) {
+    console.log('e');
+    this.music.setQueueThenPlay(type, id);
   }
 
   ngOnDestroy(): void {
