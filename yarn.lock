@@ -6658,9 +6658,9 @@ electron-to-chromium@^1.4.284:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.402.tgz#9aa7bbb63081513127870af6d22f829344c5ba57"
   integrity sha512-gWYvJSkohOiBE6ecVYXkrDgNaUjo47QEKK0kQzmWyhkH+yoYiG44bwuicTGNSIQRG3WDMsWVZJLRnJnLNkbWvA==
 
-"electron@https://github.com/castlabs/electron-releases#v25.0.0-beta.4+wvcus":
-  version "25.0.0-beta.4"
-  resolved "https://github.com/castlabs/electron-releases#9d77e3dc9f9fb1f688594a1b47350a20e17fe99a"
+"electron@https://github.com/castlabs/electron-releases#v25.0.0-beta.8+wvcus":
+  version "25.0.0-beta.8"
+  resolved "https://github.com/castlabs/electron-releases#72fe39dab3a68685947937ff56a54ea81b0d6380"
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^18.11.18"

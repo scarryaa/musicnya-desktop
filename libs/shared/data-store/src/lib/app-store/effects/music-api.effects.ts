@@ -49,7 +49,6 @@ export class MusicAPIEffects {
             })
           );
         } else {
-          console.log('fetching library playlists from musickit api');
           // get library playlists and then songs
           return from(this.musickit.getLibraryPlaylists()).pipe(
             switchMap((playlists: LibraryPlaylists[]) =>

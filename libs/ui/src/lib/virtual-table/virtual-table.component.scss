@@ -1,12 +1,19 @@
+.horiz-center {
+  &::before,
+  &::after {
+    margin-left: -1.7rem !important;
+  }
+}
+
 .center-before {
   &::before {
-    margin-top: 0.6rem;
+    margin-top: 0.5rem;
   }
 }
 
 .center-after {
   &::after {
-    margin-top: -1.9rem !important;
+    margin-top: -2rem !important;
   }
 }
 
@@ -98,10 +105,11 @@ table {
     max-width: 90% !important;
 
     &::before {
-      color: var(--backgroundColor);
+      color: #073131;
       font-family: 'Material Symbols Rounded';
       filter: var(--drop-shadow);
       font-variation-settings: 'FILL' 1 !important;
+      font-size: var(--font-size-xl);
       content: '\e01e';
       margin-left: -1.4rem;
       position: absolute;
@@ -110,10 +118,11 @@ table {
     }
 
     &::after {
-      color: rgb(199, 67, 67);
+      color: #8c0807;
       font-family: 'Material Symbols Rounded';
       filter: var(--drop-shadow);
       font-variation-settings: 'FILL' 1 !important;
+      font-size: var(--font-size-xl);
       content: '\e063';
       margin-left: -1.4rem;
       margin-top: -1.2rem;

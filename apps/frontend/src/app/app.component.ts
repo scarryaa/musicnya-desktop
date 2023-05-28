@@ -23,7 +23,7 @@ import {
 } from '@nyan-inc/core';
 import { NavigationButtonsComponent } from './navigation-buttons/navigation-buttons.component';
 import { HttpService } from '../../../../libs/core/src/lib/http/http.service';
-import { MusicAPIFacade } from '@nyan-inc/shared';
+import { MusicAPIFacade, MusicEventListeners } from '@nyan-inc/shared';
 import * as AppActions from '../store/actions/app.actions';
 import * as LayoutActions from '../store/actions/layout.actions';
 import * as fromLayout from '../store/reducers/layout.reducer';
@@ -64,7 +64,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private http: HttpService,
     private windowService: WindowRefService,
     private musicAPIFacade: MusicAPIFacade,
-    private musickit: MusickitBase
+    private musickit: MusickitBase,
+    private eventListeners: MusicEventListeners
   ) {
     this.drawerOpen$ = this.store.pipe(select(fromLayout.getDrawerOpen));
     // TODO fix this
@@ -86,12 +87,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     await this.http.getConfig();
-    const DEV_TOKEN = this.http.DEV_TOKEN;
 
     this.store.dispatch(AppActions.initApp());
-    setTimeout(() => {
-      this.musicAPIFacade.getLibraryPlaylists();
-    }, 1000);
+    this.musicAPIFacade.getLibraryPlaylists();
+    this.eventListeners.addEventListeners();
   }
 
   ngOnDestroy(): void {

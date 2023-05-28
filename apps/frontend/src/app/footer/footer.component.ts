@@ -6,7 +6,7 @@ import {
   PlaybackControlsModule,
 } from '@nyan-inc/ui';
 import { LetDirective } from '@ngrx/component';
-import { PlayerFacade } from '@nyan-inc/shared';
+import { MusicFacade } from '@nyan-inc/shared';
 
 @Component({
   selector: 'musicnya-footer',
@@ -23,5 +23,5 @@ import { PlayerFacade } from '@nyan-inc/shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FooterComponent {
-  constructor(public playerFacade: PlayerFacade) {}
+  constructor(public playerFacade: MusicFacade) {}
 }

@@ -30,7 +30,14 @@
 
   <!-- Title Column -->
   <ng-container cdkColumnDef="Title">
-    <th id="title-table-header" cdk-header-cell *cdkHeaderCellDef>Title</th>
+    <th
+      [style.paddingLeft.rem]="showAlbums ? 1 : 1.6"
+      id="title-table-header"
+      cdk-header-cell
+      *cdkHeaderCellDef
+    >
+      Title
+    </th>
     <td
       class="title-content"
       [ngClass]="{
@@ -41,7 +48,8 @@
           song?.type !== 'music-videos',
         'center-after':
           song?.attributes?.contentRating !== 'explicit' &&
-          song?.type === 'music-videos'
+          song?.type === 'music-videos',
+        'horiz-center': showAlbums
       }"
       cdk-cell
       *cdkCellDef="let song"

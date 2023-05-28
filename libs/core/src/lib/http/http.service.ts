@@ -6,14 +6,14 @@ import { Config } from '../models/config.model';
 export class HttpService {
   DEV_TOKEN = 'UNDEFINED';
 
-  getConfig(): Promise<boolean> {
+  getConfig(): Promise<string> {
     return fetch('assets/config.json')
       .then((response) => response.json())
       .then((config: Config) => (this.DEV_TOKEN = config.DEV_TOKEN))
-      .then(() => true)
+      .then(() => this.DEV_TOKEN)
       .catch((error) => {
         console.error('Error:', error);
-        return false;
+        return 'UNDEFINED';
       });
   }
 }

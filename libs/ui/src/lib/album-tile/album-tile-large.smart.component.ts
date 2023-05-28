@@ -6,9 +6,9 @@ import {
   Input,
 } from '@angular/core';
 import { AlbumTileLargeModule } from './album-tile-large.component';
-import { MediaPlayInfo } from './models';
 import { Router } from '@angular/router';
 import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
+import { MediaPlayInfo } from '../models';
 
 @Component({
   selector: 'ui-album-tile-large',

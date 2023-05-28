@@ -1,14 +1,13 @@
 <ng-container *ngrxLet="playerFacade as vm">
   <ui-footer>
     <ng-container start>
-      <div id="start-container">
+      <div id="start-container" *ngIf="vm.currentItem$ | async as item">
         <ui-album-tile
-          *ngIf="vm?.mediaLoaded$"
           [tabIndex]="-1"
           id="media-tile"
-          source="https://upload.wikimedia.org/wikipedia/en/f/f8/The_Strokes_-_The_New_Abnormal.png"
-          mediaTitle="Test Album"
-          [artists]="['guy']"
+          [source]="item.artworkURL"
+          [mediaTitle]="item.title"
+          [artists]="[item.artistName]"
           [showArtists]="true"
           [tileSize]="3.5"
           [hoverUnderline]="true"
@@ -17,13 +16,25 @@
       </div>
     </ng-container>
     <ng-container center>
-      <ui-playback-controls> </ui-playback-controls>
+      <ui-playback-controls
+        (playEmitter)="vm.playing$ ? vm.pause() : vm.play()"
+        (nextEmitter)="vm.nextTrack()"
+        (previousEmitter)="vm.previousTrack()"
+        (repeatEmitter)="vm.setRepeatMode()"
+        (shuffleEmitter)="vm.setShuffleMode()"
+        [isPlaying]="vm.playing$ | async"
+        [shuffleMode]="vm.shuffleMode$ | async"
+        [repeatMode]="vm.repeatMode$ | async"
+        [playbackTime]="(vm.currentPlaybackTime$ | async) || 0"
+        (dragStopEmitter)="vm.seekToTime($event)"
+      >
+      </ui-playback-controls>
     </ng-container>
     <ng-container end>
       <div id="misc-controls-wrapper">
-        <ui-miscellaneous-controls
-          id="misc-controls"
-        ></ui-miscellaneous-controls>
+        <ui-miscellaneous-controls (volumeEmitter)="vm.setVolume($event / 20)">
+          id="misc-controls" ></ui-miscellaneous-controls
+        >
       </div>
     </ng-container>
   </ui-footer>

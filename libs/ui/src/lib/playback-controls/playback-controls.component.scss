@@ -1,9 +1,35 @@
+.red {
+  i {
+    color: red !important;
+  }
+}
+
 :host {
   #controls-wrapper,
   #misc-controls-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  #duration-wrapper {
+    position: relative;
+
+    #current-time {
+      font-family: Haskoy;
+      font-size: var(--font-size-xs);
+      position: absolute;
+      top: -1rem;
+      left: -3rem;
+    }
+
+    #duration {
+      font-family: Haskoy;
+      font-size: var(--font-size-xs);
+      position: absolute;
+      top: -1rem;
+      right: -3rem;
+    }
   }
 
   #track-wrapper {

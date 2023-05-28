@@ -13,22 +13,6 @@ export class MusickitAPI {
   }
 
   /**
-   * Set the queue of the instance
-   * @param object - The object to set the queue with
-   */
-  async setQueue(object: any) {
-    await this.instance.setQueue({ ...object });
-    return object.startPlaying;
-  }
-
-  /**
-   * Play the instance
-   */
-  async play() {
-    return await this.instance.play();
-  }
-
-  /**
    * Get the instance
    */
 

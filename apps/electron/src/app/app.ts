@@ -11,6 +11,7 @@ import {
   screen,
   dialog,
   nativeTheme,
+  components,
 } from 'electron';
 const ipcMain = require('electron').ipcMain;
 const ipcRenderer = require('electron').ipcRenderer;
@@ -52,6 +53,29 @@ export default class App {
   }
 
   private static setHeadersConfig() {
+    App.mainWindow.webContents.session.webRequest.onBeforeRequest(
+      {
+        urls: ['https://*/*'],
+      },
+      (
+        details: { url: string | string[] },
+        callback: (argument0: {
+          redirectURL?: string;
+          cancel?: boolean;
+        }) => void
+      ) => {
+        if (details.url.includes('hls.js')) {
+          callback({
+            redirectURL: `http://localhost:$${4200}/assets/js/hls.js`,
+          });
+        } else {
+          callback({
+            cancel: false,
+          });
+        }
+      }
+    );
+
     App.mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
       async (details, callback) => {
         if (details.url === 'https://buy.itunes.apple.com/account/web/info') {
@@ -62,6 +86,15 @@ export default class App {
           );
           if (itspod != null)
             details.requestHeaders['Cookie'] = `itspod=${itspod}`;
+        }
+        if (details.url.includes('play.itunes.apple.com')) {
+          details.requestHeaders['DNT'] = '1';
+          details.requestHeaders['authority'] = 'play.itunes.com';
+          details.requestHeaders['origin'] = 'https://beta.music.apple.com';
+          details.requestHeaders['referer'] = 'https://beta.music.apple.com';
+          details.requestHeaders['sec-fetch-dest'] = 'empty';
+          details.requestHeaders['sec-fetch-mode'] = 'cors';
+          details.requestHeaders['sec-fetch-site'] = 'same-site';
         }
         if (details.url.includes('apple.com')) {
           details.requestHeaders['DNT'] = '1';
@@ -135,6 +168,11 @@ export default class App {
             App.baseUrl,
           ];
           details.responseHeaders['referer'] = ['https://beta.music.apple.com'];
+        } else if (details.url.includes('play.itunes.apple.com')) {
+          details.responseHeaders['access-control-allow-origin'].pop();
+          details.responseHeaders['access-control-allow-origin'].push(
+            App.baseUrl
+          );
         }
 
         callback({ responseHeaders: details.responseHeaders });
@@ -165,7 +203,8 @@ export default class App {
     }
   }
 
-  private static onReady() {
+  private static async onReady() {
+    await components.whenReady();
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.
     // Some APIs can only be used after this event occurs.

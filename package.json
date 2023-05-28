@@ -80,7 +80,7 @@
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
     "cypress": "^12.11.0",
-    "electron": "https://github.com/castlabs/electron-releases#v25.0.0-beta.4+wvcus",
+    "electron": "https://github.com/castlabs/electron-releases#v25.0.0-beta.8+wvcus",
     "electron-builder": "^23.6.0",
     "electron-devtools-installer": "^3.2.0",
     "eslint": "8.41.0",

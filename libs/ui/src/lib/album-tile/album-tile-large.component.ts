@@ -19,7 +19,6 @@ import {
   JoinPipeModule,
   PreloadImageDirective,
 } from '@nyan-inc/core';
-import { MediaPlayInfo } from './models';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({

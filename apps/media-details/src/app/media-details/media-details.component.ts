@@ -15,7 +15,7 @@ import {
 } from '@nyan-inc/ui';
 import { BaseButtonModule, ColorService } from '@nyan-inc/core';
 import { FastAverageColorResult } from 'fast-average-color';
-import { MusicAPIFacade } from '@nyan-inc/shared';
+import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
 import { Observable } from 'rxjs';
 import { LetDirective } from '@ngrx/component';
 import Color from 'colorjs.io';
@@ -41,13 +41,16 @@ export class MediaDetailsComponent implements AfterViewInit {
   mediaCover!: ElementRef;
   mediaColor!: FastAverageColorResult | void;
   state$: Observable<any>;
+  musicState$: MusicFacade;
 
   constructor(
     private changeReference: ChangeDetectorRef,
     private musicAPIFacade: MusicAPIFacade,
+    private musicFacade: MusicFacade,
     private color: ColorService
   ) {
     this.state$ = this.musicAPIFacade.state$;
+    this.musicState$ = this.musicFacade;
   }
 
   ngAfterViewInit(): void {

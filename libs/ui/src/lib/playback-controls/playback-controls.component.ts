@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, NgModule } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  NgModule,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SliderModule } from '../slider/slider.component';
 import {
@@ -7,24 +14,50 @@ import {
   TooltipComponent,
   TooltipDirectiveModule,
 } from '@nyan-inc/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'ui-playback-controls',
   template: ` <div id="track-wrapper">
-      <ui-slider></ui-slider>
+      <ui-slider
+        #slider
+        [max]="playbackTime?.currentPlaybackDuration || 0"
+        [value]="
+          dragging ? slider.value : playbackTime?.currentPlaybackTime || 0
+        "
+        (value)="playbackTime.currentPlaybackTime = $event || 0"
+        (dragging)="handleDrag($event)"
+        (dragStop)="handleDragStop($event)"
+      ></ui-slider>
+    </div>
+    <div id="duration-wrapper">
+      <span id="current-time"
+        >{{
+          (dragging
+            ? slider.value * 1000 - 1
+            : playbackTime?.currentPlaybackTime * 1000 - 1 || 0
+          ) | date : 'mm:ss'
+        }}
+      </span>
+      <span id="duration">{{
+        playbackTime?.currentPlaybackDuration * 1000 - 100 || 0 | date : 'mm:ss'
+      }}</span>
     </div>
     <div id="controls-wrapper">
       <core-base-button
         #button
+        (click)="shuffleEmitter.emit()"
         [tabIndex]="0"
         class="album-tile ui-drawer-item core-base-button-rounded"
         icon="shuffle"
+        [ngClass]="{ red: shuffleMode === 1 }"
         id="shuffle-button"
       >
       </core-base-button
       ><core-base-button
         #button
         [tabIndex]="0"
+        (click)="previousEmitter.emit()"
         class="album-tile ui-drawer-item core-base-button-rounded"
         icon="skip_previous"
         id="previous-button"
@@ -32,16 +65,17 @@ import {
       </core-base-button
       ><core-base-button
         #button
+        (click)="playEmitter.emit()"
         [coreTooltip]="'Play'"
         [tabIndex]="0"
         class="album-tile ui-drawer-item core-base-button-rounded"
-        icon="play_circle"
-        id="play-button"
+        [icon]="isPlaying ? 'pause_circle' : 'play_circle'"
         id="play-button"
       >
       </core-base-button>
       <core-base-button
         #button
+        (click)="nextEmitter.emit()"
         [tabIndex]="0"
         class="album-tile ui-drawer-item core-base-button-rounded"
         icon="skip_next"
@@ -50,9 +84,11 @@ import {
       </core-base-button>
       <core-base-button
         #button
+        (click)="repeatEmitter.emit()"
         [tabIndex]="0"
         class="album-tile ui-drawer-item core-base-button-rounded"
         icon="repeat"
+        [ngClass]="{ red: repeatMode === 'all', green: repeatMode === 'one' }"
         id="repeat-button"
       >
       </core-base-button>
@@ -60,7 +96,34 @@ import {
   styleUrls: ['./playback-controls.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PlaybackControlsComponent extends BaseButtonComponent {}
+export class PlaybackControlsComponent extends BaseButtonComponent {
+  @Output() readonly playEmitter: EventEmitter<void> = new EventEmitter();
+  @Output() readonly nextEmitter: EventEmitter<void> = new EventEmitter();
+  @Output() readonly previousEmitter: EventEmitter<void> = new EventEmitter();
+  @Output() readonly shuffleEmitter: EventEmitter<void> = new EventEmitter();
+  @Output() readonly repeatEmitter: EventEmitter<void> = new EventEmitter();
+  @Output() readonly dragEmitter: EventEmitter<number> = new EventEmitter();
+  @Output() readonly dragStopEmitter: EventEmitter<number> = new EventEmitter();
+
+  @Input() isPlaying: boolean | null = false;
+  @Input() shuffleMode: any;
+  @Input() repeatMode: any;
+  @Input() playbackTime: any = {
+    currentPlaybackTime: 0,
+    currentPlaybackDuration: 0,
+  };
+  dragging = false;
+
+  handleDrag(event: number): void {
+    this.dragging = true;
+    this.dragEmitter.emit(event);
+  }
+
+  handleDragStop(event: number): void {
+    this.dragging = false;
+    this.dragStopEmitter.emit(event);
+  }
+}
 
 @Component({
   selector: 'ui-miscellaneous-controls',
@@ -91,13 +154,20 @@ export class PlaybackControlsComponent extends BaseButtonComponent {}
     >
     </core-base-button>
     <div id="volume-track-wrapper">
-      <ui-slider [width]="5" [max]="20"></ui-slider>
+      <ui-slider
+        (valueChange)="volumeEmitter.emit($event)"
+        [width]="5"
+        [max]="20"
+      ></ui-slider>
     </div>
   </div>`,
   styleUrls: ['./playback-controls.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MiscellaneousControlsComponent extends BaseButtonComponent {}
+export class MiscellaneousControlsComponent extends BaseButtonComponent {
+  @Output() readonly volumeEmitter: EventEmitter<number> =
+    new EventEmitter<number>();
+}
 
 @NgModule({
   imports: [

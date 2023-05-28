@@ -1,13 +1,14 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpService } from '@nyan-inc/core';
+import type { MusicKit as Music } from '../types';
 
-declare var MusicKit: any;
+declare var MusicKit: typeof Music;
 
 @Injectable({
   providedIn: 'root',
 })
-export class MusickitBase implements OnInit {
-  public instance!: typeof MusicKit.MusicKitInstance;
+export class MusickitBase {
+  public instance!: Music.MusicKitInstance;
 
   constructor(private http: HttpService) {
     this.init();
@@ -15,16 +16,13 @@ export class MusickitBase implements OnInit {
 
   async init(): Promise<void> {
     await this.http.getConfig().then((res) => {
-      const DEV_TOKEN = this.http.DEV_TOKEN;
-      this.initMusicKit(DEV_TOKEN);
+      this.initMusicKit(res).then(async (res) => {
+        this.instance = res;
+        this.instance.volume = 0.05;
+        this.instance.clearQueue();
+        this.instance.stop();
+      });
     });
-  }
-
-  async ngOnInit(): Promise<void> {
-    await this.http.getConfig();
-    const DEV_TOKEN = this.http.DEV_TOKEN;
-
-    this.initMusicKit(DEV_TOKEN);
   }
 
   /**
