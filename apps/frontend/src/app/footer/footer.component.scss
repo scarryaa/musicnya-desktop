@@ -5,8 +5,27 @@
     color: var(--font-color);
   }
 
+  ::ng-deep {
+    .footer-start {
+      flex: 1;
+      overflow: hidden;
+      padding-right: 1rem;
+    }
+
+    .footer-center {
+      flex: 2;
+    }
+
+    .footer-end {
+      flex: 1;
+      overflow: hidden;
+    }
+  }
+
   #start-container {
+    max-width: 100%;
     display: flex;
+    flex: 1;
     vertical-align: middle;
     ::ng-deep {
       span {
@@ -16,15 +35,30 @@
   }
 
   ::ng-deep #start-container #media-tile {
+    core-base-button {
+      max-width: inherit;
+
+      button {
+        max-width: inherit;
+
+        #album-info {
+          max-width: 100%;
+          overflow: hidden;
+        }
+      }
+    }
+
+    max-width: inherit;
     margin-top: 0.4rem;
     margin-left: 1rem;
     filter: drop-shadow(0rem 0.3rem 0.5rem rgba(black, 0.4));
 
-    .album-info {
-      vertical-align: middle !important;
-    }
-
     #title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+      padding-right: 3rem;
       color: var(--font-color);
       cursor: pointer !important;
     }

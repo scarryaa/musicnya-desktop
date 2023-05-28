@@ -18,9 +18,10 @@ export class Musickit {
   }
 
   async play() {
-    return await this.instance.setQueue({ album: '1586653480' }).then(() => {
-      return this.instance.changeToMediaAtIndex(0);
-    });
+    if (this.instance.isPlaying || this.instance.queueIsEmpty) {
+      return;
+    }
+    return await this.instance.play();
   }
 
   async pause() {

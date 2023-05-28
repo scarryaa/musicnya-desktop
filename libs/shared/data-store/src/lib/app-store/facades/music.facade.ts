@@ -1,7 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { filter, map, Subscription, take } from 'rxjs';
-import type { MusicKit } from '../../../types';
+import { MusicKit } from '../../../types';
+import { processMediaType } from '../../models/helpers';
 import { MusicActions } from '../actions';
 import { fromMusic } from '../reducers';
 import { MusicAPIState } from '../reducers/music-api.reducer';
@@ -13,11 +14,7 @@ import { MusicState } from '../reducers/music.reducer';
 export class MusicFacade implements OnDestroy {
   subs = new Subscription();
   state$ = this.store.pipe(select(fromMusic.getMusicState));
-  currentItem$ = this.state$.pipe(
-    map((state) => state.musicPlayer.currentItem),
-    filter((mediaItem) => !!mediaItem),
-    take(1)
-  );
+  currentItem$ = this.state$.pipe(select(fromMusic.getCurrentItem));
   playing$ = this.state$.pipe(select(fromMusic.getPlaying));
   volume$ = this.state$.pipe(map((state) => state.musicPlayer.playbackVolume));
   paused$ = this.state$.pipe(map((state) => state.musicPlayer.isPaused));
@@ -32,6 +29,9 @@ export class MusicFacade implements OnDestroy {
   );
   currentPlaybackTime$ = this.state$.pipe(
     select(fromMusic.getCurrentPlaybackTime)
+  );
+  currentPlaybackState$ = this.state$.pipe(
+    select(fromMusic.getCurrentPlaybackState)
   );
 
   constructor(private store: Store<MusicState>) {}
@@ -134,25 +134,3 @@ export class MusicFacade implements OnDestroy {
     this.store.dispatch(MusicActions.setQueueFromSongIDs({ payload: { ids } }));
   }
 }
-
-// helpers
-
-// determine type of media item
-const processMediaType = (type: string, id: string[] | string) => {
-  if (id instanceof Array<string>) return 'songs';
-
-  switch (type) {
-    case 'albums':
-      return 'album';
-    case 'artists':
-      return 'artist';
-    case 'playlists':
-      return 'playlist';
-    case 'library-playlists':
-      return 'playlist';
-    case 'songs':
-      return 'song';
-    default:
-      return 'song';
-  }
-};

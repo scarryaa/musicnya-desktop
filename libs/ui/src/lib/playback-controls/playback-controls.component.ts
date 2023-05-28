@@ -15,6 +15,7 @@ import {
   TooltipDirectiveModule,
 } from '@nyan-inc/core';
 import { Observable } from 'rxjs';
+import { MusicKit } from 'libs/shared/data-store/src/types';
 
 @Component({
   selector: 'ui-playback-controls',
@@ -23,7 +24,8 @@ import { Observable } from 'rxjs';
         #slider
         [max]="playbackTime?.currentPlaybackDuration || 0"
         [value]="
-          dragging ? slider.value : playbackTime?.currentPlaybackTime || 0
+          (dragging ? slider.value : playbackTime?.currentPlaybackTime) - 10 ||
+          0
         "
         (value)="playbackTime.currentPlaybackTime = $event || 0"
         (dragging)="handleDrag($event)"
@@ -33,10 +35,9 @@ import { Observable } from 'rxjs';
     <div id="duration-wrapper">
       <span id="current-time"
         >{{
-          (dragging
-            ? slider.value * 1000 - 1
-            : playbackTime?.currentPlaybackTime * 1000 - 1 || 0
-          ) | date : 'mm:ss'
+          dragging
+            ? (slider.value * 1000 | date : 'mm:ss')
+            : (playbackTime.currentPlaybackTime * 1000 | date : 'mm:ss')
         }}
       </span>
       <span id="duration">{{
@@ -65,11 +66,11 @@ import { Observable } from 'rxjs';
       </core-base-button
       ><core-base-button
         #button
-        (click)="playEmitter.emit()"
+        (click)="playbackState === 2 ? pauseEmitter.emit() : playEmitter.emit()"
         [coreTooltip]="'Play'"
         [tabIndex]="0"
         class="album-tile ui-drawer-item core-base-button-rounded"
-        [icon]="isPlaying ? 'pause_circle' : 'play_circle'"
+        [icon]="playbackState === 2 ? 'pause_circle' : 'play_circle'"
         id="play-button"
       >
       </core-base-button>
@@ -98,6 +99,7 @@ import { Observable } from 'rxjs';
 })
 export class PlaybackControlsComponent extends BaseButtonComponent {
   @Output() readonly playEmitter: EventEmitter<void> = new EventEmitter();
+  @Output() readonly pauseEmitter: EventEmitter<void> = new EventEmitter();
   @Output() readonly nextEmitter: EventEmitter<void> = new EventEmitter();
   @Output() readonly previousEmitter: EventEmitter<void> = new EventEmitter();
   @Output() readonly shuffleEmitter: EventEmitter<void> = new EventEmitter();
@@ -105,9 +107,11 @@ export class PlaybackControlsComponent extends BaseButtonComponent {
   @Output() readonly dragEmitter: EventEmitter<number> = new EventEmitter();
   @Output() readonly dragStopEmitter: EventEmitter<number> = new EventEmitter();
 
-  @Input() isPlaying: boolean | null = false;
+  @Input() playbackState: MusicKit.PlaybackStates =
+    MusicKit.PlaybackStates.none;
   @Input() shuffleMode: any;
   @Input() repeatMode: any;
+  @Input() dragTime: any;
   @Input() playbackTime: any = {
     currentPlaybackTime: 0,
     currentPlaybackDuration: 0,
@@ -116,6 +120,7 @@ export class PlaybackControlsComponent extends BaseButtonComponent {
 
   handleDrag(event: number): void {
     this.dragging = true;
+    this.dragTime = event;
     this.dragEmitter.emit(event);
   }
 

@@ -6,7 +6,9 @@ import {
   createSelector,
   createFeatureSelector,
 } from '@ngrx/store';
+import { MediaItemTypes } from '@nyan-inc/core';
 import type { MusicKit } from '../../../types';
+import { MKMediaItemType } from '../../models/musickit.models';
 import { MusicActions } from '../actions';
 
 import { MusicEntity } from '../models/music.models';
@@ -31,7 +33,7 @@ interface MusicPlayerState {
   isStalled: boolean | null;
   playbackBitrate: number | null;
   playbackVolume: number | null;
-  currentItem: MusicKit.MediaItem | null;
+  currentItem: MusicKit.MediaItem;
   currentQueue: MusicKit.Queue | null;
   currentQueueIndex: number | null;
   currentQueueItems: MusicKit.MediaItem[] | null;
@@ -41,7 +43,7 @@ interface MusicPlayerState {
   currentPlaybackTime: number | null;
   currentPlaybackShuffleMode: MusicKit.PlayerShuffleMode | null;
   currentPlaybackRepeatMode: MusicKit.PlayerRepeatMode | null;
-  currentPlaybackState: MusicKit.PlaybackStates | null;
+  currentPlaybackState: MusicKit.PlaybackStates;
   currentPlaybackBufferedProgress: number | null;
 }
 
@@ -72,7 +74,11 @@ export const initialMusicState: MusicState = musicAdapter.getInitialState({
     isStalled: null,
     playbackBitrate: null,
     playbackVolume: null,
-    currentItem: null,
+    currentItem: {
+      href: '',
+      id: '',
+      type: MKMediaItemType.songs as unknown as MusicKit.MediaItemType,
+    },
     currentQueue: null,
     currentQueueIndex: null,
     currentQueueItems: null,
@@ -82,7 +88,7 @@ export const initialMusicState: MusicState = musicAdapter.getInitialState({
     currentPlaybackTime: null,
     currentPlaybackShuffleMode: null,
     currentPlaybackRepeatMode: null,
-    currentPlaybackState: null,
+    currentPlaybackState: 0,
     currentPlaybackBufferedProgress: null,
   },
 });
@@ -514,12 +520,17 @@ export const getPlaying = createSelector(
 
 export const getCurrentItem = createSelector(
   selectMusicState,
-  (state) => state.musicPlayer?.currentItem
+  (state) => state.musicPlayer.currentItem
 );
 
 export const getCurrentPlaybackTime = createSelector(
   selectMusicState,
   (state) => state.musicPlayer?.currentPlaybackTime
+);
+
+export const getCurrentPlaybackState = createSelector(
+  selectMusicState,
+  (state) => state.musicPlayer?.currentPlaybackState
 );
 
 export const getMusicState =
@@ -528,3 +539,7 @@ export const getMusicState =
 export function musicReducer(state: MusicState | undefined, action: Action) {
   return reducer(state, action);
 }
+
+let setAll = (obj: any, val: any) =>
+  Object.keys(obj).forEach((k) => (obj[k] = val));
+let setNull = (obj: any) => setAll(obj, null);

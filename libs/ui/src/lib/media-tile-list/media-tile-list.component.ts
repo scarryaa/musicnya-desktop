@@ -48,6 +48,7 @@ import { RouterModule } from '@angular/router';
         }"
         [artists]="[listData[i].attributes?.artistName] || []"
         [imageSource]="listData[i].attributes?.artwork?.url ?? ''"
+        (playEmitter)="emit(i)"
       ></ui-album-tile-large>
     </div>`,
   styleUrls: ['./media-tile-list.component.scss'],
@@ -61,6 +62,13 @@ export class MediaTileListComponent {
   @Input() listTitle!: string;
   @Input() listData!: any[];
   @Input() clickEnabled = true;
-  @Output() readonly playEmitter: EventEmitter<{ album: string }> =
+  @Output() readonly playEmitter: EventEmitter<{ type: string; id: string }> =
     new EventEmitter();
+
+  emit(i: number) {
+    this.playEmitter.emit({
+      type: this.listData[i].type,
+      id: this.listData[i].id,
+    });
+  }
 }

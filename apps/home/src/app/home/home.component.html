@@ -2,7 +2,7 @@
   <ng-container>
     <!-- Home Recommendations -->
     <ui-media-tile-list
-      (playEmitter)="play($event)"
+      (playEmitter)="play($event.type, $event.id)"
       [listTitle]="media.homeTileLists?.[1]?.title"
       [listData]="media.homeTileLists?.[1]?.data || []"
       [showMore]="media.homeTileLists?.[1]?.showMore || false"
@@ -10,7 +10,7 @@
     <ng-container *ngIf="media.homeTileLists?.[0]?.data as dataList">
       <ui-media-tile-list
         *ngFor="let item of dataList; let i = index; trackBy: trackBy"
-        (playEmitter)="play($event)"
+        (playEmitter)="play($event.type, $event.id)"
         [listTitle]="item?.attributes?.title?.stringForDisplay"
         [listData]="item?.relationships?.contents?.data || []"
       ></ui-media-tile-list>

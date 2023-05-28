@@ -2,17 +2,7 @@
 /* eslint-disable unicorn/prefer-module */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import {
-  app,
-  ShareMenu,
-  Menu,
-  BrowserWindow,
-  shell,
-  screen,
-  dialog,
-  nativeTheme,
-  components,
-} from 'electron';
+import { Menu, BrowserWindow, shell, screen, components } from 'electron';
 const ipcMain = require('electron').ipcMain;
 const ipcRenderer = require('electron').ipcRenderer;
 import { rendererAppName, rendererAppPort } from './constants';
@@ -25,6 +15,7 @@ export default class App {
   static mainWindow: Electron.BrowserWindow;
   static application: Electron.App;
   static BrowserWindow;
+  static splashWindow: Electron.BrowserWindow;
   static platform = process.platform;
   static baseUrl = `http://localhost:${rendererAppPort}`;
 
@@ -66,7 +57,7 @@ export default class App {
       ) => {
         if (details.url.includes('hls.js')) {
           callback({
-            redirectURL: `http://localhost:$${4200}/assets/js/hls.js`,
+            redirectURL: `/assets/js/hls.js`,
           });
         } else {
           callback({
@@ -213,8 +204,14 @@ export default class App {
       App.initMainWindow();
       App.loadMainWindow();
       App.setHeadersConfig();
+      if (!App.isDevelopmentMode()) {
+        App.SplashWindow();
+      }
+    } else {
+      App.application.quit();
     }
 
+    App.application.setName(rendererAppName);
     if (App.isDevelopmentMode()) {
       App.mainWindow.webContents.openDevTools();
     }
@@ -228,6 +225,30 @@ export default class App {
     }
   }
 
+  private static SplashWindow() {
+    App.splashWindow = new BrowserWindow({
+      width: 450,
+      height: 600,
+      frame: false,
+      transparent: false,
+      alwaysOnTop: true,
+      resizable: false,
+      show: true,
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: false,
+      },
+    });
+
+    App.splashWindow.loadURL(`file://${__dirname}/app/splash/splash.html`);
+    App.splashWindow.center();
+
+    // setTimeout(function () {
+    //   App.splashWindow.close();
+    //   App.mainWindow.show();
+    // }, 5000);
+  }
+
   private static initMainWindow() {
     const workAreaSize = screen.getPrimaryDisplay().workAreaSize;
     const width = Math.min(900, workAreaSize.width || 1280);
@@ -239,7 +260,7 @@ export default class App {
       height: height,
       minWidth: 900,
       minHeight: 615,
-      show: true,
+      show: App.isDevelopmentMode() ? true : false,
       frame: false,
       fullscreenable: true,
       fullscreen: false,
@@ -263,9 +284,6 @@ export default class App {
     App.mainWindow.center();
 
     // if main window is ready to show, close the splash window and show the main window
-    App.mainWindow.once('ready-to-show', () => {
-      App.mainWindow.show();
-    });
 
     ipcMain.on('auth-window', (_event) => {
       AuthWindow(App.mainWindow);
@@ -324,6 +342,10 @@ export default class App {
     App.BrowserWindow = browserWindow;
     App.application = app;
 
+    App.application.commandLine.appendSwitch(
+      'autoplay-policy',
+      'no-user-gesture-required'
+    );
     App.application.on('window-all-closed', App.onWindowAllClosed); // Quit when all windows are closed.
     App.application.on('ready', App.onReady); // App is ready to load data
     App.application.on('activate', App.onActivate); // App is activated

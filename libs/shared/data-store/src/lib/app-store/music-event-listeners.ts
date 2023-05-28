@@ -1,6 +1,8 @@
-import { inject, Injectable } from '@angular/core';
+import { Inject, inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MusickitBase } from '@yan-inc/core-services';
+import copy from 'fast-copy';
+import { Observable, throttleTime } from 'rxjs';
 import { MusicKit } from '../../types';
 import { MusicActions } from './actions';
 import { MusicState } from './reducers/music.reducer';
@@ -9,27 +11,33 @@ import { MusicState } from './reducers/music.reducer';
   providedIn: 'root',
 })
 export class MusicEventListeners {
-  music = inject(MusickitBase);
-  store = inject(Store<MusicState>);
+  store: Store<MusicState>;
+
+  constructor(private music: MusickitBase, store: Store<MusicState>) {
+    this.store = store;
+  }
+
   instance = this.music.instance;
+  playbackTimeDidChange$ = createPlaybackTimeDidChangeObservable(this.instance);
 
   addEventListeners() {
-    console.log('test');
+    console.log('Adding event listeners');
+    this.playbackTimeDidChange$
+      .pipe(throttleTime(100))
+      .subscribe((event: any) => {
+        this.store.dispatch(
+          MusicActions.setPlaybackTime({ payload: { time: event } })
+        );
+      });
 
-    // add event listeners
-    this.instance.addEventListener('playbackTimeDidChange', (event: number) => {
-      this.store.dispatch(
-        MusicActions.setPlaybackTime({ payload: { time: event } })
-      );
-    });
-
-    this.instance.addEventListener('mediaItemDidChange', () => {
+    this.instance.addEventListener('nowPlayingItemDidChange', () => {
       if (this.instance.nowPlayingItem) {
         this.store.dispatch(
           MusicActions.setMediaItem({
             payload: {
-              mediaItem: this.instance
-                .nowPlayingItem as unknown as MusicKit.MediaItem,
+              mediaItem: JSON.parse(
+                JSON.stringify(this.music.instance.nowPlayingItem)
+              ),
             },
           })
         );
@@ -46,7 +54,9 @@ export class MusicEventListeners {
 
     this.instance.addEventListener('playbackStateDidChange', (event: any) => {
       this.store.dispatch(
-        MusicActions.setPlaybackState({ payload: event.state })
+        MusicActions.setPlaybackState({
+          payload: { playbackState: processPlaybackState(event.state) },
+        })
       );
     });
 
@@ -97,3 +107,38 @@ export class MusicEventListeners {
     // });
   }
 }
+
+function createPlaybackTimeDidChangeObservable(instance: any) {
+  return new Observable((subscriber) => {
+    const handler = (event: number) => subscriber.next(event);
+
+    instance.addEventListener('playbackTimeDidChange', handler);
+
+    return () => instance.removeEventListener('playbackTimeDidChange', handler);
+  });
+}
+
+const processPlaybackState = (state: any) => {
+  switch (state) {
+    case MusicKit.PlaybackStates.none:
+      return 0;
+    case MusicKit.PlaybackStates.loading:
+      return 1;
+    case MusicKit.PlaybackStates.playing:
+      return 2;
+    case MusicKit.PlaybackStates.paused:
+      return 3;
+    case MusicKit.PlaybackStates.stopped:
+      return 4;
+    case MusicKit.PlaybackStates.seeking:
+      return 5;
+    case MusicKit.PlaybackStates.waiting:
+      return 6;
+    case MusicKit.PlaybackStates.stalled:
+      return 7;
+    case MusicKit.PlaybackStates.completed:
+      return 8;
+    default:
+      return 0;
+  }
+};

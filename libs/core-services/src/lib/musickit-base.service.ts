@@ -1,5 +1,7 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Inject, Injectable, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { HttpService } from '@nyan-inc/core';
+import { MusicEventListeners, MusicState } from '@nyan-inc/shared';
 import type { MusicKit as Music } from '../types';
 
 declare var MusicKit: typeof Music;
@@ -10,19 +12,24 @@ declare var MusicKit: typeof Music;
 export class MusickitBase {
   public instance!: Music.MusicKitInstance;
 
-  constructor(private http: HttpService) {
+  constructor(private http: HttpService, private store: Store<MusicState>) {
     this.init();
   }
 
   async init(): Promise<void> {
-    await this.http.getConfig().then((res) => {
-      this.initMusicKit(res).then(async (res) => {
-        this.instance = res;
-        this.instance.volume = 0.05;
-        this.instance.clearQueue();
-        this.instance.stop();
-      });
-    });
+    await this.http
+      .getConfig()
+      .then((res) => {
+        this.initMusicKit(res).then(async (res) => {
+          this.instance = res;
+          this.instance.volume = 0.05;
+          this.instance.clearQueue();
+          this.instance.stop();
+          const eventListeners = new MusicEventListeners(this, this.store);
+          eventListeners.addEventListeners();
+        });
+      })
+      .finally(() => {});
   }
 
   /**

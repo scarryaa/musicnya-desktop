@@ -11,7 +11,7 @@
         "outputPath": "dist/apps/electron",
         "main": "apps/electron/src/main.ts",
         "tsConfig": "apps/electron/tsconfig.app.json",
-        "assets": ["apps/electron/src/assets"]
+        "assets": ["apps/electron/src/assets", "apps/electron/src/app/splash"]
       },
       "configurations": {
         "production": {
