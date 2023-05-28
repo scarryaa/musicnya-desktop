@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import type { MusicKit } from '../types/musickit';
+import { MusicKit } from '../types';
 import { MusickitBase } from './musickit-base.service';
 
 @Injectable({

@@ -6,12 +6,13 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { AlbumTileLargeModule } from './album-tile-large.component';
 import { Router } from '@angular/router';
 import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
 import { MediaPlayInfo } from '../models';
-import { MusicFacade } from '@nyan-inc/shared';
 
 @Component({
   selector: 'ui-album-tile-large',
@@ -36,7 +37,7 @@ import { MusicFacade } from '@nyan-inc/shared';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlbumTileLargeSmartComponent implements OnChanges {
-  constructor(private router: Router, private music: MusicFacade) {}
+  constructor(private router: Router) {}
   isZoomed = false;
 
   @Input() showEditOverlay = false;
@@ -57,6 +58,8 @@ export class AlbumTileLargeSmartComponent implements OnChanges {
     artists: Array<string>(),
   };
 
+  @Output() playEmitter = new EventEmitter();
+
   //TODO move this to a deticated router class in core?
   async routeToMediaDetails(details: MediaPlayInfo) {
     await this.router.navigate(['media/' + details.type + '/' + details.id]);
@@ -67,7 +70,7 @@ export class AlbumTileLargeSmartComponent implements OnChanges {
   }
 
   play(details: MediaPlayInfo) {
-    this.music.setQueueThenPlay(details.type, details.id);
+    this.playEmitter.emit(details);
   }
 
   async routeToArtist(details: MediaPlayInfo) {

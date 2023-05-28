@@ -15,7 +15,6 @@ import {
   TooltipDirectiveModule,
 } from '@nyan-inc/core';
 import { Observable } from 'rxjs';
-import { MusicKit } from 'libs/shared/data-store/src/types';
 
 @Component({
   selector: 'ui-playback-controls',
@@ -107,8 +106,7 @@ export class PlaybackControlsComponent extends BaseButtonComponent {
   @Output() readonly dragEmitter: EventEmitter<number> = new EventEmitter();
   @Output() readonly dragStopEmitter: EventEmitter<number> = new EventEmitter();
 
-  @Input() playbackState: MusicKit.PlaybackStates =
-    MusicKit.PlaybackStates.none;
+  @Input() playbackState = 0;
   @Input() shuffleMode: any;
   @Input() repeatMode: any;
   @Input() dragTime: any;

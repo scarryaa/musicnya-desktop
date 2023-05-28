@@ -23,7 +23,11 @@ import {
 } from '@nyan-inc/core';
 import { NavigationButtonsComponent } from './navigation-buttons/navigation-buttons.component';
 import { HttpService } from '../../../../libs/core/src/lib/http/http.service';
-import { MusicAPIFacade, MusicEventListeners } from '@nyan-inc/shared';
+import {
+  MusicAPIFacade,
+  MusicEventListeners,
+  MusicState,
+} from '@nyan-inc/shared';
 import * as AppActions from '../store/actions/app.actions';
 import * as LayoutActions from '../store/actions/layout.actions';
 import * as fromLayout from '../store/reducers/layout.reducer';
@@ -60,12 +64,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     //TODO convert to facade
-    private store: Store<AppState & LayoutState>,
+    private store: Store<AppState & LayoutState & MusicState>,
     private http: HttpService,
     private windowService: WindowRefService,
     private musicAPIFacade: MusicAPIFacade,
-    private musickit: MusickitBase,
-    private eventListeners: MusicEventListeners
+    private musickit: MusickitBase
   ) {
     this.drawerOpen$ = this.store.pipe(select(fromLayout.getDrawerOpen));
     // TODO fix this
@@ -90,6 +93,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.store.dispatch(AppActions.initApp());
 
+    const eventListeners = new MusicEventListeners(this.musickit, this.store);
+    eventListeners.addEventListeners();
     this.musicAPIFacade.getLibraryPlaylists();
   }
 

@@ -14,7 +14,6 @@ import {
 import { provideEffects } from '@ngrx/effects';
 import { provideRouterStore, routerReducer } from '@ngrx/router-store';
 import { provideStore, provideState } from '@ngrx/store';
-import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { appRoutes } from './app.routes';
 import { BrowserModule } from '@angular/platform-browser';
