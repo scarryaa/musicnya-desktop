@@ -90,6 +90,8 @@ export class AlbumTileComponent extends BaseComponent {
   @Input() titleRouterLink: string | undefined;
   @Input() artistsRouterLink = '';
   @Input() artworkRouterLink!: string;
+  @Input() routerLink!: string;
+  @Input() ngClass!: { [klass: string]: any } | string | string[] | Set<string>;
 
   @ViewChildren('button', { read: ElementRef })
   buttonElements!: QueryList<ElementRef>;

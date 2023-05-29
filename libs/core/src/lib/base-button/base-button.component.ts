@@ -47,6 +47,10 @@ export class BaseButtonComponent extends BaseComponent {
   @Input() tabIndex!: number;
   @Input() icon!: string;
   @Input() text!: string;
+  @Input() routerLink!: string;
+  @Input() routerLinkActiveOptions!: { exact: boolean };
+  @Input() ngClass!: { [klass: string]: any } | string | string[] | Set<string>;
+  @Input() cdkDragStartDelay = 0;
 
   @ViewChildren('span', { read: ElementRef })
   spanElements!: QueryList<ElementRef>;

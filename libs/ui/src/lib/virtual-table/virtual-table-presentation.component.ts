@@ -44,7 +44,8 @@ export class VirtualTableComponent implements OnChanges {
   @Input() playing = false;
   @Output() readonly dropEmitter = new EventEmitter<Songs[]>();
   @Output() readonly clickEmitter = new EventEmitter<Songs>();
-  @Output() readonly doubleClickEmitter = new EventEmitter<Songs>();
+  @Output() readonly titleClickEmitter = new EventEmitter<string>();
+  @Output() readonly doubleClickEmitter = new EventEmitter<number>();
   @Output() readonly pauseEmitter = new EventEmitter();
   @Output() readonly playEmitter = new EventEmitter();
 
@@ -54,8 +55,8 @@ export class VirtualTableComponent implements OnChanges {
     return song.id;
   }
 
-  playSong(event: MouseEvent, clickedSong: number) {
-    this.doubleClickEmitter.emit(this.data[clickedSong]);
+  playSong(event: MouseEvent, index: number) {
+    this.doubleClickEmitter.emit(index);
     event.stopPropagation();
   }
 
@@ -69,12 +70,13 @@ export class VirtualTableComponent implements OnChanges {
     event.stopPropagation();
   }
 
-  handleClick(event: MouseEvent) {
+  handleTitleClick(event: MouseEvent, albumId: string) {
+    this.titleClickEmitter.emit(albumId);
     event.stopPropagation();
   }
 
   handleDoubleClick(event: MouseEvent, clickedSong: number) {
-    this.doubleClickEmitter.emit(this.data[clickedSong]);
+    this.doubleClickEmitter.emit(clickedSong);
     event.stopPropagation();
   }
 
@@ -84,6 +86,8 @@ export class VirtualTableComponent implements OnChanges {
     this.dragData.title = event.source.data.title;
     this.dragData.artists = event.source.data.artists;
   }
+
+  handleClick(event: MouseEvent) {}
 
   drop(event: CdkDragDrop<string[]>) {
     // Rearrange the data in the array

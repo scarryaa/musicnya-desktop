@@ -189,8 +189,18 @@
             [playing]="(player.playing$ | async)!"
             (pauseEmitter)="player.pause()"
             (unpauseEmitter)="player.play()"
-            (doubleClickEmitter)="
-              player.setQueueThenPlay($event.type, $event.id)
+            (indexEmitter)="
+              player.setQueueAndPlayAtIndex(
+                media.currentMedia?.type,
+                media.currentMedia?.id,
+                $event
+              )
+            "
+            (idEmitter)="
+              player.setQueueAndPlayAtIndex(
+                media.currentMedia?.type,
+                media.currentMedia?.id || $event
+              )
             "
           ></ui-virtual-table>
         </div>

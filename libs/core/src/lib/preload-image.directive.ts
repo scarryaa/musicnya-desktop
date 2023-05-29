@@ -1,4 +1,10 @@
-import { Directive, Input, ElementRef, OnInit } from '@angular/core';
+import {
+  Directive,
+  Input,
+  ElementRef,
+  OnInit,
+  ChangeDetectorRef,
+} from '@angular/core';
 
 @Directive({
   selector: 'img[corePreloadImage]',
@@ -7,7 +13,10 @@ import { Directive, Input, ElementRef, OnInit } from '@angular/core';
 export class PreloadImageDirective implements OnInit {
   @Input() src!: string;
 
-  constructor(private element: ElementRef) {}
+  constructor(
+    private element: ElementRef,
+    private changeDetectorReference: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     const img = new Image();
@@ -15,5 +24,6 @@ export class PreloadImageDirective implements OnInit {
       this.element.nativeElement.style.backgroundImage = `url(${this.src})`;
     });
     img.src = this.src;
+    this.changeDetectorReference.detectChanges();
   }
 }

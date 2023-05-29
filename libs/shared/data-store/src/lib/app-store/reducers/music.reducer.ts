@@ -32,7 +32,7 @@ interface MusicPlayerState {
   isStalled: boolean | undefined;
   playbackBitrate: number | undefined;
   playbackVolume: number | undefined;
-  currentItem: MusicKit.MediaItem;
+  currentItem: MusicKit.MediaItem | undefined;
   currentQueue: MusicKit.Queue | undefined;
   currentQueueIndex: number | undefined;
   currentQueueItems: MusicKit.MediaItem[] | undefined;
@@ -73,11 +73,7 @@ export const initialMusicState: MusicState = musicAdapter.getInitialState({
     isStalled: undefined,
     playbackBitrate: undefined,
     playbackVolume: undefined,
-    currentItem: {
-      href: '',
-      id: '',
-      type: MKMediaItemType.songs as unknown as MusicKit.MediaItemType,
-    },
+    currentItem: undefined,
     currentQueue: undefined,
     currentQueueIndex: undefined,
     currentQueueItems: undefined,

@@ -115,10 +115,7 @@ export const getLibraryPlaylists$ = createEffect(
             )
           );
         }
-      }),
-      catchError((error) =>
-        of(MusicAPIActions.getLibraryPlaylistsFailure({ payload: { error } }))
-      )
+      })
     ),
   { functional: true }
 );
@@ -414,9 +411,6 @@ export const getMediaItem$ = createEffect(
                     payload: { data: data.payload.data },
                   })
                 )
-              ),
-              catchError((error) =>
-                of(MusicAPIActions.getMediaItemFailure({ payload: { error } }))
               )
             );
           }

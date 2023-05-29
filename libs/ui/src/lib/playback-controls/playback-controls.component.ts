@@ -157,7 +157,8 @@ export class PlaybackControlsComponent extends BaseButtonComponent {
     </core-base-button>
     <div id="volume-track-wrapper">
       <ui-slider
-        (valueChange)="volumeEmitter.emit($event)"
+        #slider
+        (input)="volumeEmitter.emit(slider.value)"
         [width]="5"
         [max]="20"
       ></ui-slider>

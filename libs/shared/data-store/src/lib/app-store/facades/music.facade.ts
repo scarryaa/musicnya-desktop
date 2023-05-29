@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { map, Subscription } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { MusicKit } from '../../../types';
 import { processMediaType } from '../../models/helpers';
 import { MusicActions } from '../actions';
@@ -13,7 +13,9 @@ import { MusicState } from '../reducers/music.reducer';
 export class MusicFacade implements OnDestroy {
   subs = new Subscription();
   state$ = this.store.pipe(select(fromMusic.getMusicState));
-  currentItem$ = this.state$.pipe(select(fromMusic.getCurrentItem));
+  currentItem$ = this.state$.pipe(
+    select(fromMusic.getCurrentItem)
+  ) as Observable<MusicKit.MediaItem>;
   playing$ = this.state$.pipe(select(fromMusic.getPlaying));
   volume$ = this.state$.pipe(map((state) => state.musicPlayer.playbackVolume));
   paused$ = this.state$.pipe(map((state) => state.musicPlayer.isPaused));
@@ -69,6 +71,18 @@ export class MusicFacade implements OnDestroy {
     this.store.dispatch(
       MusicActions.setQueueThenPlay({
         payload: { options: { [type]: id, startPlaying: true } },
+      })
+    );
+  }
+
+  setQueueAndPlayAtIndex(type: string, id: string, index = 0) {
+    type = processMediaType(type, id);
+
+    this.store.dispatch(
+      MusicActions.setQueueThenPlay({
+        payload: {
+          options: { [type]: id, startWith: index, startPlaying: true },
+        },
       })
     );
   }

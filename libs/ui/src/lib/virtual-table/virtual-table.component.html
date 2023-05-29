@@ -13,7 +13,7 @@
       <div
         [ngClass]="{
           'accent-color': playingSong === song.id,
-          'font-faded-color': playingSong !== song.id
+          'font-faded\-color': playingSong !== song.id
         }"
       >
         {{ i + 1 }}
@@ -79,6 +79,8 @@
         [source]="song.attributes?.artwork?.url"
         [tileSize]="2.5"
         [showArt]="showAlbums"
+        [titleRouterLink]="
+          '/media/albums/' + song.relationships?.albums?.data?.[0]?.id"
         [ngClass]="{
           'artist-hover': true,
           'title-hover': showAlbums,
@@ -96,9 +98,7 @@
     <td class="album-content" cdk-cell *cdkCellDef="let song">
       <span
         *ngIf="showAlbums"
-        [routerLink]="
-          '/media/albums/' + (song.relationships?.albums?.data?.[0]?.id || song.relationships?.catalog?.data?.[0]?.relationships?.albums?.data?.[0]?.id)
-        "
+        (click)="handleTitleClick($event, song.relationships?.albums?.data?.[0]?.id || song.relationships?.catalog?.data?.[0]?.relationships?.albums?.data?.[0]?.id)"
         [title]="song.attributes?.albumName"
         >{{ song.attributes?.albumName }}</span
       >

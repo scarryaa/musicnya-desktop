@@ -12,10 +12,13 @@ import copy, { State } from 'fast-copy';
 import { MusicAPIActions } from '../actions';
 import { MusicAPIEntity } from '../models/music-api.models';
 import {
+  Albums,
+  LibraryAlbums,
   LibraryPlaylists,
   MediaItem,
   MediaItemTypes,
   PersonalRecommendation,
+  Playlists,
   Resource,
 } from '@nyan-inc/core';
 

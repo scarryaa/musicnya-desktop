@@ -369,6 +369,7 @@ export declare namespace MusicKit {
     station?: string;
     startPlaying?: boolean;
     startPosition?: number;
+    startWith?: number;
     url?: string;
   }
 

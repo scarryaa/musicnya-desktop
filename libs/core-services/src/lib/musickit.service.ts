@@ -41,7 +41,9 @@ export class Musickit {
   }
 
   async skipToPreviousItem() {
-    return await this.instance.skipToPreviousItem();
+    return this.instance.currentPlaybackTime > 5
+      ? this.seekToTime(0)
+      : this.instance.skipToPreviousItem();
   }
 
   async changeToMediaAtIndex(index: number) {

@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   HostBinding,
+  HostListener,
   Input,
   NgModule,
   OnChanges,
@@ -15,7 +16,7 @@ import { SongDataSource } from './song-data-source';
 import { VirtualTableModule } from './virtual-table-presentation.component';
 import { DataSource } from '@angular/cdk/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'ui-virtual-table',
@@ -25,7 +26,8 @@ import { RouterModule } from '@angular/router';
     [data]="data"
     (dropEmitter)="handleDrop($event)"
     (clickEmitter)="handleClick($event)"
-    (doubleClickEmitter)="handleDoubleClick($event)"
+    (titleClickEmitter)="handleTitleClick($event)"
+    (doubleClickEmitter)="handleDoubleClickIndex($event)"
     [showAlbums]="showAlbums"
     [playingSong]="playingSong"
     [selected]="selection"
@@ -47,11 +49,19 @@ export class VirtualTableSmartComponent implements OnChanges {
 
   @Output() unpauseEmitter = new EventEmitter();
   @Output() pauseEmitter = new EventEmitter();
-  @Output() doubleClickEmitter = new EventEmitter<Songs>();
+  @Output() idEmitter = new EventEmitter<string>();
+  @Output() dropEmitter = new EventEmitter<Songs[]>();
+  @Output() indexEmitter = new EventEmitter<number>();
 
   @HostBinding('style.width.%') width = '100';
 
-  constructor() {
+  // listen to router events and clear selection if the route changes
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event: any) {
+    this.selection.clear();
+  }
+
+  constructor(private router: Router) {
     this.dataSource = new SongDataSource(this.data);
   }
 
@@ -81,8 +91,16 @@ export class VirtualTableSmartComponent implements OnChanges {
     this.selection.toggle(event);
   }
 
-  handleDoubleClick(event: Songs) {
-    this.doubleClickEmitter.emit(event);
+  handleTitleClick(albumId: string) {
+    this.router.navigate(['media/albums/', albumId]);
+  }
+
+  handleDoubleClickIndex(event: number) {
+    this.indexEmitter.emit(event);
+  }
+
+  handleDoubleClickId(event: string) {
+    this.idEmitter.emit(event);
   }
 }
 
