@@ -20,14 +20,12 @@ export const getLibraryPlaylists = select(
 export const getLibraryPlaylistSongs = createSelector(
   getMusicAPIState,
   (state: MusicAPIState) => {
-    if (state.libraryPlaylists) {
-      return {
-        ...state.libraryPlaylists.find(
-          (playlist) => playlist.id === state.selectedId
-        )?.songs,
-      };
-    } else {
-      return null;
-    }
+    return state.libraryPlaylists
+      ? {
+          ...state.libraryPlaylists.find(
+            (playlist) => playlist.id === state.selectedId
+          )?.songs,
+        }
+      : null;
   }
 );

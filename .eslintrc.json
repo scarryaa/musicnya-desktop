@@ -48,11 +48,14 @@
         "plugin:@angular-eslint/template/process-inline-templates",
         "plugin:@nrwl/nx/angular-template"
       ],
-      "parser": "@angular-eslint/template-parser",
+      "parser": "@typescript-eslint/parser",
       "parserOptions": {
         "project": ["tsconfig.*?.json"]
       },
       "rules": {
+        "@rxjs-angular/prefer-takeuntil": "error",
+        "@rxjs-angular/prefer-async-pipe": "error",
+        "@rxjs-angular/prefer-composition": "error",
         "@angular-eslint/directive-selector": [
           "error",
           {

@@ -10,10 +10,10 @@ export class Musickit {
   _instance!: MusicKit.MusicKitInstance;
 
   constructor(private musicKitBase: MusickitBase, private http: HttpService) {
-    this.getInstance(http.DEV_TOKEN);
+    this.getInstance();
   }
 
-  async getInstance(developmentToken: string) {
+  async getInstance() {
     this._instance = this.musicKitBase.instance as MusicKit.MusicKitInstance;
   }
 

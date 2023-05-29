@@ -49,7 +49,7 @@ export class MusickitAPI {
 
   // Fetch the data from the music api
   async requestData(url: string): Promise<any> {
-    const result = await this.instance.api.v3.music(url);
+    const result = await this.instance?.api?.v3.music(url);
     return result.data.data;
   }
 

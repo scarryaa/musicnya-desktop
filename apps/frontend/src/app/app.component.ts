@@ -14,7 +14,7 @@ import { DrawerComponent } from './drawer/drawer.component';
 import { FooterComponent } from './footer/footer.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { select, Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription, takeUntil } from 'rxjs';
 import { TitleBarComponent } from './title-bar/title-bar.component';
 import {
   DraggableDirective,
@@ -26,6 +26,7 @@ import {
   MusicAPIFacade,
   MusicEventListeners,
   MusicState,
+  RouterFacade,
 } from '@nyan-inc/shared';
 import * as AppActions from '../store/actions/app.actions';
 import * as LayoutActions from '../store/actions/layout.actions';
@@ -57,6 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
   width!: number;
   subs: Subscription = new Subscription();
   title = 'musicnya';
+  destroy$ = new Subject<void>();
 
   @ContentChildren(DraggableDirective, { descendants: true, read: ElementRef })
   draggables!: QueryList<DraggableDirective>;
@@ -66,7 +68,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private store: Store<AppState & LayoutState & MusicState>,
     private http: HttpService,
     private musicAPIFacade: MusicAPIFacade,
-    private musickit: MusickitBase
+    private musickit: MusickitBase,
+    private routerFacade: RouterFacade
   ) {
     this.drawerOpen$ = this.store.pipe(select(fromLayout.getDrawerOpen));
     // TODO fix this
@@ -90,6 +93,7 @@ export class AppComponent implements OnInit, OnDestroy {
     await this.http.getConfig();
 
     this.store.dispatch(AppActions.initApp());
+    this.musicAPIFacade.loadAPI();
 
     const eventListeners = new MusicEventListeners(this.musickit, this.store);
     eventListeners.addEventListeners();
@@ -98,6 +102,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+    this.destroy$.next();
   }
 
   toggleDrawer(event: boolean): void {

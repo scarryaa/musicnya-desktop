@@ -18,12 +18,13 @@ import {
   DisableChildTabIndexDirective,
   FallbackImageDirective,
 } from '@nyan-inc/core';
-import { MusicAPIFacade } from '@nyan-inc/shared';
+import { MusicAPIFacade, SpinnerFacade } from '@nyan-inc/shared';
 import {
   DrawerModule,
   AlbumTileModule,
   DrawerToggleDirective,
 } from '@nyan-inc/ui';
+import { SpinnerComponent } from '@nyan-inc/core';
 import { NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
 import { Subject, Subscription } from 'rxjs';
 
@@ -41,6 +42,7 @@ import { Subject, Subscription } from 'rxjs';
     DragDropModule,
     NgScrollbarModule,
     FallbackImageDirective,
+    SpinnerComponent,
   ],
   templateUrl: './drawer.component.html',
   styleUrls: ['./drawer.component.scss'],
@@ -51,12 +53,15 @@ export class DrawerComponent
   implements OnChanges, OnDestroy, OnInit
 {
   libraryPlaylists$: any;
+  spinnerState$: any;
 
   constructor(
     private changeReference: ChangeDetectorRef,
-    public musicAPIFacade: MusicAPIFacade
+    public musicAPIFacade: MusicAPIFacade,
+    public spinner: SpinnerFacade
   ) {
     super();
+    this.spinnerState$ = this.spinner.state$;
   }
 
   @Input() width?: number;

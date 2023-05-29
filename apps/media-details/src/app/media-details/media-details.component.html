@@ -187,6 +187,7 @@
             "
             [playingSong]="(player.currentItem$ | async)?.id"
             [playing]="(player.playing$ | async)!"
+            [routeChanges]="routeChangeEmitter"
             (pauseEmitter)="player.pause()"
             (unpauseEmitter)="player.play()"
             (indexEmitter)="

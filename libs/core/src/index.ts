@@ -21,3 +21,4 @@ export * from './lib/fallback-image.directive';
 export * from './lib/preload-image.directive';
 export * from './lib/cache-route-reuse.strategy';
 export * from './lib/http/http.service';
+export * from './lib/spinner/spinner.component';

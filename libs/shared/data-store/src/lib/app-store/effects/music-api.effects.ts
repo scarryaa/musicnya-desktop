@@ -11,9 +11,11 @@ import {
   forkJoin,
   concatMap,
   tap,
+  skipWhile,
+  take,
 } from 'rxjs';
 import { of } from 'rxjs';
-import { MusicAPIActions } from '../actions';
+import { MusicAPIActions, SpinnerActions } from '../actions';
 import copy from 'fast-copy';
 import { select, Store } from '@ngrx/store';
 import { ROUTER_NAVIGATED } from '@ngrx/router-store';
@@ -26,12 +28,29 @@ import {
   PersonalRecommendation,
   Songs,
 } from '@nyan-inc/core';
+import { MusicState } from '../reducers/music.reducer';
+import { SpinnerState } from '../reducers/spinner.reducer';
+
+//Load music api
+export const loadMusicAPI$ = createEffect(
+  (actions$ = inject(Actions), musickit = inject(MusickitAPI)) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.loadMusicAPI),
+      skipWhile(() => !musickit.instance),
+      switchMap(() => of(MusicAPIActions.loadMusicAPISuccess())),
+      catchError((error: Error) => {
+        console.error('Error', error);
+        return of(MusicAPIActions.loadMusicAPIFailure({ payload: { error } }));
+      })
+    ),
+  { functional: true }
+);
 
 // Checks the store for library playlists and if they're not there, fetches them from Musickit API
 export const getLibraryPlaylists$ = createEffect(
   (
     actions$ = inject(Actions),
-    store = inject(Store),
+    store = inject(Store<MusicState & SpinnerState>),
     musickit = inject(MusickitAPI)
   ) =>
     actions$.pipe(
@@ -101,6 +120,7 @@ export const getLibraryPlaylists$ = createEffect(
                 )
               )
             ),
+            tap(() => store.dispatch(SpinnerActions.hideSpinner())),
             map((playlists) =>
               MusicAPIActions.getLibraryPlaylistsSuccess({
                 payload: { data: copy(playlists) },
@@ -147,9 +167,10 @@ export const getLibraryPlaylists$ = createEffect(
 
 // Fetches media item based on the route params
 export const getMediaItemOnRouteChange$ = createEffect(
-  (actions$ = inject(Actions)) =>
+  (actions$ = inject(Actions), store$ = inject(Store<SpinnerState>)) =>
     actions$.pipe(
       ofType(ROUTER_NAVIGATED),
+      tap(() => store$.dispatch(SpinnerActions.showSpinner())),
       map((router) => router.payload?.routerState?.root?.firstChild?.params),
       filter(
         (parameters: RouteParameters) => !!parameters.id && !!parameters.type
@@ -165,6 +186,7 @@ export const getMediaItemOnRouteChange$ = createEffect(
           payload: { type: parameters.type, id: parameters.id },
         }),
       ]),
+      tap(() => store$.dispatch(SpinnerActions.hideSpinner())),
       catchError((error) =>
         of(MusicAPIActions.getMediaItemFailure({ payload: { error } }))
       )
@@ -180,6 +202,7 @@ export const getRecommendationsAndRecentlyPlayed$ = createEffect(
   ) =>
     actions$.pipe(
       ofType(MusicAPIActions.getRecommendationsAndRecentlyPlayed),
+      tap(() => store.dispatch(SpinnerActions.showSpinner())),
       withLatestFrom(store.pipe(select('musicApi', 'homeTileLists'))),
       tap((value) => console.log(value)),
       switchMap(([, payload]) => {
@@ -190,6 +213,7 @@ export const getRecommendationsAndRecentlyPlayed$ = createEffect(
         ) {
           console.log('recommendations already in store');
           console.log(payload);
+          store.dispatch(SpinnerActions.hideSpinner());
           return of(
             MusicAPIActions.getRecommendationsAndRecentlyPlayedSuccess({
               payload: {
@@ -249,6 +273,7 @@ export const getRecommendationsAndRecentlyPlayed$ = createEffect(
                 })
               );
 
+              store.dispatch(SpinnerActions.hideSpinner());
               return MusicAPIActions.getRecommendationsAndRecentlyPlayedSuccess(
                 {
                   payload: {
@@ -259,24 +284,10 @@ export const getRecommendationsAndRecentlyPlayed$ = createEffect(
                   },
                 }
               );
-            }),
-            catchError((error) =>
-              of(
-                MusicAPIActions.getRecommendationsAndRecentlyPlayedFailure({
-                  payload: { error },
-                })
-              )
-            )
+            })
           );
         }
-      }),
-      catchError((error) =>
-        of(
-          MusicAPIActions.getRecommendationsAndRecentlyPlayedFailure({
-            payload: { error },
-          })
-        )
-      )
+      })
     ),
   { functional: true }
 );
@@ -338,10 +349,11 @@ export const getMediaItem$ = createEffect(
   (
     actions$ = inject(Actions),
     musickit = inject(MusickitAPI),
-    store = inject(Store)
+    store = inject(Store<MusicState & SpinnerState>)
   ) =>
     actions$.pipe(
       ofType(MusicAPIActions.getMediaItem),
+      tap(() => store.dispatch(SpinnerActions.showSpinner())),
       withLatestFrom(
         store.pipe(select('musicApi', 'mediaCache')),
         store.pipe(select('musicApi', 'libraryPlaylists'))
@@ -352,6 +364,7 @@ export const getMediaItem$ = createEffect(
 
         if (foundInCache) {
           console.log('Found in cache');
+          store.dispatch(SpinnerActions.hideSpinner());
           return of(
             MusicAPIActions.getMediaItemSuccess({
               payload: { data: copy(foundInCache) },
@@ -360,6 +373,7 @@ export const getMediaItem$ = createEffect(
               payload: { data: foundInCache },
             })
           );
+          store.dispatch(SpinnerActions.hideSpinner());
         } else {
           const foundInLibrary = libraryPlaylists?.find(
             (playlist: any) => playlist.id === id
@@ -367,6 +381,7 @@ export const getMediaItem$ = createEffect(
 
           if (foundInLibrary) {
             console.log('Found in library playlists');
+            store.dispatch(SpinnerActions.hideSpinner());
             return of(
               MusicAPIActions.getMediaItemSuccess({
                 payload: { data: copy(foundInLibrary) },
@@ -411,9 +426,11 @@ export const getMediaItem$ = createEffect(
                     payload: { data: data.payload.data },
                   })
                 )
-              )
+              ),
+              tap(() => store.dispatch(SpinnerActions.hideSpinner()))
             );
           }
+          tap(() => store.dispatch(SpinnerActions.hideSpinner()));
         }
       })
     ),

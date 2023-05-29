@@ -7,7 +7,6 @@ import {
   createFeatureSelector,
 } from '@ngrx/store';
 import type { MusicKit } from '../../../types';
-import { MKMediaItemType } from '../../models/musickit.models';
 import { MusicActions } from '../actions';
 
 import { MusicEntity } from '../models/music.models';

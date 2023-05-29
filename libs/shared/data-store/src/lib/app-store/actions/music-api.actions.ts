@@ -11,6 +11,16 @@ import {
 } from '@nyan-inc/core';
 import { MusicAPIEntity } from '../models/music-api.models';
 
+// Music API Actions
+export const loadMusicAPI = createAction('[Music/API] Load Music API');
+export const loadMusicAPISuccess = createAction(
+  '[Music/API] Load Music API Success'
+);
+export const loadMusicAPIFailure = createAction(
+  '[Music/API] Load Music API Failure',
+  props<{ payload: { error: Error } }>()
+);
+
 // Library Playlists Actions
 export const getLibraryPlaylists = createAction(
   '[Music/API] Get Library Playlists'

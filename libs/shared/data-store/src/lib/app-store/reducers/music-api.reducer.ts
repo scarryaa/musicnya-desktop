@@ -12,13 +12,10 @@ import copy, { State } from 'fast-copy';
 import { MusicAPIActions } from '../actions';
 import { MusicAPIEntity } from '../models/music-api.models';
 import {
-  Albums,
-  LibraryAlbums,
   LibraryPlaylists,
   MediaItem,
   MediaItemTypes,
   PersonalRecommendation,
-  Playlists,
   Resource,
 } from '@nyan-inc/core';
 
@@ -77,6 +74,21 @@ export const initialMusicAPIState: MusicAPIState =
 
 const reducer = createReducer(
   { ...initialMusicAPIState },
+
+  on(MusicAPIActions.loadMusicAPI, (state) => ({
+    ...state,
+    loaded: false,
+    error: undefined,
+  })),
+  on(MusicAPIActions.loadMusicAPISuccess, (state) => ({
+    ...state,
+    loaded: true,
+  })),
+  on(MusicAPIActions.loadMusicAPIFailure, (state, { payload }) => ({
+    ...state,
+    error: payload.error,
+  })),
+
   on(MusicAPIActions.getLibraryPlaylists, (state) => ({ ...state })),
   on(MusicAPIActions.getLibraryPlaylistsSuccess, (state, { payload }) => ({
     ...state,

@@ -8,6 +8,8 @@ import {
   Input,
   NgModule,
   OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
@@ -17,6 +19,7 @@ import { VirtualTableModule } from './virtual-table-presentation.component';
 import { DataSource } from '@angular/cdk/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router, RouterModule } from '@angular/router';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'ui-virtual-table',
@@ -37,15 +40,18 @@ import { Router, RouterModule } from '@angular/router';
   ></ui-virtual-table-presentation>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VirtualTableSmartComponent implements OnChanges {
+export class VirtualTableSmartComponent implements OnChanges, OnDestroy {
   displayedColumns = DisplayedColumns;
   dataSource!: DataSource<Songs>;
   selection = new SelectionModel<Songs>(true, []);
   showAlbums = true;
+  destroy$ = new Subject<void>();
+
   @Input() data!: Songs[];
   @Input() media!: MediaItemTypes;
   @Input() playingSong: string | undefined = undefined;
   @Input() playing = false;
+  @Input() routeChanges!: Observable<void>;
 
   @Output() unpauseEmitter = new EventEmitter();
   @Output() pauseEmitter = new EventEmitter();
@@ -56,10 +62,6 @@ export class VirtualTableSmartComponent implements OnChanges {
   @HostBinding('style.width.%') width = '100';
 
   // listen to router events and clear selection if the route changes
-  @HostListener('window:popstate', ['$event'])
-  onPopState(event: any) {
-    this.selection.clear();
-  }
 
   constructor(private router: Router) {
     this.dataSource = new SongDataSource(this.data);
@@ -71,6 +73,7 @@ export class VirtualTableSmartComponent implements OnChanges {
     }
 
     if (changes['media']) {
+      this.selection.clear();
       this.media = changes['media'].currentValue;
 
       if (this.media === 'albums' || this.media === 'library-albums') {
@@ -81,6 +84,10 @@ export class VirtualTableSmartComponent implements OnChanges {
         this.showAlbums = true;
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
   }
 
   handleDrop(data: Songs[]) {

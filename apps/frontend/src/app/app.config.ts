@@ -25,6 +25,7 @@ import {
   musicEffects,
   MusicEventListeners,
   preferencesEffects,
+  fromSpinner,
 } from '@nyan-inc/shared';
 import * as fromApp from '../store/reducers/app.reducer';
 import * as fromLayout from '../store/reducers/layout.reducer';
@@ -69,6 +70,7 @@ export const appConfig: ApplicationConfig = {
     provideStore(
       {
         app: fromApp.appReducer,
+        spinner: fromSpinner.spinnerReducer,
         router: routerReducer,
         layout: fromLayout.layoutReducer,
         music: fromMusic.musicReducer,
@@ -98,5 +100,6 @@ export const appConfig: ApplicationConfig = {
       fromMusicAPI.MusicAPI_API_FEATURE_KEY,
       fromMusicAPI.musicAPIReducer
     ),
+    provideState(fromSpinner.SPINNER_FEATURE_KEY, fromSpinner.spinnerReducer),
   ],
 };

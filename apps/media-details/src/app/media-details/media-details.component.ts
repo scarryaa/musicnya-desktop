@@ -6,6 +6,10 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
+  EventEmitter,
+  Output,
+  OnDestroy,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -15,8 +19,8 @@ import {
 } from '@nyan-inc/ui';
 import { BaseButtonModule, ColorService } from '@nyan-inc/core';
 import { FastAverageColorResult } from 'fast-average-color';
-import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
-import { Observable } from 'rxjs';
+import { MusicAPIFacade, MusicFacade, RouterFacade } from '@nyan-inc/shared';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { LetDirective } from '@ngrx/component';
 import Color from 'colorjs.io';
 
@@ -35,18 +39,22 @@ import Color from 'colorjs.io';
   styleUrls: ['./media-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MediaDetailsComponent implements AfterViewInit {
+export class MediaDetailsComponent implements AfterViewInit, OnDestroy {
   showAdditionalInfo = false;
   @ViewChild('mediaCover', { read: ElementRef })
   mediaCover!: ElementRef;
   mediaColor!: FastAverageColorResult | void;
   state$: Observable<any>;
   musicState$: MusicFacade;
+  destroy$ = new Subject<void>();
+
+  readonly routeChangeEmitter = new Subject<void>();
 
   constructor(
     private changeReference: ChangeDetectorRef,
     private musicAPIFacade: MusicAPIFacade,
     private musicFacade: MusicFacade,
+    private routerFacade: RouterFacade,
     private color: ColorService
   ) {
     this.state$ = this.musicAPIFacade.state$;
@@ -90,6 +98,10 @@ export class MediaDetailsComponent implements AfterViewInit {
           });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
   }
 
   toggleShowContent() {

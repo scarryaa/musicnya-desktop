@@ -2,6 +2,7 @@
   <ng-container>
     <!-- Home Recommendations -->
     <ui-media-tile-list
+      *ngIf="media.homeTileLists?.[1]?.data"
       (playEmitter)="play($event.type, $event.id)"
       [listTitle]="media.homeTileLists?.[1]?.title"
       [listData]="media.homeTileLists?.[1]?.data || []"

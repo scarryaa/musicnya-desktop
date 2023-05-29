@@ -2,13 +2,14 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnDestroy,
-  OnInit,
+  AfterViewInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { HeadingComponent, MediaTileListComponent } from '@nyan-inc/ui';
-import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
+import { MusicAPIFacade, MusicFacade, SpinnerFacade } from '@nyan-inc/shared';
 import { LetDirective } from '@ngrx/component';
+import { SpinnerComponent } from '@nyan-inc/core';
 
 @Component({
   standalone: true,
@@ -17,13 +18,14 @@ import { LetDirective } from '@ngrx/component';
     HeadingComponent,
     MediaTileListComponent,
     LetDirective,
+    SpinnerComponent,
   ],
   selector: 'musicnya-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent implements OnDestroy, OnInit {
+export class HomeComponent implements OnDestroy, AfterViewInit {
   constructor(
     public musicAPIFacade: MusicAPIFacade,
     public music: MusicFacade
@@ -35,7 +37,8 @@ export class HomeComponent implements OnDestroy, OnInit {
   _destroy$: Subject<void> = new Subject<void>();
   state$: Observable<any>;
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    this.musicAPIFacade.loadAPI();
     this.musicAPIFacade.getRecommendationsAndRecentlyPlayed();
   }
 
