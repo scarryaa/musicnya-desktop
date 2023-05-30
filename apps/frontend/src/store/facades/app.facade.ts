@@ -11,7 +11,6 @@ export class AppFacade {
 
   state$ = this.store.select((state) => state);
   loggedInAppleMusic$ = this.store.select((state) => state.loggedInAppleMusic);
-
   loggedInSpotify$ = this.store.select((state) => state.loggedInSpotify);
 
   initApp() {

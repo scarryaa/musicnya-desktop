@@ -204,9 +204,9 @@ export default class App {
       App.initMainWindow();
       App.loadMainWindow();
       App.setHeadersConfig();
-      if (!App.isDevelopmentMode()) {
-        App.SplashWindow();
-      }
+      // if (!App.isDevelopmentMode()) {
+      //   App.SplashWindow();
+      // }
     } else {
       App.application.quit();
     }

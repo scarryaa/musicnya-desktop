@@ -13,7 +13,7 @@ import {
 } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideRouterStore, routerReducer } from '@ngrx/router-store';
-import { provideStore, provideState, Store } from '@ngrx/store';
+import { provideStore, provideState } from '@ngrx/store';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { appRoutes } from './app.routes';
 import { BrowserModule } from '@angular/platform-browser';
@@ -23,16 +23,16 @@ import {
   fromMusicAPI,
   musicAPIEffects,
   musicEffects,
-  MusicEventListeners,
   preferencesEffects,
   fromSpinner,
-  MusicState,
+  MusicEventListeners,
 } from '@nyan-inc/shared';
 import * as fromApp from '../store/reducers/app.reducer';
 import * as fromLayout from '../store/reducers/layout.reducer';
 import { appEffects } from '../store/effects';
-import { CacheRouteReuseStrategy, HttpService } from '@nyan-inc/core';
-import { LoginService, MusickitBase } from '@nyan-inc/core-services';
+import { CacheRouteReuseStrategy } from '@nyan-inc/core';
+import { LoginService } from './services/login/login.service';
+import { MusickitBase } from '@nyan-inc/core-services';
 
 export const appConfig: ApplicationConfig = {
   providers: [

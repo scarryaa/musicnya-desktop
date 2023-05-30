@@ -13,39 +13,18 @@ import { RouterModule } from '@angular/router';
 import { DrawerComponent } from './drawer/drawer.component';
 import { FooterComponent } from './footer/footer.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
-import { select, Store } from '@ngrx/store';
-import {
-  map,
-  Observable,
-  Subject,
-  Subscription,
-  take,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { Observable, Subject, Subscription, take, takeUntil, tap } from 'rxjs';
 import { TitleBarComponent } from './title-bar/title-bar.component';
 import {
   DraggableDirective,
-  HttpService,
   NavigationButtonSmartModule,
 } from '@nyan-inc/core';
 import { NavigationButtonsComponent } from './navigation-buttons/navigation-buttons.component';
-import {
-  MusicAPIFacade,
-  MusicEventListeners,
-  MusicFacade,
-  MusicState,
-  RouterFacade,
-} from '@nyan-inc/shared';
-import * as AppActions from '../store/actions/app.actions';
-import * as LayoutActions from '../store/actions/layout.actions';
-import * as fromLayout from '../store/reducers/layout.reducer';
-import * as fromApp from '../store/reducers/app.reducer';
+import { MusicAPIFacade, MusicEventListeners } from '@nyan-inc/shared';
 import { AppState } from '../store/reducers/app.reducer';
-import { LayoutState } from '../store/reducers/layout.reducer';
-import { MusickitBase } from '@nyan-inc/core-services';
 import { LetDirective } from '@ngrx/component';
 import { AppFacade, LayoutFacade } from '../store/facades';
+import { HttpService } from '@nyan-inc/core-services';
 
 @Component({
   standalone: true,
@@ -60,7 +39,6 @@ import { AppFacade, LayoutFacade } from '../store/facades';
     NavigationButtonsComponent,
     LetDirective,
   ],
-  providers: [MusickitBase, Store<MusicState>],
   selector: 'musicnya-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
@@ -82,7 +60,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private http: HttpService,
     private musicAPIFacade: MusicAPIFacade,
     private app: AppFacade,
-    private layout: LayoutFacade
+    private layout: LayoutFacade,
+    private eventListeners: MusicEventListeners
   ) {
     this.state$ = this.app.state$;
   }
@@ -100,10 +79,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.app.checkForLogins();
     this.musicAPIFacade.loadAPI();
     this.musicAPIFacade.getLibraryPlaylists();
+    this.eventListeners.addEventListeners();
   }
 
   handleMenuClick(event: string): void {
-    console.log(event);
+    this.app.loginAppleMusic();
   }
 
   ngOnDestroy(): void {

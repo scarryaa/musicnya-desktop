@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <head>
     <link href="./splash.css" rel="stylesheet">
+    <script>
+        const login = () => 
+            console.log('login');
+        
+    </script>
 </head>
 <body>
     <div id="splash-logo">
@@ -15,9 +20,9 @@
         <p>If not, no worries! You can also play local music.</p>
 
         <div id="login-options">
-            <button class="splash-login-button" id="button-spotify" (click)="login()">Login With Spotify</button>
-            <button class="splash-login-button" id="button-apple" (click)="login()">Login With Apple Music</button>
-            <button class="splash-login-button" id="button-continue" (click)="login()">Continue</button>
+            <button class="splash-login-button" id="button-spotify" (onclick)="login()"><s>Login With Spotify</s></button>
+            <button class="splash-login-button" id="button-apple" (onclick)="login()">Login With Apple Music</button>
+            <button class="splash-login-button" id="button-continue" (click)="login()"><s>Continue</s></button>
         </div>
     </div>
 </body>

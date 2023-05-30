@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
-import { LoginService } from '@nyan-inc/core-services';
 import { switchMap, of, catchError, take } from 'rxjs';
+import { LoginService } from '../../app/services/login/login.service';
 import { AppActions } from '../actions';
 
 export const checkForLogins$ = createEffect(

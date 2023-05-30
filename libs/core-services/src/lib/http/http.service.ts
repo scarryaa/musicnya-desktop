@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Config } from '../models/config.model';
+
+export interface Config {
+  DEV_TOKEN: string;
+}
 
 @Injectable({ providedIn: 'root', deps: [HttpClient] })
 export class HttpService {

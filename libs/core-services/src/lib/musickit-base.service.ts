@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpService } from '@nyan-inc/core';
-import { MusicEventListeners } from '@nyan-inc/shared';
 import type { MusicKit as Music } from '../types';
+import { HttpService } from './http/http.service';
 
-declare const MusicKit: typeof Music;
+declare const MusicKit: any;
 
 @Injectable({
   providedIn: 'root',
@@ -11,10 +10,7 @@ declare const MusicKit: typeof Music;
 export class MusickitBase {
   public instance!: Music.MusicKitInstance;
 
-  constructor(
-    private http: HttpService,
-    private eventListener: MusicEventListeners
-  ) {}
+  constructor(private http: HttpService) {}
 
   async init(): Promise<void> {
     return await this.http.getConfig().then((result) => {
@@ -24,7 +20,7 @@ export class MusickitBase {
         instance.clearQueue();
         instance.stop();
 
-        this.eventListener.addEventListeners(instance);
+        (window as any).MusicKit = instance;
         return instance;
       });
     });

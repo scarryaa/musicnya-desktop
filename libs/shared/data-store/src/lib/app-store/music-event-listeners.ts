@@ -1,7 +1,6 @@
 import { Inject, inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MusickitBase } from '@nyan-inc/core-services';
-import copy from 'fast-copy';
 import { Observable, throttleTime } from 'rxjs';
 import { MusicKit } from '../../types';
 import { MusicActions } from './actions';
@@ -13,19 +12,19 @@ import { MusicState } from './reducers/music.reducer';
 })
 export class MusicEventListeners {
   store: Store<MusicState>;
-  instance: any;
+  instance!: MusicKit.MusicKitInstance;
   playbackTimeDidChange$!: Observable<any>;
 
   constructor(store: Store<MusicState>) {
     this.store = store;
   }
 
-  addEventListeners(instance: any) {
-    this.instance = instance;
+  addEventListeners() {
+    console.log('Adding event listeners');
+    this.instance = (window as any).MusicKit;
     this.playbackTimeDidChange$ = createPlaybackTimeDidChangeObservable(
       this.instance
     );
-    console.log('Adding event listeners');
     this.playbackTimeDidChange$
       .pipe(throttleTime(100))
       .subscribe((event: any) => {
@@ -34,7 +33,7 @@ export class MusicEventListeners {
         );
       });
 
-    instance.addEventListener('nowPlayingItemDidChange', () => {
+    this.instance.addEventListener('nowPlayingItemDidChange', () => {
       if (this.instance.nowPlayingItem) {
         this.store.dispatch(
           MusicActions.setMediaItem({
@@ -124,25 +123,35 @@ function createPlaybackTimeDidChangeObservable(instance: any) {
 
 const processPlaybackState = (state: any) => {
   switch (state) {
-    case MusicKit.PlaybackStates.none:
+    case MusicKit.PlaybackStates.none: {
       return 0;
-    case MusicKit.PlaybackStates.loading:
+    }
+    case MusicKit.PlaybackStates.loading: {
       return 1;
-    case MusicKit.PlaybackStates.playing:
+    }
+    case MusicKit.PlaybackStates.playing: {
       return 2;
-    case MusicKit.PlaybackStates.paused:
+    }
+    case MusicKit.PlaybackStates.paused: {
       return 3;
-    case MusicKit.PlaybackStates.stopped:
+    }
+    case MusicKit.PlaybackStates.stopped: {
       return 4;
-    case MusicKit.PlaybackStates.seeking:
+    }
+    case MusicKit.PlaybackStates.seeking: {
       return 5;
-    case MusicKit.PlaybackStates.waiting:
+    }
+    case MusicKit.PlaybackStates.waiting: {
       return 6;
-    case MusicKit.PlaybackStates.stalled:
+    }
+    case MusicKit.PlaybackStates.stalled: {
       return 7;
-    case MusicKit.PlaybackStates.completed:
+    }
+    case MusicKit.PlaybackStates.completed: {
       return 8;
-    default:
+    }
+    default: {
       return 0;
+    }
   }
 };

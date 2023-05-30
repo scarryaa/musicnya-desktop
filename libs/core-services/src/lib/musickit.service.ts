@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpService } from '@nyan-inc/core';
 import { MusicKit } from '../types';
+import { HttpService } from './http/http.service';
 import { MusickitBase } from './musickit-base.service';
 
 @Injectable({
