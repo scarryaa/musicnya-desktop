@@ -13,7 +13,7 @@ import {
 } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideRouterStore, routerReducer } from '@ngrx/router-store';
-import { provideStore, provideState } from '@ngrx/store';
+import { provideStore, provideState, Store } from '@ngrx/store';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { appRoutes } from './app.routes';
 import { BrowserModule } from '@angular/platform-browser';
@@ -26,22 +26,22 @@ import {
   MusicEventListeners,
   preferencesEffects,
   fromSpinner,
+  MusicState,
 } from '@nyan-inc/shared';
 import * as fromApp from '../store/reducers/app.reducer';
 import * as fromLayout from '../store/reducers/layout.reducer';
-import { AppEffects } from '../store/effects/app.effects';
-import { CacheRouteReuseStrategy } from '@nyan-inc/core';
+import { appEffects } from '../store/effects';
+import { CacheRouteReuseStrategy, HttpService } from '@nyan-inc/core';
+import { LoginService, MusickitBase } from '@nyan-inc/core-services';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     {
       provide: APP_INITIALIZER,
-      useFactory: (eventListeners: MusicEventListeners) => () => {
-        document.addEventListener('DOMContentLoaded', () => {
-          eventListeners.addEventListeners();
-        });
+      useFactory: (loginService: LoginService) => () => {
+        loginService.listenForCookies();
       },
-      deps: [MusicEventListeners],
+      deps: [LoginService],
       multi: true,
     },
     provideRouter(
@@ -88,7 +88,7 @@ export const appConfig: ApplicationConfig = {
       }
     ),
     provideEffects([
-      AppEffects,
+      appEffects,
       musicAPIEffects,
       musicEffects,
       preferencesEffects,
@@ -101,5 +101,13 @@ export const appConfig: ApplicationConfig = {
       fromMusicAPI.musicAPIReducer
     ),
     provideState(fromSpinner.SPINNER_FEATURE_KEY, fromSpinner.spinnerReducer),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (musickitBase: MusickitBase) => () => {
+        musickitBase.init();
+      },
+      deps: [MusickitBase],
+      multi: true,
+    },
   ],
 };

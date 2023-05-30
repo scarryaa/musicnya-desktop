@@ -14,26 +14,38 @@ import { DrawerComponent } from './drawer/drawer.component';
 import { FooterComponent } from './footer/footer.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { select, Store } from '@ngrx/store';
-import { Observable, Subject, Subscription, takeUntil } from 'rxjs';
+import {
+  map,
+  Observable,
+  Subject,
+  Subscription,
+  take,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { TitleBarComponent } from './title-bar/title-bar.component';
 import {
   DraggableDirective,
+  HttpService,
   NavigationButtonSmartModule,
 } from '@nyan-inc/core';
 import { NavigationButtonsComponent } from './navigation-buttons/navigation-buttons.component';
-import { HttpService } from '../../../../libs/core/src/lib/http/http.service';
 import {
   MusicAPIFacade,
   MusicEventListeners,
+  MusicFacade,
   MusicState,
   RouterFacade,
 } from '@nyan-inc/shared';
 import * as AppActions from '../store/actions/app.actions';
 import * as LayoutActions from '../store/actions/layout.actions';
 import * as fromLayout from '../store/reducers/layout.reducer';
+import * as fromApp from '../store/reducers/app.reducer';
 import { AppState } from '../store/reducers/app.reducer';
 import { LayoutState } from '../store/reducers/layout.reducer';
-import { MusickitBase } from '@yan-inc/core-services';
+import { MusickitBase } from '@nyan-inc/core-services';
+import { LetDirective } from '@ngrx/component';
+import { AppFacade, LayoutFacade } from '../store/facades';
 
 @Component({
   standalone: true,
@@ -46,7 +58,9 @@ import { MusickitBase } from '@yan-inc/core-services';
     TitleBarComponent,
     NavigationButtonSmartModule,
     NavigationButtonsComponent,
+    LetDirective,
   ],
+  providers: [MusickitBase, Store<MusicState>],
   selector: 'musicnya-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
@@ -54,33 +68,23 @@ import { MusickitBase } from '@yan-inc/core-services';
 })
 export class AppComponent implements OnInit, OnDestroy {
   private _window: any;
-  drawerOpen$: Observable<boolean>;
   width!: number;
   subs: Subscription = new Subscription();
   title = 'musicnya';
   destroy$ = new Subject<void>();
+  drawerOpen$ = this.layout.drawerOpen$;
+  state$!: Observable<AppState>;
 
   @ContentChildren(DraggableDirective, { descendants: true, read: ElementRef })
   draggables!: QueryList<DraggableDirective>;
 
   constructor(
-    //TODO convert to facade
-    private store: Store<AppState & LayoutState & MusicState>,
     private http: HttpService,
     private musicAPIFacade: MusicAPIFacade,
-    private musickit: MusickitBase,
-    private routerFacade: RouterFacade
+    private app: AppFacade,
+    private layout: LayoutFacade
   ) {
-    this.drawerOpen$ = this.store.pipe(select(fromLayout.getDrawerOpen));
-    // TODO fix this
-    (window as any).api.cookies((event: any, cookies: any) => {
-      console.log((window as any).api.cookies);
-      console.log('[appIPC] recv-cookies');
-      for (const key of Object.keys(cookies)) {
-        console.log(key, cookies[key]);
-        localStorage.setItem(key, cookies[key]);
-      }
-    });
+    this.state$ = this.app.state$;
   }
 
   @HostListener('mousedown', ['$event']) onClick(event: MouseEvent) {
@@ -92,12 +96,14 @@ export class AppComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     await this.http.getConfig();
 
-    this.store.dispatch(AppActions.initApp());
+    this.app.initApp();
+    this.app.checkForLogins();
     this.musicAPIFacade.loadAPI();
-
-    const eventListeners = new MusicEventListeners(this.musickit, this.store);
-    eventListeners.addEventListeners();
     this.musicAPIFacade.getLibraryPlaylists();
+  }
+
+  handleMenuClick(event: string): void {
+    console.log(event);
   }
 
   ngOnDestroy(): void {
@@ -105,9 +111,15 @@ export class AppComponent implements OnInit, OnDestroy {
     this.destroy$.next();
   }
 
-  toggleDrawer(event: boolean): void {
-    this.store.dispatch(
-      event ? LayoutActions.closeDrawer() : LayoutActions.openDrawer()
-    );
+  toggleDrawer(): void {
+    this.drawerOpen$
+      .pipe(
+        takeUntil(this.destroy$),
+        take(1),
+        tap((value) =>
+          value ? this.layout.closeDrawer() : this.layout.openDrawer()
+        )
+      )
+      .subscribe();
   }
 }

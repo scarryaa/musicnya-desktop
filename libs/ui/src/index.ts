@@ -12,3 +12,4 @@ export * from './lib/album-tile/album-tile.component';
 export * from './lib/virtual-table/virtual-table-presentation.component';
 export * from './lib/virtual-table/virtual-table-smart.component';
 export * from './lib/models';
+export * from './lib/menu/menu.component';

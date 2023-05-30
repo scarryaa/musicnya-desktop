@@ -1,5 +1,5 @@
 {
-  "name": "@yan-inc/core-services",
+  "name": "@nyan-inc/core-services",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^16.0.0",

@@ -1,19 +1,25 @@
-<div>
-  <musicnya-title-bar></musicnya-title-bar>
-  <div id="app-wrapper">
-    <div id="navigation-buttons-wrapper">
-      <musicnya-navigation-buttons
-        [ngClass]="{ 'drawer-expanded': (drawerOpen$ | async)! }"
-        id="navigation-buttons"
-      ></musicnya-navigation-buttons>
+<ng-container *ngrxLet="state$ as vm">
+  <div>
+    <musicnya-title-bar
+      (clickEmitter)="handleMenuClick($event)"
+      [loggedInAppleMusic]="vm.loggedInAppleMusic"
+      [loggedInSpotify]="vm.loggedInSpotify"
+    ></musicnya-title-bar>
+    <div id="app-wrapper">
+      <div id="navigation-buttons-wrapper">
+        <musicnya-navigation-buttons
+          [ngClass]="{ 'drawer-expanded': (drawerOpen$ | async) }"
+          id="navigation-buttons"
+        ></musicnya-navigation-buttons>
+      </div>
+      <musicnya-drawer
+        [width]="width"
+        (drawerOpened$)="toggleDrawer()"
+        [open]="(drawerOpen$ | async)!"
+      >
+        <router-outlet></router-outlet>
+      </musicnya-drawer>
+      <musicnya-footer></musicnya-footer>
     </div>
-    <musicnya-drawer
-      [width]="width"
-      (drawerOpened$)="toggleDrawer($event)"
-      [open]="(drawerOpen$ | async)!"
-    >
-      <router-outlet></router-outlet>
-    </musicnya-drawer>
-    <musicnya-footer></musicnya-footer>
   </div>
-</div>
+</ng-container>

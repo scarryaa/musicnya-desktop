@@ -12,14 +12,13 @@ import {
   concatMap,
   tap,
   skipWhile,
-  take,
 } from 'rxjs';
 import { of } from 'rxjs';
 import { MusicAPIActions, SpinnerActions } from '../actions';
 import copy from 'fast-copy';
 import { select, Store } from '@ngrx/store';
 import { ROUTER_NAVIGATED } from '@ngrx/router-store';
-import { MusickitAPI } from '@yan-inc/core-services';
+import { MusickitAPI } from '@nyan-inc/core-services';
 import {
   LibraryPlaylists,
   Resource,

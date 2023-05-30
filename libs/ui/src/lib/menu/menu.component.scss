@@ -1,0 +1,67 @@
+:root {
+  --menu-background-color: rgb(0, 0, 0);
+  --menu-item-height: 2.5rem;
+  --menu-item-width: 10rem;
+  --menu-item-padding: 0rem 1rem;
+  --menu-item-font-size: 1rem;
+  --menu-item-color: var(--font-color);
+  --menu-item-font-weight: var(--font-weight-very-bold);
+  --menu-item-display: flex;
+  --menu-item-align-items: center;
+  --menu-item-hover-background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu {
+  position: absolute;
+  top: 2rem;
+  left: 1.75rem;
+  height: auto;
+  width: auto;
+  background-color: rgb(10, 10, 10);
+  z-index: 9999;
+  flex-direction: column;
+  display: flex;
+  filter: drop-shadow(0 0 0.5rem rgba(0, 0, 0, 0.5));
+}
+
+.menu-item {
+  height: var(--menu-item-height);
+  width: var(--menu-item-width);
+  padding: var(--menu-item-padding);
+  padding-top: 0.2rem;
+  font-size: var(--menu-item-font-size);
+  font-weight: var(--menu-item-font-weight);
+  transition: var(--menu-item-transition);
+  display: var(--menu-item-display);
+  align-items: var(--menu-item-align-items);
+  color: var(--menu-item-color);
+
+  &:hover {
+    background-color: var(--menu-item-hover-background-color);
+  }
+
+  .ui-menu-item-icon {
+    svg {
+      display: block;
+      margin-left: 0.175rem;
+      width: 22.5px;
+      height: 27.5px;
+      padding-right: 0.15rem;
+      margin-bottom: 0.4rem;
+
+      path {
+        fill: var(--font-color);
+      }
+    }
+
+    color: var(--font-color);
+    padding-right: 0.6rem;
+  }
+
+  .ui-menu-item-text {
+    display: block;
+    color: var(--font-color);
+    align-content: center;
+    padding-bottom: 0.2rem;
+  }
+}

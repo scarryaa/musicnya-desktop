@@ -1,6 +1,6 @@
 import { Inject, inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { MusickitBase } from '@yan-inc/core-services';
+import { MusickitBase } from '@nyan-inc/core-services';
 import copy from 'fast-copy';
 import { Observable, throttleTime } from 'rxjs';
 import { MusicKit } from '../../types';
@@ -9,18 +9,22 @@ import { MusicState } from './reducers/music.reducer';
 
 @Injectable({
   providedIn: 'root',
+  deps: [MusickitBase, Store],
 })
 export class MusicEventListeners {
   store: Store<MusicState>;
+  instance: any;
+  playbackTimeDidChange$!: Observable<any>;
 
-  constructor(private music: MusickitBase, store: Store<MusicState>) {
+  constructor(store: Store<MusicState>) {
     this.store = store;
   }
 
-  instance = this.music.instance;
-  playbackTimeDidChange$ = createPlaybackTimeDidChangeObservable(this.instance);
-
-  addEventListeners() {
+  addEventListeners(instance: any) {
+    this.instance = instance;
+    this.playbackTimeDidChange$ = createPlaybackTimeDidChangeObservable(
+      this.instance
+    );
     console.log('Adding event listeners');
     this.playbackTimeDidChange$
       .pipe(throttleTime(100))
@@ -30,13 +34,13 @@ export class MusicEventListeners {
         );
       });
 
-    this.instance.addEventListener('nowPlayingItemDidChange', () => {
+    instance.addEventListener('nowPlayingItemDidChange', () => {
       if (this.instance.nowPlayingItem) {
         this.store.dispatch(
           MusicActions.setMediaItem({
             payload: {
               mediaItem: JSON.parse(
-                JSON.stringify(this.music.instance.nowPlayingItem)
+                JSON.stringify(this.instance.nowPlayingItem)
               ),
             },
           })

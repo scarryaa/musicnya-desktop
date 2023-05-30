@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
-import { Musickit } from '@yan-inc/core-services';
+import { Musickit } from '@nyan-inc/core-services';
 import {
   switchMap,
   catchError,
