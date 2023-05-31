@@ -88,7 +88,7 @@ export class TitleBarComponent {
   @Output() clickEmitter = new EventEmitter<string>();
 
   openAppleMenu() {
-    (window as any).api.send('auth-window', 'auth-window');
+    (window as any).api.send('apple-music-login', 'apple-music-login');
   }
 
   openSpotifyMenu() {}

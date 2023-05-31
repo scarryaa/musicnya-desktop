@@ -23,7 +23,7 @@ export class LoginService {
   }
 
   async loginAppleMusic() {
-    (window as any).api.send('auth-window', 'auth-window');
+    (window as any).api.send('apple-music-login', 'apple-music-login');
   }
 
   async logoutAppleMusic() {

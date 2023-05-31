@@ -14,7 +14,7 @@ import {
   standalone: true,
 })
 export class FallbackImageDirective implements OnInit, OnChanges {
-  _fallback = './../assets/images/music_note.webp';
+  _fallback = './assets/images/music_note.webp';
   @Input() src = this._fallback;
 
   constructor(

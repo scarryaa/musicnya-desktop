@@ -72,10 +72,10 @@ export default class App {
         if (details.url === 'https://buy.itunes.apple.com/account/web/info') {
           details.requestHeaders['sec-fetch-site'] = 'same-site';
           details.requestHeaders['DNT'] = '1';
-          let itspod = await App.mainWindow.webContents.executeJavaScript(
+          const itspod = await App.mainWindow.webContents.executeJavaScript(
             `window.localStorage.getItem("music.ampwebplay.itspod")`
           );
-          if (itspod != null)
+          if (itspod != undefined)
             details.requestHeaders['Cookie'] = `itspod=${itspod}`;
         }
         if (details.url.includes('play.itunes.apple.com')) {
@@ -215,6 +215,7 @@ export default class App {
     if (App.isDevelopmentMode()) {
       App.mainWindow.webContents.openDevTools();
     }
+    App.SplashWindow();
   }
 
   private static onActivate() {
@@ -236,17 +237,24 @@ export default class App {
       show: true,
       webPreferences: {
         nodeIntegration: false,
-        contextIsolation: false,
+        contextIsolation: true,
+        preload: join(__dirname, 'main.preload.js'),
       },
     });
 
     App.splashWindow.loadURL(`file://${__dirname}/app/splash/splash.html`);
     App.splashWindow.center();
+    localStorage.clear();
 
-    // setTimeout(function () {
-    //   App.splashWindow.close();
-    //   App.mainWindow.show();
-    // }, 5000);
+    const seenSplash = App.splashWindow.webContents.executeJavaScript(
+      'localStorage.getItem("seenSplash")'
+    );
+    console.log(seenSplash);
+    if (seenSplash) {
+      App.splashWindow.close();
+      App.mainWindow.show();
+      return;
+    }
   }
 
   private static initMainWindow() {
@@ -260,7 +268,7 @@ export default class App {
       height: height,
       minWidth: 900,
       minHeight: 615,
-      show: App.isDevelopmentMode() ? true : false,
+      show: false,
       frame: false,
       fullscreenable: true,
       fullscreen: false,
@@ -272,7 +280,7 @@ export default class App {
         sandbox: true,
         accessibleTitle: 'musicnya',
         defaultFontFamily: { standard: 'Haskoy', sansSerif: 'InterDisplay' },
-        devTools: App.isDevelopmentMode(),
+        devTools: true,
         experimentalFeatures: App.isDevelopmentMode(),
         nodeIntegration: true,
         contextIsolation: true,
@@ -285,23 +293,23 @@ export default class App {
 
     // if main window is ready to show, close the splash window and show the main window
 
-    ipcMain.on('auth-window', (_event) => {
+    ipcMain.on('apple-music-login', () => {
       AuthWindow(App.mainWindow);
     });
 
-    ipcMain.on('close-window', async (event) => {
+    ipcMain.on('close-window', async () => {
       App.mainWindow.close();
     });
 
-    ipcMain.on('minimize-window', async (event) => {
+    ipcMain.on('minimize-window', async () => {
       App.mainWindow.minimize();
     });
 
-    ipcMain.on('maximize-window', async (event) => {
+    ipcMain.on('maximize-window', async () => {
       App.mainWindow.maximize();
     });
 
-    ipcMain.on('clear-local-storage', async (event) => {
+    ipcMain.on('clear-local-storage', async () => {
       App.mainWindow.webContents.session.clearStorageData();
     });
 
@@ -325,7 +333,9 @@ export default class App {
     if (App.application.isPackaged) {
       App.mainWindow.loadURL(
         format({
-          name: join(__dirname, '..', rendererAppName, 'index.html'),
+          name: App.isDevelopmentMode()
+            ? join(__dirname, '..', 'frontend', 'index.html')
+            : join(__dirname, '..', 'frontend', 'browser', 'index.html'),
         })
       );
     } else {
@@ -352,7 +362,7 @@ export default class App {
   }
 }
 
-function AuthWindow(win: BrowserWindow) {
+export function AuthWindow(win: BrowserWindow) {
   // create a BrowserWindow
   const authWindow = new BrowserWindow({
     width: 500,
@@ -393,16 +403,19 @@ function AuthWindow(win: BrowserWindow) {
     'dslang',
   ];
 
-  ipcMain.on('auth-window-ready', async (_event) => {
+  ipcMain.on('auth-window-ready', async () => {
     authWindow.show();
   });
 
-  ipcMain.on('auth-completed', async (_event) => {
-    console.log('auth completed');
+  ipcMain.on('auth-completed', async () => {
     await getCookies().then((cookies) => {
       console.log(cookies);
       win.webContents.send('recv-cookies', cookies);
+      win.webContents.send('load-app');
+      App.splashWindow.close();
       authWindow.close();
+
+      App.mainWindow.show();
     });
   });
 
@@ -488,8 +501,7 @@ let styling = \`${overlayStyling}\`;
           const toRenderer: {
             [key: string]: string;
           } = {};
-          for (let i = 0; i < cookieKeys.length; i++) {
-            const key = cookieKeys[i];
+          for (const key of cookieKeys) {
             // find the cookie
             const cookie = cookies.find((cookie) => cookie.name === key);
             // if cookie exists

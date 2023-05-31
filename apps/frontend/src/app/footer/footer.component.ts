@@ -1,12 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  AlbumTileModule,
-  FooterModule,
-  PlaybackControlsModule,
-} from '@nyan-inc/ui';
+import { FooterModule, PlaybackControlsModule } from '@nyan-inc/ui';
 import { LetDirective } from '@ngrx/component';
 import { MusicFacade } from '@nyan-inc/shared';
+import { AlbumTileModule } from '@nyan-inc/core';
 
 @Component({
   selector: 'musicnya-footer',

@@ -1,0 +1,47 @@
+:host {
+  padding-inline: 1rem;
+  color: black;
+  display: flex;
+  flex-direction: row;
+
+  .content-wrapper {
+    .top-songs-wrapper {
+      text-align: -webkit-right;
+      margin-left: -1rem;
+      display: inline-flex;
+      flex-direction: row;
+
+      ::ng-deep p {
+        margin-left: 1rem;
+      }
+    }
+
+    .albums-wrapper {
+      display: flex;
+      align-items: flex-end;
+
+      .featured-tile-wrapper {
+        margin-top: 2rem;
+      }
+
+      .scroll-wrapper {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-gap: 1rem;
+        overflow-x: scroll;
+        overflow-y: visible;
+        padding-inline: 1rem;
+        padding-block: 1rem;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+.no-title {
+  margin-top: 1.8rem;
+  margin-left: -1.5rem;
+}

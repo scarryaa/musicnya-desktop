@@ -9,8 +9,15 @@
     ::ng-deep {
       max-width: 100%;
       #album-info {
+        overflow-x: hidden;
+
         #title,
         #artists {
+          max-width: 100%;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          display: block !important;
           font-family: 'Inter' !important;
         }
 
@@ -32,20 +39,21 @@
       padding-block: 0.25rem !important;
     }
 
-    > :hover {
-      background-color: var(--drawer-highlight-color);
-    }
-
     #baseComponent {
-      border-radius: 4px;
+      border-radius: 3px;
 
-      :focus-visible {
-        > :hover {
-          background-color: var(--drawer-highlight-color);
+      > button:hover {
+        &.collapsed img {
+          outline: 4px solid var(--drawer-highlight-color);
         }
+        background-color: var(--drawer-highlight-color);
       }
 
-      &:active {
+      > button:focus-visible {
+        background-color: var(--drawer-highlight-color);
+      }
+
+      > button:active {
         background-color: var(--drawer-active-color);
       }
 

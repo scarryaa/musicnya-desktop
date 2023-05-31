@@ -1,0 +1,85 @@
+<ng-container *ngrxLet="state$ as media">
+  <ng-container *ngrxLet="musicState$ as player">
+    <div class="content-wrapper">
+      <div class="top-songs-wrapper">
+        <core-top-songs
+          [songs]="media.currentMedia?.views?.['top-songs']?.data"
+        ></core-top-songs>
+        <core-top-songs
+          class="no-title"
+          [index]="3"
+          [rows]="3"
+          [songs]="media.currentMedia?.views?.['top-songs']?.data"
+          [showTitle]="false"
+        ></core-top-songs>
+        <core-top-songs
+          class="no-title"
+          [index]="6"
+          [rows]="3"
+          [songs]="media.currentMedia?.views?.['top-songs']?.data"
+          [showTitle]="false"
+        ></core-top-songs>
+      </div>
+      <div class="albums-wrapper">
+        <div
+          class="featured-tile-wrapper"
+          *ngIf="(media.currentMedia?.views?.['latest-release']?.data?.[0] ||
+          media.currentMedia?.views?.['featured-albums']?.data?.[0]) as
+          featured"
+        >
+          <core-featured-tile
+            [source]="
+              featured?.attributes?.artwork?.url
+                .replace('{w}x{h}', '200x200')
+                .replace('{f}', 'webp')
+            "
+            [tileSize]="14"
+            heading="Hello"
+            subheading="Hi"
+            superheading="Sup"
+            [showTitle]="true"
+          ></core-featured-tile>
+        </div>
+        <div class="scroll-wrapper">
+          <ui-album-tile-large
+            [imageSource]="media.currentMedia?.attributes?.artwork?.url"
+            [tileSize]="10"
+            [artists]="media.currentMedia?.relationships?.artists?.data"
+            [mediaTitle]="'e'"
+            [mediaInfo]="{
+              name: 'Uhhhhh',
+              type: media.currentMedia?.type,
+              id: media.currentMedia?.id,
+              artists: []
+            }"
+          >
+          </ui-album-tile-large>
+          <ui-album-tile-large
+            [imageSource]="media.currentMedia?.attributes?.artwork?.url"
+            [tileSize]="10"
+            [artists]="media.currentMedia?.relationships?.artists?.data"
+            [mediaTitle]="media.currentMedia?.attributes?.name"
+            [showInfo]="true"
+          >
+          </ui-album-tile-large>
+          <ui-album-tile-large
+            [imageSource]="media.currentMedia?.attributes?.artwork?.url"
+            [tileSize]="10"
+            [artists]="['Radiohead']"
+            [mediaTitle]="media.currentMedia?.attributes?.name"
+            [showInfo]="true"
+          >
+          </ui-album-tile-large>
+          <ui-album-tile-large
+            [imageSource]="media.currentMedia?.attributes?.artwork?.url"
+            [tileSize]="10"
+            [artists]="media.currentMedia?.relationships?.artists?.data"
+            [mediaTitle]="media.currentMedia?.attributes?.name"
+            [showInfo]="true"
+          >
+          </ui-album-tile-large>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>

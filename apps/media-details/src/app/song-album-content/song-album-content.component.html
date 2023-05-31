@@ -1,0 +1,29 @@
+<ng-container *ngrxLet="state$ as media">
+  <ng-container *ngrxLet="musicState$">
+    <ui-virtual-table
+      [media]="media?.currentMedia?.type"
+      [data]="
+        media?.currentMedia?.songs ||
+        media?.currentMedia?.relationships?.tracks?.data
+      "
+      [playingSong]="(musicState$.currentItem$ | async)?.id"
+      [playing]="(musicState$.playing$ | async)!"
+      [routeChanges]="routeChangeEmitter"
+      (pauseEmitter)="musicState$.pause()"
+      (unpauseEmitter)="musicState$.play()"
+      (indexEmitter)="
+        musicState$.setQueueAndPlayAtIndex(
+          media.currentMedia?.type,
+          media.currentMedia?.id,
+          $event
+        )
+      "
+      (idEmitter)="
+        musicState$.setQueueAndPlayAtIndex(
+          media.currentMedia?.type,
+          media.currentMedia?.id || $event
+        )
+      "
+    ></ui-virtual-table>
+  </ng-container>
+</ng-container>

@@ -26,6 +26,10 @@ export class MusicAPIFacade implements OnDestroy {
     .pipe(select(fromMusicAPI.getMusicAPIState))
     .pipe(map((value) => value.homeTileLists[0]));
   state$ = this.store.pipe(select(fromMusicAPI.getMusicAPIState));
+  type$ = this.store.pipe(select(fromMusicAPI.getMusicAPIState)).pipe(
+    filter((value) => value.currentMediaType !== undefined),
+    map((value) => value.currentMedia?.type)
+  );
 
   constructor(private store: Store<MusicAPIState>) {}
 

@@ -22,6 +22,10 @@ body {
   -webkit-user-drag: none;
 }
 
+core-base-button {
+  -webkit-app-region: no-drag;
+}
+
 ::ng-deep .cdk-drop-list-dragging .cdk-drag {
   transition: 0;
 }

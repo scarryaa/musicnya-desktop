@@ -6,11 +6,37 @@
     "serve:main": "nx serve --inspect=inspect-brk electron",
     "lint": "ng lint"
   },
+  "description": "A purrfect Apple Music alternative and general music player for Android, iOS, Windows, MacOS, Linux, and (technically) Web.",
+  "author": "nyan-inc",
   "private": true,
   "build": {
+    "appId": "nyan-inc.musicnya",
+    "productName": "musicnya",
     "electronDownload": {
       "mirror": "https://github.com/castlabs/electron-releases/releases/download/v"
-    }
+    },
+    "files": [
+      {
+        "from": "dist/apps/electron",
+        "to": "./electron"
+      },
+      {
+        "from": "dist/apps/frontend",
+        "to": "./frontend"
+      },
+      {
+        "from": "dist/apps/home",
+        "to": "./home"
+      },
+      {
+        "from": "dist/apps/media-details",
+        "to": "./media-details"
+      },
+      {
+        "from": "dist/apps/search",
+        "to": "./search"
+      }
+    ]
   },
   "dependencies": {
     "@angular/animations": "~16.0.0",

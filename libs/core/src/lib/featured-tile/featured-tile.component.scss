@@ -1,0 +1,22 @@
+:host {
+  align-self: flex-end;
+}
+
+.tile-wrapper {
+  display: flex;
+  flex-direction: row;
+
+  .image-wrapper {
+  }
+
+  .headings-wrapper {
+    margin-inline: 1.5rem;
+    margin-right: 6rem;
+    align-self: center;
+  }
+}
+
+img {
+  filter: drop-shadow(0 0 10px oklch(0% 0 0 / 20%));
+  border-radius: 4px;
+}

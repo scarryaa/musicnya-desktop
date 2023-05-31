@@ -88,7 +88,10 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
             >{{ mediaInfo.name }}</span
           >
         </div>
-        <div [ngClass]="{ 'hover-underline': true }">
+        <div
+          [ngClass]="{ 'hover-underline': true }"
+          *ngIf="mediaInfo.artists && mediaInfo.artists.length > 0"
+        >
           <span
             id="artists"
             (keyUp.Space)="routeEmitter.emit(mediaInfo)"

@@ -39,7 +39,9 @@
         "name": "electron",
         "frontendProject": "frontend",
         "outputPath": "dist/packages",
-        "prepackageOnly": true
+        "sourcePath": "dist/apps",
+        "prepackageOnly": true,
+        
       }
     },
     "make": {

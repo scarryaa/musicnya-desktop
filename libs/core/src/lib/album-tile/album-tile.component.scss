@@ -148,7 +148,6 @@
   .album-tile-large {
     flex-direction: column;
     display: block;
-    overflow: hidden;
 
     #album-info-large div span {
       white-space: nowrap;
@@ -231,13 +230,15 @@
       padding-left: 0.05rem;
       opacity: 1;
 
-      &:focus-visible {
-        border: 2px solid black;
-      }
-
       i {
         transform: scale(1.05);
       }
+    }
+  }
+
+  #play-button {
+    &:focus-visible {
+      border: 2px solid black;
     }
   }
 }

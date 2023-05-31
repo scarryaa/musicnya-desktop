@@ -25,7 +25,6 @@ import {
   musicEffects,
   preferencesEffects,
   fromSpinner,
-  MusicEventListeners,
 } from '@nyan-inc/shared';
 import * as fromApp from '../store/reducers/app.reducer';
 import * as fromLayout from '../store/reducers/layout.reducer';
@@ -33,6 +32,7 @@ import { appEffects } from '../store/effects';
 import { CacheRouteReuseStrategy } from '@nyan-inc/core';
 import { LoginService } from './services/login/login.service';
 import { MusickitBase } from '@nyan-inc/core-services';
+import { AppService } from './services/app/app.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -42,6 +42,12 @@ export const appConfig: ApplicationConfig = {
         loginService.listenForCookies();
       },
       deps: [LoginService],
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (appService: AppService) => () => appService.waitForSplash(),
+      deps: [AppService],
       multi: true,
     },
     provideRouter(

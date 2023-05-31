@@ -1,28 +1,29 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   HostBinding,
-  ViewChild,
-  ElementRef,
   AfterViewInit,
-  EventEmitter,
-  Output,
   OnDestroy,
-  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  AlbumTileLargeSmartModule,
   MediaDetailsDropdownModule,
   VirtualTableSmartModule,
 } from '@nyan-inc/ui';
-import { BaseButtonModule, ColorService } from '@nyan-inc/core';
+import {
+  AlbumTileLargeSmartModule,
+  BaseButtonModule,
+  ColorService,
+} from '@nyan-inc/core';
 import { FastAverageColorResult } from 'fast-average-color';
-import { MusicAPIFacade, MusicFacade, RouterFacade } from '@nyan-inc/shared';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { MusicAPIFacade } from '@nyan-inc/shared';
+import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { LetDirective } from '@ngrx/component';
 import Color from 'colorjs.io';
+import { ArtistDetailsComponent } from '../artist-details/artist-details.component';
+import { ArtistDetailsContentComponent } from '../artist-details-content/artist-details-content.component';
+import { SongAlbumDetailsComponent } from '../song-album-details/song-album-details.component';
+import { SongAlbumContentComponent } from '../song-album-content/song-album-content.component';
 
 @Component({
   standalone: true,
@@ -33,6 +34,10 @@ import Color from 'colorjs.io';
     MediaDetailsDropdownModule,
     VirtualTableSmartModule,
     LetDirective,
+    ArtistDetailsComponent,
+    ArtistDetailsContentComponent,
+    SongAlbumDetailsComponent,
+    SongAlbumContentComponent,
   ],
   selector: 'musicnya-media-details',
   templateUrl: './media-details.component.html',
@@ -40,25 +45,29 @@ import Color from 'colorjs.io';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MediaDetailsComponent implements AfterViewInit, OnDestroy {
-  showAdditionalInfo = false;
-  @ViewChild('mediaCover', { read: ElementRef })
-  mediaCover!: ElementRef;
   mediaColor!: FastAverageColorResult | void;
+  isArtist = false;
+
   state$: Observable<any>;
-  musicState$: MusicFacade;
   destroy$ = new Subject<void>();
 
-  readonly routeChangeEmitter = new Subject<void>();
-
   constructor(
-    private changeReference: ChangeDetectorRef,
     private musicAPIFacade: MusicAPIFacade,
-    private musicFacade: MusicFacade,
-    private routerFacade: RouterFacade,
     private color: ColorService
   ) {
     this.state$ = this.musicAPIFacade.state$;
-    this.musicState$ = this.musicFacade;
+
+    this.musicAPIFacade.type$
+      .pipe(
+        map((type) => type === 'artists'),
+        takeUntil(this.destroy$),
+        tap((isArtist) => {
+          console.log(isArtist);
+        })
+      )
+      .subscribe((isArtist) => {
+        this.isArtist = isArtist;
+      });
   }
 
   ngAfterViewInit(): void {
@@ -102,11 +111,6 @@ export class MediaDetailsComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$.next();
-  }
-
-  toggleShowContent() {
-    this.showAdditionalInfo = !this.showAdditionalInfo;
-    this.changeReference.detectChanges();
   }
 
   @HostBinding('style.background') backgroundGradient =

@@ -2,9 +2,13 @@
 <head>
     <link href="./splash.css" rel="stylesheet">
     <script>
-        const login = () => 
-            console.log('login');
-        
+        console.log(window);
+        window.api.receive('auth-window-done', () => {
+        console.log('e')});
+        // const login = () => window.api.send('spotify-login', 'ping');
+        const appleMusic = () => {
+            window.api.send('apple-music-login', 'ping');
+        }
     </script>
 </head>
 <body>
@@ -20,9 +24,9 @@
         <p>If not, no worries! You can also play local music.</p>
 
         <div id="login-options">
-            <button class="splash-login-button" id="button-spotify" (onclick)="login()"><s>Login With Spotify</s></button>
-            <button class="splash-login-button" id="button-apple" (onclick)="login()">Login With Apple Music</button>
-            <button class="splash-login-button" id="button-continue" (click)="login()"><s>Continue</s></button>
+            <button class="splash-login-button" id="button-spotify" onclick="login()"><s>Login With Spotify</s></button>
+            <button class="splash-login-button" id="button-apple" onclick="appleMusic()">Login With Apple Music</button>
+            <button class="splash-login-button" id="button-continue" onclick="login()"><s>Continue</s></button>
         </div>
     </div>
 </body>

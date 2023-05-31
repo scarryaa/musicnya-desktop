@@ -12,7 +12,7 @@ import {
 import { AlbumTileLargeModule } from './album-tile-large.component';
 import { Router } from '@angular/router';
 import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
-import { MediaPlayInfo } from '../models';
+import { MediaPlayInfo } from '../../../../ui/src/lib/models';
 
 @Component({
   selector: 'ui-album-tile-large',

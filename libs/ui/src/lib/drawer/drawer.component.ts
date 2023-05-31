@@ -134,14 +134,14 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
 
     for (const item of this._drawerItems) {
       item.setStyle('span', 'opacity', this.collapsed ? '0' : '1');
-      item.setStyle('#baseComponent', 'width', this.collapsed ? '30% ' : '90%');
       setTimeout(() =>
         item.setStyle(
           '#baseComponent #album-info',
           'visibility',
-          this.collapsed ? 'hhidden' : 'visible'
+          this.collapsed ? 'hidden' : 'visible'
         )
       );
+      item.setClass(this.collapsed ? 'collapsed' : '');
       this.changeReference.markForCheck();
     }
 
@@ -152,9 +152,11 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
             for (const item of items) {
               item.setStyle('span', 'opacity', this.collapsed ? '0' : '1');
               item.setStyle(
-                '#baseComponent',
-                'width',
-                this.collapsed ? '50% ' : '90%'
+                '#baseButton button:hover img',
+                'outline',
+                this.collapsed
+                  ? '4px solid var(--drawer-highlight-color'
+                  : 'none'
               );
               setTimeout(() =>
                 item.setStyle(
@@ -162,6 +164,22 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
                   'visibility',
                   this.collapsed ? 'hhidden' : 'visible'
                 )
+              );
+
+              item.setStyle(
+                '#baseComponent:not(ui-album-tile) span',
+                'display',
+                this.collapsed ? 'none' : 'flex'
+              );
+
+              setTimeout(
+                () =>
+                  item.setStyle(
+                    '#baseComponent:not(ui-album-tile) #album-info',
+                    'display',
+                    this.collapsed ? 'none' : 'flex'
+                  ),
+                this.collapsed ? 300 : 0
               );
             }
             this._drawerItems = items.toArray();
@@ -192,21 +210,21 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
         ) {
           this._collapsed
             ? item.setStyle('self, button', 'width', '82.5%')
-            : item.setStyle('self, button', 'width', '90%');
-        } else {
-          item.setStyle(
-            'self, button',
-            'width',
-            this._collapsed ? '50%' : '90%'
-          );
+            : item.setStyle('self, button', 'width', '95%');
         }
+
+        item.setStyle(
+          '#baseComponent span',
+          'display',
+          this.collapsed ? 'none' : 'flex'
+        );
 
         setTimeout(
           () =>
             item.setStyle(
               '#baseComponent #album-info',
-              'visibility',
-              this.collapsed ? 'hhidden' : 'visible'
+              'display',
+              this.collapsed ? 'none' : 'flex'
             ),
           this.collapsed ? 300 : 0
         );

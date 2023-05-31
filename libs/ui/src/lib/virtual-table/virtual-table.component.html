@@ -81,6 +81,7 @@
         [showArt]="showAlbums"
         [titleRouterLink]="
           '/media/albums/' + song.relationships?.albums?.data?.[0]?.id"
+        [artistsRouterLink]="'/media/artists/' + (song.relationships?.artists?.data?.[0]?.id ||  song.relationships?.catalog?.data?.[0]?.relationships?.artists?.data?.[0]?.id)"
         [ngClass]="{
           'artist-hover': true,
           'title-hover': showAlbums,

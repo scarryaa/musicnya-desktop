@@ -11,7 +11,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { HeadingComponent } from '../heading/heading.component';
-import { AlbumTileLargeSmartModule } from '../album-tile/album-tile-large.smart.component';
+import { AlbumTileLargeSmartModule } from '../../../../core/src/lib/album-tile/album-tile-large.smart.component';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -46,7 +46,7 @@ import { RouterModule } from '@angular/router';
           id: listData[i].id,
           artists: [listData[i].attributes.artistName]
         }"
-        [artists]="[listData[i].attributes?.artistName] || []"
+        [artists]="[listData[i].attributes?.artistName]"
         [imageSource]="listData[i].attributes?.artwork?.url ?? ''"
         (playEmitter)="emit(i)"
       ></ui-album-tile-large>

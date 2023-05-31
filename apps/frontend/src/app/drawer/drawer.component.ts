@@ -14,16 +14,13 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import {
+  AlbumTileModule,
   BaseButtonModule,
   DisableChildTabIndexDirective,
   FallbackImageDirective,
 } from '@nyan-inc/core';
 import { MusicAPIFacade, SpinnerFacade } from '@nyan-inc/shared';
-import {
-  DrawerModule,
-  AlbumTileModule,
-  DrawerToggleDirective,
-} from '@nyan-inc/ui';
+import { DrawerModule, DrawerToggleDirective } from '@nyan-inc/ui';
 import { SpinnerComponent } from '@nyan-inc/core';
 import { NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
 import { Subject, Subscription } from 'rxjs';

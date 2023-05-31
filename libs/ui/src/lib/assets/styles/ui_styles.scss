@@ -206,6 +206,63 @@ span,
 }
 
 //button
+.media-action-button,
+.media-misc-button {
+  color: var(--backgroundColorLight, white);
+  font-size: var(--font-size-6xl);
+
+  i,
+  span {
+    color: black !important;
+  }
+}
+
+.media-action-button {
+  button {
+    width: 7.5rem;
+    padding-left: 0.4rem;
+
+    i {
+      padding-left: 0.2rem;
+      font-size: var(--font-size-3xl);
+    }
+  }
+}
+
+.media-misc-button {
+  button {
+    outline-offset: -0.1em;
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    border-radius: 10px;
+    padding-bottom: 0.15rem;
+    background: transparent;
+
+    i {
+      color: #bdbdbd !important;
+      mix-blend-mode: luminosity;
+    }
+  }
+
+  &:hover {
+    filter: brightness(120%);
+  }
+
+  &:active {
+    filter: brightness(80%);
+  }
+
+  i {
+    color: var(--font-color-white);
+    font-size: var(--font-size-6hxl);
+  }
+
+  &:active {
+    i {
+      color: var(--font-color-white-faded);
+    }
+  }
+}
 
 //accordion
 .p-accordion .p-accordion-content {

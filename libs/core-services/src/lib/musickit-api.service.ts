@@ -92,7 +92,7 @@ export class MusickitAPI {
 
   async getArtist(id: string): Promise<any> {
     return this.requestData(
-      `/v1/catalog/us/artists/${id}${this.getQueryString()}`
+      `/v1/catalog/us/artists/${id}${this.getQueryString()}&views=top-songs,latest-release,featured-albums`
     );
   }
 

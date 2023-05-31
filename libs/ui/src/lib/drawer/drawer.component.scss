@@ -28,6 +28,10 @@
     width: inherit;
   }
 
+  ::ng-deep ui-album-tile {
+    width: 100%;
+  }
+
   ::ng-deep {
     .ui-drawer #header-wrapper span,
     .ui-drawer #content-wrapper span {
@@ -125,5 +129,17 @@
     --scrollbar-thumb-color: var(--scrollbar-color);
     --scrollbar-thumb-hover-color: var(--scrollbar-hover-color);
     --scrollbar-border-radius: 4px;
+  }
+}
+
+::ng-deep .ui-drawer.drawer-collapsed {
+  ui-album-tile #baseComponent {
+    button:hover {
+      outline: 6px solid var(--drawer-highlight-color);
+    }
+
+    button:active {
+      outline: 6px solid var(--drawer-active-color);
+    }
   }
 }

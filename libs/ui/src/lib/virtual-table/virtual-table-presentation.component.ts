@@ -24,7 +24,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SelectionModel } from '@angular/cdk/collections';
-import { AlbumTileModule } from '../album-tile/album-tile.component';
+import { AlbumTileModule } from '../../../../core/src/lib/album-tile/album-tile.component';
 import { RouterModule } from '@angular/router';
 
 @Component({

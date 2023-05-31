@@ -4,17 +4,15 @@ import {
   Component,
   EventEmitter,
   HostBinding,
-  HostListener,
   Input,
   NgModule,
   OnChanges,
   OnDestroy,
-  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
 import { DisplayedColumns, MediaItemTypes, Songs } from '@nyan-inc/core';
-import { SongDataSource } from './song-data-source';
+import { SongDataSource } from '../../../../core/src/lib/models/song-data-source';
 import { VirtualTableModule } from './virtual-table-presentation.component';
 import { DataSource } from '@angular/cdk/table';
 import { SelectionModel } from '@angular/cdk/collections';
