@@ -10,16 +10,14 @@ import {
   SimpleChanges,
   EventEmitter,
 } from '@angular/core';
-import {
-  BaseButtonModule,
-  BaseComponent,
-  DisableChildFocusDirective,
-  DisableChildTabIndexDirective,
-  FallbackImageDirective,
-  JoinPipeModule,
-  PreloadImageDirective,
-} from '@nyan-inc/core';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { BaseButtonModule } from '../base-button/base-button.component';
+import { BaseComponent } from '../base-component';
+import { DisableChildFocusDirective } from '../disable-child-focus.directive';
+import { DisableChildTabIndexDirective } from '../disable-child-tabindex.directive';
+import { FallbackImageDirective } from '../fallback-image.directive';
+import { JoinPipeModule } from '../join.pipe';
+import { PreloadImageDirective } from '../preload-image.directive';
 
 @Component({
   selector: 'ui-album-tile-large-presentation',

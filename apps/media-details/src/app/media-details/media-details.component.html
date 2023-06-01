@@ -7,17 +7,26 @@
       'linear-gradient(transparent 14.09rem, transparent 10rem)'
     "
   >
-    <div id="media-details-wrapper" [ngSwitch]="isArtist">
-      <ng-container *ngSwitchCase="true">
-        <ng-container *ngTemplateOutlet="artistDetailsTemplate"></ng-container>
-      </ng-container>
-      <ng-container *ngSwitchDefault>
-        <ng-container *ngTemplateOutlet="mediaDetails"></ng-container>
-      </ng-container>
+    <div class="media-details-relative">
+      <img
+        class="banner"
+        [style.visibility]="isArtist ? 'visible' : 'hidden'"
+        [src]="musicAPIFacade.artistBanner$ | async"
+      />
+      <div id="media-details-wrapper" [ngSwitch]="isArtist">
+        <ng-container *ngSwitchCase="true">
+          <ng-container
+            *ngTemplateOutlet="artistDetailsTemplate"
+          ></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <ng-container *ngTemplateOutlet="mediaDetails"></ng-container>
+        </ng-container>
+      </div>
     </div>
     <div id="media-content-wrapper">
       <div id="media-content">
-        <div [ngSwitch]="isArtist">
+        <div [ngSwitch]="isArtist" class="content-wrapper">
           <ng-container *ngSwitchCase="true">
             <ng-container *ngTemplateOutlet="artistContent"></ng-container>
           </ng-container>

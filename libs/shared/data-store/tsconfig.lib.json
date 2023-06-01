@@ -17,6 +17,6 @@
     "src/index.ts",
     "../../../apps/frontend/src/store/actions/layout.actions.ts",
     "../../../apps/frontend/src/store/reducers/layout.reducer.ts"
-, "../../../apps/frontend/src/store/models/layout.models.ts"  ],
+, "../../../apps/frontend/src/store/models/layout.models.ts", "../../core/src/lib/models/media-play-info.model.ts"  ],
   "main": "dist/index.js"
 }

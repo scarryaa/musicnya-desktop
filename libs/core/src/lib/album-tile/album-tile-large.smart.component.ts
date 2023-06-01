@@ -1,18 +1,18 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import {
   Component,
   ChangeDetectionStrategy,
-  NgModule,
-  Input,
   OnChanges,
-  SimpleChanges,
+  Input,
   Output,
   EventEmitter,
+  SimpleChanges,
+  NgModule,
 } from '@angular/core';
-import { AlbumTileLargeModule } from './album-tile-large.component';
 import { Router } from '@angular/router';
-import { CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
-import { MediaPlayInfo } from '../../../../ui/src/lib/models';
+import { MediaPlayInfo } from '../models/media-play-info.model';
+import { AlbumTileLargeModule } from './album-tile-large.component';
 
 @Component({
   selector: 'ui-album-tile-large',

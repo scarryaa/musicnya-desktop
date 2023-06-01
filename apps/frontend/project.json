@@ -20,7 +20,8 @@
         },
         "styles": [
           "apps/frontend/src/assets/styles/styles.scss",
-          "libs/ui/src/lib/assets/styles/ui_styles.scss"
+          "libs/ui/src/lib/assets/styles/ui_styles.scss",
+          "apps/frontend/src/assets/styles/global_breakpoints.scss"
         ],
         "assets": ["apps/frontend/src/assets"],
         "scripts": [],

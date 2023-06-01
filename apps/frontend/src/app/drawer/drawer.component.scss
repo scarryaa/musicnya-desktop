@@ -7,7 +7,11 @@
     margin-block: 0 !important;
 
     ::ng-deep {
-      max-width: 100%;
+      img {
+        max-width: 3rem;
+        max-height: 3rem;
+      }
+
       #album-info {
         overflow-x: hidden;
 

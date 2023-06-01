@@ -1183,6 +1183,11 @@ export declare namespace MusicKit {
     type: 'artists';
     attributes?: {
       editorialNotes?: EditorialNotes;
+      editorialArtwork: {
+        bannerUber: Artwork;
+        storeFlowcase: Artwork;
+      };
+      editorialVideo: any;
       genreNames: string[];
       name: string;
       url: string;

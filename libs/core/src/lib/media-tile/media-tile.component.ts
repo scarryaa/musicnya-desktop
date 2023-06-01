@@ -1,24 +1,16 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BaseButtonModule } from '../base-button/base-button.component';
-import { RouterModule } from '@angular/router';
-import { FallbackImageDirective } from '../fallback-image.directive';
 
 @Component({
-  selector: 'core-featured-tile',
+  selector: 'core-media-tile',
   standalone: true,
-  imports: [
-    CommonModule,
-    BaseButtonModule,
-    RouterModule,
-    FallbackImageDirective,
-  ],
-  template: ` <div class="media-tile-wrapper">
+  imports: [CommonModule],
+  template: `<div class="media-tile-wrapper">
     <div class="media-tile">
       <div class="media-tile__image-wrapper">
         <img
           class="media-tile__image-wrapper__image"
-          [src]="source"
+          [src]="mediaImage"
           [style.minWidth.rem]="mediaImageSize"
         />
         <div class="media-tile__image-overlay">
@@ -60,26 +52,15 @@ import { FallbackImageDirective } from '../fallback-image.directive';
           </div>
         </div>
       </div>
-      <div class="media-tile__headings">
-        <div class="media-tile__superheading">{{ superheading }}</div>
-        <div class="media-tile-heading">{{ heading }}</div>
-        <div class="media-tile__subheading">{{ subheading }}</div>
-      </div>
+      <div class="media-tile__title">{{ mediaTitle }}</div>
+      <div class="media-tile__subtitle">{{ mediaSubtitle }}</div>
     </div>
   </div>`,
-  styleUrls: ['./featured-tile.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./media-tile.component.scss'],
 })
-export class FeaturedTileComponent {
-  @Input() superheading!: string;
-  @Input() heading!: string;
-  @Input() subheading!: string;
-  @Input() source!: string;
-  @Input() mediaImageSize = 8;
-  @Input() headingRouterLink: string | undefined;
-  @Input() artworkRouterLink!: string;
-  @Input() routerLink!: string;
-  @Input() ngClass!: { [klass: string]: any } | string | string[] | Set<string>;
-  @Input() showTitle = false;
-  @Input() reasonTitle = '';
+export class MediaTileComponent {
+  @Input() mediaTitle: string | undefined = undefined;
+  @Input() mediaSubtitle: string | undefined = undefined;
+  @Input() mediaImage: string | undefined = undefined;
+  @Input() mediaImageSize: number | undefined = undefined;
 }

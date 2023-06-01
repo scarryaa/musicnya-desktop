@@ -29,7 +29,7 @@ import { AlbumTileModule } from '../album-tile/album-tile.component';
           [showArtists]="true"
           [mediaTitle]="media.attributes?.name"
           [source]="media.attributes?.artwork?.url"
-          [tileSize]="2.5"
+          [sizeX]="2.5"
           [showArt]="true"
           [titleRouterLink]="
         '/media/albums/' + media.relationships?.albums?.data?.[0]?.id"

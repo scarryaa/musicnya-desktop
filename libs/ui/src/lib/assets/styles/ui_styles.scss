@@ -105,6 +105,19 @@ body.light {
   @include lighten();
 }
 
+:host {
+  position: relative;
+
+  img {
+    position: relative;
+  }
+}
+
+.text-drop-shadow {
+  font-weight: 500;
+  filter: drop-shadow(0 0 4px oklch(0% 0 0 / 10%));
+}
+
 #title {
   font-size: var(--font-size-xl);
   white-space: nowrap;

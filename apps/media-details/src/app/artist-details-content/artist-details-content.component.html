@@ -5,79 +5,126 @@
         <core-top-songs
           [songs]="media.currentMedia?.views?.['top-songs']?.data"
         ></core-top-songs>
-        <core-top-songs
-          class="no-title"
-          [index]="3"
-          [rows]="3"
-          [songs]="media.currentMedia?.views?.['top-songs']?.data"
-          [showTitle]="false"
-        ></core-top-songs>
-        <core-top-songs
-          class="no-title"
-          [index]="6"
-          [rows]="3"
-          [songs]="media.currentMedia?.views?.['top-songs']?.data"
-          [showTitle]="false"
-        ></core-top-songs>
+      </div>
+      <div
+        class="featured-tile-wrapper"
+        *ngIf="(musicAPIFacade.featuredAlbums$ | async)?.[0]"
+      >
+        <ng-container
+          *ngIf="musicAPIFacade.featuredAlbums$ | async as featured"
+        >
+          <p id="featured-tile-heading">Featured</p>
+          <core-featured-tile
+            [source]="featured[0].attributes?.artwork?.url || ''"
+            [reasonTitle]="musicAPIFacade.featuredReason$ | async"
+            [mediaImageSize]="10"
+            [superheading]="featured[0].attributes?.releaseDate || ''"
+            [heading]="featured[0].attributes?.name || ''"
+            [subheading]="
+              (musicAPIFacade.featuredTrackCount$ | async) + ' songs'
+            "
+            [showTitle]="true"
+          ></core-featured-tile>
+        </ng-container>
       </div>
       <div class="albums-wrapper">
         <div
-          class="featured-tile-wrapper"
-          *ngIf="(media.currentMedia?.views?.['latest-release']?.data?.[0] ||
-          media.currentMedia?.views?.['featured-albums']?.data?.[0]) as
-          featured"
+          class="scroll-wrapper"
+          *ngIf="(musicAPIFacade.artistAlbums$ | async)?.[0]"
         >
-          <core-featured-tile
-            [source]="
-              featured?.attributes?.artwork?.url
-                .replace('{w}x{h}', '200x200')
-                .replace('{f}', 'webp')
-            "
-            [tileSize]="14"
-            heading="Hello"
-            subheading="Hi"
-            superheading="Sup"
-            [showTitle]="true"
-          ></core-featured-tile>
+          <p id="albums-heading">Albums</p>
+          <ng-container
+            *ngFor="let album of musicAPIFacade.artistAlbums$ | async"
+          >
+            <core-media-tile
+              class="media-tile"
+              [mediaImage]="album.attributes?.artwork?.url || ''"
+              [mediaImageSize]="10"
+              [mediaTitle]="album?.attributes?.name || ''"
+              [mediaSubtitle]="
+                album?.attributes?.releaseDate?.slice(0, 4) || ''
+              "
+            ></core-media-tile>
+          </ng-container>
         </div>
+      </div>
+      <div
+        class="music-videos-wrapper"
+        *ngIf="(musicAPIFacade.artistMusicVideos$ | async)?.[0]"
+      >
         <div class="scroll-wrapper">
-          <ui-album-tile-large
-            [imageSource]="media.currentMedia?.attributes?.artwork?.url"
-            [tileSize]="10"
-            [artists]="media.currentMedia?.relationships?.artists?.data"
-            [mediaTitle]="'e'"
-            [mediaInfo]="{
-              name: 'Uhhhhh',
-              type: media.currentMedia?.type,
-              id: media.currentMedia?.id,
-              artists: []
-            }"
+          <p id="music-videos-heading">Music Videos</p>
+          <ng-container
+            *ngFor="let album of musicAPIFacade.artistMusicVideos$ | async"
           >
-          </ui-album-tile-large>
-          <ui-album-tile-large
-            [imageSource]="media.currentMedia?.attributes?.artwork?.url"
-            [tileSize]="10"
-            [artists]="media.currentMedia?.relationships?.artists?.data"
-            [mediaTitle]="media.currentMedia?.attributes?.name"
-            [showInfo]="true"
+            <core-video-tile
+              class="media-tile video-tile"
+              [videoImage]="album.attributes?.artwork?.url || ''"
+              [videoImageSize]="10"
+              [videoTitle]="album?.attributes?.name || ''"
+              [videoSubtitle]="
+                album?.attributes?.releaseDate?.slice(0, 4) || ''
+              "
+            ></core-video-tile>
+          </ng-container>
+        </div>
+      </div>
+      <div
+        class="artist-playlists-wrapper"
+        *ngIf="(musicAPIFacade.artistPlaylists$ | async)?.[0]"
+      >
+        <div class="scroll-wrapper">
+          <p id="artist-playlists-heading">Artist Playlists</p>
+          <ng-container
+            *ngFor="let playlist of musicAPIFacade.artistPlaylists$ | async"
           >
-          </ui-album-tile-large>
-          <ui-album-tile-large
-            [imageSource]="media.currentMedia?.attributes?.artwork?.url"
-            [tileSize]="10"
-            [artists]="['Radiohead']"
-            [mediaTitle]="media.currentMedia?.attributes?.name"
-            [showInfo]="true"
+            <core-media-tile
+              [mediaImage]="playlist.attributes?.artwork?.url || ''"
+              [mediaImageSize]="10"
+              [mediaTitle]="playlist?.attributes?.name || ''"
+              [mediaSubtitle]="
+                playlist?.attributes?.releaseDate?.slice(0, 4) || ''
+              "
+            >
+            </core-media-tile>
+          </ng-container>
+        </div>
+      </div>
+      <div
+        class="singles-eps-wrapper"
+        *ngIf="(musicAPIFacade.artistSingles$ | async)?.[0]"
+      >
+        <div class="scroll-wrapper">
+          <p id="singles-eps-heading">Singles & EPs</p>
+          <ng-container
+            *ngFor="let album of musicAPIFacade.artistSingles$ | async"
           >
-          </ui-album-tile-large>
-          <ui-album-tile-large
-            [imageSource]="media.currentMedia?.attributes?.artwork?.url"
-            [tileSize]="10"
-            [artists]="media.currentMedia?.relationships?.artists?.data"
-            [mediaTitle]="media.currentMedia?.attributes?.name"
-            [showInfo]="true"
+            <core-media-tile
+              [mediaImage]="album.attributes?.artwork?.url || ''"
+              [mediaImageSize]="10"
+              [mediaTitle]="album?.attributes?.name || ''"
+              [mediaSubtitle]="
+                album?.attributes?.releaseDate?.slice(0, 4) || ''
+              "
+            ></core-media-tile>
+          </ng-container>
+        </div>
+      </div>
+      <div
+        class="similar-artists-wrapper"
+        *ngIf="(musicAPIFacade.similarArtists$ | async)?.[0]"
+      >
+        <div class="scroll-wrapper">
+          <p id="similar-artists-heading">Similar Artists</p>
+          <ng-container
+            *ngFor="let artist of musicAPIFacade.similarArtists$ | async"
           >
-          </ui-album-tile-large>
+            <core-artist-tile
+              class="artist-tile"
+              [name]="artist?.attributes?.name || ''"
+              [image]="artist?.attributes?.artwork?.url || ''"
+            ></core-artist-tile>
+          </ng-container>
         </div>
       </div>
     </div>

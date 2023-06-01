@@ -1,0 +1,57 @@
+@media screen and (max-width: 1392px) {
+  core-media-tile-small {
+    img {
+      min-height: 4.15rem;
+    }
+  }
+
+  core-video-tile {
+    img {
+      min-height: 6.65rem !important;
+    }
+  }
+
+  core-artist-tile {
+    img {
+      min-width: 10rem;
+      min-height: 10rem;
+    }
+  }
+}
+
+@media screen and (min-width: 1393px) {
+  core-featured-tile {
+    img {
+      max-width: 14rem;
+    }
+  }
+
+  core-media-tile-small {
+    img {
+      min-height: 3rem;
+      max-height: 6rem;
+    }
+  }
+
+  core-media-tile {
+    img {
+      max-width: 14rem;
+    }
+  }
+
+  core-video-tile {
+    img {
+      min-height: 6.65rem;
+      max-height: 9.2rem;
+    }
+  }
+
+  core-artist-tile {
+    img {
+      min-width: 10rem;
+      min-height: 10rem;
+      max-width: 14rem;
+      max-height: 14rem;
+    }
+  }
+}

@@ -1,42 +1,71 @@
 :host {
-  padding-inline: 1rem;
   color: black;
   display: flex;
   flex-direction: row;
+  width: inherit;
 
   .content-wrapper {
+    width: -webkit-fill-available;
+
     .top-songs-wrapper {
-      text-align: -webkit-right;
-      margin-left: -1rem;
       display: inline-flex;
       flex-direction: row;
-
-      ::ng-deep p {
-        margin-left: 1rem;
-      }
+      width: inherit;
+      max-width: inherit;
+      margin-left: 1rem;
+      margin-top: -0.5rem;
     }
 
-    .albums-wrapper {
+    .featured-tile-wrapper {
+      margin-top: 2rem;
+      padding-left: 1rem;
+    }
+
+    .albums-wrapper,
+    .music-videos-wrapper,
+    .artist-playlists-wrapper,
+    .singles-eps-wrapper,
+    .similar-artists-wrapper {
+      width: 100%;
+      max-width: inherit;
       display: flex;
       align-items: flex-end;
 
-      .featured-tile-wrapper {
-        margin-top: 2rem;
-      }
-
       .scroll-wrapper {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        grid-gap: 1rem;
+        margin-bottom: -1.2rem;
+        display: flex;
+        gap: 1rem;
         overflow-x: scroll;
         overflow-y: visible;
         padding-inline: 1rem;
         padding-block: 1rem;
 
+        #albums-heading,
+        #music-videos-heading,
+        #artist-playlists-heading,
+        #singles-eps-heading,
+        #similar-artists-heading {
+          position: absolute;
+          margin-top: -2rem;
+        }
+
         &::-webkit-scrollbar {
           display: none;
         }
       }
+    }
+
+    .music-videos-wrapper,
+    .artist-playlists-wrapper,
+    .singles-eps-wrapper,
+    .similar-artists-wrapper,
+    .albums-wrapper {
+      margin-top: 4rem;
+    }
+
+    .similar-artists-wrapper {
+      margin-bottom: 2rem;
+      overflow-y: visible;
     }
   }
 }

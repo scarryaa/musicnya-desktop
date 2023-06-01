@@ -15,6 +15,7 @@ import {
   DragTooltipComponent,
   DraggableDirective,
   Songs,
+  AlbumTileModule,
 } from '@nyan-inc/core';
 import {
   CdkDragDrop,
@@ -24,7 +25,6 @@ import {
 } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SelectionModel } from '@angular/cdk/collections';
-import { AlbumTileModule } from '../../../../core/src/lib/album-tile/album-tile.component';
 import { RouterModule } from '@angular/router';
 
 @Component({

@@ -103,8 +103,6 @@
     }
 
     #misc-media-buttons {
-      position: absolute;
-      right: 1rem;
       display: flex;
       flex: 1 1 auto;
       flex-direction: row;
@@ -129,7 +127,7 @@
       height: 0.35rem;
       z-index: 1;
       background-color: black;
-      top: 17.8rem;
+      top: 13.8rem;
       left: calc(50% + 0.25rem);
     }
 
@@ -186,7 +184,7 @@
       transition: transform 0.3s ease;
       color: white;
       position: absolute;
-      top: 16.3rem;
+      top: 12.3rem;
       left: 50%;
 
       &.rotated {

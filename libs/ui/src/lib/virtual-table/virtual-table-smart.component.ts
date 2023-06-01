@@ -11,8 +11,12 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { DisplayedColumns, MediaItemTypes, Songs } from '@nyan-inc/core';
-import { SongDataSource } from '../../../../core/src/lib/models/song-data-source';
+import {
+  DisplayedColumns,
+  MediaItemTypes,
+  SongDataSource,
+  Songs,
+} from '@nyan-inc/core';
 import { VirtualTableModule } from './virtual-table-presentation.component';
 import { DataSource } from '@angular/cdk/table';
 import { SelectionModel } from '@angular/cdk/collections';

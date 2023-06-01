@@ -8,5 +8,4 @@ export * from './lib/directives/drawer-toggle.directive';
 export * from './lib/media-details-dropdown/media-details-dropdown.component';
 export * from './lib/virtual-table/virtual-table-presentation.component';
 export * from './lib/virtual-table/virtual-table-smart.component';
-export * from './lib/models';
 export * from './lib/menu/menu.component';

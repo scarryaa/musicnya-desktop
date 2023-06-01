@@ -1,7 +1,7 @@
 import { DataSource } from '@angular/cdk/collections';
 import { Directive } from '@angular/core';
-import { Songs } from '@nyan-inc/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Songs } from './music.types';
 
 @Directive()
 export class SongDataSource extends DataSource<Songs> {

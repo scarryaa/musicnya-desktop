@@ -16,7 +16,7 @@ export interface View {
   meta?: { [key: string]: any };
   next?: string;
   attributes?: { [key: string]: any };
-  data: Resource | Resource[];
+  data: Resource[];
 }
 
 export interface LibraryAlbums {
@@ -259,17 +259,34 @@ export interface Artists {
   href: string;
   attributes?: {
     name: string;
+    artistName: string;
     isBand: boolean;
     url: string;
     genreNames: string[];
     editorialNotes?: EditorialNotes;
+    editorialArtwork: {
+      bannerUber: Artwork;
+      storeFlowcase: Artwork;
+    };
+    editorialVideo: any;
     artwork: Artwork;
     playParams: PlayParameters;
     contentRating?: 'clean' | 'explicit' | 'notExplicit';
   };
   relationships?: {
-    albums: Relationship;
-    genres: Relationship;
+    albums?: Relationship;
+    artists?: Relationship;
+    curators?: Relationship;
+    playlists?: Relationship;
+    genres?: Relationship;
+    tracks?: Relationship;
+    station?: Relationship;
+    ['music-videos']?: Relationship;
+    ['featured-playlists']?: Relationship;
+    ['similar-artists']?: Relationship;
+  };
+  views?: {
+    [key: string]: View;
   };
 }
 
@@ -343,6 +360,11 @@ export interface MediaItem {
     artistName: string;
     albumName?: string;
     composerName?: string;
+    editorialNotes?: EditorialNotes;
+    editorialArtwork?: {
+      bannerUber?: Artwork;
+      storeFlowcase?: Artwork;
+    };
   };
 }
 
@@ -354,11 +376,17 @@ export interface Resource {
     name?: string;
     artistName?: string;
     albumName?: string;
+    trackCount?: string;
     composerName?: string;
     isrc?: string;
     hasLyrics?: boolean;
     url?: string;
     genreNames?: string[];
+    editorialArtwork?: {
+      bannerUber?: Artwork;
+      storeFlowcase?: Artwork;
+    };
+    editorialVideo?: any;
     releaseDate?: string;
     trackNumber?: number;
     discNumber?: number;
@@ -375,6 +403,12 @@ export interface Resource {
     genres?: Relationship;
     tracks?: Relationship;
     station?: Relationship;
+    ['music-videos']?: Relationship;
+    ['featured-playlists']?: Relationship;
+    ['similar-artists']?: Relationship;
+  };
+  views?: {
+    [key: string]: View;
   };
 }
 

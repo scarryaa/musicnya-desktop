@@ -52,7 +52,7 @@ export class MediaDetailsComponent implements AfterViewInit, OnDestroy {
   destroy$ = new Subject<void>();
 
   constructor(
-    private musicAPIFacade: MusicAPIFacade,
+    public musicAPIFacade: MusicAPIFacade,
     private color: ColorService
   ) {
     this.state$ = this.musicAPIFacade.state$;

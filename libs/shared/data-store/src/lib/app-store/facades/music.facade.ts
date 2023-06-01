@@ -5,7 +5,7 @@ import { MusicKit } from '../../../types';
 import { processMediaType } from '../../models/helpers';
 import { MusicActions } from '../actions';
 import { fromMusic } from '../reducers';
-import { MusicState } from '../reducers/music.reducer';
+import { MusicState, selectMusicState } from '../reducers/music.reducer';
 
 @Injectable({
   providedIn: 'root',

@@ -7,8 +7,10 @@ import { CommonModule } from '@angular/common';
 import {
   TopSongsComponent,
   FeaturedTileComponent,
-  AlbumTileLargeModule,
   AlbumTileLargeSmartModule,
+  ArtistTileComponent,
+  MediaTileComponent,
+  VideoTileComponent,
 } from '@nyan-inc/core';
 import { LetDirective } from '@ngrx/component';
 import { MusicFacade, MusicAPIFacade } from '@nyan-inc/shared';
@@ -25,6 +27,9 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     FeaturedTileComponent,
     ScrollingModule,
     AlbumTileLargeSmartModule,
+    ArtistTileComponent,
+    MediaTileComponent,
+    VideoTileComponent,
   ],
   templateUrl: './artist-details-content.component.html',
   styleUrls: ['./artist-details-content.component.scss'],
@@ -36,7 +41,7 @@ export class ArtistDetailsContentComponent {
 
   constructor(
     private changeReference: ChangeDetectorRef,
-    private musicAPIFacade: MusicAPIFacade,
+    public musicAPIFacade: MusicAPIFacade,
     private musicFacade: MusicFacade
   ) {
     this.state$ = this.musicAPIFacade.state$;

@@ -2,24 +2,19 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   ChangeDetectionStrategy,
+  Input,
   ViewChildren,
   ElementRef,
   QueryList,
-  HostBinding,
   ChangeDetectorRef,
   NgModule,
-  Input,
-  Output,
-  EventEmitter,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import {
-  BaseButtonModule,
-  BaseComponent,
-  DisableChildTabIndexDirective,
-  FallbackImageDirective,
-  JoinPipeModule,
-} from '@nyan-inc/core';
+import { BaseButtonModule } from '../base-button/base-button.component';
+import { BaseComponent } from '../base-component';
+import { DisableChildTabIndexDirective } from '../disable-child-tabindex.directive';
+import { FallbackImageDirective } from '../fallback-image.directive';
+import { JoinPipeModule } from '../join.pipe';
 
 @Component({
   selector: 'ui-album-tile',
@@ -31,8 +26,7 @@ import {
         *ngIf="showArt"
         id="artwork"
         alt="{{ type }} art"
-        [style.max-width.rem]="tileSize"
-        [style.max-height.rem]="tileSize"
+        [style.min-width.rem]="sizeX"
         [src]="source"
         [ngClass]="{ 'hover-underline': hoverUnderline }"
         [routerLink]="artworkRouterLink"
@@ -81,7 +75,7 @@ export class AlbumTileComponent extends BaseComponent {
   @Input() source!: string;
   @Input() mediaTitle!: string;
   @Input() artists!: string[];
-  @Input() tileSize = 2;
+  @Input() sizeX = 4;
   @Input() showArtists = this.artists ? true : false;
   @Input() hoverUnderline = false;
   @Input() showArt = true;

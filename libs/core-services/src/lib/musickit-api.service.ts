@@ -92,7 +92,7 @@ export class MusickitAPI {
 
   async getArtist(id: string): Promise<any> {
     return this.requestData(
-      `/v1/catalog/us/artists/${id}${this.getQueryString()}&views=top-songs,latest-release,featured-albums`
+      `/v1/catalog/us/artists/${id}?include=albums,similar-artists,music-videos,playlists&views=top-videos,featured-playlists,singles,appears-on,similar-artists,top-songs,latest-release,featured-albums&limit[top-songs]=20&include[albums]=attributes,artwork,title,albumName&extend=editorialArtwork,editorialVideo`
     );
   }
 

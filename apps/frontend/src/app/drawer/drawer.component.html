@@ -55,7 +55,7 @@
             [routerLink]="'/media/' + 'library-playlist' + '/' + playlist.id"
             [tabIndex]="-1"
             [source]="playlist.attributes?.artwork?.url || playlist.songs?.[0]?.attributes?.artwork?.url"
-            [tileSize]="3"
+            [sizeX]="3"
             [artists]="playlist?.attributes?.artists || ['Me']"
             [showArtists]="true"
             [mediaTitle]="playlist?.attributes?.name || ''"

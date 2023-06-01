@@ -2,6 +2,12 @@
   display: block;
   position: relative;
 
+  &:hover {
+    .media-tile__image-overlay {
+      display: block !important;
+    }
+  }
+
   .media-tile-wrapper {
     display: flex;
     flex-wrap: wrap;
@@ -10,24 +16,17 @@
   }
 
   .media-tile {
-    display: flex;
     flex: 1;
     align-self: flex-start;
     position: relative;
-    flex-direction: row;
-    flex-grow: 0;
-
-    &:hover {
-      .media-tile__image-overlay {
-        display: block !important;
-      }
-    }
 
     .media-tile__image-wrapper {
       position: relative;
-      width: calc(100% - 5.3rem);
+      width: 100%;
       border-radius: 8px;
     }
+
+    // TODO abstract this to a component (find a way)
 
     .media-tile__image-wrapper__image {
       object-fit: cover;
@@ -122,35 +121,25 @@
       }
     }
 
-    .media-tile__headings {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      margin-left: 2rem;
-      margin-right: 1rem;
+    .media-tile__title {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      line-clamp: 1;
+      -webkit-line-clamp: 1;
+      overflow: hidden;
+      min-width: 100%;
+      max-width: min-content;
+    }
 
-      width: 100%;
-      .media-tile__title {
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        line-clamp: 1;
-        -webkit-line-clamp: 1;
-        overflow: hidden;
-        min-width: 100%;
-        max-width: min-content;
-      }
-
-      .media-tile__subittle {
-        color: var(--color-gray-500);
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        line-clamp: 2;
-        -webkit-line-clamp: 2;
-        overflow: hidden;
-      }
+    .media-tile__subittle {
+      color: var(--color-gray-500);
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      line-clamp: 2;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
     }
   }
 }

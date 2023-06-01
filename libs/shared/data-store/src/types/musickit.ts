@@ -1179,6 +1179,11 @@ export declare namespace MusicKit {
       name: string;
       url: string;
     };
+    editorialArtwork: {
+      bannerUber: Artwork;
+      storeFlowcase: Artwork;
+    };
+    editorialVideo: any;
     relationships: {
       albums: Relationship<Albums>;
       genres: Relationship<Genres>;
