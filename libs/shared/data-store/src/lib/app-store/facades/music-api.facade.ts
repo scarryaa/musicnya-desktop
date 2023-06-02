@@ -44,6 +44,12 @@ export class MusicAPIFacade implements OnDestroy {
     .pipe(select(fromMusicAPI.getMusicAPIState))
     .pipe(map((value) => value.currentMedia?.id));
 
+  artistStationID$ = this.store
+    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(
+      map((value) => value.currentMedia?.relationships?.station?.data?.[0]?.id)
+    );
+
   artistTopSongs$ = this.store
     .pipe(select(fromMusicAPI.getMusicAPIState))
     .pipe(map((value) => value.currentMedia?.views?.['top-songs']?.data));

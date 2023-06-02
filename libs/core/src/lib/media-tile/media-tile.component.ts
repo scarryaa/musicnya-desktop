@@ -1,11 +1,18 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { PlayButtonComponent } from '../play-button/play-button.component';
+import { OptionsButtonComponent } from '../options-button/options-button.component';
 
 @Component({
   selector: 'core-media-tile',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    PlayButtonComponent,
+    OptionsButtonComponent,
+  ],
   template: `<div class="media-tile-wrapper">
     <div class="media-tile">
       <div class="media-tile__image-wrapper">
@@ -13,50 +20,18 @@ import { RouterModule } from '@angular/router';
           class="media-tile__image-wrapper__image"
           [src]="mediaImage"
           [style.minWidth.rem]="mediaImageSize"
+          [style.minHeight.rem]="mediaImageSize"
+          [style.aspectRatio]="1"
         />
         <div class="media-tile__image-overlay" [routerLink]="mediaLink">
-          <div
+          <core-play-button
             class="media-tile__image-overlay__play-button"
-            (click)="handlePlayClick($event)"
-          >
-            <div class="media-tile__image-overlay__play-button__icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1.5rem"
-                height="1.5rem"
-                viewBox="0 0 24 24"
-                fill="white"
-                stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
-            </div>
-          </div>
-          <div
+            (playEmitter)="handlePlayClick()"
+          ></core-play-button>
+          <core-options-button
             class="media-tile__image-overlay__options-button"
-            (click)="handleOptionsClick($event)"
-          >
-            <div class="media-tile__image-overlay__options-button__icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1.5rem"
-                height="1.5rem"
-                viewBox="0 0 24 24"
-                fill="white"
-                stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="1"></circle>
-                <circle cx="12" cy="5" r="1"></circle>
-                <circle cx="12" cy="19" r="1"></circle>
-              </svg>
-            </div>
-          </div>
+            (optionsEmitter)="handleOptionsClick()"
+          ></core-options-button>
         </div>
       </div>
       <div
@@ -92,13 +67,11 @@ export class MediaTileComponent {
   @Output() playEmitter = new EventEmitter<{ type: string; id: string }>();
   @Output() optionsEmitter = new EventEmitter();
 
-  handlePlayClick(event: MouseEvent) {
-    event.stopPropagation();
+  handlePlayClick() {
     this.playEmitter.emit({ type: this.type || '', id: this.id || '' });
   }
 
-  handleOptionsClick(event: MouseEvent) {
-    event.stopPropagation();
-    this.optionsEmitter.emit(event);
+  handleOptionsClick() {
+    this.optionsEmitter.emit();
   }
 }

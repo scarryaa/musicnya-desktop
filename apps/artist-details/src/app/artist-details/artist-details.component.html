@@ -31,13 +31,18 @@
         <p class="artist-details__info__text-wrapper__artist-name">
           {{ vm.artistName$ | async }}
         </p>
-        <div class="artist-details__info__text-wrapper__buttons">
+        <div
+          class="artist-details__info__text-wrapper__buttons"
+          *ngIf="vm.artistStationID$ | async as stationID"
+        >
           <core-base-button
+            (click)="play('stations', $any(stationID))"
             class="artist-details__info__text-wrapper__buttons-button artist-details__info__text-wrapper__buttons__play-button"
             [icon]="'play_arrow'"
             [componentStyleClass]="'ui-button-l media-action-button'"
           ></core-base-button>
           <core-base-button
+            (click)="play('stations', $any(stationID), true)"
             class="artist-details__info__text-wrapper__buttons-button artist-details__info__text-wrapper__buttons__shuffle-button"
             [icon]="'shuffle'"
             [componentStyleClass]="'ui-button-l media-action-button'"
@@ -51,29 +56,27 @@
       </div>
     </div>
     <div class="artist-details__content">
-      <div class="artist-details__content__top-songs-featured">
-        <div
-          class="artist-details__content__featured"
-          *ngIf="vm.featuredAlbums$ | async as featured"
-        >
-          <ng-container *ngIf="featured?.[0]">
-            <p class="artist-details__content__featured__heading">Featured</p>
-            <div class="artist-details__content__featured__scroll-wrapper">
-              <core-featured-tile
-                [source]="$any(featured)?.[0]?.attributes?.artwork?.url || ''"
-                [reasonTitle]="(vm.featuredReason$ | async) || ''"
-                [mediaImageSize]="10"
-                [superheading]="$any(featured)?.[0]?.attributes?.releaseDate || ''"
-                [heading]="$any(featured)?.[0]?.attributes?.name || ''"
-                [subheading]="(vm.featuredTrackCount$ | async) + ' songs'"
-                [showTitle]="true"
-                [albumLink]="(vm.featuredAlbumLink$ | async) ?? undefined"
-                [id]="$any(featured)?.id"
-                [type]="$any(featured)?.type"
-                (playEmitter)="play($event.type, $event.id)"
-              ></core-featured-tile>
-            </div>
-          </ng-container>
+      <div
+        *ngIf="vm.featuredAlbums$ | async as featured"
+        class="artist-details__content__top-songs-featured"
+      >
+        <div class="artist-details__content__featured" *ngIf="featured?.[0]">
+          <p class="artist-details__content__featured__heading">Featured</p>
+          <div class="artist-details__content__featured__scroll-wrapper">
+            <core-featured-tile
+              [source]="$any(featured)?.[0]?.attributes?.artwork?.url || ''"
+              [reasonTitle]="(vm.featuredReason$ | async) || ''"
+              [mediaImageSize]="10"
+              [superheading]="$any(featured)?.[0]?.attributes?.releaseDate || ''"
+              [heading]="$any(featured)?.[0]?.attributes?.name || ''"
+              [subheading]="(vm.featuredTrackCount$ | async) + ' songs'"
+              [showTitle]="true"
+              [albumLink]="(vm.featuredAlbumLink$ | async) ?? undefined"
+              [id]="$any(featured)?.id"
+              [type]="$any(featured)?.type"
+              (playEmitter)="play($event.type, $event.id)"
+            ></core-featured-tile>
+          </div>
         </div>
         <div
           class="artist-details__content__top-songs"
@@ -209,6 +212,8 @@
                 [id]="artist?.id"
                 [type]="artist?.type!"
                 [artistLink]="'/media/artists/' + artist?.id"
+                [stationId]="artist?.relationships?.station?.data?.[0]?.id"
+                (playEmitter)="play($event.type, $event.id)"
               ></core-artist-tile>
             </ng-container>
           </div>

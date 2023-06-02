@@ -14,6 +14,8 @@ export const processMediaType = (type: string, id: string[] | string) => {
       return 'playlist';
     case 'songs':
       return 'song';
+    case 'stations':
+      return 'station';
     default:
       return 'song';
   }

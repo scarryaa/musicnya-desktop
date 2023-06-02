@@ -6,11 +6,13 @@ import {
   Output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PlayButtonComponent } from '../play-button/play-button.component';
+import { OptionsButtonComponent } from '../options-button/options-button.component';
 
 @Component({
   selector: 'core-video-tile',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PlayButtonComponent, OptionsButtonComponent],
   template: `<div class="video-tile-wrapper">
     <div class="video-tile">
       <div class="video-tile__image-wrapper">
@@ -20,48 +22,12 @@ import { CommonModule } from '@angular/common';
           [style.minWidth.rem]="videoImageSize"
         />
         <div class="video-tile__image-overlay">
-          <div
-            class="video-tile__image-overlay__play-button"
-            (click)="handlePlayClick($event)"
-          >
-            <div class="video-tile__image-overlay__play-button__icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1.5rem"
-                height="1.5rem"
-                viewBox="0 0 24 24"
-                fill="white"
-                stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
-            </div>
-          </div>
-          <div
-            class="video-tile__image-overlay__options-button"
-            (click)="handleOptionsClick($event)"
-          >
-            <div class="video-tile__image-overlay__options-button__icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1.5rem"
-                height="1.5rem"
-                viewBox="0 0 24 24"
-                fill="white"
-                stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="1"></circle>
-                <circle cx="12" cy="5" r="1"></circle>
-                <circle cx="12" cy="19" r="1"></circle>
-              </svg>
-            </div>
-          </div>
+          <core-play-button
+            (playEmitter)="handlePlayClick()"
+          ></core-play-button>
+          <core-options-button
+            (optionsEmitter)="handleOptionsClick()"
+          ></core-options-button>
         </div>
       </div>
       <div class="video-tile__title" [title]="videoTitle">{{ videoTitle }}</div>
@@ -84,13 +50,11 @@ export class VideoTileComponent {
   @Output() playClick = new EventEmitter<{ type: string; id: string }>();
   @Output() optionsClick = new EventEmitter<void>();
 
-  handlePlayClick(event: MouseEvent) {
-    event.stopPropagation();
+  handlePlayClick() {
     this.playClick.emit({ type: this.type, id: this.id || '' });
   }
 
-  handleOptionsClick(event: MouseEvent) {
-    event.stopPropagation();
+  handleOptionsClick() {
     this.optionsClick.emit();
   }
 }

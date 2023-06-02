@@ -16,14 +16,14 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@nyan-inc/artist-details": ["apps/artist-details/src/index.ts"],
       "@nyan-inc/core": ["libs/core/src/index.ts"],
       "@nyan-inc/core-services": ["libs/core-services/src/index.ts"],
       "@nyan-inc/musickit-typescript": [
         "libs/musickit-typescript/src/index.ts"
       ],
       "@nyan-inc/shared": ["libs/shared/data-store/src/index.ts"],
-      "@nyan-inc/ui": ["libs/ui/src/index.ts"],
-      "@nyan-inc/artist-details": ["apps/artist-details/src/index.ts"]
+      "@nyan-inc/ui": ["libs/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -61,8 +61,14 @@ export class MusicFacade implements OnDestroy {
     this.store.dispatch(MusicActions.setVolume({ payload: { volume } }));
   }
 
-  setQueue() {
-    this.store.dispatch(MusicActions.setQueue({ payload: { options: {} } }));
+  setQueue(type: string, id: string) {
+    type = processMediaType(type, id);
+
+    this.store.dispatch(
+      MusicActions.setQueue({
+        payload: { options: { [type]: id, startPlaying: false } },
+      })
+    );
   }
 
   setQueueThenPlay(type: string, id: string) {
@@ -92,7 +98,7 @@ export class MusicFacade implements OnDestroy {
 
     this.store.dispatch(
       MusicActions.shufflePlay({
-        payload: { options: { [type]: id, startPlaying: true } },
+        payload: { options: { [type]: id, startPlaying: false } },
       })
     );
   }

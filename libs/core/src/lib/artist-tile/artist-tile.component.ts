@@ -1,17 +1,20 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   HostBinding,
   Input,
+  Output,
   ViewEncapsulation,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { PlayButtonComponent } from '../play-button/play-button.component';
 
 @Component({
   selector: 'core-artist-tile',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, PlayButtonComponent],
   template: `<div class="artist-tile-wrapper">
     <div class="artist-tile">
       <div class="artist-tile__image-wrapper">
@@ -19,7 +22,9 @@ import { RouterModule } from '@angular/router';
         <div
           class="artist-tile-wrapper__image-overlay"
           [routerLink]="artistLink"
-        ></div>
+        >
+          <core-play-button (playEmitter)="handlePlay()"></core-play-button>
+        </div>
       </div>
       <p [routerLink]="artistLink">{{ name }}</p>
     </div>
@@ -103,4 +108,12 @@ export class ArtistTileComponent {
   @Input() tileSize = 8;
   @Input() artistLink?: string;
   @Input() type = 'artists';
+  @Input() id?: string;
+  @Input() stationId?: string;
+
+  @Output() playEmitter = new EventEmitter<{ type: string; id: string }>();
+
+  handlePlay() {
+    this.playEmitter.emit({ type: 'stations', id: this.stationId! });
+  }
 }

@@ -36,3 +36,5 @@ export * from './lib/media-tile-small/media-tile-small.component';
 export * from './lib/divider/divider.component';
 export * from './lib/media-hover-overlay/media-hover-overlay.directive';
 export * from './lib/media-overlay/media-overlay.component';
+export * from './lib/play-button/play-button.component';
+export * from './lib/options-button/options-button.component';

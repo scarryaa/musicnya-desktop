@@ -37,9 +37,13 @@ export class ArtistDetailsComponent {
   ) {
     console.log('ArtistDetailsComponent');
   }
+  stationID?: string;
 
-  play(type: string, id: string) {
-    this.musicFacade.setQueueThenPlay(type, id);
+  play(type: string, id: string, shuffle = false) {
+    shuffle
+      ? this.musicFacade.shufflePlay(type, id)
+      : this.musicFacade.setQueueThenPlay(type, id);
+    setTimeout(() => this.musicFacade.play(), 1000);
   }
 
   playAtIndex(type: string, id: string, index: number) {
