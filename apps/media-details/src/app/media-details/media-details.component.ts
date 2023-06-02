@@ -20,8 +20,6 @@ import { MusicAPIFacade } from '@nyan-inc/shared';
 import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { LetDirective } from '@ngrx/component';
 import Color from 'colorjs.io';
-import { ArtistDetailsComponent } from '../artist-details/artist-details.component';
-import { ArtistDetailsContentComponent } from '../artist-details-content/artist-details-content.component';
 import { SongAlbumDetailsComponent } from '../song-album-details/song-album-details.component';
 import { SongAlbumContentComponent } from '../song-album-content/song-album-content.component';
 
@@ -34,8 +32,6 @@ import { SongAlbumContentComponent } from '../song-album-content/song-album-cont
     MediaDetailsDropdownModule,
     VirtualTableSmartModule,
     LetDirective,
-    ArtistDetailsComponent,
-    ArtistDetailsContentComponent,
     SongAlbumDetailsComponent,
     SongAlbumContentComponent,
   ],

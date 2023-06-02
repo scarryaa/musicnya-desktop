@@ -66,7 +66,12 @@ import { RouterModule } from '@angular/router';
       >
         {{ mediaTitle }}
       </div>
-      <div class="media-tile__subtitle" [title]="mediaSubtitle">
+      <div
+        [ngClass]="{ hover_underline: subtitleHover }"
+        [routerLink]="subtitleHover ? subtitleLink : undefined"
+        class="media-tile__subtitle"
+        [title]="mediaSubtitle"
+      >
         {{ mediaSubtitle }}
       </div>
     </div>
@@ -79,8 +84,10 @@ export class MediaTileComponent {
   @Input() mediaImage: string | undefined = undefined;
   @Input() mediaImageSize: number | undefined = undefined;
   @Input() mediaLink?: string;
+  @Input() subtitleLink?: string;
   @Input() id?: string;
   @Input() type?: string;
+  @Input() subtitleHover = true;
 
   @Output() playEmitter = new EventEmitter<{ type: string; id: string }>();
   @Output() optionsEmitter = new EventEmitter();

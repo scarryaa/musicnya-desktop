@@ -14,11 +14,6 @@
         [src]="musicAPIFacade.artistBanner$ | async"
       />
       <div id="media-details-wrapper" [ngSwitch]="isArtist">
-        <ng-container *ngSwitchCase="true">
-          <ng-container
-            *ngTemplateOutlet="artistDetailsTemplate"
-          ></ng-container>
-        </ng-container>
         <ng-container *ngSwitchDefault>
           <ng-container *ngTemplateOutlet="mediaDetails"></ng-container>
         </ng-container>
@@ -27,9 +22,6 @@
     <div id="media-content-wrapper">
       <div id="media-content">
         <div [ngSwitch]="isArtist" class="content-wrapper">
-          <ng-container *ngSwitchCase="true">
-            <ng-container *ngTemplateOutlet="artistContent"></ng-container>
-          </ng-container>
           <ng-container *ngSwitchDefault>
             <ng-container *ngTemplateOutlet="mediaContent"></ng-container>
           </ng-container>
@@ -41,16 +33,8 @@
 
 <div *ngTemplateOutlet="base"></div>
 
-<ng-template #artistDetailsTemplate>
-  <musicnya-artist-details></musicnya-artist-details>
-</ng-template>
-
 <ng-template #mediaDetails>
   <musicnya-song-album-details></musicnya-song-album-details>
-</ng-template>
-
-<ng-template #artistContent>
-  <musicnya-artist-details-content></musicnya-artist-details-content>
 </ng-template>
 
 <ng-template #mediaContent>

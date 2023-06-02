@@ -98,7 +98,7 @@ export class MusickitAPI {
 
   async getRecentlyPlayed(): Promise<any> {
     const request = await this.requestData(
-      `/v1/me/recent/played${this.getQueryString()}&limit=20`
+      `/v1/me/recent/played${this.getQueryString()}&limit=20&include=[albums]=artists&extend=editorialArtwork,artistUrl,artistId,editorialVideo,offers,trackCount&limit[albums]=10&include=[artists]=id`
     );
     console.log(request);
     return request;
@@ -106,7 +106,7 @@ export class MusickitAPI {
 
   async getRecommendations(): Promise<any> {
     const request = await this.requestData(
-      `/v1/me/recommendations${this.getQueryString()}?include[albums]=artists&extend=editorialArtwork,editorialVideo,offers,trackCount&limit[albums]=10`
+      `/v1/me/recommendations${this.getQueryString()}?include[albums]=artists&extend=editorialArtwork,artistId,artistUrl,editorialVideo,offers,trackCount&limit[albums]=10&include=[artists]=id`
     );
     console.log(request);
     return request;

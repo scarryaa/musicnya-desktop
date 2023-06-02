@@ -12,17 +12,12 @@ import {
 } from '@angular/core';
 import { HeadingComponent } from '../heading/heading.component';
 import { RouterModule } from '@angular/router';
-import { AlbumTileLargeSmartModule } from '@nyan-inc/core';
+import { AlbumTileLargeSmartModule, MediaTileComponent } from '@nyan-inc/core';
 
 @Component({
   selector: 'ui-media-tile-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    HeadingComponent,
-    AlbumTileLargeSmartModule,
-    RouterModule,
-  ],
+  imports: [CommonModule, HeadingComponent, MediaTileComponent, RouterModule],
   template: `<div
       id="list-wrapper"
       [ngClass]="{ hide: !showMore }"
@@ -31,25 +26,24 @@ import { AlbumTileLargeSmartModule } from '@nyan-inc/core';
       <ui-heading id="heading" size="medium">{{ listTitle }}</ui-heading>
     </div>
     <div id="album-tile-container">
-      <ui-album-tile-large
+      <core-media-tile
+        class="album-tile"
         *ngFor="let item of listData; let i = index"
         [id]="listData[i].id"
         #items
-        [clickEnabled]="clickEnabled"
         [mediaTitle]="listData[i].attributes?.name ?? ''"
-        [artworkRouterLink]="
-          '/media/' + listData[i].type + '/' + listData[i].id
-        "
-        [mediaInfo]="{
-          name: listData[i].attributes.name,
-          type: listData[i].type,
-          id: listData[i].id,
-          artists: [listData[i].attributes.artistName]
-        }"
-        [artists]="[listData[i].attributes?.artistName]"
-        [imageSource]="listData[i].attributes?.artwork?.url ?? ''"
+        [mediaLink]="'/media/' + listData[i].type + '/' + listData[i].id"
+        [mediaSubtitle]="listData[i].attributes?.artistName ?? ''"
+        [type]="listData[i].type"
+        [mediaImageSize]="10"
+        [mediaImage]="listData[i].attributes?.artwork?.url ?? ''"
         (playEmitter)="emit(i)"
-      ></ui-album-tile-large>
+        [subtitleLink]="
+          '/media/' +
+          'artists/' +
+          listData[i].attributes?.artistUrl?.split('/').at(-1)
+        "
+      ></core-media-tile>
     </div>`,
   styleUrls: ['./media-tile-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
