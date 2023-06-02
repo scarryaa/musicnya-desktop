@@ -1,5 +1,6 @@
 <ng-container *ngrxLet="musicAPIFacade as vm">
   <div
+    *ngIf="vm.loaded$ | async"
     class="artist-details"
     [style.background]="
       'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url(' +
@@ -8,6 +9,7 @@
     "
   >
     <div
+      *ngIf="vm.loaded$ | async"
       class="artist-details__info"
       [style.backgroundSize]="'cover'"
       [style.backgroundRepeat]="'no-repeat'"
@@ -65,12 +67,17 @@
                 [heading]="$any(featured)?.[0]?.attributes?.name || ''"
                 [subheading]="(vm.featuredTrackCount$ | async) + ' songs'"
                 [showTitle]="true"
+                [albumLink]="(vm.featuredAlbumLink$ | async) ?? undefined"
+                [id]="$any(featured)?.id"
+                [type]="$any(featured)?.type"
+                (playEmitter)="play($event.type, $event.id)"
               ></core-featured-tile>
             </div>
           </ng-container>
         </div>
         <div
           class="artist-details__content__top-songs"
+          [style.paddingRight.rem]="$any(vm.featuredAlbums$ | async)?.[0] ? 23.5 : 0"
           *ngIf="vm.artistTopSongs$ | async as songs"
         >
           <ng-container *ngIf="songs?.[0]">
@@ -82,7 +89,21 @@
                   [mediaImage]="song.attributes?.artwork?.url || ''"
                   [mediaImageSize]="10"
                   [mediaTitle]="song?.attributes?.name || ''"
-                  [mediaSubtitle]="song?.attributes?.artistName || ''"
+                  [mediaSubtitle]="song?.attributes?.albumName"
+                  [mediaLink]="
+                    '/media/albums/' +
+                      song?.attributes?.url?.split('/')?.at(-1)?.split('?')?.[0] ||
+                    undefined
+                  "
+                  [id]="song?.attributes?.url?.split('/')?.at(-1)?.split('?')?.[0] || ''"
+                  [type]="'albums'"
+                  (playEmitter)="
+                    playAtIndex(
+                      $event.type,
+                      $event.id,
+                      song?.attributes?.trackNumber! - 1
+                    )
+                  "
                 ></core-media-tile-small>
               </ng-container>
             </div>
@@ -105,6 +126,11 @@
                 [mediaSubtitle]="
                   album?.attributes?.releaseDate?.slice(0, 4) || ''
                 "
+                [mediaLink]="'/media/albums/' + album?.id"
+                [id]="album?.id"
+                [type]="album?.type"
+                (playEmitter)="play($event.type, $event.id)"
+                (optionsEmitter)="options($event)"
               ></core-media-tile>
             </ng-container>
           </div>
@@ -128,6 +154,14 @@
                 [mediaSubtitle]="
                   single?.attributes?.releaseDate?.slice(0, 4) || ''
                 "
+                [mediaLink]="
+                  '/media/albums/' +
+                    single?.attributes?.url?.split('/')?.at(-1)?.split('?')?.[0] ||
+                  undefined"
+                [id]="single?.id"
+                [type]="single?.type"
+                (playEmitter)="play($event.type, $event.id)"
+                (optionsEmitter)="options($event)"
               ></core-media-tile>
             </ng-container>
           </div>
@@ -151,6 +185,10 @@
                 [videoSubtitle]="
                   video?.attributes?.releaseDate?.slice(0, 4) || ''
                 "
+                [id]="video?.id"
+                [type]="'videos'"
+                (playClick)="play($event.type, $event.id)"
+                (optionsClick)="options($event)"
               ></core-video-tile>
             </ng-container>
           </div>
@@ -168,6 +206,9 @@
                 [image]="artist.attributes?.artwork?.url || ''"
                 [tileSize]="10"
                 [name]="artist?.attributes?.name || ''"
+                [id]="artist?.id"
+                [type]="artist?.type!"
+                [artistLink]="'/media/artists/' + artist?.id"
               ></core-artist-tile>
             </ng-container>
           </div>

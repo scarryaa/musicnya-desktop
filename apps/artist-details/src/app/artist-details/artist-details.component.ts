@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LetDirective } from '@ngrx/component';
-import { MusicAPIFacade } from '@nyan-inc/shared';
+import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
 import {
   FeaturedTileComponent,
   MediaTileComponent,
@@ -31,7 +31,20 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArtistDetailsComponent {
-  constructor(public musicAPIFacade: MusicAPIFacade) {
+  constructor(
+    public musicAPIFacade: MusicAPIFacade,
+    private musicFacade: MusicFacade
+  ) {
     console.log('ArtistDetailsComponent');
   }
+
+  play(type: string, id: string) {
+    this.musicFacade.setQueueThenPlay(type, id);
+  }
+
+  playAtIndex(type: string, id: string, index: number) {
+    this.musicFacade.setQueueAndPlayAtIndex(type, id, index);
+  }
+
+  options(args: any) {}
 }

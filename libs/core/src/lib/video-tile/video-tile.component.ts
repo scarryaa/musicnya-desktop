@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -14,7 +20,10 @@ import { CommonModule } from '@angular/common';
           [style.minWidth.rem]="videoImageSize"
         />
         <div class="video-tile__image-overlay">
-          <div class="video-tile__image-overlay__play-button">
+          <div
+            class="video-tile__image-overlay__play-button"
+            (click)="handlePlayClick($event)"
+          >
             <div class="video-tile__image-overlay__play-button__icon">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +40,10 @@ import { CommonModule } from '@angular/common';
               </svg>
             </div>
           </div>
-          <div class="video-tile__image-overlay__options-button">
+          <div
+            class="video-tile__image-overlay__options-button"
+            (click)="handleOptionsClick($event)"
+          >
             <div class="video-tile__image-overlay__options-button__icon">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -52,8 +64,10 @@ import { CommonModule } from '@angular/common';
           </div>
         </div>
       </div>
-      <div class="video-tile__title">{{ videoTitle }}</div>
-      <div class="video-tile__subtitle">{{ videoSubtitle }}</div>
+      <div class="video-tile__title" [title]="videoTitle">{{ videoTitle }}</div>
+      <div class="video-tile__subtitle" [title]="videoSubtitle">
+        {{ videoSubtitle }}
+      </div>
     </div>
   </div>`,
   styleUrls: ['./video-tile.component.scss'],
@@ -64,4 +78,19 @@ export class VideoTileComponent {
   @Input() videoSubtitle: string | undefined = undefined;
   @Input() videoImage: string | undefined = undefined;
   @Input() videoImageSize: number | undefined = undefined;
+  @Input() id?: string;
+  @Input() type = 'videos';
+
+  @Output() playClick = new EventEmitter<{ type: string; id: string }>();
+  @Output() optionsClick = new EventEmitter<void>();
+
+  handlePlayClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.playClick.emit({ type: this.type, id: this.id || '' });
+  }
+
+  handleOptionsClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.optionsClick.emit();
+  }
 }

@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseButtonModule } from '../base-button/base-button.component';
 import { RouterModule } from '@angular/router';
@@ -21,8 +27,11 @@ import { FallbackImageDirective } from '../fallback-image.directive';
           [src]="source"
           [style.minWidth.rem]="mediaImageSize"
         />
-        <div class="media-tile__image-overlay">
-          <div class="media-tile__image-overlay__play-button">
+        <div class="media-tile__image-overlay" [routerLink]="albumLink">
+          <div
+            class="media-tile__image-overlay__play-button"
+            (click)="handlePlayClick($event)"
+          >
             <div class="media-tile__image-overlay__play-button__icon">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +48,10 @@ import { FallbackImageDirective } from '../fallback-image.directive';
               </svg>
             </div>
           </div>
-          <div class="media-tile__image-overlay__options-button">
+          <div
+            class="media-tile__image-overlay__options-button"
+            (click)="handleOptionsClick($event)"
+          >
             <div class="media-tile__image-overlay__options-button__icon">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -61,9 +73,19 @@ import { FallbackImageDirective } from '../fallback-image.directive';
         </div>
       </div>
       <div class="media-tile__headings">
-        <div class="media-tile__superheading">{{ superheading }}</div>
-        <div class="media-tile-heading">{{ heading }}</div>
-        <div class="media-tile__subheading">{{ subheading }}</div>
+        <div class="media-tile__superheading" [title]="superheading">
+          {{ superheading }}
+        </div>
+        <div
+          class="media-tile__heading"
+          [title]="heading"
+          [routerLink]="albumLink"
+        >
+          {{ heading }}
+        </div>
+        <div class="media-tile__subheading" [title]="subheading">
+          {{ subheading }}
+        </div>
       </div>
     </div>
   </div>`,
@@ -78,8 +100,23 @@ export class FeaturedTileComponent {
   @Input() mediaImageSize = 8;
   @Input() headingRouterLink: string | undefined;
   @Input() artworkRouterLink!: string;
-  @Input() routerLink!: string;
+  @Input() albumLink?: string;
   @Input() ngClass!: { [klass: string]: any } | string | string[] | Set<string>;
   @Input() showTitle = false;
   @Input() reasonTitle = '';
+  @Input() id?: string;
+  @Input() type?: string;
+
+  @Output() playEmitter = new EventEmitter<{ type: string; id: string }>();
+  @Output() optionsEmitter = new EventEmitter<void>();
+
+  handlePlayClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.playEmitter.emit({ type: this.type || '', id: this.id || '' });
+  }
+
+  handleOptionsClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.optionsEmitter.emit();
+  }
 }

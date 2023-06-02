@@ -28,6 +28,7 @@
 @media screen and (min-width: 1393px) {
   core-featured-tile {
     img {
+      min-width: 11rem !important;
       max-width: 14rem;
     }
   }

@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'core-media-tile',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   template: `<div class="media-tile-wrapper">
     <div class="media-tile">
       <div class="media-tile__image-wrapper">
@@ -13,8 +14,11 @@ import { CommonModule } from '@angular/common';
           [src]="mediaImage"
           [style.minWidth.rem]="mediaImageSize"
         />
-        <div class="media-tile__image-overlay">
-          <div class="media-tile__image-overlay__play-button">
+        <div class="media-tile__image-overlay" [routerLink]="mediaLink">
+          <div
+            class="media-tile__image-overlay__play-button"
+            (click)="handlePlayClick($event)"
+          >
             <div class="media-tile__image-overlay__play-button__icon">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +35,10 @@ import { CommonModule } from '@angular/common';
               </svg>
             </div>
           </div>
-          <div class="media-tile__image-overlay__options-button">
+          <div
+            class="media-tile__image-overlay__options-button"
+            (click)="handleOptionsClick($event)"
+          >
             <div class="media-tile__image-overlay__options-button__icon">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -52,8 +59,16 @@ import { CommonModule } from '@angular/common';
           </div>
         </div>
       </div>
-      <div class="media-tile__title">{{ mediaTitle }}</div>
-      <div class="media-tile__subtitle">{{ mediaSubtitle }}</div>
+      <div
+        class="media-tile__title"
+        [routerLink]="mediaLink"
+        [title]="mediaTitle"
+      >
+        {{ mediaTitle }}
+      </div>
+      <div class="media-tile__subtitle" [title]="mediaSubtitle">
+        {{ mediaSubtitle }}
+      </div>
     </div>
   </div>`,
   styleUrls: ['./media-tile.component.scss'],
@@ -63,4 +78,20 @@ export class MediaTileComponent {
   @Input() mediaSubtitle: string | undefined = undefined;
   @Input() mediaImage: string | undefined = undefined;
   @Input() mediaImageSize: number | undefined = undefined;
+  @Input() mediaLink?: string;
+  @Input() id?: string;
+  @Input() type?: string;
+
+  @Output() playEmitter = new EventEmitter<{ type: string; id: string }>();
+  @Output() optionsEmitter = new EventEmitter();
+
+  handlePlayClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.playEmitter.emit({ type: this.type || '', id: this.id || '' });
+  }
+
+  handleOptionsClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.optionsEmitter.emit(event);
+  }
 }

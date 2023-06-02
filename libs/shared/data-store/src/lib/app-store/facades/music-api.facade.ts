@@ -30,6 +30,9 @@ export class MusicAPIFacade implements OnDestroy {
     filter((value) => value.currentMediaType !== undefined),
     map((value) => value.currentMedia?.type)
   );
+  loaded$ = this.store
+    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(map((value) => value.loaded));
 
   // artist selectors
 
@@ -68,6 +71,17 @@ export class MusicAPIFacade implements OnDestroy {
       )
     )
   );
+
+  featuredAlbumLink$ = this.store
+    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(
+      map(
+        (value) =>
+          '/media/albums/' +
+            value.currentMedia?.views?.['latest-release']?.data?.[0]?.id ||
+          value.currentMedia?.views?.['featured-albums']?.data?.[0]?.id
+      )
+    );
 
   featuredReason$ = this.store.pipe(select(fromMusicAPI.getMusicAPIState)).pipe(
     filter((value: MusicAPIState) => value && value.currentMedia !== undefined),

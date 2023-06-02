@@ -6,18 +6,22 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'core-artist-tile',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   template: `<div class="artist-tile-wrapper">
     <div class="artist-tile">
       <div class="artist-tile__image-wrapper">
         <img [src]="image" class="artist-tile-wrapper__image-wrapper__image" />
-        <div class="artist-tile-wrapper__image-overlay"></div>
+        <div
+          class="artist-tile-wrapper__image-overlay"
+          [routerLink]="artistLink"
+        ></div>
       </div>
-      <p>{{ name }}</p>
+      <p [routerLink]="artistLink">{{ name }}</p>
     </div>
   </div>`,
   styles: [
@@ -55,7 +59,7 @@ import { CommonModule } from '@angular/common';
             display: none;
             position: absolute;
             width: 100%;
-            height: calc(100% - 0.85rem);
+            height: calc(100% - 0.8rem);
             top: 0;
             bottom: 0;
             background-color: oklch(0 0 0 / 40%);
@@ -97,4 +101,6 @@ export class ArtistTileComponent {
   @Input() name = '';
   @Input() image = '';
   @Input() tileSize = 8;
+  @Input() artistLink?: string;
+  @Input() type = 'artists';
 }

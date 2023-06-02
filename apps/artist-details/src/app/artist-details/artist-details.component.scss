@@ -123,11 +123,6 @@
     font-size: var(--font-size-lg);
     font-family: Haskoy;
 
-    .artist-details__content__top-songs {
-      margin-left: 2rem;
-      padding-right: 21.5rem !important;
-    }
-
     .artist-details__content__top-songs,
     .artist-details__content__similar-artists,
     .artist-details__content__albums,
@@ -188,12 +183,12 @@
   .artist-details__content__top-songs__scroll-wrapper {
     display: grid !important;
     position: relative;
-    grid-template-columns: repeat(auto-fit, 300px);
+    grid-template-columns: repeat(auto-fill, 250px);
     grid-template-rows: 100px 100px;
     grid-auto-rows: 0px;
-    gap: 0.2rem !important;
+    gap: 0.5rem !important;
     grid-auto-flow: column dense;
-    padding-right: 2rem;
+    padding-right: 4.5rem;
     align-content: flex-end;
     margin-top: -1.2rem;
 
@@ -262,6 +257,10 @@
       padding-left: 1rem;
       gap: 1rem;
     }
+  }
+
+  .artist-details__content__featured {
+    margin-right: 3rem;
   }
 }
 

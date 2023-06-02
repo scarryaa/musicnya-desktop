@@ -1,10 +1,17 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'core-media-tile-small',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   template: `<div class="media-tile-small-wrapper">
     <div class="media-tile-small">
       <div class="media-tile-small__wrapper">
@@ -13,7 +20,10 @@ import { CommonModule } from '@angular/common';
           [src]="mediaImage"
           [style.minHeight.rem]="mediaImageSize"
         />
-        <div class="media-tile-small__wrapper__overlay">
+        <div
+          class="media-tile-small__wrapper__overlay"
+          (click)="handlePlayClick($event)"
+        >
           <div class="media-tile-small__wrapper__overlay__play-button">
             <div class="media-tile-small__wrapper__overlay__play-button__icon">
               <svg
@@ -34,10 +44,18 @@ import { CommonModule } from '@angular/common';
         </div>
       </div>
       <div class="media-tile-small__info">
-        <div class="media-tile-small__info__title" [title]="mediaTitle">
+        <div
+          class="media-tile-small__info__title"
+          [title]="mediaTitle"
+          [routerLink]="mediaLink"
+        >
           {{ mediaTitle }}
         </div>
-        <div class="media-tile-small__info__subtitle" [title]="mediaSubtitle">
+        <div
+          class="media-tile-small__info__subtitle"
+          [title]="mediaSubtitle"
+          [routerLink]="mediaLink"
+        >
           {{ mediaSubtitle }}
         </div>
       </div>
@@ -51,4 +69,20 @@ export class MediaTileSmallComponent {
   @Input() mediaSubtitle: string | undefined = undefined;
   @Input() mediaImage: string | undefined = undefined;
   @Input() mediaImageSize: number | undefined = undefined;
+  @Input() mediaLink?: string;
+  @Input() id?: string;
+  @Input() type?: string;
+
+  @Output() playEmitter = new EventEmitter<{ type: string; id: string }>();
+  @Output() optionsEmitter = new EventEmitter<void>();
+
+  handlePlayClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.playEmitter.emit({ type: this.type || '', id: this.id || '' });
+  }
+
+  handleOptionsClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.optionsEmitter.emit();
+  }
 }

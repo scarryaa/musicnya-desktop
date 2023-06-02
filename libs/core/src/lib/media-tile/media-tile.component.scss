@@ -132,10 +132,17 @@
       min-width: 100%;
       max-width: min-content;
       filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.3));
+
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
     }
 
     .media-tile__subtitle {
       display: -webkit-box;
+      min-width: 100%;
+      max-width: min-content;
       -webkit-box-orient: vertical;
       line-clamp: 2;
       -webkit-line-clamp: 2;
