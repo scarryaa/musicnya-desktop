@@ -31,6 +31,7 @@ import {
 import { MusicState } from '../reducers/music.reducer';
 import { SpinnerState } from '../reducers/spinner.reducer';
 import { MusicKit } from '../../../types';
+import { RouterState } from '@angular/router';
 
 //Load music api
 export const loadMusicAPI$ = createEffect(
@@ -165,6 +166,165 @@ export const getLibraryPlaylists$ = createEffect(
 //     )
 //   )
 // );
+
+// Fetches artist from payload id if they're not in the store
+export const getArtist$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    store = inject(Store<MusicState & SpinnerState & RouterState>),
+    musickit = inject(MusickitAPI)
+  ) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.getArtist),
+      tap(() => store.dispatch(SpinnerActions.showSpinner())),
+      withLatestFrom(store.pipe(select('artists'))),
+      // filter(([action, artists]) => {
+      //   const artist = artists.find(
+      //     (artist: MusicKit.Artists) => artist.id === action.payload.artistId
+      //   );
+      //   tap(() => store.dispatch(SpinnerActions.hideSpinner()));
+      //   return !artist;
+      // }),
+      switchMap(([action]) =>
+        from(musickit.getArtist(action.payload.artistId))
+      ),
+      map((data) => {
+        const [firstItem] = data as Artists[];
+
+        if (firstItem && firstItem.attributes?.artwork?.url) {
+          firstItem.attributes.artwork.url = firstItem.attributes?.artwork.url
+            .replace('{w}x{h}', '1000x500')
+            .replace('{f}', 'webp');
+        }
+
+        if (
+          firstItem &&
+          firstItem?.attributes?.editorialArtwork?.bannerUber?.url
+        ) {
+          firstItem.attributes.editorialArtwork.bannerUber.url =
+            firstItem.attributes.editorialArtwork.bannerUber.url
+              .replace('{w}x{h}', '1000x500')
+              .replace('{f}', 'webp');
+        }
+
+        if (
+          firstItem &&
+          firstItem?.attributes?.editorialArtwork?.storeFlowcase?.url
+        ) {
+          firstItem.attributes.editorialArtwork.storeFlowcase.url =
+            firstItem.attributes.editorialArtwork.storeFlowcase.url
+              .replace('{w}x{h}', '1000x500')
+              .replace('{f}', 'webp');
+        }
+
+        if (firstItem && firstItem?.relationships?.albums?.data) {
+          firstItem.relationships.albums.data =
+            firstItem.relationships.albums.data.sort((a: any, b: any) => {
+              const aDate = new Date(a.attributes.releaseDate);
+              const bDate = new Date(b.attributes.releaseDate);
+              return bDate.getTime() - aDate.getTime();
+            });
+        }
+        // }
+
+        if (firstItem && firstItem?.relationships?.albums?.data) {
+          for (const album of firstItem.relationships.albums.data) {
+            if (album.attributes?.artwork?.url) {
+              album.attributes.artwork.url = album.attributes?.artwork.url
+                .replace('{w}x{h}', '400x400')
+                .replace('{f}', 'webp');
+            }
+          }
+        }
+
+        if (firstItem && firstItem?.views?.['top-songs']) {
+          for (const track of firstItem.views['top-songs'].data) {
+            if (track.attributes?.['artwork']?.url) {
+              track.attributes['artwork'].url = track.attributes?.[
+                'artwork'
+              ].url
+                .replace('{w}x{h}', '400x400')
+                .replace('{f}', 'webp');
+            }
+          }
+        }
+
+        if (firstItem && firstItem?.relationships?.playlists) {
+          for (const playlist of firstItem.relationships.playlists
+            .data as unknown as MusicKit.Playlists[]) {
+            if (playlist.attributes?.artwork?.url) {
+              playlist.attributes.artwork.url = playlist.attributes?.artwork.url
+                .replace('{w}x{h}', '400x400')
+                .replace('{f}', 'webp');
+            }
+          }
+        }
+
+        if (firstItem?.relationships?.['music-videos']) {
+          for (const video of firstItem.relationships['music-videos']
+            .data as unknown as MusicKit.MusicVideos[]) {
+            if (video.attributes?.artwork?.url) {
+              video.attributes.artwork.url =
+                video.attributes?.artwork.url.replace('{w}x{h}', '400x400');
+            }
+          }
+        }
+
+        if (firstItem && firstItem?.views?.['similar-artists']) {
+          for (const artist of firstItem.views['similar-artists'].data) {
+            if (artist.attributes?.['artwork']?.url) {
+              artist.attributes['artwork'].url = artist.attributes?.[
+                'artwork'
+              ].url
+                .replace('{w}x{h}', '400x400')
+                .replace('{f}', 'webp');
+            }
+          }
+        }
+
+        if (firstItem && firstItem?.views?.['latest-release']) {
+          for (const artist of firstItem.views['latest-release'].data) {
+            if (artist.attributes?.['artwork']?.url) {
+              artist.attributes['artwork'].url = artist.attributes?.[
+                'artwork'
+              ].url
+                .replace('{w}x{h}', '400x400')
+                .replace('{f}', 'webp');
+            }
+          }
+        }
+
+        if (firstItem && firstItem?.views?.['featured-albums']) {
+          for (const artist of firstItem.views['featured-albums'].data) {
+            if (artist.attributes?.['artwork']?.url) {
+              artist.attributes['artwork'].url = artist.attributes?.[
+                'artwork'
+              ].url
+                .replace('{w}x{h}', '400x400')
+                .replace('{f}', 'webp');
+            }
+          }
+        }
+
+        return MusicAPIActions.getArtistSuccess({
+          payload: { data: copy(firstItem) },
+        });
+      }),
+      switchMap((data) =>
+        of(
+          data,
+          MusicAPIActions.setCurrentMedia({
+            payload: {
+              data: data.payload.data,
+            },
+          })
+        )
+      ),
+      tap(() => store.dispatch(SpinnerActions.hideSpinner())),
+      tap((payload) => console.log(payload))
+    ),
+  { functional: true }
+);
 
 // Fetches media item based on the route params
 export const getMediaItemOnRouteChange$ = createEffect(
@@ -401,7 +561,7 @@ export const getMediaItem$ = createEffect(
                     if (firstItem && firstItem.attributes?.artwork?.url) {
                       firstItem.attributes.artwork.url =
                         firstItem.attributes?.artwork.url
-                          .replace('{w}x{h}', '1000x500')
+                          .replace('{w}x{h}', '3000x2000')
                           .replace('{f}', 'webp');
                     }
 
@@ -411,7 +571,7 @@ export const getMediaItem$ = createEffect(
                     ) {
                       firstItem.attributes.editorialArtwork.bannerUber.url =
                         firstItem.attributes.editorialArtwork.bannerUber.url
-                          .replace('{w}x{h}', '1000x500')
+                          .replace('{w}x{h}', '3000x2000')
                           .replace('{f}', 'webp');
                     }
 
@@ -422,7 +582,7 @@ export const getMediaItem$ = createEffect(
                     ) {
                       firstItem.attributes.editorialArtwork.storeFlowcase.url =
                         firstItem.attributes.editorialArtwork.storeFlowcase.url
-                          .replace('{w}x{h}', '1000x500')
+                          .replace('{w}x{h}', '3000x2000')
                           .replace('{f}', 'webp');
                     }
 
@@ -551,7 +711,7 @@ export const getMediaItem$ = createEffect(
                           .replace('{f}', 'webp');
                     }
 
-                    if (firstItem && firstItem?.relationships?.data) {
+                    if (firstItem && firstItem?.relationships?.tracks?.data) {
                       for (const track of firstItem.relationships.tracks.data) {
                         if (track.attributes?.artwork?.url) {
                           track.attributes.artwork.url =

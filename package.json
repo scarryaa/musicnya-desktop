@@ -35,6 +35,10 @@
       {
         "from": "dist/apps/search",
         "to": "./search"
+      },
+      {
+        "from": "dist/apps/artist-details",
+        "to": "./artist-details"
       }
     ]
   },

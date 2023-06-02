@@ -1,0 +1,188 @@
+{
+  "name": "artist-details",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "artist-details",
+  "sourceRoot": "apps/artist-details/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:webpack-browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/artist-details/browser",
+        "index": "apps/artist-details/src/index.html",
+        "main": "apps/artist-details/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/artist-details/tsconfig.app.json",
+        "assets": [
+          "apps/artist-details/src/favicon.ico",
+          "apps/artist-details/src/assets"
+        ],
+        "styles": ["apps/artist-details/src/styles.scss"],
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/artist-details/webpack.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "apps/artist-details/webpack.prod.config.js"
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@nx/angular:webpack-dev-server",
+      "options": {
+        "port": 4204,
+        "publicHost": "http://localhost:4204"
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "artist-details:build:production"
+        },
+        "development": {
+          "browserTarget": "artist-details:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "artist-details:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "apps/artist-details/**/*.ts",
+          "apps/artist-details/**/*.html"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/artist-details/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "artist-details:build",
+        "port": 4204,
+        "watch": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "artist-details:build:development"
+        },
+        "production": {
+          "buildTarget": "artist-details:build:production"
+        }
+      }
+    },
+    "server": {
+      "dependsOn": ["build"],
+      "executor": "@nx/angular:webpack-server",
+      "options": {
+        "outputPath": "dist/apps/artist-details/server",
+        "main": "apps/artist-details/server.ts",
+        "tsConfig": "apps/artist-details/tsconfig.server.json",
+        "customWebpackConfig": {
+          "path": "apps/artist-details/webpack.server.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "outputHashing": "media"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "sourceMap": true,
+          "extractLicenses": false,
+          "vendorChunk": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-ssr": {
+      "executor": "@nguniversal/builders:ssr-dev-server",
+      "configurations": {
+        "development": {
+          "browserTarget": "artist-details:build:development",
+          "serverTarget": "artist-details:server:development"
+        },
+        "production": {
+          "browserTarget": "artist-details:build:production",
+          "serverTarget": "artist-details:server:production"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4204
+      }
+    },
+    "prerender": {
+      "executor": "@nguniversal/builders:prerender",
+      "options": {
+        "routes": ["/"]
+      },
+      "configurations": {
+        "development": {
+          "browserTarget": "artist-details:build:development",
+          "serverTarget": "artist-details:server:development"
+        },
+        "production": {
+          "browserTarget": "artist-details:build:production",
+          "serverTarget": "artist-details:server:production"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "static-server": {
+      "dependsOn": ["build", "server"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "PORT=4204 node dist/apps/artist-details/server/main.js"
+      }
+    }
+  }
+}

@@ -1,0 +1,178 @@
+<ng-container *ngrxLet="musicAPIFacade as vm">
+  <div
+    class="artist-details"
+    [style.background]="
+      'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url(' +
+      (vm.artistBanner$ | async) +
+      ')'
+    "
+  >
+    <div
+      class="artist-details__info"
+      [style.backgroundSize]="'cover'"
+      [style.backgroundRepeat]="'no-repeat'"
+      [style.backgroundPosition]="'center'"
+    >
+      <div class="artist-details__info__image-wrapper">
+        <picture>
+          <source [srcset]="vm.artistBanner$ | async" />
+          <img
+            class="artist-details__info__image-wrapper__image"
+            [src]="
+              (vm.artistBanner$ | async) ||
+              'assets/images/artist-placeholder.png'
+            "
+          />
+        </picture>
+      </div>
+      <div class="artist-details__info__text-wrapper">
+        <p class="artist-details__info__text-wrapper__artist-name">
+          {{ vm.artistName$ | async }}
+        </p>
+        <div class="artist-details__info__text-wrapper__buttons">
+          <core-base-button
+            class="artist-details__info__text-wrapper__buttons-button artist-details__info__text-wrapper__buttons__play-button"
+            [icon]="'play_arrow'"
+            [componentStyleClass]="'ui-button-l media-action-button'"
+          ></core-base-button>
+          <core-base-button
+            class="artist-details__info__text-wrapper__buttons-button artist-details__info__text-wrapper__buttons__shuffle-button"
+            [icon]="'shuffle'"
+            [componentStyleClass]="'ui-button-l media-action-button'"
+          ></core-base-button>
+          <core-base-button
+            class="artist-details__info__text-wrapper__buttons-button artist-details__info__text-wrapper__buttons__more-button"
+            [icon]="'more_horiz'"
+            [componentStyleClass]="'ui-button-l media-action-button'"
+          ></core-base-button>
+        </div>
+      </div>
+    </div>
+    <div class="artist-details__content">
+      <div class="artist-details__content__top-songs-featured">
+        <div
+          class="artist-details__content__featured"
+          *ngIf="vm.featuredAlbums$ | async as featured"
+        >
+          <ng-container *ngIf="featured?.[0]">
+            <p class="artist-details__content__featured__heading">Featured</p>
+            <div class="artist-details__content__featured__scroll-wrapper">
+              <core-featured-tile
+                [source]="$any(featured)?.[0]?.attributes?.artwork?.url || ''"
+                [reasonTitle]="(vm.featuredReason$ | async) || ''"
+                [mediaImageSize]="10"
+                [superheading]="$any(featured)?.[0]?.attributes?.releaseDate || ''"
+                [heading]="$any(featured)?.[0]?.attributes?.name || ''"
+                [subheading]="(vm.featuredTrackCount$ | async) + ' songs'"
+                [showTitle]="true"
+              ></core-featured-tile>
+            </div>
+          </ng-container>
+        </div>
+        <div
+          class="artist-details__content__top-songs"
+          *ngIf="vm.artistTopSongs$ | async as songs"
+        >
+          <ng-container *ngIf="songs?.[0]">
+            <p class="artist-details__content__top-songs__heading">Top Songs</p>
+            <div class="artist-details__content__top-songs__scroll-wrapper">
+              <ng-container *ngFor="let song of songs">
+                <core-media-tile-small
+                  class="artist-details__content__top-songs__scroll-wrapper__media-tile"
+                  [mediaImage]="song.attributes?.artwork?.url || ''"
+                  [mediaImageSize]="10"
+                  [mediaTitle]="song?.attributes?.name || ''"
+                  [mediaSubtitle]="song?.attributes?.artistName || ''"
+                ></core-media-tile-small>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div
+        class="artist-details__content__albums"
+        *ngIf="vm.artistAlbums$ | async as albums"
+      >
+        <ng-container *ngIf="albums?.[0]">
+          <p class="artist-details__content__albums__heading">Albums</p>
+          <div class="artist-details__content__albums__scroll-wrapper">
+            <ng-container *ngFor="let album of albums">
+              <core-media-tile
+                class="artist-details__content__albums__scroll-wrapper__media-tile"
+                [mediaImage]="album.attributes?.artwork?.url || ''"
+                [mediaImageSize]="10"
+                [mediaTitle]="album?.attributes?.name || ''"
+                [mediaSubtitle]="
+                  album?.attributes?.releaseDate?.slice(0, 4) || ''
+                "
+              ></core-media-tile>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+      <div
+        class="artist-details__content__singles-eps"
+        *ngIf="vm.artistSingles$ | async as singles"
+      >
+        <ng-container *ngIf="singles?.[0]">
+          <p class="artist-details__content__singles-eps__heading">
+            Singles & EPs
+          </p>
+          <div class="artist-details__content__singles-eps__scroll-wrapper">
+            <ng-container *ngFor="let single of singles">
+              <core-media-tile
+                class="artist-details__content__singles-eps__scroll-wrapper__media-tile"
+                [mediaImage]="single.attributes?.artwork?.url || ''"
+                [mediaImageSize]="10"
+                [mediaTitle]="single?.attributes?.name || ''"
+                [mediaSubtitle]="
+                  single?.attributes?.releaseDate?.slice(0, 4) || ''
+                "
+              ></core-media-tile>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+      <div
+        class="artist-details__content__music-videos"
+        *ngIf="vm.artistMusicVideos$ | async as videos"
+      >
+        <ng-container *ngIf="videos?.[0]">
+          <p class="artist-details__content__music-videos__heading">
+            Music Videos
+          </p>
+          <div class="artist-details__content__music-videos__scroll-wrapper">
+            <ng-container *ngFor="let video of videos">
+              <core-video-tile
+                class="artist-details__content__music-videos__scroll-wrapper__media-tile artist-details__content__music-videos__scroll-wrapper__video-tile"
+                [videoImage]="video.attributes?.artwork?.url || ''"
+                [videoImageSize]="10"
+                [videoTitle]="video?.attributes?.name || ''"
+                [videoSubtitle]="
+                  video?.attributes?.releaseDate?.slice(0, 4) || ''
+                "
+              ></core-video-tile>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+      <ng-container *ngIf="(vm.similarArtists$ | async)?.[0]">
+        <div class="artist-details__content__similar-artists">
+          <p class="artist-details__content__similar-artists__heading">
+            Similar Artists
+          </p>
+          <div class="artist-details__content__similar-artists__scroll-wrapper">
+            <ng-container *ngFor="let artist of vm.similarArtists$ | async">
+              <core-artist-tile
+                class="artist-details__content__similar-artists__scroll-wrapper__media-tile"
+                [image]="artist.attributes?.artwork?.url || ''"
+                [tileSize]="10"
+                [name]="artist?.attributes?.name || ''"
+              ></core-artist-tile>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>

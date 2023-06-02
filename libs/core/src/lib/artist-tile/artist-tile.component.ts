@@ -71,11 +71,14 @@ import { CommonModule } from '@angular/common';
             height: 8vw;
             margin-bottom: 0.5rem;
             flex: 1 1 0px;
+            filter: drop-shadow(0 0 10px oklch(0% 0 0 / 30%));
           }
         }
       }
 
       p {
+        font-weight: var(--font-weight-very-bold);
+        filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.3));
         color: var(--textColor);
         text-align: center;
         margin: 0;

@@ -1,7 +1,13 @@
 @media screen and (max-width: 1392px) {
+  core-featured-tile {
+    img {
+      min-width: 11rem !important;
+    }
+  }
+
   core-media-tile-small {
     img {
-      min-height: 4.15rem;
+      min-height: 4.15rem !important;
     }
   }
 
@@ -13,8 +19,8 @@
 
   core-artist-tile {
     img {
-      min-width: 10rem;
-      min-height: 10rem;
+      min-width: 10rem !important;
+      min-height: 10rem !important;
     }
   }
 }
@@ -28,8 +34,7 @@
 
   core-media-tile-small {
     img {
-      min-height: 3rem;
-      max-height: 6rem;
+      min-height: 4.15rem !important;
     }
   }
 

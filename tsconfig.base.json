@@ -22,7 +22,8 @@
         "libs/musickit-typescript/src/index.ts"
       ],
       "@nyan-inc/shared": ["libs/shared/data-store/src/index.ts"],
-      "@nyan-inc/ui": ["libs/ui/src/index.ts"]
+      "@nyan-inc/ui": ["libs/ui/src/index.ts"],
+      "@nyan-inc/artist-details": ["apps/artist-details/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

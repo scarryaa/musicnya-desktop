@@ -2,6 +2,11 @@ import { Route } from '@angular/router';
 
 export const appRoutes: Route[] = [
   {
+    path: 'media/artists/:id',
+    loadChildren: () =>
+      import('artist-details/Routes').then((m) => m.remoteRoutes),
+  },
+  {
     path: '',
     loadChildren: () =>
       import('../../../home/src/app/remote-entry/entry.routes').then(

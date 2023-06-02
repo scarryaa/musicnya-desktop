@@ -17,7 +17,6 @@
           <core-featured-tile
             [source]="featured[0].attributes?.artwork?.url || ''"
             [reasonTitle]="musicAPIFacade.featuredReason$ | async"
-            [mediaImageSize]="10"
             [superheading]="featured[0].attributes?.releaseDate || ''"
             [heading]="featured[0].attributes?.name || ''"
             [subheading]="

@@ -33,6 +33,18 @@ export class MusicAPIFacade implements OnDestroy {
 
   // artist selectors
 
+  artistName$ = this.store
+    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(map((value) => value.currentMedia?.attributes?.name));
+
+  artistID$ = this.store
+    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(map((value) => value.currentMedia?.id));
+
+  artistTopSongs$ = this.store
+    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(map((value) => value.currentMedia?.views?.['top-songs']?.data));
+
   featuredAlbums$ = this.store.pipe(select(fromMusicAPI.getMusicAPIState)).pipe(
     filter((value: MusicAPIState) => value && value.currentMedia !== undefined),
     filter(
@@ -181,6 +193,12 @@ export class MusicAPIFacade implements OnDestroy {
 
   loadAPI() {
     this.store.dispatch(MusicAPIActions.loadMusicAPI());
+  }
+
+  getArtist(id: string) {
+    this.store.dispatch(
+      MusicAPIActions.getArtist({ payload: { artistId: id } })
+    );
   }
 
   getRecommendations() {

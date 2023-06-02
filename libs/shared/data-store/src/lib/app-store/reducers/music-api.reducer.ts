@@ -196,7 +196,18 @@ const reducer = createReducer(
       ...state,
       payload: payload.error,
     })
-  )
+  ),
+
+  // get artist from id
+  on(MusicAPIActions.getArtist, (state) => ({ ...state })),
+  on(MusicAPIActions.getArtistSuccess, (state, { payload }) => ({
+    ...state,
+    currentMedia: payload.data,
+  })),
+  on(MusicAPIActions.getArtistFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  }))
 );
 
 export const getMusicAPIState = createFeatureSelector<MusicAPIState>(

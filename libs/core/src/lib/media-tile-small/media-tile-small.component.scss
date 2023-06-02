@@ -142,11 +142,17 @@
       white-space: nowrap;
       overflow: hidden;
       max-width: 8rem;
+      filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.4));
 
       &:hover {
         text-decoration: underline;
         cursor: pointer;
       }
+    }
+
+    .media-tile-small__info__subtitle {
+      color: var(--font-color-black-faded3);
+      filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.1));
     }
   }
 }

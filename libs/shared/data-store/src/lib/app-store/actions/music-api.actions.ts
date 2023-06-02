@@ -297,3 +297,17 @@ export const getRecommendationsAndRecentlyPlayedFailure = createAction(
   '[Music/API] Get Recommendations and Recently Played Failure',
   props<{ payload: { error: Error } }>()
 );
+
+// Get artist based on id
+export const getArtist = createAction(
+  '[Music/API] Get Artist',
+  props<{ payload: { artistId: string } }>()
+);
+export const getArtistSuccess = createAction(
+  '[Music/API] Get Artist Success',
+  props<{ payload: { data: MediaItem } }>()
+);
+export const getArtistFailure = createAction(
+  '[Music/API] Get Artist Failure',
+  props<{ payload: { error: Error } }>()
+);
