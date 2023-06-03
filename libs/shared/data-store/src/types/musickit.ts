@@ -1,3 +1,7 @@
+/* eslint-disable functional/type-declaration-immutability */
+/* eslint-disable functional/no-classes */
+/* eslint-disable @typescript-eslint/no-namespace */
+/* eslint-disable functional/prefer-immutable-types */
 /**Use the MusicKit namespace to configure MusicKit on the Web and access the singleton instance.
  *
  * It is also a global variable on the window object, and a namespace for other utils and enums.
@@ -619,6 +623,8 @@ export declare namespace MusicKit {
     readonly trackNumber?: number;
     /**The number of the media item in the album's track list. */
     readonly type: MediaItemType;
+
+    readonly relationships: any;
 
     // Methods
 

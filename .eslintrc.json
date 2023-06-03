@@ -1,6 +1,6 @@
 {
   "root": true,
-  "plugins": ["@nrwl/nx", "unicorn"],
+  "plugins": ["@nrwl/nx", "unicorn", "functional"],
   "ignorePatterns": ["!**/*"],
   "env": {
     "es2022": true
@@ -11,7 +11,8 @@
     "plugin:@nrwl/nx/typescript",
     "plugin:@angular-eslint/recommended",
     "plugin:unicorn/recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:functional/no-mutations"
   ],
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -31,6 +32,10 @@
         ]
       }
     ],
+    "functional/no-classes": "off",
+    "functional/functional-parameters": "off",
+    "functional/no-expression-statements": "off",
+    "functional/prefer-immutable-types": "off",
     "prettier/prettier": [
       "error",
       {
@@ -46,7 +51,8 @@
         "plugin:@typescript-eslint/recommended",
         "plugin:@nrwl/nx/typescript",
         "plugin:@angular-eslint/template/process-inline-templates",
-        "plugin:@nrwl/nx/angular-template"
+        "plugin:@nrwl/nx/angular-template",
+        "plugin:functional/recommended"
       ],
       "parser": "@typescript-eslint/parser",
       "parserOptions": {
@@ -71,7 +77,8 @@
             "prefix": "musicnya",
             "style": "kebab-case"
           }
-        ]
+        ],
+        "functional/no-classes": ["off"]
       }
     },
     {

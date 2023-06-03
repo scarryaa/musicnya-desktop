@@ -1,43 +1,52 @@
+/* eslint-disable functional/prefer-immutable-types */
 import { Injectable, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { map, Observable, Subscription } from 'rxjs';
+import { map, Observable, Subscription, tap } from 'rxjs';
+import { ReadonlyDeep } from 'type-fest';
 import { MusicKit } from '../../../types';
 import { processMediaType } from '../../models/helpers';
 import { MusicActions } from '../actions';
 import { fromMusic } from '../reducers';
-import { MusicState, selectMusicState } from '../reducers/music.reducer';
+import { MusicState } from '../reducers/music.reducer';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MusicFacade implements OnDestroy {
-  subs = new Subscription();
-  state$ = this.store.pipe(select(fromMusic.getMusicState));
-  currentItem$ = this.state$.pipe(
+  readonly subs = new Subscription();
+  readonly state$ = this.store.pipe(select(fromMusic.getMusicState));
+  readonly currentItem$ = this.state$.pipe(
     select(fromMusic.getCurrentItem)
   ) as Observable<MusicKit.MediaItem>;
-  playing$ = this.state$.pipe(select(fromMusic.getPlaying));
-  volume$ = this.state$.pipe(map((state) => state.musicPlayer.playbackVolume));
-  paused$ = this.state$.pipe(map((state) => state.musicPlayer.isPaused));
-  repeatMode$ = this.state$.pipe(
+  readonly playing$ = this.state$.pipe(select(fromMusic.getPlaying));
+  readonly volume$ = this.state$.pipe(
+    map((state) => state.musicPlayer.playbackVolume)
+  );
+  readonly paused$ = this.state$.pipe(
+    map((state) => state.musicPlayer.isPaused)
+  );
+  readonly repeatMode$ = this.state$.pipe(
     map((state) => state.musicPlayer.currentPlaybackRepeatMode)
   );
-  shuffleMode$ = this.state$.pipe(
+  readonly shuffleMode$ = this.state$.pipe(
     map((state) => state.musicPlayer.currentPlaybackShuffleMode)
   );
-  duration$ = this.state$.pipe(
+  readonly duration$ = this.state$.pipe(
     map((state) => state.musicPlayer.currentPlaybackDuration)
   );
-  currentPlaybackTime$ = this.state$.pipe(
+  readonly currentPlaybackTime$ = this.state$.pipe(
     select(fromMusic.getCurrentPlaybackTime)
   );
-  currentPlaybackState$ = this.state$.pipe(
+  readonly currentPlaybackState$ = this.state$.pipe(
     select(fromMusic.getCurrentPlaybackState)
   );
+  readonly currentArtist$ = this.state$.pipe(
+    map((state) => state.musicPlayer.currentArtist)
+  );
 
-  constructor(private store: Store<MusicState>) {}
+  constructor(private readonly store: Store<MusicState>) {}
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.subs.unsubscribe();
   }
 
@@ -53,15 +62,15 @@ export class MusicFacade implements OnDestroy {
     this.store.dispatch(MusicActions.pause());
   }
 
-  seekToTime(time: number) {
+  seekToTime(time: Readonly<number>) {
     this.store.dispatch(MusicActions.seekToTime({ payload: { time } }));
   }
 
-  setVolume(volume: number) {
+  setVolume(volume: Readonly<number>) {
     this.store.dispatch(MusicActions.setVolume({ payload: { volume } }));
   }
 
-  setQueue(type: string, id: string) {
+  setQueue(type: Readonly<string>, id: Readonly<string>) {
     type = processMediaType(type, id);
 
     this.store.dispatch(
@@ -93,7 +102,7 @@ export class MusicFacade implements OnDestroy {
     );
   }
 
-  shufflePlay(type: string, id: string) {
+  shufflePlay(type: Readonly<string>, id: Readonly<string>) {
     type = processMediaType(type, id);
 
     this.store.dispatch(
@@ -103,7 +112,7 @@ export class MusicFacade implements OnDestroy {
     );
   }
 
-  setQueuePosition(position: number) {
+  setQueuePosition(position: Readonly<number>) {
     this.store.dispatch(
       MusicActions.setQueuePosition({ payload: { position } })
     );
@@ -125,19 +134,19 @@ export class MusicFacade implements OnDestroy {
     this.store.dispatch(MusicActions.skipToNextItem());
   }
 
-  changeToMediaAtIndex(index: number) {
+  changeToMediaAtIndex(index: Readonly<number>) {
     this.store.dispatch(
       MusicActions.changeToMediaAtIndex({ payload: { index } })
     );
   }
 
-  addEventListener(event: string, callback: any) {
+  addEventListener(event: ReadonlyDeep<string>, callback: ReadonlyDeep<any>) {
     this.store.dispatch(
       MusicActions.addEventListener({ payload: { event, callback } })
     );
   }
 
-  removeEventListener(event: string, callback: any) {
+  removeEventListener(event: Readonly<string>, callback: any) {
     this.store.dispatch(
       MusicActions.removeEventListener({ payload: { event, callback } })
     );

@@ -7,7 +7,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { HeadingComponent, MediaTileListComponent } from '@nyan-inc/ui';
-import { MusicAPIFacade, MusicFacade, SpinnerFacade } from '@nyan-inc/shared';
+import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
 import { LetDirective } from '@ngrx/component';
 import { SpinnerComponent } from '@nyan-inc/core';
 
@@ -43,7 +43,6 @@ export class HomeComponent implements OnDestroy, AfterViewInit {
   }
 
   play(type: string, id: string) {
-    console.log('e');
     this.music.setQueueThenPlay(type, id);
   }
 

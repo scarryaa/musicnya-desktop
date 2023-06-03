@@ -1,7 +1,8 @@
+/* eslint-disable functional/prefer-immutable-types */
 import { inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
-import { Musickit } from '@nyan-inc/core-services';
+import { Musickit, MusickitAPI } from '@nyan-inc/core-services';
 import {
   switchMap,
   catchError,
@@ -11,10 +12,13 @@ import {
   concatMap,
   filter,
   withLatestFrom,
+  mergeMap,
+  map,
 } from 'rxjs';
 import { MusicKit } from '../../../types';
 import { MusicActions } from '../actions';
 import { fromMusic } from '../reducers';
+import { ReadonlyDeep } from 'type-fest';
 
 export const addListener$ = createEffect(
   (actions$ = inject(Actions), music = inject(Musickit)) =>
@@ -27,8 +31,7 @@ export const addListener$ = createEffect(
         )
       ),
       switchMap(() => of(MusicActions.addEventListenerSuccess())),
-      catchError((error: Error) => {
-        console.error('Error', error);
+      catchError((error: ReadonlyDeep<Error>) => {
         return of(MusicActions.addEventListenerFailure({ payload: { error } }));
       })
     ),
@@ -46,8 +49,7 @@ export const removeListener$ = createEffect(
         )
       ),
       switchMap(() => of(MusicActions.removeEventListenerSuccess())),
-      catchError((error: Error) => {
-        console.error('Error', error);
+      catchError((error: ReadonlyDeep<Error>) => {
         return of(
           MusicActions.removeEventListenerFailure({ payload: { error } })
         );
@@ -64,15 +66,11 @@ export const setQueue$ = createEffect(
         from(music.setQueue(action.payload.options as any))
       ),
       switchMap((shouldPlay) => {
-        const actions = [];
-        actions.push(MusicActions.setQueueSuccess());
-        if (shouldPlay) {
-          actions.push(MusicActions.play());
-        }
-        return actions;
+        const actions = [MusicActions.setQueueSuccess()];
+        const actionsWithPlay = [...actions, MusicActions.play()];
+        return shouldPlay ? actionsWithPlay : actions;
       }),
-      catchError((error) => {
-        console.error('Error', error);
+      catchError(() => {
         return of(MusicActions.setQueueFailure);
       })
     ),
@@ -84,6 +82,7 @@ export const shufflePlay$ = createEffect(
     actions$.pipe(
       ofType(MusicActions.shufflePlay),
       concatMap(async (action) => [
+        // eslint-disable-next-line functional/immutable-data
         (music.instance.shuffleMode = 1),
         await music.setQueue({
           ...action.payload.options,
@@ -91,8 +90,7 @@ export const shufflePlay$ = createEffect(
         } as any),
       ]),
       switchMap(() => of(MusicActions.shufflePlaySuccess())),
-      catchError((error) => {
-        console.error('Error', error);
+      catchError(() => {
         return of(MusicActions.shufflePlayFailure);
       })
     ),
@@ -110,8 +108,7 @@ export const setQueueThenPlay$ = createEffect(
         } as any),
       ]),
       switchMap(() => of(MusicActions.setQueueThenPlaySuccess())),
-      catchError((error) => {
-        console.error('Error', error);
+      catchError(() => {
         return of(MusicActions.setQueueThenPlayFailure);
       })
     ),
@@ -127,11 +124,10 @@ export const play$ = createEffect(
     actions$.pipe(
       ofType(MusicActions.play),
       withLatestFrom(store.pipe(select(() => fromMusic.getCurrentItem))),
-      filter(([, currentItem]) => currentItem !== null),
+      filter(([, currentItem]) => !!currentItem),
       switchMap(() => from(music.play())),
       switchMap(() => of(MusicActions.playSuccess())),
-      catchError((error) => {
-        console.error('Error', error);
+      catchError(() => {
         return of(MusicActions.playFailure);
       })
     ),
@@ -163,7 +159,6 @@ export const setShuffleMode$ = createEffect(
         )
       ),
       catchError((error) => {
-        console.error('Error', error);
         return of(MusicActions.setShuffleModeFailure({ payload: { error } }));
       })
     ),
@@ -175,17 +170,13 @@ export const setRepeatMode$ = createEffect(
     actions$.pipe(
       ofType(MusicActions.setRepeatMode),
       tap(() => {
-        if (
+        (music.instance.repeatMode as any) =
           music.instance.repeatMode.valueOf() === MusicKit.PlayerRepeatMode.none
-        ) {
-          (music.instance.repeatMode as any) = MusicKit.PlayerRepeatMode.one;
-        } else if (
-          music.instance.repeatMode.valueOf() === MusicKit.PlayerRepeatMode.one
-        ) {
-          (music.instance.repeatMode as any) = MusicKit.PlayerRepeatMode.all;
-        } else {
-          (music.instance.repeatMode as any) = MusicKit.PlayerRepeatMode.none;
-        }
+            ? MusicKit.PlayerRepeatMode.one
+            : music.instance.repeatMode.valueOf() ===
+              MusicKit.PlayerRepeatMode.one
+            ? MusicKit.PlayerRepeatMode.all
+            : MusicKit.PlayerRepeatMode.none;
       }),
       switchMap(() =>
         of(
@@ -196,8 +187,7 @@ export const setRepeatMode$ = createEffect(
           })
         )
       ),
-      catchError((error) => {
-        console.error('Error', error);
+      catchError((error: ReadonlyDeep<Error>) => {
         return of(MusicActions.setRepeatModeFailure({ payload: { error } }));
       })
     ),
@@ -210,8 +200,7 @@ export const pause$ = createEffect(
       ofType(MusicActions.pause),
       switchMap(() => from(music.pause())),
       switchMap(() => of(MusicActions.pauseSuccess())),
-      catchError((error) => {
-        console.error('Error', error);
+      catchError(() => {
         return of(MusicActions.pauseFailure);
       })
     ),
@@ -224,8 +213,7 @@ export const skipToNextItem$ = createEffect(
       ofType(MusicActions.skipToNextItem),
       switchMap(() => from(music.skipToNextItem())),
       switchMap(() => of(MusicActions.skipToNextItemSuccess())),
-      catchError((error) => {
-        console.error('Error', error);
+      catchError(() => {
         return of(MusicActions.skipToNextItemFailure);
       })
     ),
@@ -238,8 +226,7 @@ export const skipToPreviousItem$ = createEffect(
       ofType(MusicActions.skipToPreviousItem),
       switchMap(() => from(music.skipToPreviousItem())),
       switchMap(() => of(MusicActions.skipToPreviousItemSuccess())),
-      catchError((error) => {
-        console.error('Error', error);
+      catchError(() => {
         return of(MusicActions.skipToPreviousItemFailure);
       })
     ),
@@ -254,8 +241,7 @@ export const changeToMediaAtIndex$ = createEffect(
         from(music.changeToMediaAtIndex(action.payload.index))
       ),
       switchMap(() => of(MusicActions.changeToMediaAtIndexSuccess())),
-      catchError((error) => {
-        console.error('Error', error);
+      catchError(() => {
         return of(MusicActions.changeToMediaAtIndexFailure);
       })
     ),
@@ -268,8 +254,7 @@ export const seekToTime$ = createEffect(
       ofType(MusicActions.seekToTime),
       switchMap((action) => from(music.seekToTime(action.payload.time))),
       switchMap(() => of(MusicActions.seekToTimeSuccess())),
-      catchError((error) => {
-        console.error('Error', error);
+      catchError(() => {
         return of(MusicActions.seekToTimeFailure);
       })
     ),
@@ -284,8 +269,7 @@ export const setQueueFromMediaItems$ = createEffect(
         from(music.setQueueFromMediaItems(action.payload.items as any))
       ),
       switchMap(() => of(MusicActions.setQueueFromMediaItemsSuccess())),
-      catchError((error) => {
-        console.error('Error', error);
+      catchError(() => {
         return of(MusicActions.setQueueFromMediaItemsFailure);
       })
     ),
@@ -300,8 +284,7 @@ export const setQueueFromSongIDs$ = createEffect(
         from(music.setQueueFromSongIDs(action.payload.ids))
       ),
       switchMap(() => of(MusicActions.setQueueFromSongIDsSuccess())),
-      catchError((error) => {
-        console.error('Error', error);
+      catchError(() => {
         return of(MusicActions.setQueueFromSongIDsFailure);
       })
     ),
@@ -314,9 +297,31 @@ export const setVolume$ = createEffect(
       ofType(MusicActions.setVolume),
       switchMap((action) => from(music.setVolume(action.payload.volume))),
       switchMap(() => of(MusicActions.setVolumeSuccess())),
-      catchError((error) => {
-        console.error('Error', error);
+      catchError(() => {
         return of(MusicActions.setVolumeFailure);
+      })
+    ),
+  { functional: true }
+);
+
+// Fetches an artist from a song id
+export const getArtistFromSongID$ = createEffect(
+  (actions$ = inject(Actions), musickit = inject(MusickitAPI)) =>
+    actions$.pipe(
+      ofType(MusicActions.getArtistFromSongID),
+      mergeMap((action) =>
+        from(musickit.getArtistFromSongID(action.payload.songId))
+      ),
+      map((data) => {
+        const mappedData = data[0];
+        return MusicActions.getArtistFromSongIDSuccess({
+          payload: { data: mappedData },
+        });
+      }),
+      catchError((error) => {
+        return of(
+          MusicActions.getArtistFromSongIDFailure({ payload: { error } })
+        );
       })
     ),
   { functional: true }

@@ -1,3 +1,5 @@
+/* eslint-disable functional/immutable-data */
+/* eslint-disable functional/prefer-immutable-types */
 import { Injectable } from '@angular/core';
 import { MusicKit } from '../types';
 import { HttpService } from './http/http.service';
@@ -9,7 +11,10 @@ import { MusickitBase } from './musickit-base.service';
 export class Musickit {
   _instance!: MusicKit.MusicKitInstance;
 
-  constructor(private musicKitBase: MusickitBase, private http: HttpService) {
+  constructor(
+    private readonly musicKitBase: MusickitBase,
+    private readonly http: HttpService
+  ) {
     this.getInstance();
   }
 
@@ -46,11 +51,11 @@ export class Musickit {
       : this.instance.skipToPreviousItem();
   }
 
-  async changeToMediaAtIndex(index: number) {
+  async changeToMediaAtIndex(index: Readonly<number>) {
     return await this.instance.changeToMediaAtIndex(index);
   }
 
-  async seekToTime(time: number) {
+  async seekToTime(time: Readonly<number>) {
     return await this.instance.seekToTime(time);
   }
 
@@ -62,7 +67,7 @@ export class Musickit {
     return await this.instance.setQueue({ ...options });
   };
 
-  async setVolume(volume: number) {
+  async setVolume(volume: Readonly<number>) {
     return (this.instance.volume = volume);
   }
 

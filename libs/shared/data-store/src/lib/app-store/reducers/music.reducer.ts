@@ -31,6 +31,7 @@ interface MusicPlayerState {
   isStalled: boolean | undefined;
   playbackBitrate: number | undefined;
   playbackVolume: number | undefined;
+  currentArtist: MusicKit.Resource | undefined;
   currentItem: MusicKit.MediaItem | undefined;
   currentQueue: MusicKit.Queue | undefined;
   currentQueueIndex: number | undefined;
@@ -72,6 +73,7 @@ export const initialMusicState: MusicState = musicAdapter.getInitialState({
     isStalled: undefined,
     playbackBitrate: undefined,
     playbackVolume: undefined,
+    currentArtist: undefined,
     currentItem: undefined,
     currentQueue: undefined,
     currentQueueIndex: undefined,
@@ -502,6 +504,20 @@ const reducer = createReducer(
     ...state,
     loaded: false,
     error: error,
+  })),
+
+  // get artist from song id
+  on(MusicActions.getArtistFromSongID, (state) => ({ ...state })),
+  on(MusicActions.getArtistFromSongIDSuccess, (state, { payload }) => ({
+    ...state,
+    musicPlayer: {
+      ...state.musicPlayer,
+      currentArtist: payload.data,
+    },
+  })),
+  on(MusicActions.getArtistFromSongIDFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
   }))
 );
 
@@ -525,6 +541,11 @@ export const getCurrentPlaybackTime = createSelector(
 export const getCurrentPlaybackState = createSelector(
   selectMusicState,
   (state) => state.musicPlayer?.currentPlaybackState
+);
+
+export const getCurrentArtist = createSelector(
+  selectMusicState,
+  (state) => state.musicPlayer.currentArtist
 );
 
 export const getMusicState =

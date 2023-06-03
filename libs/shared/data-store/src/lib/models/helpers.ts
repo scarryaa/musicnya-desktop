@@ -1,22 +1,33 @@
+/* eslint-disable functional/prefer-immutable-types */
 // helper functions
 // determine type of media item
-export const processMediaType = (type: string, id: string[] | string) => {
+export const processMediaType = (
+  type: Readonly<string>,
+  id: ReadonlyArray<string> | Readonly<string>
+) => {
   if (id instanceof Array<string>) return 'songs';
 
   switch (type) {
-    case 'albums':
+    case 'albums': {
       return 'album';
-    case 'artists':
+    }
+    case 'artists': {
       return 'artist';
-    case 'playlists':
+    }
+    case 'playlists': {
       return 'playlist';
-    case 'library-playlists':
+    }
+    case 'library-playlists': {
       return 'playlist';
-    case 'songs':
+    }
+    case 'songs': {
       return 'song';
-    case 'stations':
+    }
+    case 'stations': {
       return 'station';
-    default:
+    }
+    default: {
       return 'song';
+    }
   }
 };

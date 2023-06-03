@@ -1,4 +1,6 @@
+/* eslint-disable functional/prefer-immutable-types */
 import { createAction, props } from '@ngrx/store';
+import { ReadonlyDeep } from 'type-fest';
 import type { MusicKit } from '../../../types';
 
 export const musicInit = createAction('[Music] Init');
@@ -193,7 +195,7 @@ export const setQueuePositionFailure = createAction(
 
 export const setQueueFromMediaItems = createAction(
   '[Music] Set Queue Items',
-  props<{ payload: { items: MusicKit.MediaItem[] } }>()
+  props<{ payload: { items: ReadonlyDeep<MusicKit.MediaItem[]> } }>()
 );
 export const setQueueFromMediaItemsSuccess = createAction(
   '[Music] Set Queue Items Success'
@@ -224,5 +226,18 @@ export const setPlaybackTimeSuccess = createAction(
 );
 export const setPlaybackTimeFailure = createAction(
   '[Music] Set Playback Time Failure',
+  props<{ payload: { error: Error } }>()
+);
+
+export const getArtistFromSongID = createAction(
+  '[Music/API] Get Artist From Song',
+  props<{ payload: { songId: string } }>()
+);
+export const getArtistFromSongIDSuccess = createAction(
+  '[Music/API] Get Artist From Song Success',
+  props<{ payload: { data: MusicKit.Resource } }>()
+);
+export const getArtistFromSongIDFailure = createAction(
+  '[Music/API] Get Artist From Song Failure',
   props<{ payload: { error: Error } }>()
 );

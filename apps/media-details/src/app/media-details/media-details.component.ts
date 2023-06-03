@@ -17,11 +17,12 @@ import {
 } from '@nyan-inc/core';
 import { FastAverageColorResult } from 'fast-average-color';
 import { MusicAPIFacade } from '@nyan-inc/shared';
-import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { LetDirective } from '@ngrx/component';
 import Color from 'colorjs.io';
 import { SongAlbumDetailsComponent } from '../song-album-details/song-album-details.component';
 import { SongAlbumContentComponent } from '../song-album-content/song-album-content.component';
+import { ReadonlyDeep } from 'type-fest';
 
 @Component({
   standalone: true,
@@ -41,33 +42,24 @@ import { SongAlbumContentComponent } from '../song-album-content/song-album-cont
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MediaDetailsComponent implements AfterViewInit, OnDestroy {
-  mediaColor!: FastAverageColorResult | void;
-  isArtist = false;
+  readonly mediaColor!: ReadonlyDeep<FastAverageColorResult | void>;
+  readonly isArtist = false;
 
-  state$: Observable<any>;
-  destroy$ = new Subject<void>();
+  readonly state$: ReadonlyDeep<Observable<any>>;
+  readonly destroy$: ReadonlyDeep<Subject<void>> = new Subject<void>();
 
   constructor(
-    public musicAPIFacade: MusicAPIFacade,
-    private color: ColorService
+    // eslint-disable-next-line functional/prefer-immutable-types
+    public readonly musicAPIFacade: MusicAPIFacade,
+    // eslint-disable-next-line functional/prefer-immutable-types
+    private readonly color: ColorService
   ) {
     this.state$ = this.musicAPIFacade.state$;
-
-    this.musicAPIFacade.type$
-      .pipe(
-        map((type) => type === 'artists'),
-        takeUntil(this.destroy$),
-        tap((isArtist) => {
-          console.log(isArtist);
-        })
-      )
-      .subscribe((isArtist) => {
-        this.isArtist = isArtist;
-      });
   }
 
-  ngAfterViewInit(): void {
-    this.state$.subscribe(async (media) => {
+  ngAfterViewInit() {
+    // eslint-disable-next-line functional/prefer-immutable-types
+    this.state$.subscribe(async (media): Promise<ReadonlyDeep<any>> => {
       // TODO move this to a service
       if (!media.loaded) {
         document.documentElement.style.setProperty(
@@ -84,21 +76,25 @@ export class MediaDetailsComponent implements AfterViewInit, OnDestroy {
             media?.currentMedia?.attributes?.artwork?.url ||
               media?.currentMedia?.songs?.[0]?.attributes?.artwork?.url
           )
-          .then((foundColor) => {
+          .then((foundColor: ReadonlyDeep<FastAverageColorResult | void>) => {
             document.documentElement.style.setProperty(
               '--backgroundColor',
               `${(foundColor as any)?.hex}` ?? 'var(--backgroundColor)'
             );
 
-            const color = new Color(`${(foundColor as any)?.hex}`).to('oklch');
+            const color: ReadonlyDeep<Color> = new Color(
+              `${(foundColor as any)?.hex}`
+            ).to('oklch');
 
-            (color as any).c -= 0.1;
-
-            (color as any).l = 0.905;
+            const newColor: ReadonlyDeep<any> = {
+              ...color,
+              c: (color as ReadonlyDeep<any>).c - 0.1,
+              l: 0.905,
+            };
 
             document.documentElement.style.setProperty(
               '--backgroundColorLight',
-              color.toString()
+              newColor.toString()
             );
           });
       }
@@ -109,6 +105,6 @@ export class MediaDetailsComponent implements AfterViewInit, OnDestroy {
     this.destroy$.next();
   }
 
-  @HostBinding('style.background') backgroundGradient =
+  @HostBinding('style.background') readonly backgroundGradient =
     'radial-gradient(100% 100% at 25rem -2rem, oklch(100% 0 0 / 100%) 0, oklch(100% 0 0 / 70%) 8rem, oklch(20% 0 0) 100%), var(--backgroundColor)';
 }

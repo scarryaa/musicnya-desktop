@@ -1,4 +1,4 @@
-import { Inject, inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MusickitBase } from '@nyan-inc/core-services';
 import { Observable, throttleTime } from 'rxjs';
@@ -35,12 +35,21 @@ export class MusicEventListeners {
 
     this.instance.addEventListener('nowPlayingItemDidChange', () => {
       if (this.instance.nowPlayingItem) {
+        console.log(this.instance.nowPlayingItem);
         this.store.dispatch(
           MusicActions.setMediaItem({
             payload: {
               mediaItem: JSON.parse(
                 JSON.stringify(this.instance.nowPlayingItem)
               ),
+            },
+          })
+        );
+
+        this.store.dispatch(
+          MusicActions.getArtistFromSongID({
+            payload: {
+              songId: this.instance.nowPlayingItem.id,
             },
           })
         );

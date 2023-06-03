@@ -13,18 +13,14 @@
         [style.visibility]="isArtist ? 'visible' : 'hidden'"
         [src]="musicAPIFacade.artistBanner$ | async"
       />
-      <div id="media-details-wrapper" [ngSwitch]="isArtist">
-        <ng-container *ngSwitchDefault>
-          <ng-container *ngTemplateOutlet="mediaDetails"></ng-container>
-        </ng-container>
+      <div id="media-details-wrapper">
+        <ng-container *ngTemplateOutlet="mediaDetails"></ng-container>
       </div>
     </div>
     <div id="media-content-wrapper">
       <div id="media-content">
-        <div [ngSwitch]="isArtist" class="content-wrapper">
-          <ng-container *ngSwitchDefault>
-            <ng-container *ngTemplateOutlet="mediaContent"></ng-container>
-          </ng-container>
+        <div class="content-wrapper">
+          <ng-container *ngTemplateOutlet="mediaContent"></ng-container>
         </div>
       </div>
     </div>

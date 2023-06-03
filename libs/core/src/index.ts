@@ -38,3 +38,5 @@ export * from './lib/media-hover-overlay/media-hover-overlay.directive';
 export * from './lib/media-overlay/media-overlay.component';
 export * from './lib/play-button/play-button.component';
 export * from './lib/options-button/options-button.component';
+export * from './lib/year-slice.pipe';
+export * from './lib/footer-media-tile/footer-media-tile.component';

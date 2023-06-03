@@ -1,3 +1,6 @@
+/* eslint-disable functional/type-declaration-immutability */
+/* eslint-disable functional/immutable-data */
+/* eslint-disable functional/prefer-immutable-types */
 import { inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import {

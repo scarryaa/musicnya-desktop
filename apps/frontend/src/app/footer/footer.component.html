@@ -2,18 +2,21 @@
   <ui-footer>
     <ng-container start>
       <div id="start-container">
-        <ui-album-tile
-          *ngIf="vm.currentItem$ | async as item"
-          [tabIndex]="-1"
-          id="media-tile"
-          [source]="item.attributes?.['artwork']?.url.replace('{w}x{h}', '300x300').replace('{f}', '{webp}')"
-          [mediaTitle]="item.attributes?.['name']"
-          [artists]="[item.attributes?.['artistName']!]"
-          [showArtists]="true"
-          [sizeX]="3.5"
-          [hoverUnderline]="true"
-        >
-        </ui-album-tile>
+        <core-footer-media-tile
+          *ngIf="vm.currentItem$ | async as currentTrack"
+          class="media-tile"
+          [mediaImage]="currentTrack?.attributes?.['artwork']?.url.replace('{w}x{h}', '300x300').replace('{f}', '{webp}')"
+          [mediaTitle]="currentTrack?.attributes?.['name']"
+          [mediaSubtitle]="currentTrack?.attributes?.['artistName']"
+          [mediaLink]="
+          '/media/albums/' +
+          currentTrack.attributes?.['url']?.split('/')?.at(-1)?.split('?')?.[0] ||
+          undefined
+        "
+          [mediaSubtitleLink]="
+            '/media/artists/' + (vm.currentArtist$ | async)?.id
+          "
+        ></core-footer-media-tile>
       </div>
     </ng-container>
     <ng-container center>

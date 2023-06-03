@@ -1,3 +1,4 @@
+/* eslint-disable functional/prefer-immutable-types */
 import { Injectable } from '@angular/core';
 import { MusicKit } from '../types';
 import { MusickitBase } from './musickit-base.service';
@@ -6,22 +7,18 @@ import { MusickitBase } from './musickit-base.service';
   providedIn: 'root',
 })
 export class MusickitAPI {
-  private _instance!: MusicKit.MusicKitInstance;
+  private readonly _instance!: MusicKit.MusicKitInstance;
 
-  constructor(private musickit: MusickitBase) {
-    this.instance = this.musickit.instance;
+  constructor(private readonly musickit: MusickitBase) {
+    this._instance = this.musickit.instance;
   }
 
   /**
    * Get the instance
    */
 
-  public get instance(): any {
+  public get instance(): MusicKit.MusicKitInstance {
     return this.musickit.instance;
-  }
-
-  public set instance(instance: any) {
-    this._instance = instance;
   }
 
   /**
@@ -109,6 +106,13 @@ export class MusickitAPI {
       `/v1/me/recommendations${this.getQueryString()}?include[albums]=artists&extend=editorialArtwork,artistId,artistUrl,editorialVideo,offers,trackCount&limit[albums]=10&include=[artists]=id`
     );
     console.log(request);
+    return request;
+  }
+
+  async getArtistFromSongID(id: string): Promise<any> {
+    const request = await this.requestData(
+      `/v1/catalog/us/songs/${id}/artists${this.getQueryString()}?include[albums]=artists&extend=editorialArtwork,artistId,artistUrl,editorialVideo,offers,trackCount&limit[albums]=10&include=[artists]=id`
+    );
     return request;
   }
 

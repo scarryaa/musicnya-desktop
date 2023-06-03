@@ -24,58 +24,12 @@
 
   #start-container {
     max-width: 100%;
-    display: flex;
     flex: 1;
     vertical-align: middle;
     ::ng-deep {
       span {
         letter-spacing: var(--letter-spacing-n2xl);
       }
-    }
-  }
-
-  ::ng-deep #start-container #media-tile {
-    core-base-button {
-      max-width: inherit;
-
-      button {
-        max-width: inherit;
-
-        #album-info {
-          max-width: 100%;
-          overflow: hidden;
-        }
-      }
-    }
-
-    max-width: inherit;
-    margin-top: 0.4rem;
-    margin-left: 1rem;
-    filter: drop-shadow(0rem 0.3rem 0.5rem rgba(black, 0.4));
-
-    #title {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 100%;
-      padding-right: 3rem;
-      color: var(--font-color);
-      cursor: pointer !important;
-    }
-
-    #artists {
-      cursor: pointer !important;
-    }
-
-    #artwork {
-      &:hover {
-        cursor: auto;
-      }
-    }
-
-    #artwork,
-    #album-info {
-      margin-bottom: 0.6rem;
     }
   }
 }

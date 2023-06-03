@@ -44,7 +44,7 @@
             ><span class="seperator"> • </span>
             <!-- TODO make a pipe for this -->
             <span id="year">{{
-              media?.currentMedia?.attributes?.releaseDate.substring(0, 4)
+              media?.currentMedia?.attributes?.releaseDate | yearSlice
             }}</span></span
           >
         </div>

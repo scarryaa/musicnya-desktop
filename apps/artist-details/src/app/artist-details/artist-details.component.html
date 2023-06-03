@@ -127,7 +127,7 @@
                 [mediaImageSize]="10"
                 [mediaTitle]="album?.attributes?.name || ''"
                 [mediaSubtitle]="
-                  album?.attributes?.releaseDate?.slice(0, 4) || ''
+                  album?.attributes?.releaseDate || '' | yearSlice
                 "
                 [mediaLink]="'/media/albums/' + album?.id"
                 [id]="album?.id"
@@ -155,7 +155,7 @@
                 [mediaImageSize]="10"
                 [mediaTitle]="single?.attributes?.name || ''"
                 [mediaSubtitle]="
-                  single?.attributes?.releaseDate?.slice(0, 4) || ''
+                  single?.attributes?.releaseDate || '' | yearSlice
                 "
                 [mediaLink]="
                   '/media/albums/' +
@@ -186,7 +186,7 @@
                 [videoImageSize]="10"
                 [videoTitle]="video?.attributes?.name || ''"
                 [videoSubtitle]="
-                  video?.attributes?.releaseDate?.slice(0, 4) || ''
+                  video?.attributes?.releaseDate || '' | yearSlice
                 "
                 [id]="video?.id"
                 [type]="'videos'"

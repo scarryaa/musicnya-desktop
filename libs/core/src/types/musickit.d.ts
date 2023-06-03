@@ -1,3 +1,5 @@
+/* eslint-disable functional/prefer-immutable-types */
+/* eslint-disable functional/type-declaration-immutability */
 /**Use the MusicKit namespace to configure MusicKit on the Web and access the singleton instance.
  *
  * It is also a global variable on the window object, and a namespace for other utils and enums.

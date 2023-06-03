@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FooterModule, PlaybackControlsModule } from '@nyan-inc/ui';
 import { LetDirective } from '@ngrx/component';
 import { MusicFacade } from '@nyan-inc/shared';
-import { AlbumTileModule } from '@nyan-inc/core';
+import { FooterMediaTileComponent } from '@nyan-inc/core';
 
 @Component({
   selector: 'musicnya-footer',
@@ -11,9 +11,9 @@ import { AlbumTileModule } from '@nyan-inc/core';
   imports: [
     CommonModule,
     FooterModule,
-    AlbumTileModule,
     PlaybackControlsModule,
     LetDirective,
+    FooterMediaTileComponent,
   ],
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],

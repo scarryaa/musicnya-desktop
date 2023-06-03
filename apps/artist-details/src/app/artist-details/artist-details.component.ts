@@ -1,3 +1,4 @@
+/* eslint-disable functional/prefer-immutable-types */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LetDirective } from '@ngrx/component';
@@ -10,6 +11,7 @@ import {
   MediaTileSmallComponent,
   ArtistTileComponent,
   BaseButtonModule,
+  YearSlicePipe,
 } from '@nyan-inc/core';
 
 @Component({
@@ -25,6 +27,7 @@ import {
     MediaTileSmallComponent,
     ArtistTileComponent,
     BaseButtonModule,
+    YearSlicePipe,
   ],
   templateUrl: './artist-details.component.html',
   styleUrls: ['./artist-details.component.scss'],
@@ -32,12 +35,12 @@ import {
 })
 export class ArtistDetailsComponent {
   constructor(
-    public musicAPIFacade: MusicAPIFacade,
-    private musicFacade: MusicFacade
+    public readonly musicAPIFacade: MusicAPIFacade,
+    private readonly musicFacade: MusicFacade
   ) {
     console.log('ArtistDetailsComponent');
   }
-  stationID?: string;
+  readonly stationID?: string;
 
   play(type: string, id: string, shuffle = false) {
     shuffle
@@ -50,5 +53,5 @@ export class ArtistDetailsComponent {
     this.musicFacade.setQueueAndPlayAtIndex(type, id, index);
   }
 
-  options(args: any) {}
+  options(arguments_: any) {}
 }

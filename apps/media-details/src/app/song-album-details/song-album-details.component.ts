@@ -14,10 +14,14 @@ import {
 import { Observable, Subject } from 'rxjs';
 import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
 import { LetDirective } from '@ngrx/component';
+import { YearSlicePipe } from '@nyan-inc/core';
 
 @Component({
   selector: 'musicnya-song-album-details',
   standalone: true,
+  templateUrl: './song-album-details.component.html',
+  styleUrls: ['./song-album-details.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     AlbumTileLargeModule,
@@ -25,10 +29,8 @@ import { LetDirective } from '@ngrx/component';
     BaseButtonModule,
     MediaDetailsDropdownModule,
     LetDirective,
+    YearSlicePipe,
   ],
-  templateUrl: './song-album-details.component.html',
-  styleUrls: ['./song-album-details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SongAlbumDetailsComponent implements OnDestroy {
   state$: Observable<any>;
