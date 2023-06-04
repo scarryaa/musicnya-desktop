@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostBinding,
@@ -22,6 +23,7 @@ import { DataSource } from '@angular/cdk/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router, RouterModule } from '@angular/router';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { MusicKit } from 'libs/shared/data-store/src/types';
 
 @Component({
   selector: 'ui-virtual-table',
@@ -33,12 +35,14 @@ import { Observable, Subject, takeUntil } from 'rxjs';
     (clickEmitter)="handleClick($event)"
     (titleClickEmitter)="handleTitleClick($event)"
     (doubleClickEmitter)="handleDoubleClickIndex($event)"
+    (loveClickEmitter)="loveClickEmitter.emit($event)"
     [showAlbums]="showAlbums"
     [playingSong]="playingSong"
     [selected]="selection"
     [playing]="playing"
     (playEmitter)="unpauseEmitter.emit()"
     (pauseEmitter)="pauseEmitter.emit()"
+    [ratings]="ratings"
   ></ui-virtual-table-presentation>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -50,6 +54,7 @@ export class VirtualTableSmartComponent implements OnChanges, OnDestroy {
   destroy$ = new Subject<void>();
 
   @Input() data!: Songs[];
+  @Input() ratings?: any | null;
   @Input() media!: MediaItemTypes;
   @Input() playingSong: string | undefined = undefined;
   @Input() playing = false;
@@ -60,13 +65,18 @@ export class VirtualTableSmartComponent implements OnChanges, OnDestroy {
   @Output() idEmitter = new EventEmitter<string>();
   @Output() dropEmitter = new EventEmitter<Songs[]>();
   @Output() indexEmitter = new EventEmitter<number>();
+  @Output() loveClickEmitter = new EventEmitter<{ type: string; id: string }>();
 
   @HostBinding('style.width.%') width = '100';
 
   // listen to router events and clear selection if the route changes
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private changeReference: ChangeDetectorRef
+  ) {
     this.dataSource = new SongDataSource(this.data);
+    this.ratings = [];
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -86,6 +96,12 @@ export class VirtualTableSmartComponent implements OnChanges, OnDestroy {
         this.showAlbums = true;
       }
     }
+
+    if (changes['ratings']) {
+      console.log(changes['ratings'].currentValue);
+      this.ratings = changes['ratings'].currentValue;
+    }
+    this.changeReference.detectChanges();
   }
 
   ngOnDestroy(): void {
@@ -110,6 +126,10 @@ export class VirtualTableSmartComponent implements OnChanges, OnDestroy {
 
   handleDoubleClickId(event: string) {
     this.idEmitter.emit(event);
+  }
+
+  handleLoveClick(event: { type: string; id: string }) {
+    this.loveClickEmitter.emit(event);
   }
 }
 

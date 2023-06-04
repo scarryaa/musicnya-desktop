@@ -26,6 +26,9 @@ export const processMediaType = (
     case 'stations': {
       return 'station';
     }
+    case 'musicVideo': {
+      return 'musicVideo';
+    }
     default: {
       return 'song';
     }

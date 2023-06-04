@@ -1,3 +1,4 @@
+import { CdkMenuItem } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import {
   Component,
@@ -13,7 +14,7 @@ import { MenuComponent, MenuItemComponent } from '@nyan-inc/ui';
 @Component({
   selector: 'musicnya-menu',
   standalone: true,
-  imports: [CommonModule, MenuComponent, MenuItemComponent],
+  imports: [CommonModule, MenuComponent, MenuItemComponent, CdkMenuItem],
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

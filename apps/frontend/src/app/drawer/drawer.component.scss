@@ -47,17 +47,35 @@
     }
   }
 
+  .library {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .library__add-button {
+      position: relative;
+      margin-left: 3.2rem !important;
+    }
+  }
+
+  .library__categories {
+    width: 100%;
+    margin-top: 0.2rem;
+    margin-bottom: 0.8rem;
+  }
+
   ::ng-deep #footer-wrapper {
     > * {
+      filter: drop-shadow(0 0 0.5rem rgba(0, 0, 0, 0.5));
       padding-block: 0.25rem !important;
     }
 
     #baseComponent {
-      border-radius: 3px;
+      border-radius: 8px;
 
       > button:hover {
         &.collapsed img {
-          outline: 4px solid var(--drawer-highlight-color);
+          outline: 8px solid var(--drawer-highlight-color);
         }
         background-color: var(--drawer-highlight-color);
       }
@@ -117,5 +135,13 @@
     flex: 1;
     border-radius: 10px;
     height: 100vh !important;
+  }
+}
+
+::ng-deep {
+  .header-button {
+    span {
+      padding-left: 1rem;
+    }
   }
 }

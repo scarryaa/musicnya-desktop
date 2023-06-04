@@ -1,64 +1,120 @@
-<ui-drawer
-  [style.--drawerPadding]="!open ? '0rem' : '0.2rem'"
-  [style.--albumTileOutline]="!open ? '0.15rem' : '0'"
-  [style.--albumTileOutlineInverse]="!open ? '0' : '0.15rem'"
->
-  <ng-container header>
-    <core-base-button
-      class="ui-button-m text-reg outline-offset drawer-item"
-      text="Home"
-      icon="home"
-      [routerLink]="'/'"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      coreDisableChildTabIndex
-    ></core-base-button>
-    <core-base-button
-      class="ui-button-m outline-offset drawer-item"
-      text="Search"
-      icon="search"
-      [routerLink]="'/search'"
-      routerLinkActive="active"
-      routerLink
-      coreDisableChildTabIndex
-    ></core-base-button>
-  </ng-container>
-  <ng-container content>
-    <core-spinner *ngIf="spinner.show$ | async"> </core-spinner>
-    <core-base-button
-      class="ui-button-m outline-offset drawer-item"
-      text="Library"
-      icon="library_music"
-      uiDrawerToggle
-      (click)="toggle()"
-    ></core-base-button>
-    <!-- <core-base-button
-      uiButton
-      text="New Playlist"
-      icon="add_box"
-    ></core-base-button> -->
-  </ng-container>
-  <ng-container footer>
-    <ng-scrollbar class="drawer-scroller" [autoHeightDisabled]="true">
-      <div id="footer-wrapper">
-        <ng-container
-          *ngFor="let playlist of libraryPlaylists$ | async; let i = index"
-        >
-          <ui-album-tile
-            coreFallbackImage
-            class="drawer-item"
-            [routerLink]="'/media/' + 'library-playlist' + '/' + playlist.id"
-            [tabIndex]="-1"
-            [source]="playlist.attributes?.artwork?.url || playlist.songs?.[0]?.attributes?.artwork?.url"
-            [sizeX]="3"
-            [artists]="playlist?.attributes?.artists || ['Me']"
-            [showArtists]="true"
-            [mediaTitle]="playlist?.attributes?.name || ''"
-          >
-          </ui-album-tile>
-        </ng-container>
+<ng-container *ngrxLet="vm as vm">
+  <ui-drawer
+    [style.--drawerPadding]="!open ? '0rem' : '0.2rem'"
+    [style.--albumTileOutline]="!open ? '0.15rem' : '0'"
+    [style.--albumTileOutlineInverse]="!open ? '0' : '0.15rem'"
+  >
+    <ng-container header>
+      <core-base-button
+        class="ui-button-m text-reg outline-offset drawer-item header-button"
+        text="Home"
+        icon="home"
+        [routerLink]="'/'"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        coreDisableChildTabIndex
+        [coreTooltip]="'Home'"
+        [showDelay]="1000"
+        [position]="TooltipPosition.RIGHT"
+      ></core-base-button>
+      <core-base-button
+        class="ui-button-m outline-offset drawer-item header-button"
+        text="Search"
+        icon="search"
+        [routerLink]="'/search'"
+        routerLinkActive="active"
+        routerLink
+        coreDisableChildTabIndex
+        [coreTooltip]="'Search'"
+        [showDelay]="1000"
+        [position]="TooltipPosition.RIGHT"
+      ></core-base-button>
+    </ng-container>
+    <ng-container content>
+      <core-spinner *ngIf="spinner.show$ | async"> </core-spinner>
+      <div class="library">
+        <core-base-button
+          class="ui-button-m outline-offset drawer-item header-button"
+          text="Library"
+          icon="library_music"
+          uiDrawerToggle
+          (click)="toggle()"
+          [coreTooltip]="
+            (vm.drawerOpen$ | async) ? 'Close Library' : 'Open Library'
+          "
+          [showDelay]="1000"
+          [position]="TooltipPosition.RIGHT"
+        ></core-base-button>
+        <core-base-button
+          class="library__add-button"
+          uiButton
+          icon="add"
+          [coreTooltip]="'New Playlist'"
+          [showDelay]="200"
+          [position]="TooltipPosition.RIGHT"
+        ></core-base-button>
       </div>
-    </ng-scrollbar>
-  </ng-container>
-  <ng-content body-content></ng-content>
-</ui-drawer>
+      <div
+        class="library__categories"
+        [style.display]="(vm.drawerOpen$ | async) ? 'block' : 'none'"
+      >
+        <core-chip-group (selectedChipEmitter)="handleChipSelect($event)">
+          <core-chip
+            class="library__categories__songs-tile"
+            [coreTooltip]="'Songs'"
+            [showDelay]="200"
+          >
+            <i class="material-symbols-rounded">music_note</i>
+          </core-chip>
+          <core-chip
+            class="library__categories__playlists-tile"
+            [coreTooltip]="'Playlists'"
+            [showDelay]="200"
+          >
+            <i class="material-symbols-rounded">queue_music</i>
+          </core-chip>
+          <core-chip
+            class="library__categories__albums-tile"
+            [coreTooltip]="'Albums'"
+            [showDelay]="200"
+          >
+            <i class="material-symbols-rounded">album</i>
+          </core-chip>
+          <core-chip
+            class="library__categories__artists-tile"
+            [coreTooltip]="'Artists'"
+            [showDelay]="200"
+          >
+            <i class="material-symbols-rounded">groups</i>
+          </core-chip>
+        </core-chip-group>
+      </div>
+    </ng-container>
+    <ng-container footer>
+      <ng-scrollbar class="drawer-scroller" [autoHeightDisabled]="true">
+        <div id="footer-wrapper">
+          <ng-container
+            *ngFor="let media of vm.currentView$ | async; let i = index"
+          >
+            <ui-album-tile
+              coreFallbackImage
+              class="drawer-item"
+              [routerLink]="'/media/' + 'library-playlist' + '/' + media.id"
+              [tabIndex]="-1"
+              [source]="media.attributes?.artwork?.url || $any(media).songs?.[0]?.attributes?.artwork?.url"
+              [sizeX]="3"
+              [artists]="$any(media?.attributes).artists || ['Me']"
+              [showArtists]="true"
+              [mediaTitle]="media?.attributes?.name || ''"
+              [coreTooltip]="media?.attributes?.name + '\n Me'"
+              [position]="TooltipPosition.RIGHT"
+              [showDelay]="!(vm.drawerOpen$ | async) ? 0 : 500"
+            >
+            </ui-album-tile>
+          </ng-container>
+        </div>
+      </ng-scrollbar>
+    </ng-container>
+    <ng-content body-content></ng-content>
+  </ui-drawer>
+</ng-container>

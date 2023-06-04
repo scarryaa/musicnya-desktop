@@ -369,6 +369,7 @@ export declare namespace MusicKit {
     playlist?: string;
     song?: string;
     songs?: Array<string>;
+    musicVideo?: string;
     station?: string;
     startPlaying?: boolean;
     startPosition?: number;

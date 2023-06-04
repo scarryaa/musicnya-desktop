@@ -35,11 +35,17 @@ export class SongAlbumContentComponent {
 
   constructor(
     private changeReference: ChangeDetectorRef,
-    private musicAPIFacade: MusicAPIFacade,
+    public musicAPIFacade: MusicAPIFacade,
     private musicFacade: MusicFacade
   ) {
     this.state$ = this.musicAPIFacade.state$;
     this.musicState$ = this.musicFacade;
+    this.musicAPIFacade.getRatings$.subscribe((data) => {
+      console.log(data);
+    });
+    this.state$.subscribe((data) => {
+      console.log(data);
+    });
   }
 
   toggleShowContent() {

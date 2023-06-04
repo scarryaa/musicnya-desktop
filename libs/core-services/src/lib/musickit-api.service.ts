@@ -25,7 +25,7 @@ export class MusickitAPI {
    */
   async getLibraryPlaylists(): Promise<any[]> {
     return await this.requestData(
-      '/v1/me/library/playlist-folders/p.playlistsroot/children?art%5Burl%5D=f&include=name%2CcanDelete%2CcanEdit&l=en-US&offset=0&omit%5Bresource%5D=autos&platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls'
+      `/v1/me/library/playlist-folders/p.playlistsroot/children${this.getQueryString()}&art%5Burl%5D=f&include=name%2CcanDelete%2CcanEdit&l=en-US&offset=0&omit%5Bresource%5D=autos&platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls`
     );
   }
 
@@ -113,6 +113,27 @@ export class MusickitAPI {
       `/v1/catalog/us/songs/${id}/artists${this.getQueryString()}?include[albums]=artists&extend=editorialArtwork,artistId,artistUrl,editorialVideo,offers,trackCount&limit[albums]=10&include=[artists]=id`
     );
     return request;
+  }
+
+  async getRatingsByIDs(type: any, ids: string[]): Promise<any> {
+    const request = await this.musickit.instance.api.v3.music(
+      `v1/me/ratings/${type}/?platform=web&ids=${ids.join(',')}`
+    );
+    return request.data.data;
+  }
+
+  async loveItem(type: any, id: string): Promise<any> {
+    const request = await this.musickit.instance.api.v3.music(
+      `v1/me/ratings/${type}/${id}`,
+      undefined,
+      {
+        fetchOptions: {
+          method: 'PUT',
+          body: JSON.stringify({ attributes: { value: 1 } }),
+        },
+      }
+    );
+    return request.data.data;
   }
 
   // Provide common query string for API endpoints

@@ -1,5 +1,5 @@
 <ui-menu #menu>
-  <ui-menu-item (click)="clickEmitter.emit('apple')">
+  <ui-menu-item cdkMenuItem (cdkMenuItemTriggered)="clickEmitter.emit('apple')">
     <div class="ui-menu-item-icon">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
         <path
@@ -14,7 +14,10 @@
       <i class="material-symbols-rounded">arrow_right</i>
     </div> -->
   </ui-menu-item>
-  <ui-menu-item (click)="clickEmitter.emit('spotify')">
+  <ui-menu-item
+    cdkMenuItem
+    (cdkMenuItemTriggered)="clickEmitter.emit('spotify')"
+  >
     <div class="ui-menu-item-icon" id="spotify-menu-icon">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
         <path
@@ -29,13 +32,16 @@
       <i class="material-symbols-rounded">arrow_right</i>
     </div> -->
   </ui-menu-item>
-  <ui-menu-item (click)="clickEmitter.emit('settings')">
+  <ui-menu-item
+    cdkMenuItem
+    (cdkMenuItemTriggered)="clickEmitter.emit('settings')"
+  >
     <div class="ui-menu-item-icon">
       <i class="material-symbols-rounded">settings</i>
     </div>
     <div class="ui-menu-item-text">Settings</div>
   </ui-menu-item>
-  <ui-menu-item (click)="clickEmitter.emit('about')">
+  <ui-menu-item cdkMenuItem (cdkMenuItemTriggered)="clickEmitter.emit('about')">
     <div class="ui-menu-item-icon">
       <i class="material-symbols-rounded">info</i>
     </div>

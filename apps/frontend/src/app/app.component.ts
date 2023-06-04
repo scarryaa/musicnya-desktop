@@ -9,7 +9,7 @@ import {
   ContentChildren,
   ElementRef,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { DrawerComponent } from './drawer/drawer.component';
 import { FooterComponent } from './footer/footer.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
@@ -61,7 +61,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private musicAPIFacade: MusicAPIFacade,
     private app: AppFacade,
     private layout: LayoutFacade,
-    private eventListeners: MusicEventListeners
+    private eventListeners: MusicEventListeners,
+    private router: Router
   ) {
     this.state$ = this.app.state$;
   }
@@ -83,7 +84,21 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   handleMenuClick(event: string): void {
-    this.app.loginAppleMusic();
+    switch (event) {
+      case 'settings': {
+        console.log('hello');
+        this.router.navigateByUrl('/settings');
+        break;
+      }
+      case 'loginAppleMusic': {
+        this.app.loginAppleMusic();
+        break;
+      }
+      case 'loginSpotify': {
+        this.app.loginSpotify();
+        break;
+      }
+    }
   }
 
   ngOnDestroy(): void {

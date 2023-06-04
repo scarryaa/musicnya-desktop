@@ -13,6 +13,7 @@ import {
   BaseButtonModule,
   TooltipComponent,
   TooltipDirectiveModule,
+  TooltipPosition,
 } from '@nyan-inc/core';
 
 @Component({
@@ -66,6 +67,8 @@ import {
         #button
         (click)="playbackState === 2 ? pauseEmitter.emit() : playEmitter.emit()"
         [coreTooltip]="'Play'"
+        [position]="TooltipPosition.ABOVE"
+        [showDelay]="500"
         [tabIndex]="0"
         class="album-tile ui-drawer-item core-base-button-rounded"
         [icon]="playbackState === 2 ? 'pause_circle' : 'play_circle'"
@@ -114,6 +117,7 @@ export class PlaybackControlsComponent extends BaseButtonComponent {
     currentPlaybackDuration: 0,
   };
   dragging = false;
+  TooltipPosition = TooltipPosition;
 
   handleDrag(event: number): void {
     this.dragging = true;
@@ -149,6 +153,8 @@ export class PlaybackControlsComponent extends BaseButtonComponent {
     <core-base-button
       #button
       [coreTooltip]="'Mute'"
+      [position]="TooltipPosition.ABOVE"
+      [showDelay]="500"
       [tabIndex]="0"
       class="album-tile ui-drawer-item core-base-button-rounded"
       icon="volume_down"
@@ -170,6 +176,7 @@ export class PlaybackControlsComponent extends BaseButtonComponent {
 export class MiscellaneousControlsComponent extends BaseButtonComponent {
   @Output() readonly volumeEmitter: EventEmitter<number> =
     new EventEmitter<number>();
+  TooltipPosition = TooltipPosition;
 }
 
 @NgModule({

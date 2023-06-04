@@ -1,3 +1,9 @@
+.heart-filled {
+  fill: red !important;
+  fill-opacity: 1 !important;
+  stroke: red !important;
+}
+
 .horiz-center {
   &::before,
   &::after {

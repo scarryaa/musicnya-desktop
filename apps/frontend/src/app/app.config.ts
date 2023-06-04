@@ -28,7 +28,7 @@ import {
 } from '@nyan-inc/shared';
 import * as fromApp from '../store/reducers/app.reducer';
 import * as fromLayout from '../store/reducers/layout.reducer';
-import { appEffects } from '../store/effects';
+import { appEffects, layoutEffects } from '../store/effects';
 import { CacheRouteReuseStrategy } from '@nyan-inc/core';
 import { LoginService } from './services/login/login.service';
 import { MusickitBase } from '@nyan-inc/core-services';
@@ -98,6 +98,7 @@ export const appConfig: ApplicationConfig = {
       musicAPIEffects,
       musicEffects,
       preferencesEffects,
+      layoutEffects,
     ]),
     provideState(fromLayout.LAYOUT_FEATURE_KEY, fromLayout.layoutReducer),
     provideState(fromApp.APP_FEATURE_KEY, fromApp.appReducer),

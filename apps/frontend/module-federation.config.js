@@ -8,7 +8,7 @@ const webpack = require('webpack');
 // eslint-disable-next-line functional/immutable-data
 module.exports = {
   name: 'frontend',
-  remotes: ['home', 'search', 'media-details', 'artist-details'],
+  remotes: ['home', 'search', 'media-details', 'artist-details', 'settings'],
   plugins: [
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(process.env),

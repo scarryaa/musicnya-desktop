@@ -1,17 +1,12 @@
 import {
+  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
+  ContentChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  CdkMenu,
-  CdkMenuItem,
-  CdkMenuItemRadio,
-  CdkMenuGroup,
-  CdkMenuItemCheckbox,
-  CdkMenuTrigger,
-} from '@angular/cdk/menu';
+import { CdkMenu } from '@angular/cdk/menu';
 
 @Component({
   selector: 'ui-menu',

@@ -1,95 +1,103 @@
 <ng-container *ngrxLet="state$ as media">
-  <ng-container *ngrxLet="musicState$">
-    <div class="more-info">
-      <div class="color-div"></div>
-      <i
-        id="toggle-button"
-        class="material-symbols-rounded"
-        [ngClass]="{
-          rotated: showAdditionalInfo
-        }"
-        (click)="toggleShowContent()"
-        (keydown)="toggleShowContent()"
-        >expand_circle_down</i
-      >
-      <div class="info-border"></div>
-      <ui-media-details-dropdown [showContent]="showAdditionalInfo">
-        <div id="dropdown-content-wrapper">
-          <div class="dropdown-content" #content>
-            <div class="content-wrapper">
-              <div id="media-songs-genre-description">
-                <span id="songs-count"
-                  >{{
-                    media?.currentMedia?.attributes?.trackCount ||
-                      media?.currentMedia?.relationships?.tracks?.data
-                        ?.length ||
-                      media?.currentMedia?.songs?.length
-                  }}
-                  songs
-                </span>
-                <span>{{ media?.currentMedia?.duration | date : 'm:ss' }}</span>
-                <p
-                  *ngIf="media?.currentMedia?.attributes?.genreNames"
-                  id="genres"
-                >
-                  {{ media?.currentMedia?.attributes?.genreNames.join(', ') }}
-                </p>
-                <p
-                  *ngIf="
-                    media?.currentMedia?.attributes?.editorialNotes?.standard ||
-                    media?.currentMedia?.attributes?.editorialNotes?.short
-                  "
-                  id="media-description"
-                  [innerHTML]="
-                    media?.currentMedia?.attributes?.editorialNotes?.standard ||
-                    media?.currentMedia?.attributes?.editorialNotes?.short
-                  "
-                ></p>
-                <p *ngIf="media?.currentMedia?.attributes?.releaseDate">
-                  {{ media?.currentMedia?.attributes?.releaseDate }}
-                </p>
-                <p
-                  id="recordLabel"
-                  *ngIf="media?.currentMedia?.attributes?.recordLabel"
-                >
-                  {{ media?.currentMedia?.attributes?.recordLabel }}
-                </p>
-                <p
-                  id="copyright"
-                  *ngIf="media?.currentMedia?.attributes?.copyright"
-                >
-                  {{ media?.currentMedia?.attributes?.copyright }}
-                </p>
+  <ng-container *ngrxLet="musicAPIFacade as vm">
+    <ng-container *ngrxLet="musicState$">
+      <div class="more-info">
+        <div class="color-div"></div>
+        <i
+          id="toggle-button"
+          class="material-symbols-rounded"
+          [ngClass]="{
+            rotated: showAdditionalInfo
+          }"
+          (click)="toggleShowContent()"
+          (keydown)="toggleShowContent()"
+          >expand_circle_down</i
+        >
+        <div class="info-border"></div>
+        <ui-media-details-dropdown [showContent]="showAdditionalInfo">
+          <div id="dropdown-content-wrapper">
+            <div class="dropdown-content" #content>
+              <div class="content-wrapper">
+                <div id="media-songs-genre-description">
+                  <span id="songs-count"
+                    >{{
+                      media?.currentMedia?.attributes?.trackCount ||
+                        media?.currentMedia?.relationships?.tracks?.data
+                          ?.length ||
+                        media?.currentMedia?.songs?.length
+                    }}
+                    songs
+                  </span>
+                  <span>{{
+                    media?.currentMedia?.duration | date : 'm:ss'
+                  }}</span>
+                  <p
+                    *ngIf="media?.currentMedia?.attributes?.genreNames"
+                    id="genres"
+                  >
+                    {{ media?.currentMedia?.attributes?.genreNames.join(', ') }}
+                  </p>
+                  <p
+                    *ngIf="
+                      media?.currentMedia?.attributes?.editorialNotes
+                        ?.standard ||
+                      media?.currentMedia?.attributes?.editorialNotes?.short
+                    "
+                    id="media-description"
+                    [innerHTML]="
+                      media?.currentMedia?.attributes?.editorialNotes
+                        ?.standard ||
+                      media?.currentMedia?.attributes?.editorialNotes?.short
+                    "
+                  ></p>
+                  <p *ngIf="media?.currentMedia?.attributes?.releaseDate">
+                    {{ media?.currentMedia?.attributes?.releaseDate }}
+                  </p>
+                  <p
+                    id="recordLabel"
+                    *ngIf="media?.currentMedia?.attributes?.recordLabel"
+                  >
+                    {{ media?.currentMedia?.attributes?.recordLabel }}
+                  </p>
+                  <p
+                    id="copyright"
+                    *ngIf="media?.currentMedia?.attributes?.copyright"
+                  >
+                    {{ media?.currentMedia?.attributes?.copyright }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </ui-media-details-dropdown>
-    </div>
-    <ui-virtual-table
-      [media]="media?.currentMedia?.type"
-      [data]="
-        media?.currentMedia?.songs ||
-        media?.currentMedia?.relationships?.tracks?.data
-      "
-      [playingSong]="(musicState$.currentItem$ | async)?.id"
-      [playing]="(musicState$.playing$ | async)!"
-      [routeChanges]="routeChangeEmitter"
-      (pauseEmitter)="musicState$.pause()"
-      (unpauseEmitter)="musicState$.play()"
-      (indexEmitter)="
-        musicState$.setQueueAndPlayAtIndex(
-          media.currentMedia?.type,
-          media.currentMedia?.id,
-          $event
-        )
-      "
-      (idEmitter)="
-        musicState$.setQueueAndPlayAtIndex(
-          media.currentMedia?.type,
-          media.currentMedia?.id || $event
-        )
-      "
-    ></ui-virtual-table>
+        </ui-media-details-dropdown>
+      </div>
+      <ui-virtual-table
+        [media]="media?.currentMedia?.type"
+        [data]="
+          media?.currentMedia?.songs ||
+          media?.currentMedia?.relationships?.tracks?.data
+        "
+        [ratings]="vm.getRatings$ | async"
+        [playingSong]="(musicState$.currentItem$ | async)?.id"
+        [playing]="(musicState$.playing$ | async)!"
+        [routeChanges]="routeChangeEmitter"
+        (pauseEmitter)="musicState$.pause()"
+        (unpauseEmitter)="musicState$.play()"
+        (indexEmitter)="
+          musicState$.setQueueAndPlayAtIndex(
+            media.currentMedia?.type,
+            media.currentMedia?.id,
+            $event
+          )
+        "
+        (loveClickEmitter)="vm.love($event)"
+        (idEmitter)="
+          musicState$.setQueueAndPlayAtIndex(
+            media.currentMedia?.type,
+            media.currentMedia?.id || $event
+          )
+        "
+      ></ui-virtual-table>
+    </ng-container>
   </ng-container>
 </ng-container>

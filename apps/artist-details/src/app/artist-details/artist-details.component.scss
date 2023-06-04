@@ -99,20 +99,23 @@
         padding: 0.5rem 1rem;
         padding-left: 1.5rem;
         border-radius: 4px;
-        background-color: var(--color-gray-300);
+        background-color: var(--gray-300);
         font-size: var(--font-size-md);
         font-weight: var(--font-weight-bold);
+        color: var(--text) !important;
 
-        i {
-          color: var(--text-inverse);
+        ::ng-deep button {
+          i {
+            color: var(--text) !important;
+          }
         }
 
         &:hover {
-          background-color: var(--color-gray-200);
+          background-color: var(--gray-200);
         }
 
         &:active {
-          background-color: var(--color-gray-500);
+          background-color: var(--gray-300);
         }
       }
     }

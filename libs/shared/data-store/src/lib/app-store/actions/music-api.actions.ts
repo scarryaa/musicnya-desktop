@@ -9,7 +9,9 @@ import {
   PersonalRecommendation,
   Playlists,
 } from '@nyan-inc/core';
+import { MusicKit } from '../../../types';
 import { MusicAPIEntity } from '../models/music-api.models';
+import { Ratings } from '../reducers/music-api.reducer';
 
 // Music API Actions
 export const loadMusicAPI = createAction('[Music/API] Load Music API');
@@ -309,5 +311,33 @@ export const getArtistSuccess = createAction(
 );
 export const getArtistFailure = createAction(
   '[Music/API] Get Artist Failure',
+  props<{ payload: { error: Error } }>()
+);
+
+// Get user ratings from IDs
+export const getUserRatingsFromIDs = createAction(
+  '[Music/API] Get User Ratings From IDs',
+  props<{ payload: { type: MediaItemTypes; ids: string[] } }>()
+);
+export const getUserRatingsFromIDsSuccess = createAction(
+  '[Music/API] Get User Ratings From IDs Success',
+  props<{ payload: { data: Array<Ratings> } }>()
+);
+export const getUserRatingsFromIDsFailure = createAction(
+  '[Music/API] Get User Ratings From IDs Failure',
+  props<{ payload: { error: Error } }>()
+);
+
+// Love a mediaitem
+export const loveMediaItem = createAction(
+  '[Music/API] Love Media Item',
+  props<{ payload: { type: MediaItemTypes; id: string } }>()
+);
+export const loveMediaItemSuccess = createAction(
+  '[Music/API] Love Media Item Success',
+  props<{ payload: { data: Array<Ratings> } }>()
+);
+export const loveMediaItemFailure = createAction(
+  '[Music/API] Love Media Item Failure',
   props<{ payload: { error: Error } }>()
 );

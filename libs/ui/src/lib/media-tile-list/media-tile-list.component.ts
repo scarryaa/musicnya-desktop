@@ -21,9 +21,11 @@ import { AlbumTileLargeSmartModule, MediaTileComponent } from '@nyan-inc/core';
   template: `<div
       id="list-wrapper"
       [ngClass]="{ hide: !showMore }"
-      [routerLink]="showMore ? '/show-more/' + listTitle : undefined"
+      [routerLink]="showMore ? '/show-more/' + listId : undefined"
     >
-      <ui-heading id="heading" size="medium">{{ listTitle }}</ui-heading>
+      <ui-heading id="heading" size="medium" [ngClass]="{ hide: !showMore }">{{
+        listTitle
+      }}</ui-heading>
     </div>
     <div id="album-tile-container">
       <core-media-tile
@@ -54,6 +56,7 @@ export class MediaTileListComponent {
   mediaItems!: QueryList<ElementRef>;
   @Input() showMore = false;
   @Input() listTitle!: string;
+  @Input() listId?: string;
   @Input() listData!: any[];
   @Input() clickEnabled = true;
   @Output() readonly playEmitter: EventEmitter<{ type: string; id: string }> =

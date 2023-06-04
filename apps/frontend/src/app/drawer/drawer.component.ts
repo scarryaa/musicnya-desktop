@@ -16,14 +16,21 @@ import { RouterModule } from '@angular/router';
 import {
   AlbumTileModule,
   BaseButtonModule,
+  ChipComponent,
+  ChipGroupComponent,
   DisableChildTabIndexDirective,
   FallbackImageDirective,
+  JoinPipeModule,
+  TooltipDirectiveModule,
+  TooltipPosition,
 } from '@nyan-inc/core';
 import { MusicAPIFacade, SpinnerFacade } from '@nyan-inc/shared';
 import { DrawerModule, DrawerToggleDirective } from '@nyan-inc/ui';
 import { SpinnerComponent } from '@nyan-inc/core';
 import { NgScrollbar, NgScrollbarModule } from 'ngx-scrollbar';
 import { Subject, Subscription } from 'rxjs';
+import { LetDirective } from '@ngrx/component';
+import { LayoutFacade } from '../../store/facades';
 
 @Component({
   selector: 'musicnya-drawer',
@@ -40,6 +47,11 @@ import { Subject, Subscription } from 'rxjs';
     NgScrollbarModule,
     FallbackImageDirective,
     SpinnerComponent,
+    ChipComponent,
+    ChipGroupComponent,
+    LetDirective,
+    TooltipDirectiveModule,
+    JoinPipeModule,
   ],
   templateUrl: './drawer.component.html',
   styleUrls: ['./drawer.component.scss'],
@@ -51,14 +63,19 @@ export class DrawerComponent
 {
   libraryPlaylists$: any;
   spinnerState$: any;
+  TooltipPosition = TooltipPosition;
 
   constructor(
     private changeReference: ChangeDetectorRef,
     public musicAPIFacade: MusicAPIFacade,
-    public spinner: SpinnerFacade
+    public spinner: SpinnerFacade,
+    public vm: LayoutFacade
   ) {
     super();
     this.spinnerState$ = this.spinner.state$;
+    this.vm.currentView$.subscribe((view) => {
+      console.log(view);
+    });
   }
 
   @Input() width?: number;
@@ -67,6 +84,30 @@ export class DrawerComponent
   subs = new Subscription();
 
   @ViewChild('scrollbar') scrollbar!: NgScrollbar;
+
+  handleChipSelect(event: number) {
+    switch (event) {
+      case 0: {
+        this.vm.setView('songs');
+        break;
+      }
+      case 1: {
+        this.vm.setView('playlists');
+        break;
+      }
+      case 2: {
+        this.vm.setView('albums');
+        break;
+      }
+      case 3: {
+        this.vm.setView('artists');
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }
 
   ngOnInit(): void {
     this.libraryPlaylists$ = this.musicAPIFacade.libraryPlaylists$;

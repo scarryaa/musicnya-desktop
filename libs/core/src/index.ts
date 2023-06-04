@@ -40,3 +40,5 @@ export * from './lib/play-button/play-button.component';
 export * from './lib/options-button/options-button.component';
 export * from './lib/year-slice.pipe';
 export * from './lib/footer-media-tile/footer-media-tile.component';
+export * from './lib/chip/chip.component';
+export * from './lib/tooltip/tooltip.enums';

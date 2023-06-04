@@ -12,6 +12,11 @@
   background: none;
   box-shadow: none;
 
+  span {
+    font-size: var(--font-size-xl);
+    letter-spacing: var(--letter-spacing-nl);
+  }
+
   &:not(.ui-button-no-hover) {
     &:hover:not(:disabled),
     &:focus-visible:not(:disabled) {

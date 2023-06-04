@@ -212,6 +212,7 @@ export interface PersonalRecommendation {
     reason?: string;
     reasonType?: string;
     recommendationType?: string;
+    hasSeeAll: boolean;
     type: string;
   };
   relationships?: {

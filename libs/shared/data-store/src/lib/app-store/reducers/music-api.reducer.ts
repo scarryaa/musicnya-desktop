@@ -6,6 +6,7 @@ import {
   createFeatureSelector,
   ActionReducer,
   MetaReducer,
+  createSelector,
 } from '@ngrx/store';
 
 import copy, { State } from 'fast-copy';
@@ -20,6 +21,12 @@ import {
 } from '@nyan-inc/core';
 
 export const MusicAPI_API_FEATURE_KEY = 'musicApi';
+export const RATINGS_FEATURE_KEY = 'ratings';
+
+export interface Ratings {
+  id: string;
+  rating: number;
+}
 
 export interface MusicAPIState extends EntityState<MusicAPIEntity> {
   selectedId?: string | number;
@@ -27,6 +34,7 @@ export interface MusicAPIState extends EntityState<MusicAPIEntity> {
   libraryPlaylists: LibraryPlaylists[] | undefined;
   error?: string | Error | null;
   mediaCache?: MediaItem[];
+  ratingsCache?: Ratings[];
   currentMediaType?: MediaItemTypes;
   currentMedia?: Resource;
   homeTileLists: Array<{
@@ -67,6 +75,7 @@ export const initialMusicAPIState: MusicAPIState =
     playlists: undefined,
     albums: undefined,
     mediaCache: undefined,
+    ratingsCache: undefined,
     currentMedia: undefined,
     currentMediaType: undefined,
     homeTileLists: [{ title: '', data: undefined }],
@@ -74,7 +83,6 @@ export const initialMusicAPIState: MusicAPIState =
 
 const reducer = createReducer(
   { ...initialMusicAPIState },
-
   on(MusicAPIActions.loadMusicAPI, (state) => ({
     ...state,
     loaded: false,
@@ -211,11 +219,50 @@ const reducer = createReducer(
   on(MusicAPIActions.getArtistFailure, (state, { payload }) => ({
     ...state,
     payload: payload.error,
+  })),
+
+  // get user ratings from ids
+  on(MusicAPIActions.getUserRatingsFromIDs, (state) => ({
+    ...state,
+    loaded: false,
+  })),
+  on(MusicAPIActions.getUserRatingsFromIDsSuccess, (state, { payload }) => ({
+    ...state,
+    ratingsCache: {
+      ...state.ratingsCache,
+      ...payload.data,
+    },
+  })),
+  on(MusicAPIActions.getUserRatingsFromIDsFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  })),
+
+  // loved media item
+  on(MusicAPIActions.loveMediaItem, (state) => ({
+    ...state,
+    loaded: false,
+  })),
+  on(MusicAPIActions.loveMediaItemSuccess, (state, { payload }) => ({
+    ...state,
+    ratingsCache: {
+      ...state.ratingsCache,
+      ...payload.data,
+    },
+  })),
+  on(MusicAPIActions.loveMediaItemFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
   }))
 );
 
 export const getMusicAPIState = createFeatureSelector<MusicAPIState>(
   MusicAPI_API_FEATURE_KEY
+);
+
+export const getRatings = createSelector(
+  getMusicAPIState,
+  (state: MusicAPIState) => state.ratingsCache
 );
 
 export function musicAPIReducer(

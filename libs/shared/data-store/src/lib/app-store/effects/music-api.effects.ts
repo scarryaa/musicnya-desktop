@@ -35,6 +35,11 @@ import { MusicState } from '../reducers/music.reducer';
 import { SpinnerState } from '../reducers/spinner.reducer';
 import { MusicKit } from '../../../types';
 import { RouterState } from '@angular/router';
+import {
+  getMusicAPIState,
+  MusicAPIState,
+  Ratings,
+} from '../reducers/music-api.reducer';
 
 //Load music api
 export const loadMusicAPI$ = createEffect(
@@ -329,6 +334,25 @@ export const getArtist$ = createEffect(
   { functional: true }
 );
 
+// Gets user ratings from ids if not in store
+export const getUserRatings$ = createEffect(
+  (actions$ = inject(Actions), music = inject(MusickitAPI)) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.getUserRatingsFromIDs),
+      filter((action) => action.payload.type === 'library-playlists'),
+      mergeMap((action) =>
+        music
+          .getRatingsByIDs(action.payload.type, action.payload.ids)
+          .then((data: Array<Ratings>) =>
+            MusicAPIActions.getUserRatingsFromIDsSuccess({
+              payload: { data },
+            })
+          )
+      )
+    ),
+  { functional: true }
+);
+
 // Fetches media item based on the route params
 export const getMediaItemOnRouteChange$ = createEffect(
   (actions$ = inject(Actions), store$ = inject(Store<SpinnerState>)) =>
@@ -345,6 +369,9 @@ export const getMediaItemOnRouteChange$ = createEffect(
             type: parameters.type,
             id: parameters.id,
           },
+        }),
+        MusicAPIActions.getUserRatingsFromIDs({
+          payload: { type: parameters.type, ids: [parameters.id] },
         }),
         MusicAPIActions.setCurrentViewType({
           payload: { type: parameters.type, id: parameters.id },
@@ -725,6 +752,17 @@ export const getMediaItem$ = createEffect(
                       }
                     }
 
+                    store.dispatch(
+                      MusicAPIActions.getUserRatingsFromIDs({
+                        payload: {
+                          type: firstItem.relationships?.tracks?.data[0].type,
+                          ids: firstItem.relationships?.tracks?.data.map(
+                            (track: any) => track.id
+                          ),
+                        },
+                      })
+                    );
+
                     return MusicAPIActions.getMediaItemSuccess({
                       payload: { data: copy(firstItem) },
                     });
@@ -763,7 +801,11 @@ export const setCurrentMedia$ = createEffect(
 
 // Fetches songs for given library playlist
 export const getLibraryPlaylistSongs$ = createEffect(
-  (actions$ = inject(Actions), musickit = inject(MusickitAPI)) =>
+  (
+    actions$ = inject(Actions),
+    musickit = inject(MusickitAPI),
+    store = inject(Store<MusickitAPI>)
+  ) =>
     actions$.pipe(
       ofType(MusicAPIActions.getLibraryPlaylistSongs),
       switchMap((action) => {
@@ -819,6 +861,29 @@ export const getLibraryPlaylistSongs$ = createEffect(
           )
         );
       })
+    ),
+  { functional: true }
+);
+
+// Love media item
+export const loveMediaItem$ = createEffect(
+  (actions$ = inject(Actions), musickit = inject(MusickitAPI)) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.loveMediaItem),
+      switchMap((action) =>
+        from(musickit.loveItem(action.payload.type, action.payload.id)).pipe(
+          map(() =>
+            MusicAPIActions.loveMediaItemSuccess({
+              payload: {
+                data: [{ id: action.payload.id, rating: 1 }],
+              },
+            })
+          ),
+          catchError((error) =>
+            of(MusicAPIActions.loveMediaItemFailure({ payload: { error } }))
+          )
+        )
+      )
     ),
   { functional: true }
 );

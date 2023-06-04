@@ -370,6 +370,7 @@ export declare namespace MusicKit {
     playlist?: string;
     song?: string;
     songs?: Array<string>;
+    musicVideo?: string;
     station?: string;
     startPlaying?: boolean;
     startPosition?: number;
@@ -914,6 +915,14 @@ export declare namespace MusicKit {
       composers: Relationship<Artists>;
       library: Relationship<LibraryAlbums>;
       'music-videos': Relationship<MusicVideos>;
+    };
+  }
+
+  interface Ratings extends Resource {
+    id: string;
+    type: 'ratings';
+    attributes?: {
+      value: number;
     };
   }
 

@@ -16,6 +16,7 @@ export interface LayoutState extends EntityState<LayoutEntity> {
   selectedId?: string | number;
   drawerOpen: boolean;
   drawerClosed: boolean;
+  currentView: 'songs' | 'artists' | 'albums' | 'playlists';
 }
 
 export interface LayoutPartialState {
@@ -28,6 +29,7 @@ export const layoutAdapter: EntityAdapter<LayoutEntity> =
 export const initialLayoutState: LayoutState = layoutAdapter.getInitialState({
   drawerOpen: false,
   drawerClosed: true,
+  currentView: 'playlists',
 });
 
 export const reducer = createReducer(
@@ -41,7 +43,31 @@ export const reducer = createReducer(
     ...state,
     drawerOpen: false,
     drawerClosed: true,
+  })),
+
+  // set views
+  on(LayoutActions.setView, (state: LayoutState, { payload }) => ({
+    ...state,
+    view: payload.view,
+  })),
+  on(LayoutActions.setPlaylistsView, (state: LayoutState) => ({
+    ...state,
+  })),
+  on(LayoutActions.setPlaylistsViewSuccess, (state: LayoutState) => ({
+    ...state,
   }))
+  // on(LayoutActions.setSongsView, (state: LayoutState) => ({
+  //   ...state,
+  //   currentView: 'songs',
+  // })),
+  // on(LayoutActions.setArtistsView, (state: LayoutState) => ({
+  //   ...state,
+  //   currentView: 'artists',
+  // })),
+  // on(LayoutActions.setAlbumsView, (state: LayoutState) => ({
+  //   ...state,
+  //   currentView: 'albums',
+  // })),
 );
 
 export function layoutReducer(state: LayoutState | undefined, action: Action) {

@@ -13,17 +13,25 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TooltipComponent } from './tooltip.component';
+import { TooltipPosition, TooltipTheme } from './tooltip.enums';
 
 @Directive({
   selector: '[coreTooltip]',
 })
 export class TooltipDirective implements OnDestroy {
   @Input() coreTooltip = '';
+  @Input() position: TooltipPosition = TooltipPosition.DEFAULT;
+  @Input() theme: TooltipTheme = TooltipTheme.DEFAULT;
+  @Input() showDelay = 0;
+  @Input() hideDelay = 0;
+
   private componentRef: ComponentRef<any> | undefined = undefined;
+  private showTimeout?: number;
+  private hideTimeout?: number;
 
   constructor(
-    private elementRef: ElementRef,
-    private appRef: ApplicationRef,
+    private elementReference: ElementRef,
+    private appReference: ApplicationRef,
     private componentFactoryResolver: ComponentFactoryResolver,
     private injector: Injector
   ) {}
@@ -34,16 +42,31 @@ export class TooltipDirective implements OnDestroy {
       const componentFactory =
         this.componentFactoryResolver.resolveComponentFactory(TooltipComponent);
       this.componentRef = componentFactory.create(this.injector);
-      this.appRef.attachView(this.componentRef.hostView);
-      const domElem = (this.componentRef.hostView as EmbeddedViewRef<any>)
+      this.appReference.attachView(this.componentRef.hostView);
+      const domElement = (this.componentRef.hostView as EmbeddedViewRef<any>)
         .rootNodes[0] as HTMLElement;
-      document.body.appendChild(domElem);
+      document.body.append(domElement);
       this.setTooltipComponentProperties();
+      this.showTimeout = window.setTimeout(
+        this.showTooltip.bind(this),
+        this.showDelay
+      );
+    }
+  }
+
+  private showTooltip() {
+    if (this.componentRef !== undefined) {
+      this.componentRef.instance.visible = true;
+      this.componentRef.instance.changeDetectorRef.detectChanges();
     }
   }
 
   @HostListener('mouseleave')
   onMouseLeave(): void {
+    this.hideTimeout = window.setTimeout(
+      this.destroy.bind(this),
+      this.hideDelay
+    );
     this.destroy();
   }
 
@@ -53,7 +76,8 @@ export class TooltipDirective implements OnDestroy {
 
   destroy(): void {
     if (this.componentRef !== undefined) {
-      this.appRef.detachView(this.componentRef.hostView);
+      clearTimeout(this.showTimeout);
+      this.appReference.detachView(this.componentRef.hostView);
       this.componentRef.destroy();
       this.componentRef = undefined;
     }
@@ -62,12 +86,41 @@ export class TooltipDirective implements OnDestroy {
   private setTooltipComponentProperties() {
     if (this.componentRef !== undefined) {
       this.componentRef.instance.tooltip = this.coreTooltip;
-      const { left, right, bottom, top } =
-        this.elementRef.nativeElement.getBoundingClientRect();
-      this.componentRef.instance.left = (right - left) / 2 + left;
-      this.componentRef.instance.top = (top - bottom) / 2 + top;
+      this.componentRef.instance.position = this.position;
+
+      const { left, right, top, bottom } =
+        this.elementReference.nativeElement.getBoundingClientRect();
+
+      switch (this.position) {
+        case TooltipPosition.BELOW: {
+          this.componentRef.instance.left = Math.round(
+            (right - left) / 2 + left
+          );
+          this.componentRef.instance.top = Math.round(bottom);
+          break;
+        }
+        case TooltipPosition.ABOVE: {
+          this.componentRef.instance.left = Math.round(
+            (right - left) / 2 + left
+          );
+          this.componentRef.instance.top = Math.round(top);
+          break;
+        }
+        case TooltipPosition.RIGHT: {
+          this.componentRef.instance.left = Math.round(right);
+          this.componentRef.instance.top = Math.round(top + (bottom - top) / 2);
+          break;
+        }
+        case TooltipPosition.LEFT: {
+          this.componentRef.instance.left = Math.round(left);
+          this.componentRef.instance.top = Math.round(top + (bottom - top) / 2);
+          break;
+        }
+        default: {
+          break;
+        }
+      }
     }
-    this.componentRef?.instance.changeDetectorRef.detectChanges();
   }
 }
 

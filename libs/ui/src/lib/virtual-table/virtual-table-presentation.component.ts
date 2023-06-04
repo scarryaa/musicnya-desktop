@@ -1,5 +1,7 @@
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -26,6 +28,7 @@ import {
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SelectionModel } from '@angular/cdk/collections';
 import { RouterModule } from '@angular/router';
+import { MusicKit } from 'libs/shared/data-store/src/types';
 
 @Component({
   selector: 'ui-virtual-table-presentation',
@@ -34,7 +37,7 @@ import { RouterModule } from '@angular/router';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VirtualTableComponent implements OnChanges {
+export class VirtualTableComponent implements OnChanges, AfterViewChecked {
   @Input() dataSource!: DataSource<Songs>;
   @Input() data!: Songs[];
   @Input() displayedColumns!: string[];
@@ -42,12 +45,19 @@ export class VirtualTableComponent implements OnChanges {
   @Input() selected = new SelectionModel<Songs>(true, []);
   @Input() playingSong: string | undefined = undefined;
   @Input() playing = false;
+  @Input() ratings?: any[] | null = [];
   @Output() readonly dropEmitter = new EventEmitter<Songs[]>();
   @Output() readonly clickEmitter = new EventEmitter<Songs>();
+  @Output() readonly loveClickEmitter = new EventEmitter<{
+    type: string;
+    id: string;
+  }>();
   @Output() readonly titleClickEmitter = new EventEmitter<string>();
   @Output() readonly doubleClickEmitter = new EventEmitter<number>();
   @Output() readonly pauseEmitter = new EventEmitter();
   @Output() readonly playEmitter = new EventEmitter();
+
+  constructor(private changeReference: ChangeDetectorRef) {}
 
   dragData: { title: string; artists: string[] } = { title: '', artists: [] };
 
@@ -87,6 +97,11 @@ export class VirtualTableComponent implements OnChanges {
     this.dragData.artists = event.source.data.artists;
   }
 
+  handleLoveClick(event: MouseEvent, params: { type: string; id: string }) {
+    event.stopPropagation();
+    this.loveClickEmitter.emit({ type: params.type, id: params.id });
+  }
+
   handleClick(event: MouseEvent) {}
 
   drop(event: CdkDragDrop<string[]>) {
@@ -95,9 +110,23 @@ export class VirtualTableComponent implements OnChanges {
     this.dropEmitter.emit(this.data);
   }
 
+  ngAfterViewChecked(): void {
+    this.changeReference.detectChanges();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['dataSource']?.currentValue) return;
-    this.dataSource = changes['dataSource']?.currentValue as DataSource<Songs>;
+    console.log(this.ratings);
+    console.log(changes);
+    if (changes['dataSource']?.currentValue) {
+      this.dataSource = changes['dataSource']
+        ?.currentValue as DataSource<Songs>;
+    }
+
+    if (changes['ratings']?.currentValue) {
+      this.ratings = changes['ratings']?.currentValue;
+      console.log(this.ratings);
+    }
+    this.changeReference.detectChanges();
   }
 }
 @NgModule({

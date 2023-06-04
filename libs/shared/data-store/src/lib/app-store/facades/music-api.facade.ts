@@ -1,7 +1,8 @@
 /* eslint-disable functional/prefer-immutable-types */
 import { Injectable, OnDestroy } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { filter, map, skipWhile, Subscription, take } from 'rxjs';
+import { createSelector, select, Store } from '@ngrx/store';
+import { MediaItemTypes } from '@nyan-inc/core';
+import { filter, map, skipWhile, Subscription, take, tap } from 'rxjs';
 import { MusicAPIActions } from '../actions';
 import { fromMusicAPI } from '../reducers';
 import { MusicAPIState } from '../reducers/music-api.reducer';
@@ -233,10 +234,72 @@ export class MusicAPIFacade implements OnDestroy {
       )
     );
 
+  // Other selectors
+  readonly getRatings$ = this.store.pipe(select(fromMusicAPI.getRatings)).pipe(
+    filter((value) => value !== undefined),
+    map((value) => value)
+  );
+
+  // media selectors/filters
+  readonly getLibraryPlaylists$ = this.store
+    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(
+      // filter only playlists
+      // TODO convert to a shared library collection
+      filter(
+        (state) => state !== undefined && state.libraryPlaylists !== undefined
+      ),
+      map((state) => state.libraryPlaylists)
+    );
+
+  // readonly getLibraryAlbums$ = this.store
+  //   .pipe(select(fromMusicAPI.getMusicAPIState))
+  //   .pipe(
+  //     filter((state) => state !== undefined),
+  //     // filter only albums
+  //     map((state) =>
+  //       state.currentMedia?.relationships?.albums?.data?.filter(
+  //         (album: any) => album.type === 'library-albums'
+  //       )
+  //     )
+  //   );
+
+  // readonly getLibraryArtists$ = this.store
+  //   .pipe(select(fromMusicAPI.getMusicAPIState))
+  //   .pipe(
+  //     filter((state) => state !== undefined),
+  //     // filter only artists
+  //     map((state) =>
+  //       state.currentMedia?.relationships?.artists?.data?.filter(
+  //         (artist: any) => artist.type === 'library-artists'
+  //       )
+  //     )
+  //   );
+
+  // readonly getLibrarySongs$ = this.store
+  //   .pipe(select(fromMusicAPI.getMusicAPIState))
+  //   .pipe(
+  //     filter((state) => state !== undefined),
+  //     // filter only songs
+  //     map((state) =>
+  //       state.currentMedia?.relationships?.songs?.data?.filter(
+  //         (song: any) => song.type === 'library-songs'
+  //       )
+  //     )
+  //   );
+
   constructor(private readonly store: Store<MusicAPIState>) {}
 
   ngOnDestroy() {
     return this.subs.unsubscribe();
+  }
+
+  love(event: { type: string; id: string }) {
+    return this.store.dispatch(
+      MusicAPIActions.loveMediaItem({
+        payload: { type: event.type as MediaItemTypes, id: event.id },
+      })
+    );
   }
 
   loadAPI() {

@@ -21,8 +21,7 @@
           <img
             class="artist-details__info__image-wrapper__image"
             [src]="
-              (vm.artistBanner$ | async) ||
-              'assets/images/artist-placeholder.png'
+              (vm.artistBanner$ | async) || 'assets/images/music_note.webp'
             "
           />
         </picture>
@@ -189,7 +188,7 @@
                   video?.attributes?.releaseDate || '' | yearSlice
                 "
                 [id]="video?.id"
-                [type]="'videos'"
+                [type]="'musicVideo'"
                 (playClick)="play($event.type, $event.id)"
                 (optionsClick)="options($event)"
               ></core-video-tile>
