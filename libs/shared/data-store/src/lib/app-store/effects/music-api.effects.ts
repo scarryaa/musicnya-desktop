@@ -1,6 +1,3 @@
-/* eslint-disable functional/type-declaration-immutability */
-/* eslint-disable functional/immutable-data */
-/* eslint-disable functional/prefer-immutable-types */
 import { inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import {
@@ -35,11 +32,6 @@ import { MusicState } from '../reducers/music.reducer';
 import { SpinnerState } from '../reducers/spinner.reducer';
 import { MusicKit } from '../../../types';
 import { RouterState } from '@angular/router';
-import {
-  getMusicAPIState,
-  MusicAPIState,
-  Ratings,
-} from '../reducers/music-api.reducer';
 
 //Load music api
 export const loadMusicAPI$ = createEffect(
@@ -66,7 +58,7 @@ export const getLibraryPlaylists$ = createEffect(
     actions$.pipe(
       ofType(MusicAPIActions.getLibraryPlaylists),
       withLatestFrom(store.pipe(select('libraryPlaylists'))),
-      switchMap(([, libraryPlaylists]: [any, LibraryPlaylists[]]) => {
+      switchMap(([, libraryPlaylists]: [any, MusicKit.LibraryPlaylists[]]) => {
         if (libraryPlaylists && libraryPlaylists.length > 0) {
           console.log('library playlists already in store');
           return of(
@@ -77,7 +69,7 @@ export const getLibraryPlaylists$ = createEffect(
         } else {
           // get library playlists and then songs
           return from(musickit.getLibraryPlaylists()).pipe(
-            switchMap((playlists: LibraryPlaylists[]) =>
+            switchMap((playlists: MusicKit.LibraryPlaylists[]) =>
               forkJoin(
                 playlists.map((playlist) =>
                   from(musickit.getLibraryPlaylistSongs(playlist.id)).pipe(
@@ -197,7 +189,7 @@ export const getArtist$ = createEffect(
         from(musickit.getArtist(action.payload.artistId))
       ),
       map((data) => {
-        const [firstItem] = data as Artists[];
+        const [firstItem] = data as MusicKit.Artists[];
 
         if (firstItem && firstItem.attributes?.artwork?.url) {
           firstItem.attributes.artwork.url = firstItem.attributes?.artwork.url
@@ -315,7 +307,9 @@ export const getArtist$ = createEffect(
         }
 
         return MusicAPIActions.getArtistSuccess({
-          payload: { data: copy(firstItem) },
+          payload: {
+            data: firstItem,
+          },
         });
       }),
       switchMap((data) =>
@@ -323,7 +317,12 @@ export const getArtist$ = createEffect(
           data,
           MusicAPIActions.setCurrentMedia({
             payload: {
-              data: data.payload.data,
+              data: {
+                ...data.payload.data,
+                type: 'artists' as unknown as MusicKit.MediaItemType,
+              },
+              type: 'artists' as MediaItemTypes,
+              id: data.payload.data.id,
             },
           })
         )
@@ -343,7 +342,7 @@ export const getUserRatings$ = createEffect(
       mergeMap((action) =>
         music
           .getRatingsByIDs(action.payload.type, action.payload.ids)
-          .then((data: Array<Ratings>) =>
+          .then((data: Array<MusicKit.Ratings>) =>
             MusicAPIActions.getUserRatingsFromIDsSuccess({
               payload: { data },
             })
@@ -560,7 +559,7 @@ export const getMediaItem$ = createEffect(
               payload: { data: copy(foundInCache) },
             }),
             MusicAPIActions.setCurrentMedia({
-              payload: { data: foundInCache },
+              payload: { data: foundInCache, type, id },
             })
           );
         } else {
@@ -577,7 +576,11 @@ export const getMediaItem$ = createEffect(
                 payload: { data: copy(foundInLibrary) },
               }),
               MusicAPIActions.setCurrentMedia({
-                payload: { data: foundInLibrary },
+                payload: {
+                  data: foundInLibrary,
+                  type: 'library-playlists',
+                  id,
+                },
               })
             );
           } else {
@@ -714,7 +717,7 @@ export const getMediaItem$ = createEffect(
                     }
 
                     return MusicAPIActions.getMediaItemSuccess({
-                      payload: { data: copy(firstItem) },
+                      payload: { data: copy(data) },
                     });
                   }),
                   switchMap((data) =>
@@ -723,6 +726,8 @@ export const getMediaItem$ = createEffect(
                       MusicAPIActions.setCurrentMedia({
                         payload: {
                           data: data.payload.data,
+                          type: 'artists',
+                          id: id,
                         },
                       })
                     )
@@ -771,7 +776,7 @@ export const getMediaItem$ = createEffect(
                     of(
                       data,
                       MusicAPIActions.setCurrentMedia({
-                        payload: { data: data.payload.data },
+                        payload: { data: data.payload.data, type, id },
                       })
                     )
                   ),
@@ -812,7 +817,7 @@ export const getLibraryPlaylistSongs$ = createEffect(
         return from(
           musickit.getLibraryPlaylistSongs(action.payload.playlist.id)
         ).pipe(
-          map((songs: LibrarySongs[]) => {
+          map((songs: MusicKit.LibrarySongs[]) => {
             const updatedSongs = songs.map((song) => ({
               ...song,
               attributes: {
@@ -830,8 +835,8 @@ export const getLibraryPlaylistSongs$ = createEffect(
                   song.attributes?.isMasteredForItunes || false,
                 playParams: {
                   ...song.attributes?.playParams,
-                  id: song.attributes?.playParams.id || '',
-                  kind: song.attributes?.playParams.kind || 'song',
+                  id: song.attributes?.playParams?.id || '',
+                  kind: song.attributes?.playParams?.kind || 'song',
                 },
                 artwork: {
                   ...song.attributes?.artwork,
@@ -875,7 +880,13 @@ export const loveMediaItem$ = createEffect(
           map(() =>
             MusicAPIActions.loveMediaItemSuccess({
               payload: {
-                data: [{ id: action.payload.id, rating: 1 }],
+                data: [
+                  {
+                    id: action.payload.id,
+                    attributes: { value: 1 },
+                    type: 'ratings',
+                  },
+                ],
               },
             })
           ),

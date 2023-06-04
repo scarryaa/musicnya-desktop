@@ -28,7 +28,6 @@ import {
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SelectionModel } from '@angular/cdk/collections';
 import { RouterModule } from '@angular/router';
-import { MusicKit } from 'libs/shared/data-store/src/types';
 
 @Component({
   selector: 'ui-virtual-table-presentation',

@@ -9,3 +9,8 @@ export interface MusicAPIEntity {
   payload: any;
   libraryPlaylists: LibraryPlaylists[];
 }
+
+export interface Ratings {
+  id: string;
+  rating: number;
+}

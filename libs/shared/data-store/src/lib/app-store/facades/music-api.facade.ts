@@ -23,13 +23,13 @@ export class MusicAPIFacade implements OnDestroy {
     .pipe(map((value) => value.loaded));
   readonly recommendations$ = this.store
     .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(map((value) => value.homeTileLists[1]));
+    .pipe(map((value) => value.personalRecommendations));
   readonly recentlyPlayed$ = this.store
     .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(map((value) => value.homeTileLists[0]));
+    .pipe(map((value) => value.recentlyPlayed));
   readonly state$ = this.store.pipe(select(fromMusicAPI.getMusicAPIState));
   readonly type$ = this.store.pipe(select(fromMusicAPI.getMusicAPIState)).pipe(
-    filter((value) => value.currentMediaType !== undefined),
+    filter((value) => value.currentMedia?.type !== undefined),
     map((value) => value.currentMedia?.type)
   );
   readonly loaded$ = this.store
@@ -40,21 +40,24 @@ export class MusicAPIFacade implements OnDestroy {
 
   readonly artistName$ = this.store
     .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(map((value) => value.currentMedia?.attributes?.name));
+    .pipe(map((value) => value.currentMedia?.data?.attributes?.['name']));
 
   readonly artistID$ = this.store
     .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(map((value) => value.currentMedia?.id));
+    .pipe(map((value) => value.currentMedia?.data?.id));
 
   readonly artistStationID$ = this.store
     .pipe(select(fromMusicAPI.getMusicAPIState))
     .pipe(
-      map((value) => value.currentMedia?.relationships?.station?.data?.[0]?.id)
+      map(
+        (value) =>
+          value.currentMedia?.data?.relationships?.station?.data?.[0]?.id
+      )
     );
 
   readonly artistTopSongs$ = this.store
     .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(map((value) => value.currentMedia?.views?.['top-songs']?.data));
+    .pipe(map((value) => value.currentMedia?.data?.views?.['top-songs']?.data));
 
   readonly featuredAlbums$ = this.store
     .pipe(select(fromMusicAPI.getMusicAPIState))
@@ -64,13 +67,13 @@ export class MusicAPIFacade implements OnDestroy {
       ),
       filter(
         (value: MusicAPIState) =>
-          value.currentMedia?.views?.['latest-release'] !== undefined ||
-          value.currentMedia?.views?.['featured-albums'] !== undefined
+          value.currentMedia?.data?.views?.['latest-release'] !== undefined ||
+          value.currentMedia?.data?.views?.['featured-albums'] !== undefined
       ),
       map((value: MusicAPIState) =>
         (
-          value.currentMedia?.views?.['latest-release']?.data ||
-          value.currentMedia?.views?.['featured-albums']?.data
+          value.currentMedia?.data?.views?.['latest-release']?.data ||
+          value.currentMedia?.data?.views?.['featured-albums']?.data
         )?.filter(
           (album: any, index: number, self: any) =>
             !album.attributes?.isSingle &&
@@ -90,8 +93,9 @@ export class MusicAPIFacade implements OnDestroy {
       map(
         (value) =>
           '/media/albums/' +
-            value.currentMedia?.views?.['latest-release']?.data?.[0]?.id ||
-          value.currentMedia?.views?.['featured-albums']?.data?.[0]?.id
+            value.currentMedia?.data?.views?.['latest-release']?.data?.[0]
+              ?.id ||
+          value.currentMedia?.data?.views?.['featured-albums']?.data?.[0]?.id
       )
     );
 
@@ -103,15 +107,17 @@ export class MusicAPIFacade implements OnDestroy {
       ),
       filter(
         (value: MusicAPIState) =>
-          value.currentMedia?.views?.['latest-release'] !== undefined ||
-          value.currentMedia?.views?.['featured-albums'] !== undefined
+          value.currentMedia?.data?.views?.['latest-release'] !== undefined ||
+          value.currentMedia?.data?.views?.['featured-albums'] !== undefined
       ),
       map(
         (value: MusicAPIState) =>
-          value.currentMedia?.views?.['latest-release']?.attributes?.[
+          value.currentMedia?.data?.views?.['latest-release']?.attributes?.[
             'title'
           ] ||
-          value.currentMedia?.views?.['featured-albums']?.attributes?.['title']
+          value.currentMedia?.data?.views?.['featured-albums']?.attributes?.[
+            'title'
+          ]
       )
     );
 
@@ -123,15 +129,15 @@ export class MusicAPIFacade implements OnDestroy {
       ),
       filter(
         (value: MusicAPIState) =>
-          value.currentMedia?.views?.['latest-release'] !== undefined ||
-          value.currentMedia?.views?.['featured-albums'] !== undefined
+          value.currentMedia?.data?.views?.['latest-release'] !== undefined ||
+          value.currentMedia?.data?.views?.['featured-albums'] !== undefined
       ),
       map(
         (value: MusicAPIState) =>
-          value.currentMedia?.views?.['latest-release']?.data[0]?.attributes
-            ?.trackCount ||
-          value.currentMedia?.views?.['featured-albums']?.data[0]?.attributes
-            ?.trackCount
+          value.currentMedia?.data?.views?.['latest-release']?.data[0]
+            ?.attributes?.trackCount ||
+          value.currentMedia?.data?.views?.['featured-albums']?.data[0]
+            ?.attributes?.trackCount
       )
     );
 
@@ -142,7 +148,7 @@ export class MusicAPIFacade implements OnDestroy {
         (value: MusicAPIState) => value && value.currentMedia !== undefined
       ),
       map((value: MusicAPIState) =>
-        value.currentMedia?.relationships?.albums?.data?.filter(
+        value.currentMedia?.data?.relationships?.albums?.data?.filter(
           (album: any, index: number, self: any) =>
             !album.attributes?.isSingle &&
             !album.attributes?.isCompilation &&
@@ -162,7 +168,7 @@ export class MusicAPIFacade implements OnDestroy {
         (value: MusicAPIState) => value && value.currentMedia !== undefined
       ),
       map((value: MusicAPIState) =>
-        value.currentMedia?.relationships?.albums?.data?.filter(
+        value.currentMedia?.data?.relationships?.albums?.data?.filter(
           (album: any, index: number, self: any) =>
             (album.attributes?.isSingle ||
               album.attributes.name.toLowerCase().includes('- single') ||
@@ -181,7 +187,7 @@ export class MusicAPIFacade implements OnDestroy {
         (value: MusicAPIState) => value && value.currentMedia !== undefined
       ),
       map((value: MusicAPIState) =>
-        value.currentMedia?.relationships?.['music-videos']?.data?.filter(
+        value.currentMedia?.data?.relationships?.['music-videos']?.data?.filter(
           (video: any, index: number, self: any) =>
             self.findIndex((t: any) => t.id === video.id) === index
         )
@@ -196,7 +202,7 @@ export class MusicAPIFacade implements OnDestroy {
       ),
       map(
         (value: MusicAPIState) =>
-          value.currentMedia?.relationships?.playlists?.data?.filter(
+          value.currentMedia?.data?.relationships?.playlists?.data?.filter(
             (playlist: any, index: number, self: any) =>
               self.findIndex((t: any) => t.id === playlist.id) === index
           ) || []
@@ -211,7 +217,7 @@ export class MusicAPIFacade implements OnDestroy {
       ),
       map(
         (value: MusicAPIState) =>
-          value.currentMedia?.views?.['similar-artists']?.data?.filter(
+          value.currentMedia?.data?.views?.['similar-artists']?.data?.filter(
             (artist: any, index: number, self: any) =>
               self.findIndex((t: any) => t.id === artist.id) === index
           ) || []
@@ -226,10 +232,11 @@ export class MusicAPIFacade implements OnDestroy {
       ),
       map(
         (value: MusicAPIState) =>
-          value.currentMedia?.attributes?.editorialArtwork?.bannerUber?.url ||
-          value.currentMedia?.attributes?.artwork?.url ||
-          value.currentMedia?.attributes?.editorialArtwork?.storeFlowcase
+          value.currentMedia?.data?.attributes?.['editorialArtwork']?.bannerUber
             ?.url ||
+          value.currentMedia?.data?.attributes?.['artwork']?.url ||
+          value.currentMedia?.data?.attributes?.['editorialArtwork']
+            ?.storeFlowcase?.url ||
           ''
       )
     );

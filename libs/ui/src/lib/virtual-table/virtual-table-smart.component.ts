@@ -23,7 +23,6 @@ import { DataSource } from '@angular/cdk/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router, RouterModule } from '@angular/router';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { MusicKit } from 'libs/shared/data-store/src/types';
 
 @Component({
   selector: 'ui-virtual-table',

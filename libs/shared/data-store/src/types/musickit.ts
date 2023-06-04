@@ -581,7 +581,7 @@ export declare namespace MusicKit {
 
     /**A string of information about the album. */
     readonly albumInfo?: string;
-    readonly href: string;
+    readonly href?: string;
     /**The title of the album. */
     readonly albumName?: string;
     /**The artist for a media item. */
@@ -624,8 +624,8 @@ export declare namespace MusicKit {
     readonly trackNumber?: number;
     /**The number of the media item in the album's track list. */
     readonly type: MediaItemType;
-
-    readonly relationships: any;
+    readonly views?: Record<string, View<any>>;
+    readonly relationships?: any;
 
     // Methods
 
@@ -930,7 +930,7 @@ export declare namespace MusicKit {
     id: MusicItemID;
     type: 'library-songs';
     attributes?: {
-      albumName: string;
+      albumName?: string;
       artistName: string;
       artwork: Artwork;
       attribution?: string;
@@ -950,10 +950,11 @@ export declare namespace MusicKit {
       isrc?: string;
       movementCount?: number;
       movementName?: string;
+      isSingle?: boolean;
       movementNumber?: number;
       name: string;
       playParams?: PlayParameters;
-      previews: Preview[];
+      previews?: Preview[];
       releaseDate?: string;
       trackNumber?: number;
       url: string;
@@ -1158,36 +1159,8 @@ export declare namespace MusicKit {
     };
   }
 
-  /**
-   * A resource object that represents a library playlist.
-   * https://developer.apple.com/documentation/applemusicapi/libraryplaylists/
-   */
-  interface LibraryPlaylists extends Resource {
-    type: 'library-playlists';
-    attributes?: {
-      isPublic?: boolean;
-      canDelete?: boolean;
-      artwork?: Artwork;
-      editorialVideo?: any;
-      canEdit: boolean;
-      dateAdded?: string;
-      description?: DescriptionAttribute;
-      hasCatalog: boolean;
-      name: string;
-      playParams?: PlayParameters;
-    };
-    relationships?: {
-      catalog?: Relationship<Playlists>;
-      tracks: Relationship<MusicVideos | Songs | LibrarySongs>;
-    };
-  }
-
-  /**
-   * A resource object that represents an artist of an album where an artist can be one or more persons.
-   * https://developer.apple.com/documentation/applemusicapi/artists-uip
-   */
-  interface Artists extends Resource {
-    type: 'artists';
+  interface LibraryArtists extends Resource {
+    type: 'library-artists';
     attributes?: {
       editorialNotes?: EditorialNotes;
       genreNames: string[];
@@ -1201,12 +1174,94 @@ export declare namespace MusicKit {
     editorialVideo: any;
     relationships: {
       albums: Relationship<Albums>;
+      catalog: Relationship<Artists>;
       genres: Relationship<Genres>;
       'music-videos': Relationship<MusicVideos>;
       playlists: Relationship<Playlists>;
       station: Relationship<Stations>;
     };
     views: {
+      'appears-on-albums': View<Albums>;
+      'compilation-albums': {
+        href?: string;
+        next?: string;
+        attributes: {
+          title: string;
+        };
+        data: Albums[];
+      };
+      'featured-albums': View<Albums>;
+      'featured-playlists': View<Playlists>;
+      'full-albums': View<Albums>;
+      'latest-release': View<Albums>;
+      'live-albums': View<Albums>;
+      'similar-artists': View<Artists>;
+      singles: View<Albums>;
+      'top-music-videos': View<MusicVideos>;
+      'top-songs': View<Songs>;
+    };
+  }
+
+  /**
+   * A resource object that represents a library playlist.
+   * https://developer.apple.com/documentation/applemusicapi/libraryplaylists/
+   */
+  interface LibraryPlaylists extends Resource {
+    type: 'library-playlists';
+    attributes?: {
+      isPublic?: boolean;
+      canDelete?: boolean;
+      artwork?: Artwork;
+      editorialVideo?: any;
+      canEdit: boolean;
+      dateAdded?: string;
+      lastModifiedDate?: string;
+      dateCreated?: string;
+      isPublished?: boolean;
+      url: string;
+      durationInMillis?: number;
+      description?: DescriptionAttribute | string;
+      hasCatalog: boolean;
+      name: string;
+      playParams?: PlayParameters;
+    };
+    relationships?: {
+      catalog?: Relationship<Playlists>;
+      tracks?: Relationship<MusicVideos | Songs | LibrarySongs>;
+    };
+  }
+
+  /**
+   * A resource object that represents an artist of an album where an artist can be one or more persons.
+   * https://developer.apple.com/documentation/applemusicapi/artists-uip
+   */
+  interface Artists extends Resource {
+    type: 'artists';
+    attributes?: {
+      artwork?: Artwork;
+      editorialNotes?: EditorialNotes;
+      editorialArtwork?: {
+        bannerUber: Artwork;
+        storeFlowcase: Artwork;
+      };
+      genreNames: string[];
+      name: string;
+      url: string;
+    };
+    editorialArtwork?: {
+      bannerUber: Artwork;
+      storeFlowcase: Artwork;
+    };
+    editorialVideo?: any;
+    relationships?: {
+      albums?: Relationship<Albums>;
+      catalog?: Relationship<Artists>;
+      genres?: Relationship<Genres>;
+      'music-videos'?: Relationship<MusicVideos>;
+      playlists?: Relationship<Playlists>;
+      station?: Relationship<Stations>;
+    };
+    views?: {
       'appears-on-albums': View<Albums>;
       'compilation-albums': {
         href?: string;

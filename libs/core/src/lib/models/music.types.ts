@@ -265,11 +265,11 @@ export interface Artists {
     url: string;
     genreNames: string[];
     editorialNotes?: EditorialNotes;
-    editorialArtwork: {
+    editorialArtwork?: {
       bannerUber: Artwork;
       storeFlowcase: Artwork;
     };
-    editorialVideo: any;
+    editorialVideo?: any;
     artwork: Artwork;
     playParams: PlayParameters;
     contentRating?: 'clean' | 'explicit' | 'notExplicit';
