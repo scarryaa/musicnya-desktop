@@ -199,10 +199,14 @@ const reducer = createReducer(
   ),
 
   // get artist from id
-  on(MusicAPIActions.getArtist, (state) => ({ ...state })),
+  on(MusicAPIActions.getArtist, (state) => ({
+    ...state,
+    loaded: false,
+  })),
   on(MusicAPIActions.getArtistSuccess, (state, { payload }) => ({
     ...state,
     currentMedia: payload.data,
+    loaded: true,
   })),
   on(MusicAPIActions.getArtistFailure, (state, { payload }) => ({
     ...state,

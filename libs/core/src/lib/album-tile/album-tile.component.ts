@@ -27,6 +27,7 @@ import { JoinPipeModule } from '../join.pipe';
         id="artwork"
         alt="{{ type }} art"
         [style.min-width.rem]="sizeX"
+        [style.max-width.rem]="maxSizeX || undefined"
         [src]="source"
         [ngClass]="{ 'hover-underline': hoverUnderline }"
         [routerLink]="artworkRouterLink"
@@ -76,6 +77,7 @@ export class AlbumTileComponent extends BaseComponent {
   @Input() mediaTitle!: string;
   @Input() artists!: string[];
   @Input() sizeX = 4;
+  @Input() maxSizeX?: number;
   @Input() showArtists = this.artists ? true : false;
   @Input() hoverUnderline = false;
   @Input() showArt = true;

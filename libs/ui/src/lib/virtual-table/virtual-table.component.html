@@ -78,6 +78,7 @@
         [mediaTitle]="song.attributes?.name"
         [source]="song.attributes?.artwork?.url"
         [sizeX]="2.5"
+        [maxSizeX]="2.5"
         [showArt]="showAlbums"
         [titleRouterLink]="
           '/media/albums/' + song.relationships?.albums?.data?.[0]?.id"

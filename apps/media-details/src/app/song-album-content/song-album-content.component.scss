@@ -1,0 +1,123 @@
+:host {
+  .more-info {
+    border-radius: 4px;
+    margin-top: 1rem;
+    max-width: 100%;
+    background: transparent;
+
+    .more-info-content {
+      background: transparent;
+      border-radius: 4px;
+    }
+
+    .color-div {
+      position: absolute;
+      width: 0.85rem;
+      height: 0.35rem;
+      z-index: 1;
+      background-color: black;
+      top: 18rem;
+      left: calc(50% + 0.25rem);
+    }
+
+    #toggle-button {
+      font-size: var(--font-size-2xl);
+      margin-right: 2rem;
+      overflow: visible;
+      margin-top: 5.25rem;
+      filter: drop-shadow(2px 0px 3px rgba(0, 0, 0, 0.3));
+    }
+
+    .info-border {
+      border-bottom: 1px solid var(--background-300);
+      position: absolute;
+      top: 17.85rem;
+      left: calc(50% - 11.5rem);
+      width: 24rem;
+      max-width: 100%;
+      z-index: 0;
+      mask: linear-gradient(
+        to right,
+        transparent 0%,
+        rgba(white, 0.5) 50%,
+        transparent 100%
+      );
+    }
+
+    #dropdown-content-wrapper {
+      background: transparent;
+      border-radius: 4px;
+      position: relative;
+      clip: auto;
+
+      .dropdown-content {
+        background: var(--background-300);
+        color: var(--text-inverse);
+        max-width: 100%;
+        min-height: 0;
+        padding-inline: 3rem;
+        padding-bottom: 2rem;
+        word-wrap: normal;
+        white-space: wrap;
+        border-radius: 4px;
+
+        .content-wrapper {
+          padding-block: 0rem;
+        }
+      }
+    }
+
+    i {
+      z-index: 2;
+      transition: transform 0.3s ease;
+      color: white;
+      position: absolute;
+      top: 12.3rem;
+      left: 50%;
+
+      &.rotated {
+        transform: rotate(180deg);
+      }
+
+      &:hover {
+        filter: brightness(110%);
+      }
+
+      &:active {
+        filter: brightness(80%);
+      }
+    }
+  }
+
+  #description {
+    display: block;
+    white-space: pre-wrap;
+  }
+
+  #media-songs-genre-description {
+    color: var(--font-color-black);
+    font-weight: var(--font-weight-bold);
+    background-color: var(--background-300);
+
+    #genres {
+      padding: 0;
+      margin-top: 0.2rem;
+    }
+
+    #songs-count {
+      font-weight: var(--font-weight-bold);
+      color: var(--font-color-black);
+    }
+
+    #recordLabel,
+    #copyright {
+      margin: 0;
+    }
+
+    span,
+    div,
+    p {
+      filter: var(--drop-shadow);
+    }
+  }
+}

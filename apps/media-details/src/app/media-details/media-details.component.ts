@@ -45,8 +45,8 @@ export class MediaDetailsComponent implements AfterViewInit, OnDestroy {
   readonly mediaColor!: ReadonlyDeep<FastAverageColorResult | void>;
   readonly isArtist = false;
 
-  readonly state$: ReadonlyDeep<Observable<any>>;
-  readonly destroy$: ReadonlyDeep<Subject<void>> = new Subject<void>();
+  readonly state$: Observable<any>;
+  readonly destroy$: Subject<void> = new Subject<void>();
 
   constructor(
     // eslint-disable-next-line functional/prefer-immutable-types
@@ -59,7 +59,7 @@ export class MediaDetailsComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     // eslint-disable-next-line functional/prefer-immutable-types
-    this.state$.subscribe(async (media): Promise<ReadonlyDeep<any>> => {
+    this.state$.subscribe(async (media): Promise<any> => {
       // TODO move this to a service
       if (!media.loaded) {
         document.documentElement.style.setProperty(
@@ -76,19 +76,19 @@ export class MediaDetailsComponent implements AfterViewInit, OnDestroy {
             media?.currentMedia?.attributes?.artwork?.url ||
               media?.currentMedia?.songs?.[0]?.attributes?.artwork?.url
           )
-          .then((foundColor: ReadonlyDeep<FastAverageColorResult | void>) => {
+          .then((foundColor: FastAverageColorResult | void) => {
             document.documentElement.style.setProperty(
               '--backgroundColor',
               `${(foundColor as any)?.hex}` ?? 'var(--backgroundColor)'
             );
 
-            const color: ReadonlyDeep<Color> = new Color(
-              `${(foundColor as any)?.hex}`
-            ).to('oklch');
+            const color: Color = new Color(`${(foundColor as any)?.hex}`).to(
+              'oklch'
+            );
 
-            const newColor: ReadonlyDeep<any> = {
+            const newColor: any = {
               ...color,
-              c: (color as ReadonlyDeep<any>).c - 0.1,
+              c: (color as any).c - 0.1,
               l: 0.905,
             };
 
@@ -104,7 +104,4 @@ export class MediaDetailsComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
   }
-
-  @HostBinding('style.background') readonly backgroundGradient =
-    'radial-gradient(100% 100% at 25rem -2rem, oklch(100% 0 0 / 100%) 0, oklch(100% 0 0 / 70%) 8rem, oklch(20% 0 0) 100%), var(--backgroundColor)';
 }

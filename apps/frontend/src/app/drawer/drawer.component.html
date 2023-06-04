@@ -36,15 +36,10 @@
       uiButton
       text="New Playlist"
       icon="add_box"
-    ></core-base-button>
-    <core-base-button
-      uiButton
-      text="Liked Songs"
-      icon="thumb_up"
     ></core-base-button> -->
   </ng-container>
   <ng-container footer>
-    <ng-scrollbar class="drawer-scroller" [autoHeightDisabled]="false">
+    <ng-scrollbar class="drawer-scroller" [autoHeightDisabled]="true">
       <div id="footer-wrapper">
         <ng-container
           *ngFor="let playlist of libraryPlaylists$ | async; let i = index"

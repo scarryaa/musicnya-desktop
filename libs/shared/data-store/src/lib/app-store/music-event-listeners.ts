@@ -35,13 +35,23 @@ export class MusicEventListeners {
 
     this.instance.addEventListener('nowPlayingItemDidChange', () => {
       if (this.instance.nowPlayingItem) {
-        console.log(this.instance.nowPlayingItem);
+        const item = {
+          ...this.instance.nowPlayingItem,
+          attributes: {
+            ...this.instance.nowPlayingItem.attributes,
+            artwork: {
+              ...this.instance.nowPlayingItem.artwork,
+              url: this.instance.nowPlayingItem.artwork?.url
+                ?.replace('{w}x{h}', '100x100')
+                .replace('{f}', 'webp'),
+            },
+          },
+        };
+
         this.store.dispatch(
           MusicActions.setMediaItem({
             payload: {
-              mediaItem: JSON.parse(
-                JSON.stringify(this.instance.nowPlayingItem)
-              ),
+              mediaItem: JSON.parse(JSON.stringify(item)),
             },
           })
         );

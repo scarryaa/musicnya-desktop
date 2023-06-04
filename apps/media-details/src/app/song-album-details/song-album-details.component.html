@@ -13,6 +13,7 @@
       [tileSize]="12"
       [showInfo]="false"
       [id]="media?.currentMedia?.id"
+      [artworkRouterLink]="undefined"
       [clickEnabled]="false"
     ></ui-album-tile-large>
     <div id="media-details">
@@ -22,7 +23,10 @@
         </div>
         <div id="media-artist-year">
           <span
-            [title]="media?.currentMedia?.attributes.artistName"
+            [title]="
+              media?.currentMedia?.attributes.artistName ||
+              media?.currentMedia?.attributes?.curatorName
+            "
             [ngClass]="{
               'can-hover': media?.currentMedia?.attributes.artistName
             }"
@@ -34,6 +38,14 @@
                 media?.currentMedia?.attributes?.curatorName) ||
               media?.currentMedia?.attributes?.artistName
             "
+            [ngClass]="{
+              'can-hover': media?.currentMedia?.type !== 'playlists'
+            }"
+            [routerLink]="
+              media?.currentMedia?.type === 'playlists'
+                ? undefined
+                : '/media/artists/' + media?.currentMedia?.relationships?.artists?.data?.[0]?.id
+            "
             >{{
               media?.currentMedia.type === 'playlists'
                 ? media?.currentMedia?.attributes?.curatorName
@@ -42,7 +54,6 @@
             }}</span
           ><span *ngIf="media?.currentMedia?.attributes?.releaseDate"
             ><span class="seperator"> • </span>
-            <!-- TODO make a pipe for this -->
             <span id="year">{{
               media?.currentMedia?.attributes?.releaseDate | yearSlice
             }}</span></span
@@ -93,73 +104,6 @@
           ></core-base-button>
         </div>
       </div>
-    </div>
-
-    <div class="more-info">
-      <div class="color-div"></div>
-      <i
-        id="toggle-button"
-        class="material-symbols-rounded"
-        [ngClass]="{
-          rotated: showAdditionalInfo
-        }"
-        (click)="toggleShowContent()"
-        (keydown)="toggleShowContent()"
-        >expand_circle_down</i
-      >
-      <div class="info-border"></div>
-      <ui-media-details-dropdown [showContent]="showAdditionalInfo">
-        <div id="dropdown-content-wrapper">
-          <div class="dropdown-content" #content>
-            <div class="content-wrapper">
-              <div id="media-songs-genre-description">
-                <span id="songs-count"
-                  >{{
-                    media?.currentMedia?.attributes?.trackCount ||
-                      media?.currentMedia?.relationships?.tracks?.data
-                        ?.length ||
-                      media?.currentMedia?.songs?.length
-                  }}
-                  songs
-                </span>
-                <span>{{ media?.currentMedia?.duration | date : 'm:ss' }}</span>
-                <p
-                  *ngIf="media?.currentMedia?.attributes?.genreNames"
-                  id="genres"
-                >
-                  {{ media?.currentMedia?.attributes?.genreNames.join(', ') }}
-                </p>
-                <p
-                  *ngIf="
-                    media?.currentMedia?.attributes?.editorialNotes?.standard ||
-                    media?.currentMedia?.attributes?.editorialNotes?.short
-                  "
-                  id="media-description"
-                  [innerHTML]="
-                    media?.currentMedia?.attributes?.editorialNotes?.standard ||
-                    media?.currentMedia?.attributes?.editorialNotes?.short
-                  "
-                ></p>
-                <p *ngIf="media?.currentMedia?.attributes?.releaseDate">
-                  {{ media?.currentMedia?.attributes?.releaseDate }}
-                </p>
-                <p
-                  id="recordLabel"
-                  *ngIf="media?.currentMedia?.attributes?.recordLabel"
-                >
-                  {{ media?.currentMedia?.attributes?.recordLabel }}
-                </p>
-                <p
-                  id="copyright"
-                  *ngIf="media?.currentMedia?.attributes?.copyright"
-                >
-                  {{ media?.currentMedia?.attributes?.copyright }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ui-media-details-dropdown>
     </div>
   </ng-container>
 </ng-container>

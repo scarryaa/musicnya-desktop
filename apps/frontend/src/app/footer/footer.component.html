@@ -5,7 +5,7 @@
         <core-footer-media-tile
           *ngIf="vm.currentItem$ | async as currentTrack"
           class="media-tile"
-          [mediaImage]="currentTrack?.attributes?.['artwork']?.url.replace('{w}x{h}', '300x300').replace('{f}', '{webp}')"
+          [mediaImage]="currentTrack?.attributes?.['artwork']?.url"
           [mediaTitle]="currentTrack?.attributes?.['name']"
           [mediaSubtitle]="currentTrack?.attributes?.['artistName']"
           [mediaLink]="

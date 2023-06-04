@@ -36,6 +36,8 @@
     "functional/functional-parameters": "off",
     "functional/no-expression-statements": "off",
     "functional/prefer-immutable-types": "off",
+    "functional/type-declaration-immutability": "off",
+    "functional/immutable-data": "off",
     "prettier/prettier": [
       "error",
       {
@@ -78,15 +80,19 @@
             "style": "kebab-case"
           }
         ],
+        "@angular-eslint/template/no-call-expression": "error",
         "functional/no-classes": ["off"]
       }
     },
     {
-      "files": ["*.html"],
-      "extends": [
-        "plugin:@nx/angular-template",
-        "plugin:@angular-eslint/template/recommended"
-      ]
+      "files": ["*.component.html"],
+      "parser": "@angular-eslint/template-parser",
+      "parserOptions": {
+        "project": "./tsconfig.app.json",
+        "ecmaVersion": 2020,
+        "sourceType": "module"
+      },
+      "plugins": ["@angular-eslint/template"]
     }
   ]
 }

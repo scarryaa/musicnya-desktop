@@ -1,4 +1,3 @@
-/* eslint-disable functional/prefer-immutable-types */
 import { Injectable } from '@angular/core';
 import { MusicKit } from '../types';
 import { MusickitBase } from './musickit-base.service';

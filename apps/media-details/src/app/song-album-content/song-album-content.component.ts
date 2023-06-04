@@ -1,6 +1,14 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { VirtualTableModule, VirtualTableSmartModule } from '@nyan-inc/ui';
+import {
+  MediaDetailsDropdownModule,
+  VirtualTableModule,
+  VirtualTableSmartModule,
+} from '@nyan-inc/ui';
 import { Observable, Subject } from 'rxjs';
 import { MusicFacade, MusicAPIFacade } from '@nyan-inc/shared';
 import { LetDirective } from '@ngrx/component';
@@ -13,6 +21,7 @@ import { LetDirective } from '@ngrx/component';
     VirtualTableSmartModule,
     VirtualTableModule,
     LetDirective,
+    MediaDetailsDropdownModule,
   ],
   templateUrl: './song-album-content.component.html',
   styleUrls: ['./song-album-content.component.scss'],
@@ -22,12 +31,19 @@ export class SongAlbumContentComponent {
   musicState$: MusicFacade;
   state$: Observable<any>;
   readonly routeChangeEmitter = new Subject<void>();
+  showAdditionalInfo = false;
 
   constructor(
+    private changeReference: ChangeDetectorRef,
     private musicAPIFacade: MusicAPIFacade,
     private musicFacade: MusicFacade
   ) {
     this.state$ = this.musicAPIFacade.state$;
     this.musicState$ = this.musicFacade;
+  }
+
+  toggleShowContent() {
+    this.showAdditionalInfo = !this.showAdditionalInfo;
+    this.changeReference.detectChanges();
   }
 }

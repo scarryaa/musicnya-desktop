@@ -1,7 +1,7 @@
 @use 'colors';
 @use 'fonts';
 
-:root  {
+:root {
   --font-weight-thin: 200;
   --font-weight-slightly-thin: 300;
   --font-weight-base: 400;
@@ -229,7 +229,7 @@ span,
 
   i,
   span {
-    color: black !important;
+    color: black;
   }
 }
 

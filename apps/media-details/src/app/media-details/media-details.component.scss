@@ -1,66 +1,38 @@
 :host {
-  color: var(--font-color);
-  background-blend-mode: multiply;
-  --background-color: #151515;
-  --backgroundColorLight: #dbdbdb;
+  height: 100vh;
+  display: block;
 
-  .can-hover {
-    cursor: pointer;
-
-    &:hover {
-      text-decoration: underline;
-    }
+  .background {
+    min-height: 100%;
+    background: linear-gradient(to bottom, var(--backgroundColor) 0 20rem),
+      radial-gradient(
+        120vw 30rem at 25rem 0rem,
+        oklch(100% 0 0/100%) 0,
+        oklch(100% 0 0/70%) 8rem,
+        oklch(20% 0 0) 100%
+      );
+    background-blend-mode: multiply;
   }
 
-  #page-wrapper {
-    margin: 0 auto;
-    background: var(--backgroundColorLight);
-    height: inherit;
+  .details {
+    display: block;
+    padding-block: 4rem;
+    padding-bottom: 2rem;
+    padding-left: 1rem;
+  }
 
-    .media-details-relative {
-      position: relative;
-    }
+  .content {
+    height: 100%;
+    display: block;
+    background-color: var(--background-300);
+    border-radius: 4px;
 
-    #media-details-wrapper {
-      background-repeat: no-repeat;
-      position: absolute;
-      bottom: 2rem;
-      left: 1rem;
-    }
-
-    .banner {
-      max-width: 100%;
-      min-width: 100%;
-      min-height: 100%;
-      object-fit: cover;
-      aspect-ratio: 2.5 / 1;
-    }
-
-    #media-content-wrapper {
-      margin: 0 auto;
-      position: relative;
-      width: 100%;
-      height: inherit;
-      margin: 0 auto;
-      margin-top: -1.25rem;
-
-      #media-content {
-        overflow: hidden;
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-        background: var(--backgroundColorLight);
-        padding-block: 1rem;
-        position: absolute;
-        top: 1.1rem;
-        display: flex;
-        width: 100%;
-        min-height: 75vh;
-
-        .content-wrapper {
-          max-width: 100%;
-          margin: 0 auto;
-        }
-      }
+    .content__list {
+      height: 100%;
+      min-height: 80vh;
+      display: block;
+      padding-top: 1rem;
+      padding-bottom: 2rem;
     }
   }
 }

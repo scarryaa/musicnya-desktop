@@ -49,7 +49,7 @@ export class AlbumTileLargeSmartComponent implements OnChanges {
   @Input() mediaTitle = '';
   @Input() showInfo = true;
   @Input() artists: string[] = [];
-  @Input() artworkRouterLink = '';
+  @Input() artworkRouterLink? = '';
   @Input() id = '';
   @Input() mediaInfo = {
     name: '',
@@ -62,7 +62,9 @@ export class AlbumTileLargeSmartComponent implements OnChanges {
 
   //TODO move this to a deticated router class in core?
   async routeToMediaDetails(details: MediaPlayInfo) {
-    await this.router.navigate(['media/' + details.type + '/' + details.id]);
+    if (this.artworkRouterLink) {
+      await this.router.navigate(['media/' + details.type + '/' + details.id]);
+    }
   }
 
   zoom(event: Event) {

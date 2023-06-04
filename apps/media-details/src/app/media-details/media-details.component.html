@@ -1,38 +1,14 @@
-<ng-template #base>
-  <div
-    *ngrxLet="state$ as media"
-    [style.opacity]="media?.loaded ? 1 : 0"
-    id="page-wrapper"
-    [style.background]="
-      'linear-gradient(transparent 14.09rem, transparent 10rem)'
-    "
-  >
-    <div class="media-details-relative">
-      <img
-        class="banner"
-        [style.visibility]="isArtist ? 'visible' : 'hidden'"
-        [src]="musicAPIFacade.artistBanner$ | async"
-      />
-      <div id="media-details-wrapper">
-        <ng-container *ngTemplateOutlet="mediaDetails"></ng-container>
-      </div>
+<ng-container *ngrxLet="state$ as media">
+  <div class="background">
+    <div class="details">
+      <musicnya-song-album-details
+        class="details__content"
+      ></musicnya-song-album-details>
     </div>
-    <div id="media-content-wrapper">
-      <div id="media-content">
-        <div class="content-wrapper">
-          <ng-container *ngTemplateOutlet="mediaContent"></ng-container>
-        </div>
-      </div>
+    <div class="content">
+      <musicnya-song-album-content
+        class="content__list"
+      ></musicnya-song-album-content>
     </div>
   </div>
-</ng-template>
-
-<div *ngTemplateOutlet="base"></div>
-
-<ng-template #mediaDetails>
-  <musicnya-song-album-details></musicnya-song-album-details>
-</ng-template>
-
-<ng-template #mediaContent>
-  <musicnya-song-album-content></musicnya-song-album-content>
-</ng-template>
+</ng-container>
