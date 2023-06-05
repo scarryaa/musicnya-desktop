@@ -1,7 +1,6 @@
 /* eslint-disable functional/prefer-immutable-types */
 import { createAction, props } from '@ngrx/store';
-import { ReadonlyDeep } from 'type-fest';
-import type { MusicKit } from '../../../types';
+import { MusicKit } from '@nyan-inc/shared-types';
 
 export const musicInit = createAction('[Music] Init');
 
@@ -195,7 +194,7 @@ export const setQueuePositionFailure = createAction(
 
 export const setQueueFromMediaItems = createAction(
   '[Music] Set Queue Items',
-  props<{ payload: { items: ReadonlyDeep<MusicKit.MediaItem[]> } }>()
+  props<{ payload: { items: MusicKit.MediaItem[] } }>()
 );
 export const setQueueFromMediaItemsSuccess = createAction(
   '[Music] Set Queue Items Success'

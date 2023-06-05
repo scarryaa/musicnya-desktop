@@ -22,7 +22,6 @@ import { LetDirective } from '@ngrx/component';
 import Color from 'colorjs.io';
 import { SongAlbumDetailsComponent } from '../song-album-details/song-album-details.component';
 import { SongAlbumContentComponent } from '../song-album-content/song-album-content.component';
-import { ReadonlyDeep } from 'type-fest';
 
 @Component({
   standalone: true,
@@ -42,7 +41,7 @@ import { ReadonlyDeep } from 'type-fest';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MediaDetailsComponent implements AfterViewInit, OnDestroy {
-  readonly mediaColor!: ReadonlyDeep<FastAverageColorResult | void>;
+  readonly mediaColor!: FastAverageColorResult | void;
   readonly isArtist = false;
 
   readonly state$: Observable<any>;

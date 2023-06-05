@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import { Musickit, MusickitAPI } from '@nyan-inc/core-services';
+import { MusicKit } from '@nyan-inc/shared-types';
 import {
   switchMap,
   catchError,
@@ -15,10 +16,8 @@ import {
   mergeMap,
   map,
 } from 'rxjs';
-import { MusicKit } from '../../../types';
 import { MusicActions } from '../actions';
 import { fromMusic } from '../reducers';
-import { ReadonlyDeep } from 'type-fest';
 
 export const addListener$ = createEffect(
   (actions$ = inject(Actions), music = inject(Musickit)) =>
@@ -31,7 +30,7 @@ export const addListener$ = createEffect(
         )
       ),
       switchMap(() => of(MusicActions.addEventListenerSuccess())),
-      catchError((error: ReadonlyDeep<Error>) => {
+      catchError((error: Error) => {
         return of(MusicActions.addEventListenerFailure({ payload: { error } }));
       })
     ),
@@ -49,7 +48,7 @@ export const removeListener$ = createEffect(
         )
       ),
       switchMap(() => of(MusicActions.removeEventListenerSuccess())),
-      catchError((error: ReadonlyDeep<Error>) => {
+      catchError((error: Error) => {
         return of(
           MusicActions.removeEventListenerFailure({ payload: { error } })
         );
@@ -187,7 +186,7 @@ export const setRepeatMode$ = createEffect(
           })
         )
       ),
-      catchError((error: ReadonlyDeep<Error>) => {
+      catchError((error: Error) => {
         return of(MusicActions.setRepeatModeFailure({ payload: { error } }));
       })
     ),

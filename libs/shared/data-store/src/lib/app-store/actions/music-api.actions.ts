@@ -1,6 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { MediaItemTypes } from '@nyan-inc/core';
-import { MusicKit } from '../../../types';
+import { MusicKit } from '@nyan-inc/shared-types';
 import { MusicAPIEntity } from '../models/music-api.models';
 
 // Music API Actions
@@ -88,7 +87,11 @@ export const getFromUrlFailure = createAction(
 export const setCurrentMedia = createAction(
   '[Music/API] Set Current Media',
   props<{
-    payload: { data: MusicKit.MediaItem; type: MediaItemTypes; id: string };
+    payload: {
+      data: MusicKit.MediaItem;
+      type: MusicKit.MediaItemType;
+      id: string;
+    };
   }>()
 );
 export const setCurrentMediaSuccess = createAction(
@@ -224,7 +227,7 @@ export const removeAlbumFailure = createAction(
 // get media item
 export const getMediaItem = createAction(
   '[Music/API] Get Media Item',
-  props<{ payload: { type: MediaItemTypes; id: string } }>()
+  props<{ payload: { type: MusicKit.MediaItemType; id: string } }>()
 );
 export const getMediaItemSuccess = createAction(
   '[Music/API] Get Media Item Success',
@@ -238,11 +241,11 @@ export const getMediaItemFailure = createAction(
 // set current view type
 export const setCurrentViewType = createAction(
   '[Music/API] Set Current View Type',
-  props<{ payload: { type: MediaItemTypes; id: string } }>()
+  props<{ payload: { type: MusicKit.MediaItemType; id: string } }>()
 );
 export const setCurrentViewTypeSuccess = createAction(
   '[Music/API] Set Current View Type Success',
-  props<{ payload: { type: MediaItemTypes; id: string } }>()
+  props<{ payload: { type: MusicKit.MediaItemType; id: string } }>()
 );
 export const setCurrentViewTypeFailure = createAction(
   '[Music/API] Set Current View Type Failure',
@@ -255,7 +258,7 @@ export const getRecommendations = createAction(
 );
 export const getRecommendationsSuccess = createAction(
   '[Music/API] Get Recommendations Success',
-  props<{ payload: { data: MusicKit.MediaItem[] } }>()
+  props<{ payload: { data: MusicKit.PersonalRecommendation[] } }>()
 );
 export const getRecommendationsFailure = createAction(
   '[Music/API] Get Recommendations Failure',
@@ -268,7 +271,7 @@ export const getRecentlyPlayed = createAction(
 );
 export const getRecentlyPlayedSuccess = createAction(
   '[Music/API] Get Recently Played Success',
-  props<{ payload: { data: MusicKit.MediaItem[] } }>()
+  props<{ payload: { data: MusicKit.Resource[] } }>()
 );
 export const getRecentlyPlayedFailure = createAction(
   '[Music/API] Get Recently Played Failure',
@@ -312,7 +315,7 @@ export const getArtistFailure = createAction(
 // Get user ratings from IDs
 export const getUserRatingsFromIDs = createAction(
   '[Music/API] Get User Ratings From IDs',
-  props<{ payload: { type: MediaItemTypes; ids: string[] } }>()
+  props<{ payload: { type: MusicKit.MediaItemType; ids: string[] } }>()
 );
 export const getUserRatingsFromIDsSuccess = createAction(
   '[Music/API] Get User Ratings From IDs Success',
@@ -326,7 +329,7 @@ export const getUserRatingsFromIDsFailure = createAction(
 // Love a mediaitem
 export const loveMediaItem = createAction(
   '[Music/API] Love Media Item',
-  props<{ payload: { type: MediaItemTypes; id: string } }>()
+  props<{ payload: { type: MusicKit.MediaItemType; id: string } }>()
 );
 export const loveMediaItemSuccess = createAction(
   '[Music/API] Love Media Item Success',
@@ -336,3 +339,20 @@ export const loveMediaItemFailure = createAction(
   '[Music/API] Love Media Item Failure',
   props<{ payload: { error: Error } }>()
 );
+
+// Route listener actions
+export const getMediaItemOnRouteChange = createAction(
+  '[Music/API] Get Media Item On Route Change',
+  props<{ payload: { type: MusicKit.MediaItemType; id: string } }>()
+);
+export const getMediaItemOnRouteChangeSuccess = createAction(
+  '[Music/API] Get Media Item On Route Change Success',
+  props<{ payload: { data: MusicKit.MediaItem } }>()
+);
+export const getMediaItemOnRouteChangeFailure = createAction(
+  '[Music/API] Get Media Item On Route Change Failure',
+  props<{ payload: { error: Error } }>()
+);
+
+// Not Found
+export const notFound = createAction('[Music/API] Not Found');

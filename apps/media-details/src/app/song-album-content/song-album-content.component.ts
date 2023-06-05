@@ -28,25 +28,14 @@ import { LetDirective } from '@ngrx/component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SongAlbumContentComponent {
-  musicState$: MusicFacade;
-  state$: Observable<any>;
   readonly routeChangeEmitter = new Subject<void>();
   showAdditionalInfo = false;
 
   constructor(
     private changeReference: ChangeDetectorRef,
-    public musicAPIFacade: MusicAPIFacade,
-    private musicFacade: MusicFacade
-  ) {
-    this.state$ = this.musicAPIFacade.state$;
-    this.musicState$ = this.musicFacade;
-    this.musicAPIFacade.getRatings$.subscribe((data) => {
-      console.log(data);
-    });
-    this.state$.subscribe((data) => {
-      console.log(data);
-    });
-  }
+    public vm: MusicAPIFacade,
+    public music: MusicFacade
+  ) {}
 
   toggleShowContent() {
     this.showAdditionalInfo = !this.showAdditionalInfo;

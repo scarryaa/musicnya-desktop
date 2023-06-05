@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MusicKit } from '../types';
+import { MusicKit } from '@nyan-inc/shared-types';
 import { MusickitBase } from './musickit-base.service';
 
 @Injectable({
@@ -30,6 +30,15 @@ export class MusickitAPI {
   }
 
   /**
+   * Get Library Albums
+   */
+  async getLibraryAlbums(): Promise<MusicKit.LibraryAlbums[]> {
+    return await this.requestData(
+      `/v1/me/library/albums${this.getQueryString()}`
+    );
+  }
+
+  /**
    * Find by URL
    * @param url - The URL to find
    */
@@ -56,16 +65,16 @@ export class MusickitAPI {
     );
   }
 
-  async getLibraryAlbum(id: string): Promise<any> {
+  async getLibraryAlbum(id: string): Promise<MusicKit.LibraryAlbums> {
     return this.requestData(
       `/v1/me/library/albums/${id}${this.getQueryString()}`
     );
   }
 
-  async getAlbum(id: string): Promise<any> {
-    return this.requestData(
+  async getAlbum(id: string): Promise<MusicKit.Albums[]> {
+    return (await this.requestData(
       `/v1/catalog/us/albums/${id}${this.getQueryString()}`
-    );
+    )) as MusicKit.Albums[];
   }
 
   async getPlaylist(id: string): Promise<any> {
@@ -92,20 +101,20 @@ export class MusickitAPI {
     );
   }
 
-  async getRecentlyPlayed(): Promise<any> {
+  async getRecentlyPlayed(): Promise<MusicKit.Resource[]> {
     const request = await this.requestData(
       `/v1/me/recent/played${this.getQueryString()}&limit=20&include=[albums]=artists&extend=editorialArtwork,artistUrl,artistId,editorialVideo,offers,trackCount&limit[albums]=10&include=[artists]=id`
     );
     console.log(request);
-    return request;
+    return request as MusicKit.Resource[];
   }
 
-  async getRecommendations(): Promise<any> {
+  async getRecommendations(): Promise<MusicKit.PersonalRecommendation[]> {
     const request = await this.requestData(
       `/v1/me/recommendations${this.getQueryString()}?include[albums]=artists&extend=editorialArtwork,artistId,artistUrl,editorialVideo,offers,trackCount&limit[albums]=10&include=[artists]=id`
     );
     console.log(request);
-    return request;
+    return request as MusicKit.PersonalRecommendation[];
   }
 
   async getArtistFromSongID(id: string): Promise<any> {

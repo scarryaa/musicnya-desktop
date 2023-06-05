@@ -104,7 +104,7 @@ export const appConfig: ApplicationConfig = {
     provideState(fromApp.APP_FEATURE_KEY, fromApp.appReducer),
     provideState(fromMusic.MUSIC_FEATURE_KEY, fromMusic.musicReducer),
     provideState(
-      fromMusicAPI.MusicAPI_API_FEATURE_KEY,
+      fromMusicAPI.MUSIC_API_FEATURE_KEY,
       fromMusicAPI.musicAPIReducer
     ),
     provideState(fromSpinner.SPINNER_FEATURE_KEY, fromSpinner.spinnerReducer),

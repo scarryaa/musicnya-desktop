@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { createSelector, select, Store } from '@ngrx/store';
-import { LibraryPlaylists } from '@nyan-inc/core';
-import { getMusicAPIState, MusicAPIState } from '@nyan-inc/shared';
-import { filter, map, Observable, switchMap } from 'rxjs';
+import { MusicAPIState } from '@nyan-inc/shared';
+import { MusicKit } from '@nyan-inc/shared-types';
+import { selectAllLibraryPlaylists } from 'libs/shared/data-store/src/lib/app-store/selectors/library-playlists.selectors';
+import { filter } from 'rxjs';
 import { LayoutActions } from '../actions';
 import { getLayoutState, LayoutState } from '../reducers/layout.reducer';
 
@@ -23,8 +24,8 @@ export class LayoutFacade {
 
   // set current view from musicAPI store based on current view
   currentView$ = this.store.pipe(
-    select(getMusicAPIState),
-    map((state) => state.libraryPlaylists)
+    select(selectAllLibraryPlaylists),
+    filter((playlists: MusicKit.LibraryPlaylists[]) => playlists.length > 0)
   );
 
   openDrawer = () => this.store.dispatch(LayoutActions.openDrawer());

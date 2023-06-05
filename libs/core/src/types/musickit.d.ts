@@ -1,5 +1,7 @@
-/* eslint-disable functional/prefer-immutable-types */
 /* eslint-disable functional/type-declaration-immutability */
+/* eslint-disable functional/no-classes */
+/* eslint-disable @typescript-eslint/no-namespace */
+/* eslint-disable functional/prefer-immutable-types */
 /**Use the MusicKit namespace to configure MusicKit on the Web and access the singleton instance.
  *
  * It is also a global variable on the window object, and a namespace for other utils and enums.
@@ -368,6 +370,7 @@ export declare namespace MusicKit {
     playlist?: string;
     song?: string;
     songs?: Array<string>;
+    musicVideo?: string;
     station?: string;
     startPlaying?: boolean;
     startPosition?: number;
@@ -577,64 +580,58 @@ export declare namespace MusicKit {
     constructor(options?: MediaItemOptions);
 
     /**A string of information about the album. */
-    readonly albumInfo: string;
-    readonly href: string;
+    albumInfo?: string;
+    href?: string;
     /**The title of the album. */
-    readonly albumName: string;
+    albumName?: string;
     /**The artist for a media item. */
-    readonly artistName: string;
+    artistName?: string;
     /**The artwork object for the media item. */
-    readonly artwork: Artwork;
+    artwork?: Artwork;
     /**The artwork image for the media item. */
-    readonly artworkURL: string;
+    artworkURL?: string;
     /**The attributes object for the media item. */
-    readonly attributes: Pick<
-      | MusicKit.Songs
-      | MusicKit.LibrarySongs
-      | MusicKit.Albums
-      | MusicKit.LibraryAlbums
-      | MusicKit.LibraryPlaylists
-      | MusicKit.Playlists,
-      'attributes'
-    >;
+    attributes?: { [key: string]: any };
     /**The attributes object for the media item. */
-    readonly contentRating: string;
+    contentRating?: string;
     /**The disc number where the media item appears. */
-    readonly discNumber: number;
+    discNumber?: number;
     /**The identifier for the media item. */
-    readonly id: string;
+    id: string;
     /**A string of common information about the media item. */
-    readonly info: string;
+    info?: string;
     /**A Boolean value that indicates whether the item has explicit lyrics or language. */
-    readonly isExplicitItem: boolean;
+    isExplicitItem?: boolean;
     /**A Boolean value that indicated whether the item is playable. */
-    readonly isPlayable: boolean;
+    isPlayable?: boolean;
     /**A Boolean value indicating whether the media item is prepared to play. */
-    readonly isPreparedToPlay: boolean;
+    isPreparedToPlay?: boolean;
     /**The ISRC (International Standard Recording Code) for a media item. */
-    readonly isrc: string;
+    isrc?: string;
     /**The playback duration of the media item. */
-    readonly playbackDuration: number;
+    playbackDuration?: number;
     /**The playlist artwork image for the media item. */
-    readonly playlistArtworkURL: string;
+    playlistArtworkURL?: string;
     /**The name of the playlist. */
-    readonly playlistName: string;
+    playlistName?: string;
     /**The URL to an unencrypted preview of the media item. */
-    readonly previewURL: string;
+    previewURL?: string;
     /**The release date of the media item. */
-    readonly releaseDate?: Date | undefined;
+    releaseDate?: Date | undefined;
     /**The name of the media item. */
-    readonly title: string;
+    title?: string;
     /**The number of the media item in the album's track list. */
-    readonly trackNumber: number;
+    trackNumber?: number;
     /**The number of the media item in the album's track list. */
-    readonly type: MediaItemType;
+    type: MediaItemType;
+    views?: Record<string, View<any>>;
+    relationships?: any;
 
     // Methods
 
     /**Prepares a media item for playback.
      * @returns a void Promise. */
-    prepareToPlay(): Promise<void>;
+    prepareToPlay?(): Promise<void>;
   }
 
   /**An enum containing events for a {@link MusicKitinstance}.*/
@@ -842,7 +839,7 @@ export declare namespace MusicKit {
     attributes?: Record<string, any>;
     relationships?: Record<string, Relationship<any>>;
     meta?: Record<string, any>;
-    views: Record<string, View<any>>;
+    views?: Record<string, View<any>>;
   }
 
   /**
@@ -921,11 +918,19 @@ export declare namespace MusicKit {
     };
   }
 
+  interface Ratings extends Resource {
+    id: string;
+    type: 'ratings';
+    attributes?: {
+      value: number;
+    };
+  }
+
   interface LibrarySongs extends Resource {
     id: MusicItemID;
     type: 'library-songs';
     attributes?: {
-      albumName: string;
+      albumName?: string;
       artistName: string;
       artwork: Artwork;
       attribution?: string;
@@ -945,10 +950,11 @@ export declare namespace MusicKit {
       isrc?: string;
       movementCount?: number;
       movementName?: string;
+      isSingle?: boolean;
       movementNumber?: number;
       name: string;
       playParams?: PlayParameters;
-      previews: Preview[];
+      previews?: Preview[];
       releaseDate?: string;
       trackNumber?: number;
       url: string;
@@ -1153,6 +1159,49 @@ export declare namespace MusicKit {
     };
   }
 
+  interface LibraryArtists extends Resource {
+    type: 'library-artists';
+    attributes?: {
+      editorialNotes?: EditorialNotes;
+      genreNames: string[];
+      name: string;
+      url: string;
+    };
+    editorialArtwork: {
+      bannerUber: Artwork;
+      storeFlowcase: Artwork;
+    };
+    editorialVideo: any;
+    relationships: {
+      albums: Relationship<Albums>;
+      catalog: Relationship<Artists>;
+      genres: Relationship<Genres>;
+      'music-videos': Relationship<MusicVideos>;
+      playlists: Relationship<Playlists>;
+      station: Relationship<Stations>;
+    };
+    views: {
+      'appears-on-albums': View<Albums>;
+      'compilation-albums': {
+        href?: string;
+        next?: string;
+        attributes: {
+          title: string;
+        };
+        data: Albums[];
+      };
+      'featured-albums': View<Albums>;
+      'featured-playlists': View<Playlists>;
+      'full-albums': View<Albums>;
+      'latest-release': View<Albums>;
+      'live-albums': View<Albums>;
+      'similar-artists': View<Artists>;
+      singles: View<Albums>;
+      'top-music-videos': View<MusicVideos>;
+      'top-songs': View<Songs>;
+    };
+  }
+
   /**
    * A resource object that represents a library playlist.
    * https://developer.apple.com/documentation/applemusicapi/libraryplaylists/
@@ -1166,14 +1215,19 @@ export declare namespace MusicKit {
       editorialVideo?: any;
       canEdit: boolean;
       dateAdded?: string;
-      description?: DescriptionAttribute;
+      lastModifiedDate?: string;
+      dateCreated?: string;
+      isPublished?: boolean;
+      url: string;
+      durationInMillis?: number;
+      description?: DescriptionAttribute | string;
       hasCatalog: boolean;
       name: string;
       playParams?: PlayParameters;
     };
     relationships?: {
       catalog?: Relationship<Playlists>;
-      tracks: Relationship<MusicVideos | Songs | LibrarySongs>;
+      tracks?: Relationship<MusicVideos | Songs | LibrarySongs>;
     };
   }
 
@@ -1184,24 +1238,30 @@ export declare namespace MusicKit {
   interface Artists extends Resource {
     type: 'artists';
     attributes?: {
+      artwork?: Artwork;
       editorialNotes?: EditorialNotes;
-      editorialArtwork: {
+      editorialArtwork?: {
         bannerUber: Artwork;
         storeFlowcase: Artwork;
       };
-      editorialVideo: any;
       genreNames: string[];
       name: string;
       url: string;
     };
-    relationships: {
-      albums: Relationship<Albums>;
-      genres: Relationship<Genres>;
-      'music-videos': Relationship<MusicVideos>;
-      playlists: Relationship<Playlists>;
-      station: Relationship<Stations>;
+    editorialArtwork?: {
+      bannerUber: Artwork;
+      storeFlowcase: Artwork;
     };
-    views: {
+    editorialVideo?: any;
+    relationships?: {
+      albums?: Relationship<Albums>;
+      catalog?: Relationship<Artists>;
+      genres?: Relationship<Genres>;
+      'music-videos'?: Relationship<MusicVideos>;
+      playlists?: Relationship<Playlists>;
+      station?: Relationship<Stations>;
+    };
+    views?: {
       'appears-on-albums': View<Albums>;
       'compilation-albums': {
         href?: string;

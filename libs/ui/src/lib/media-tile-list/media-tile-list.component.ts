@@ -12,7 +12,8 @@ import {
 } from '@angular/core';
 import { HeadingComponent } from '../heading/heading.component';
 import { RouterModule } from '@angular/router';
-import { AlbumTileLargeSmartModule, MediaTileComponent } from '@nyan-inc/core';
+import { MediaTileComponent } from '@nyan-inc/core';
+import { MusicKit } from '@nyan-inc/shared-types';
 
 @Component({
   selector: 'ui-media-tile-list',
@@ -33,17 +34,17 @@ import { AlbumTileLargeSmartModule, MediaTileComponent } from '@nyan-inc/core';
         *ngFor="let item of listData; let i = index"
         [id]="listData[i].id"
         #items
-        [mediaTitle]="listData[i].attributes?.name ?? ''"
+        [mediaTitle]="listData[i].attributes?.['name'] ?? ''"
         [mediaLink]="'/media/' + listData[i].type + '/' + listData[i].id"
-        [mediaSubtitle]="listData[i].attributes?.artistName ?? ''"
+        [mediaSubtitle]="listData[i].attributes?.['artistName'] ?? ''"
         [type]="listData[i].type"
         [mediaImageSize]="10"
-        [mediaImage]="listData[i].attributes?.artwork?.url ?? ''"
+        [mediaImage]="listData[i].attributes?.['artwork']?.url ?? ''"
         (playEmitter)="emit(i)"
         [subtitleLink]="
           '/media/' +
           'artists/' +
-          listData[i].attributes?.artistUrl?.split('/').at(-1)
+          listData[i].attributes?.['artistUrl']?.split('/').at(-1)
         "
       ></core-media-tile>
     </div>`,
@@ -57,7 +58,7 @@ export class MediaTileListComponent {
   @Input() showMore = false;
   @Input() listTitle!: string;
   @Input() listId?: string;
-  @Input() listData!: any[];
+  @Input() listData!: MusicKit.Resource[];
   @Input() clickEnabled = true;
   @Output() readonly playEmitter: EventEmitter<{ type: string; id: string }> =
     new EventEmitter();

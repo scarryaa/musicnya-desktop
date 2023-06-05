@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MusickitBase } from '@nyan-inc/core-services';
+import { MusicKit } from '@nyan-inc/shared-types';
 import { Observable, throttleTime } from 'rxjs';
-import { MusicKit } from '../../types';
 import { MusicActions } from './actions';
 import { MusicState } from './reducers/music.reducer';
 

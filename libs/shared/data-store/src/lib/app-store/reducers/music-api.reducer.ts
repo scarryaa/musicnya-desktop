@@ -3,22 +3,19 @@ import {
   createReducer,
   on,
   Action,
-  createFeatureSelector,
   ActionReducer,
   MetaReducer,
-  createSelector,
 } from '@ngrx/store';
 
 import { MusicAPIActions } from '../actions';
 import { MusicAPIEntity } from '../models/music-api.models';
-import { MediaItemTypes } from '@nyan-inc/core';
-import { MusicKit } from '../../../types';
+import { MusicKit } from '@nyan-inc/shared-types';
 
 export const MUSIC_API_FEATURE_KEY = 'musicApi';
 export const RATINGS_FEATURE_KEY = 'ratings';
 
 // state
-export interface MusicAPIState {
+export interface MusicAPIState extends EntityState<MusicAPIEntity> {
   selectedId?: string | number;
   loaded: boolean;
   libraryPlaylists: EntityState<MusicKit.LibraryPlaylists>;
@@ -28,12 +25,12 @@ export interface MusicAPIState {
   error?: string | Error | null;
 
   // caches
-  playlistsCache: EntityState<MusicKit.Playlists>;
-  albumsCache: EntityState<MusicKit.Albums>;
-  songsCache: EntityState<MusicKit.Songs>;
-  artistsCache: EntityState<MusicKit.Artists>;
-  ratingsCache: EntityState<MusicKit.Ratings>;
-  currentMedia?: { data?: MusicKit.MediaItem; type?: MediaItemTypes };
+  playlists: EntityState<MusicKit.Playlists>;
+  albums: EntityState<MusicKit.Albums>;
+  songs: EntityState<MusicKit.Songs>;
+  artists: EntityState<MusicKit.Artists>;
+  ratings: EntityState<MusicKit.Ratings>;
+  currentMedia?: { data?: MusicKit.MediaItem; type?: MusicKit.MediaItemType };
   recentlyPlayed: EntityState<MusicKit.Resource>;
   personalRecommendations: EntityState<MusicKit.PersonalRecommendation>;
 }
@@ -42,23 +39,13 @@ export interface MusicAPIPartialState {
   readonly [MUSIC_API_FEATURE_KEY]: MusicAPIState;
 }
 
-// selectors
-export const getMusicAPIState = createFeatureSelector<MusicAPIState>(
-  MUSIC_API_FEATURE_KEY
-);
-
-export const getRatings = createSelector(
-  getMusicAPIState,
-  (state: MusicAPIState) => state.ratingsCache
-);
-
 // adapters
 export const mediaCacheAdapter: EntityAdapter<MusicKit.MediaItem> =
   createEntityAdapter<MusicKit.MediaItem>();
-export const ratingsCacheAdapter: EntityAdapter<MusicKit.Ratings> =
+export const ratingsAdapter: EntityAdapter<MusicKit.Ratings> =
   createEntityAdapter<MusicKit.Ratings>();
 export const libraryPlaylistsAdapter: EntityAdapter<MusicKit.LibraryPlaylists> =
-  createEntityAdapter<MusicKit.LibraryPlaylists>();
+  createEntityAdapter<MusicKit.LibraryPlaylists>({});
 export const libraryAlbumsAdapter: EntityAdapter<MusicKit.LibraryAlbums> =
   createEntityAdapter<MusicKit.LibraryAlbums>();
 export const libraryArtistsAdapter: EntityAdapter<MusicKit.LibraryArtists> =
@@ -80,27 +67,30 @@ export const recentlyPlayedAdapter: EntityAdapter<MusicKit.Resource> =
   createEntityAdapter<MusicKit.Resource>();
 export const personalRecommendationsAdapter: EntityAdapter<MusicKit.PersonalRecommendation> =
   createEntityAdapter<MusicKit.PersonalRecommendation>();
-export const playlistsCacheAdapter: EntityAdapter<MusicKit.Playlists> =
+export const playlistsAdapter: EntityAdapter<MusicKit.Playlists> =
   createEntityAdapter<MusicKit.Playlists>();
-export const albumsCacheAdapter: EntityAdapter<MusicKit.Albums> =
+export const albumsAdapter: EntityAdapter<MusicKit.Albums> =
   createEntityAdapter<MusicKit.Albums>();
-export const songsCacheAdapter: EntityAdapter<MusicKit.Songs> =
+export const songsAdapter: EntityAdapter<MusicKit.Songs> =
   createEntityAdapter<MusicKit.Songs>();
-export const artistsCacheAdapter: EntityAdapter<MusicKit.Artists> =
+export const artistsAdapter: EntityAdapter<MusicKit.Artists> =
   createEntityAdapter<MusicKit.Artists>();
 
 //initial state
 export const initialState: MusicAPIState = {
+  selectedId: undefined,
+  ids: [],
+  entities: {},
   loaded: false,
   libraryPlaylists: libraryPlaylistsAdapter.getInitialState(),
   libraryAlbums: libraryAlbumsAdapter.getInitialState(),
   libraryArtists: libraryArtistsAdapter.getInitialState(),
   librarySongs: librarySongsAdapter.getInitialState(),
-  playlistsCache: playlistsCacheAdapter.getInitialState(),
-  albumsCache: albumsCacheAdapter.getInitialState(),
-  songsCache: songsCacheAdapter.getInitialState(),
-  artistsCache: artistsCacheAdapter.getInitialState(),
-  ratingsCache: ratingsCacheAdapter.getInitialState(),
+  playlists: playlistsAdapter.getInitialState(),
+  albums: albumsAdapter.getInitialState(),
+  songs: songsAdapter.getInitialState(),
+  artists: artistsAdapter.getInitialState(),
+  ratings: ratingsAdapter.getInitialState(),
   currentMedia: { data: undefined, type: undefined },
   recentlyPlayed: recentlyPlayedAdapter.getInitialState(),
   personalRecommendations: personalRecommendationsAdapter.getInitialState(),
@@ -223,6 +213,29 @@ const reducer = createReducer(
   //   payload: payload.error,
   // })),
 
+  // get media item on route change
+  on(MusicAPIActions.getMediaItemOnRouteChange, (state) => ({ ...state })),
+  on(
+    MusicAPIActions.getMediaItemOnRouteChangeSuccess,
+    (state, { payload }) => ({
+      ...state,
+      // add to cache
+      // songs: songsAdapter.setOne(payload.data, state.songs),
+      // albums: albumsAdapter.setOne(payload.data, state.albums),
+      // artists: artistsAdapter.setOne(
+      //   payload.data,
+      //   state.artists
+      // ),
+    })
+  ),
+  on(
+    MusicAPIActions.getMediaItemOnRouteChangeFailure,
+    (state, { payload }) => ({
+      ...state,
+      payload: payload.error,
+    })
+  ),
+
   // set current view type
   on(MusicAPIActions.setCurrentViewType, (state) => ({
     ...state,
@@ -232,6 +245,38 @@ const reducer = createReducer(
     currentMediaType: payload.type,
   })),
   on(MusicAPIActions.setCurrentViewTypeFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  })),
+
+  // get personal recommendations
+  on(MusicAPIActions.getRecommendations, (state) => ({
+    ...state,
+  })),
+  on(MusicAPIActions.getRecommendationsSuccess, (state, { payload }) => ({
+    ...state,
+    personalRecommendations: personalRecommendationsAdapter.setAll(
+      payload.data,
+      state.personalRecommendations
+    ),
+  })),
+  on(MusicAPIActions.getRecommendationsFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  })),
+
+  // get recently played
+  on(MusicAPIActions.getRecentlyPlayed, (state) => ({
+    ...state,
+  })),
+  on(MusicAPIActions.getRecentlyPlayedSuccess, (state, { payload }) => ({
+    ...state,
+    recentlyPlayed: recentlyPlayedAdapter.setAll(
+      payload.data,
+      state.recentlyPlayed
+    ),
+  })),
+  on(MusicAPIActions.getRecentlyPlayedFailure, (state, { payload }) => ({
     ...state,
     payload: payload.error,
   })),
@@ -262,6 +307,19 @@ const reducer = createReducer(
     })
   ),
 
+  // get album
+  on(MusicAPIActions.getAlbum, (state) => ({
+    ...state,
+  })),
+  on(MusicAPIActions.getAlbumSuccess, (state, { payload }) => ({
+    ...state,
+    albums: albumsAdapter.setOne(payload.data, state.albums),
+  })),
+  on(MusicAPIActions.getAlbumFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  })),
+
   // get artist from id
   on(MusicAPIActions.getArtist, (state) => ({
     ...state,
@@ -270,7 +328,7 @@ const reducer = createReducer(
   on(MusicAPIActions.getArtistSuccess, (state, { payload }) => ({
     ...state,
     artist: payload.data,
-    artistsCache: artistsCacheAdapter.addOne(payload.data, state.artistsCache),
+    artists: artistsAdapter.addOne(payload.data, state.artists),
     loaded: true,
   })),
   on(MusicAPIActions.getArtistFailure, (state, { payload }) => ({
@@ -285,8 +343,8 @@ const reducer = createReducer(
   })),
   on(MusicAPIActions.getUserRatingsFromIDsSuccess, (state, { payload }) => ({
     ...state,
-    ratingsCache: {
-      ...state.ratingsCache,
+    ratings: {
+      ...state.ratings,
       ...payload.data,
     },
   })),
@@ -302,8 +360,8 @@ const reducer = createReducer(
   })),
   on(MusicAPIActions.loveMediaItemSuccess, (state, { payload }) => ({
     ...state,
-    ratingsCache: {
-      ...state.ratingsCache,
+    ratings: {
+      ...state.ratings,
       ...payload.data,
     },
   })),

@@ -30,18 +30,9 @@ import { RouterModule } from '@angular/router';
   ],
 })
 export class SongAlbumDetailsComponent implements OnDestroy {
-  state$: Observable<any>;
-  musicState$: MusicFacade;
-
   destroy$ = new Subject<void>();
 
-  constructor(
-    private musicAPIFacade: MusicAPIFacade,
-    private musicFacade: MusicFacade
-  ) {
-    this.state$ = this.musicAPIFacade.state$;
-    this.musicState$ = this.musicFacade;
-  }
+  constructor(public vm: MusicAPIFacade, public music: MusicFacade) {}
 
   ngOnDestroy(): void {
     this.destroy$.next();

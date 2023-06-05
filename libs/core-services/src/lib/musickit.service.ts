@@ -1,7 +1,7 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/prefer-immutable-types */
 import { Injectable } from '@angular/core';
-import { MusicKit } from '../types';
+import { MusicKit } from '@nyan-inc/shared-types';
 import { HttpService } from './http/http.service';
 import { MusickitBase } from './musickit-base.service';
 
@@ -19,7 +19,8 @@ export class Musickit {
   }
 
   async getInstance() {
-    this._instance = this.musicKitBase.instance as MusicKit.MusicKitInstance;
+    this._instance = this.musicKitBase
+      .instance as unknown as MusicKit.MusicKitInstance;
   }
 
   async play() {
@@ -76,7 +77,7 @@ export class Musickit {
    */
 
   public get instance(): MusicKit.MusicKitInstance {
-    return this.musicKitBase.instance as MusicKit.MusicKitInstance;
+    return this.musicKitBase.instance as unknown as MusicKit.MusicKitInstance;
   }
 
   public set instance(instance: MusicKit.MusicKitInstance) {

@@ -6,7 +6,7 @@ import {
   createSelector,
   createFeatureSelector,
 } from '@ngrx/store';
-import type { MusicKit } from '../../../types';
+import { MusicKit } from '@nyan-inc/shared-types';
 import { MusicActions } from '../actions';
 
 import { MusicEntity } from '../models/music.models';

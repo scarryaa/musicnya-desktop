@@ -23,6 +23,7 @@ import { DataSource } from '@angular/cdk/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router, RouterModule } from '@angular/router';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { MusicKit } from '@nyan-inc/shared-types';
 
 @Component({
   selector: 'ui-virtual-table',
@@ -54,7 +55,7 @@ export class VirtualTableSmartComponent implements OnChanges, OnDestroy {
 
   @Input() data!: Songs[];
   @Input() ratings?: any | null;
-  @Input() media!: MediaItemTypes;
+  @Input() media!: MusicKit.MediaItemType;
   @Input() playingSong: string | undefined = undefined;
   @Input() playing = false;
   @Input() routeChanges!: Observable<void>;

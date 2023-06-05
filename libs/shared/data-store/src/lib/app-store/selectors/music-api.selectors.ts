@@ -1,31 +1,26 @@
 import { createFeatureSelector, createSelector, select } from '@ngrx/store';
 import {
-  getMusicAPIState,
   MusicAPIState,
-  MusicAPI_API_FEATURE_KEY,
+  MUSIC_API_FEATURE_KEY,
 } from '../reducers/music-api.reducer';
+import { MusicAPIEntity } from 'libs/shared/data-store/src/lib/app-store/models/music-api.models';
+import { createEntityAdapter } from '@ngrx/entity';
 
-export const getMusicAPI = createFeatureSelector(MusicAPI_API_FEATURE_KEY);
+export const selectMusicAPIState = createFeatureSelector<MusicAPIState>(
+  MUSIC_API_FEATURE_KEY
+);
+
+export const { selectIds, selectEntities, selectAll, selectTotal } =
+  createEntityAdapter<MusicAPIEntity>().getSelectors(selectMusicAPIState);
+
+export const selectSelectedId = createSelector(
+  selectMusicAPIState,
+  (state: MusicAPIState) => state.selectedId
+);
+
+export const getMusicAPI = createFeatureSelector(MUSIC_API_FEATURE_KEY);
 
 export const getMediaCache = select(
   getMusicAPI,
-  (state: MusicAPIState) => state.mediaCache
-);
-
-export const getLibraryPlaylists = select(
-  getMusicAPI,
-  (state: MusicAPIState) => state.libraryPlaylists
-);
-
-export const getLibraryPlaylistSongs = createSelector(
-  getMusicAPIState,
-  (state: MusicAPIState) => {
-    return state.libraryPlaylists
-      ? {
-          ...state.libraryPlaylists.find(
-            (playlist) => playlist.id === state.selectedId
-          )?.songs,
-        }
-      : null;
-  }
+  (state: MusicAPIState) => state
 );

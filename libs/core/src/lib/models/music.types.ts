@@ -1,4 +1,4 @@
-import { MusicKit } from '../../types/musickit';
+import { MusicKit } from '@nyan-inc/shared-types';
 
 export interface Artwork {
   bgColor?: string;
@@ -532,8 +532,12 @@ export interface Library {
 
 export type MediaItemTypes =
   | 'library-albums'
+  | 'library-album'
   | 'library-playlists'
+  | 'library-playlist'
   | 'library-songs'
+  | 'library-artists'
+  | 'library-artist'
   | 'albums'
   | 'playlists'
   | 'songs'
@@ -544,7 +548,6 @@ export type MediaItemTypes =
   | 'curators'
   | 'activities'
   | 'apple-curators';
-
 export interface Playback {
   playbackState: 'none' | 'playing' | 'paused' | 'stopped';
   playbackDuration: number;

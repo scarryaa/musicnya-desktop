@@ -18,3 +18,4 @@ export * from './lib/app-store/music-event-listeners';
 
 export * from './lib/models/helpers';
 export * from './lib/models/musickit.models';
+export * from './lib/app-store/selectors/index';

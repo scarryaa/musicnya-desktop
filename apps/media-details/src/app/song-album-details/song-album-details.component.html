@@ -1,109 +1,98 @@
-<ng-container *ngrxLet="state$ as media">
-  <ng-container *ngrxLet="musicState$ as player">
-    <ui-album-tile-large
-      id="media-cover-artwork"
-      #mediaCover
-      [showZoom]="true"
-      [showEditOverlay]="
-        media?.currentMedia?.type === 'library-playlists' &&
-        media?.currentMedia?.attributes?.canEdit
-      "
-      [imageSource]="media?.currentMedia?.attributes?.artwork?.url || media?.currentMedia?.songs?.[0]?.attributes?.artwork?.url"
-      [showPlayButton]="false"
-      [tileSize]="12"
-      [showInfo]="false"
-      [id]="media?.currentMedia?.id"
-      [artworkRouterLink]="undefined"
-      [clickEnabled]="false"
-    ></ui-album-tile-large>
-    <div id="media-details">
-      <div id="media-text">
-        <div id="media-title" [title]="media.currentMedia?.attributes?.name">
-          {{ media.currentMedia?.attributes?.name }}
-        </div>
-        <div id="media-artist-year">
-          <span
-            [title]="
-              media?.currentMedia?.attributes.artistName ||
-              media?.currentMedia?.attributes?.curatorName
-            "
-            [ngClass]="{
-              'can-hover': media?.currentMedia?.attributes.artistName
-            }"
-            id="artist"
-            *ngIf="
-              (media?.currentMedia?.type === 'playlists' &&
-                media?.currentMedia?.attributes?.curatorName) ||
-              (media.type !== 'playlists' &&
-                media?.currentMedia?.attributes?.curatorName) ||
-              media?.currentMedia?.attributes?.artistName
-            "
-            [ngClass]="{
-              'can-hover': media?.currentMedia?.type !== 'playlists'
-            }"
-            [routerLink]="
-              media?.currentMedia?.type === 'playlists'
+<ng-container *ngrxLet="vm">
+  <ng-container *ngrxLet="vm.selectMedia$ | async; let media">
+    <ng-container *ngrxLet="music">
+      <ui-album-tile-large
+        id="media-cover-artwork"
+        #mediaCover
+        [showZoom]="true"
+        [showEditOverlay]="
+          media?.type === 'library-playlists' && media?.attributes?.['canEdit']
+        "
+        [imageSource]="media?.attributes?.['artwork']?.url || media?.songs?.[0]?.attributes?.['artwork']?.url"
+        [showPlayButton]="false"
+        [tileSize]="12"
+        [showInfo]="false"
+        [id]="media?.id!"
+        [artworkRouterLink]="undefined"
+        [clickEnabled]="false"
+      ></ui-album-tile-large>
+      <div id="media-details">
+        <div id="media-text">
+          <div id="media-title" [title]="media?.attributes?.['name']">
+            {{ media?.attributes?.['name'] }}
+          </div>
+          <div id="media-artist-year">
+            <span
+              [title]="
+                media?.attributes?.['artistName'] || media?.attributes?.['curatorName']
+              "
+              [ngClass]="{
+                'can-hover': media?.attributes?.['artistName']
+              }"
+              id="artist"
+              *ngIf="
+                (media?.type === 'playlists' &&
+                  media?.attributes?.['curatorName']) ||
+                (media?.type !== 'playlists' &&
+                  media?.attributes?.['curatorName']) ||
+                media?.attributes?.['artistName']
+              "
+              [ngClass]="{
+                'can-hover': media?.type !== 'playlists'
+              }"
+              [routerLink]="
+              media?.type === 'playlists'
                 ? undefined
-                : '/media/artists/' + media?.currentMedia?.relationships?.artists?.data?.[0]?.id
+                : '/media/artists/' + media?.relationships?.artists?.data?.[0]?.id
             "
-            >{{
-              media?.currentMedia.type === 'playlists'
-                ? media?.currentMedia?.attributes?.curatorName
-                : media?.currentMedia?.attributes?.artistName ||
-                  'Unknown Artist'
-            }}</span
-          ><span *ngIf="media?.currentMedia?.attributes?.releaseDate"
-            ><span class="seperator"> • </span>
-            <span id="year">{{
-              media?.currentMedia?.attributes?.releaseDate | yearSlice
-            }}</span></span
-          >
+              >{{
+                media?.type === 'playlists'
+                  ? media?.attributes?.['curatorName']
+                  : media?.attributes?.['artistName'] || 'Unknown Artist'
+              }}</span
+            ><span *ngIf="media?.attributes?.['releaseDate']"
+              ><span class="seperator"> • </span>
+              <span id="year">{{
+                media?.attributes?.['releaseDate'] | yearSlice
+              }}</span></span
+            >
+          </div>
+        </div>
+        <div id="media-buttons">
+          <div id="media-buttons-wrapper">
+            <core-base-button
+              id="play-button"
+              class="core-base-button-filled media-action-button outline-offset-small"
+              componentStyleClass="ui-button-l media-action-button"
+              text="Play"
+              (click)="music.setQueueThenPlay(media?.type!, media?.id!)"
+              icon="play_arrow"
+            ></core-base-button>
+            <core-base-button
+              id="shuffle-button"
+              class="core-base-button-filled media-action-button outline-offset-small"
+              componentStyleClass="ui-button-l media-action-button"
+              text="Shuffle"
+              icon="shuffle"
+              (click)="music.shufflePlay(media?.type!, media?.id!)"
+            ></core-base-button>
+          </div>
+          <div id="misc-media-buttons">
+            <core-base-button
+              id="library-add-button"
+              class="media-misc-button outline-offset-small"
+              componentStyleClass="ui-button-l media-action-button"
+              icon="arrow_circle_down"
+            ></core-base-button>
+            <core-base-button
+              id="media-options-button"
+              class="media-misc-button outline-offset-small"
+              componentStyleClass="ui-button-l media-action-button"
+              icon="more_horiz"
+            ></core-base-button>
+          </div>
         </div>
       </div>
-      <div id="media-buttons">
-        <div id="media-buttons-wrapper">
-          <core-base-button
-            id="play-button"
-            class="core-base-button-filled media-action-button outline-offset-small"
-            componentStyleClass="ui-button-l media-action-button"
-            text="Play"
-            (click)="
-              player.setQueueThenPlay(
-                media.currentMedia?.type,
-                media.currentMedia?.id
-              )
-            "
-            icon="play_arrow"
-          ></core-base-button>
-          <core-base-button
-            id="shuffle-button"
-            class="core-base-button-filled media-action-button outline-offset-small"
-            componentStyleClass="ui-button-l media-action-button"
-            text="Shuffle"
-            icon="shuffle"
-            (click)="
-              player.shufflePlay(
-                media.currentMedia?.type,
-                media.currentMedia?.id
-              )
-            "
-          ></core-base-button>
-        </div>
-        <div id="misc-media-buttons">
-          <core-base-button
-            id="library-add-button"
-            class="media-misc-button outline-offset-small"
-            componentStyleClass="ui-button-l media-action-button"
-            icon="arrow_circle_down"
-          ></core-base-button>
-          <core-base-button
-            id="media-options-button"
-            class="media-misc-button outline-offset-small"
-            componentStyleClass="ui-button-l media-action-button"
-            icon="more_horiz"
-          ></core-base-button>
-        </div>
-      </div>
-    </div>
+    </ng-container>
   </ng-container>
 </ng-container>

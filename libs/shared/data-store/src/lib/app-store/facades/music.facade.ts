@@ -1,9 +1,8 @@
 /* eslint-disable functional/prefer-immutable-types */
 import { Injectable, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
+import { MusicKit } from '@nyan-inc/shared-types';
 import { map, Observable, Subscription, tap } from 'rxjs';
-import { ReadonlyDeep } from 'type-fest';
-import { MusicKit } from '../../../types';
 import { processMediaType } from '../../models/helpers';
 import { MusicActions } from '../actions';
 import { fromMusic } from '../reducers';
@@ -140,7 +139,7 @@ export class MusicFacade implements OnDestroy {
     );
   }
 
-  addEventListener(event: ReadonlyDeep<string>, callback: ReadonlyDeep<any>) {
+  addEventListener(event: string, callback: any) {
     this.store.dispatch(
       MusicActions.addEventListener({ payload: { event, callback } })
     );

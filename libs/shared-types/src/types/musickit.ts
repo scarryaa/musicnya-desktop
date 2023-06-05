@@ -147,28 +147,28 @@ export declare namespace MusicKit {
      * This property does not necessarily represent the actual bit rate of the item being played, only the target bit rate when the player selects the stream to play. */
     bitrate: PlaybackBitrate;
     /**The duration of the {@link nowPlayingItem}, in seconds. */
-    readonly currentPlaybackDuration: number;
+    currentPlaybackDuration: number;
     /**Progress percentage between 0 and 1 indicating the current play head position for the nowPlayingItem.
      *
      * Useful for showing a playback progress bar UI, for instance. */
-    readonly currentPlaybackProgress: number;
+    currentPlaybackProgress: number;
     /**The current position of the play head for the nowPlayingItem, in seconds. */
-    readonly currentPlaybackTime: number;
+    currentPlaybackTime: number;
     /**The current remaining playback time for the {@link nowPlayingItem}, in seconds. */
-    readonly currentPlaybackTimeRemaining: number;
+    currentPlaybackTimeRemaining: number;
     /**This is set to true after the user successfully signs in and authorizes the application via the authorize() method,
      * or upon configuring the MusicKit instance if the user had previously authorized your application. */
-    readonly isAuthorized: boolean;
+    isAuthorized: boolean;
     /**Indicates whether the player is in the playing state. */
-    readonly isPlaying: boolean;
+    isPlaying: boolean;
     /**This is the {@link MediaItem} that is currently playing from the {@link Queue}.
      *
      * This property will change when playback of a Queue starts, but will not unset on pause.
      *
      * It will change to the next item in the Queue once that item starts playing. */
-    readonly nowPlayingItem: MediaItem | undefined;
+    nowPlayingItem: MediaItem | undefined;
     /**The index of the {@link nowPlayingItem} in the current playback {@link Queue}. */
-    readonly nowPlayingItemIndex: number;
+    nowPlayingItemIndex: number;
     /**The speed of playback, which is set directly on the HTMLMediaElement as the HTMLMediaElement.playbackRate property.
      *
      * The default rate is 1.0, but this can be set to a value higher or lower to control the speed of playback.
@@ -176,7 +176,7 @@ export declare namespace MusicKit {
      * Different browsers will have different upper and lower bounds for this value. */
     playbackRate: number;
     /**The current playback state of the media player. See {@link PlaybackStates} for more information and the possible values. */
-    readonly playbackState: PlaybackStates;
+    playbackState: PlaybackStates;
     /**When a user with a valid Apple Music subscription authorizes your app, MusicKit will allow full playback of content from the Apple Music catalog.
      *
      * If the app does not have user authorization, then playback is restricted to non-DRM preview assets, which are snippets of the full media.
@@ -187,14 +187,14 @@ export declare namespace MusicKit {
      * on the user’s authorization and Apple Music Subscription status. */
     previewOnly: boolean;
     /**The current playback queue of the music player. */
-    readonly queue: Queue;
+    queue: Queue;
     /**Indicates whether the current playback {@link Queue} is empty. */
     queueIsEmpty: number;
     /**Set this to an Enum value from {@link PlayerRepeatMode} to control the repeat behavior during playback. */
     repeatMode: PlayerRepeatMode;
     /**While playing a MediaItem, seekSeconds will be an Object with properties BACK and FORWARD,
      * which represent the number of seconds that the play head will be moved backwards or forwards when calling {@link seekBackward} or {@link seekForward}, respectively. */
-    readonly seekSeconds: SeekSeconds | undefined;
+    seekSeconds: SeekSeconds | undefined;
     /** The shuffle mode of the player.
      *
      * Set this to an Enum value from {@link PlayerShuffleMode} to control the shuffle behavior during playback.
@@ -205,7 +205,7 @@ export declare namespace MusicKit {
     /**@deprecated This property is deprecated, use {@link shuffleMode} instead. */
     shuffle: boolean;
     /**This is the id of the authorized user’s storefront, if applicable. It defaults to 'us'. */
-    readonly storefrontCountryCode: string;
+    storefrontCountryCode: string;
     /**This is the id of the configured storefront for the instance of MusicKit.
      * It can be set explicitly when calling {@link MusicKit.configure()},
      * or after configuration by calling {@link changeUserStorefront}.
@@ -214,14 +214,14 @@ export declare namespace MusicKit {
      * This is also the value used for the {{storefrontId}} token in the path argument of the Passthrough API method, which helps create
      * reusable URL templates by abstracting the storefront.
      * @see MusicKit Docs: [Passthrough API](https://js-cdn.music.apple.com/musickit/v3/docs/iframe.html?path=/story/reference-javascript-api--page) */
-    readonly storefrontId: string;
+    storefrontId: string;
     /**If creating a custom video player, you can set this property to a DOM Element of type {@link HTMLVideoElement}, which is the element type of a <video> tag.
      * MusicKit will then use that element for video playback, for instance Music Videos.
      *
      * Using our Music Video Player Web Component, this will be configured for you automatically.
      * Otherwise, you will need to add a <video> element to your page and provide a reference to it as the videoContainerElement
      * property in order to play any video-format Media Items. */
-    readonly videoContainerElement: any | undefined;
+    videoContainerElement: any | undefined;
     /**The volume of audio playback, which is set directly on the {@link HTMLMediaElement} as the {@link HTMLMediaElement.volume} property.
      *
      * This value ranges between 0, which would be muting the audio, and 1, which would be the loudest possible. */
@@ -563,14 +563,21 @@ export declare namespace MusicKit {
     type: any;
   }
 
-  const enum MediaItemType {
-    albums,
-    songs,
-    artists,
-    musicVideos,
-    playlists,
-    stations,
-  }
+  export type MediaItemType =
+    | 'library-albums'
+    | 'library-playlists'
+    | 'library-songs'
+    | 'library-artists'
+    | 'albums'
+    | 'playlists'
+    | 'songs'
+    | 'personal-recommendation'
+    | 'music-videos'
+    | 'stations'
+    | 'artists'
+    | 'curators'
+    | 'activities'
+    | 'apple-curators';
 
   /**This class represents a single media item. */
   class MediaItem {
@@ -580,52 +587,54 @@ export declare namespace MusicKit {
     constructor(options?: MediaItemOptions);
 
     /**A string of information about the album. */
-    readonly albumInfo?: string;
-    readonly href?: string;
+    albumInfo?: string;
+    href?: string;
     /**The title of the album. */
-    readonly albumName?: string;
+    albumName?: string;
     /**The artist for a media item. */
-    readonly artistName?: string;
+    artistName?: string;
     /**The artwork object for the media item. */
-    readonly artwork?: Artwork;
+    artwork?: Artwork;
     /**The artwork image for the media item. */
-    readonly artworkURL?: string;
+    artworkURL?: string;
     /**The attributes object for the media item. */
-    readonly attributes?: { [key: string]: any };
+    attributes?: { [key: string]: any };
     /**The attributes object for the media item. */
-    readonly contentRating?: string;
+    contentRating?: string;
     /**The disc number where the media item appears. */
-    readonly discNumber?: number;
+    discNumber?: number;
+    duration?: number;
+    songs?: MediaItem[];
     /**The identifier for the media item. */
-    readonly id: string;
+    id: string;
     /**A string of common information about the media item. */
-    readonly info?: string;
+    info?: string;
     /**A Boolean value that indicates whether the item has explicit lyrics or language. */
-    readonly isExplicitItem?: boolean;
+    isExplicitItem?: boolean;
     /**A Boolean value that indicated whether the item is playable. */
-    readonly isPlayable?: boolean;
+    isPlayable?: boolean;
     /**A Boolean value indicating whether the media item is prepared to play. */
-    readonly isPreparedToPlay?: boolean;
+    isPreparedToPlay?: boolean;
     /**The ISRC (International Standard Recording Code) for a media item. */
-    readonly isrc?: string;
+    isrc?: string;
     /**The playback duration of the media item. */
-    readonly playbackDuration?: number;
+    playbackDuration?: number;
     /**The playlist artwork image for the media item. */
-    readonly playlistArtworkURL?: string;
+    playlistArtworkURL?: string;
     /**The name of the playlist. */
-    readonly playlistName?: string;
+    playlistName?: string;
     /**The URL to an unencrypted preview of the media item. */
-    readonly previewURL?: string;
+    previewURL?: string;
     /**The release date of the media item. */
-    readonly releaseDate?: Date | undefined;
+    releaseDate?: Date | undefined;
     /**The name of the media item. */
-    readonly title?: string;
+    title?: string;
     /**The number of the media item in the album's track list. */
-    readonly trackNumber?: number;
+    trackNumber?: number;
     /**The number of the media item in the album's track list. */
-    readonly type: MediaItemType;
-    readonly views?: Record<string, View<any>>;
-    readonly relationships?: any;
+    type: MusicKit.MediaItemType;
+    views?: Record<string, View<any>>;
+    relationships?: any;
 
     // Methods
 

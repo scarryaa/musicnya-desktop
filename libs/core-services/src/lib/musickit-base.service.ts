@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import type { MusicKit as Music } from '../types';
+import type { MusicKit as Music } from '@nyan-inc/shared-types';
 import { HttpService } from './http/http.service';
 
 declare const MusicKit: any;

@@ -7,7 +7,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { HeadingComponent, MediaTileListComponent } from '@nyan-inc/ui';
-import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
+import { MusicAPIFacade, MusicAPIState, MusicFacade } from '@nyan-inc/shared';
 import { LetDirective } from '@ngrx/component';
 import { SpinnerComponent } from '@nyan-inc/core';
 
@@ -25,22 +25,13 @@ import { SpinnerComponent } from '@nyan-inc/core';
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent implements OnDestroy, AfterViewInit {
-  constructor(
-    public musicAPIFacade: MusicAPIFacade,
-    public music: MusicFacade
-  ) {
-    this.state$ = this.musicAPIFacade.state$;
+export class HomeComponent implements OnDestroy {
+  constructor(public vm: MusicAPIFacade, public music: MusicFacade) {
+    this.vm.getRecommendationsAndRecentlyPlayed();
   }
 
   subs: Subscription = new Subscription();
   _destroy$: Subject<void> = new Subject<void>();
-  state$: Observable<any>;
-
-  ngAfterViewInit(): void {
-    this.musicAPIFacade.loadAPI();
-    this.musicAPIFacade.getRecommendationsAndRecentlyPlayed();
-  }
 
   play(type: string, id: string) {
     this.music.setQueueThenPlay(type, id);

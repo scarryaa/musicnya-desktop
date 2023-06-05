@@ -9,7 +9,6 @@ import {
   from,
   withLatestFrom,
   forkJoin,
-  concatMap,
   tap,
   skipWhile,
 } from 'rxjs';
@@ -19,19 +18,20 @@ import copy from 'fast-copy';
 import { select, Store } from '@ngrx/store';
 import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 import { MusickitAPI } from '@nyan-inc/core-services';
-import {
-  LibraryPlaylists,
-  Resource,
-  MediaItemTypes,
-  LibrarySongs,
-  PersonalRecommendation,
-  Songs,
-  Artists,
-} from '@nyan-inc/core';
+import { MediaItemTypes, Songs } from '@nyan-inc/core';
 import { MusicState } from '../reducers/music.reducer';
 import { SpinnerState } from '../reducers/spinner.reducer';
-import { MusicKit } from '../../../types';
 import { RouterState } from '@angular/router';
+import { MusicAPIState } from '../reducers/music-api.reducer';
+import {
+  selectAllLibraryAlbums,
+  selectAllLibraryPlaylists,
+  selectAllPersonalRecommendations,
+  selectAllPlaylists,
+  selectAllRecentlyPlayed,
+} from '../selectors';
+import { MusicKit } from '@nyan-inc/shared-types';
+import { selectAllAlbums } from '../selectors/albums.selectors';
 
 //Load music api
 export const loadMusicAPI$ = createEffect(
@@ -142,30 +142,54 @@ export const getLibraryPlaylists$ = createEffect(
   { functional: true }
 );
 
-// // Fetches library albums if they're not in the store
-// getLibraryAlbums$ = createEffect(() =>
-//   this.actions$.pipe(
-//     ofType(MusicAPIActions.getLibraryAlbum),
-//     withLatestFrom(this.store.select('libraryAlbums')),
-//     filter(
-//       ([action, libraryAlbums]) =>
-//         !libraryAlbums || libraryAlbums.length === 0
-//     ),
-//     switchMap(
-//       ([action, libraryAlbums]) =>
-//         libraryAlbums ?? this.musickit.getLibraryAlbums()
-//     ),
-//     map(fromMusickit),
-//     map((albums) =>
-//       MusicAPIActions.getLibraryAlbumsSuccess({
-//         payload: { data: copy(albums) },
-//       })
-//     ),
-//     catchError((error) =>
-//       of(MusicAPIActions.getLibraryAlbumsFailure({ error }))
-//     )
-//   )
-// );
+// Fetches library albums if they're not in the store
+export const getLibraryAlbums$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    store = inject(Store<MusicState & SpinnerState & RouterState>),
+    musickit = inject(MusickitAPI)
+  ) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.getLibraryAlbums),
+      // Check if albums are already in store
+      withLatestFrom(store.select(selectAllLibraryAlbums)),
+      switchMap(([, libraryAlbumsStoreData]) =>
+        libraryAlbumsStoreData.length > 0
+          ? of(
+              MusicAPIActions.getLibraryAlbumsSuccess({
+                payload: { data: libraryAlbumsStoreData },
+              })
+            )
+          : from(musickit.getLibraryAlbums()).pipe(
+              // Convert images to webp
+              map((recentlyPlayed) => {
+                for (const item of libraryAlbumsStoreData) {
+                  if (item.attributes?.['artwork']?.url) {
+                    item.attributes['artwork'].url = transformArtworkUrl(
+                      item.attributes['artwork'].url,
+                      160
+                    );
+                  }
+                }
+                return libraryAlbumsStoreData;
+              }),
+              map((libraryAlbumsStoreData) =>
+                MusicAPIActions.getRecentlyPlayedSuccess({
+                  payload: { data: libraryAlbumsStoreData },
+                })
+              ),
+              catchError((error) =>
+                of(
+                  MusicAPIActions.getRecentlyPlayedFailure({
+                    payload: { error },
+                  })
+                )
+              )
+            )
+      )
+    ),
+  { functional: true }
+);
 
 // Fetches artist from payload id if they're not in the store
 export const getArtist$ = createEffect(
@@ -321,7 +345,7 @@ export const getArtist$ = createEffect(
                 ...data.payload.data,
                 type: 'artists' as unknown as MusicKit.MediaItemType,
               },
-              type: 'artists' as MediaItemTypes,
+              type: 'artists' as unknown as MusicKit.MediaItemType,
               id: data.payload.data.id,
             },
           })
@@ -352,155 +376,333 @@ export const getUserRatings$ = createEffect(
   { functional: true }
 );
 
-// Fetches media item based on the route params
+// Listens to route changes and dispatches the appropriate actions
 export const getMediaItemOnRouteChange$ = createEffect(
   (actions$ = inject(Actions), store$ = inject(Store<SpinnerState>)) =>
     actions$.pipe(
       ofType(ROUTER_NAVIGATED),
       map((router) => router.payload?.routerState?.root?.firstChild?.params),
-      filter(
-        (parameters: RouteParameters) => !!parameters.id && !!parameters.type
-      ),
+      filter((parameters: RouteParameters) => !!parameters.id),
       tap(() => store$.dispatch(SpinnerActions.showSpinner())),
       mergeMap((parameters: RouteParameters) => [
-        MusicAPIActions.getMediaItem({
-          payload: {
-            type: parameters.type,
-            id: parameters.id,
-          },
-        }),
-        MusicAPIActions.getUserRatingsFromIDs({
-          payload: { type: parameters.type, ids: [parameters.id] },
-        }),
-        MusicAPIActions.setCurrentViewType({
-          payload: { type: parameters.type, id: parameters.id },
-        }),
+        // switch based on the type of media item
+        parameters.type
+          ? parameters.type === 'library-playlist'
+            ? MusicAPIActions.getLibraryPlaylist({
+                payload: {
+                  playlistId: parameters.id,
+                },
+              })
+            : parameters.type === 'library-album'
+            ? MusicAPIActions.getLibraryAlbum({
+                payload: {
+                  albumId: parameters.id,
+                },
+              })
+            : parameters.type === 'library-artist'
+            ? MusicAPIActions.getLibraryArtist({
+                payload: {
+                  artistId: parameters.id,
+                },
+              })
+            : parameters.type === 'albums'
+            ? MusicAPIActions.getAlbum({
+                payload: {
+                  albumId: parameters.id,
+                },
+              })
+            : MusicAPIActions.getPlaylist({
+                payload: {
+                  playlistId: parameters.id,
+                },
+              })
+          : MusicAPIActions.getArtist({
+              payload: {
+                artistId: parameters.id,
+              },
+            }),
       ]),
-      tap(() => store$.dispatch(SpinnerActions.hideSpinner())),
-      catchError((error) =>
-        of(MusicAPIActions.getMediaItemFailure({ payload: { error } }))
-      )
+      tap(() => store$.dispatch(SpinnerActions.hideSpinner()))
+    ),
+  { functional: true }
+);
+
+// Fetches an album
+export const getAlbum$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    music = inject(MusickitAPI),
+    store = inject(Store<MusicAPIState>)
+  ) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.getAlbum),
+      // Check if the album is in the store
+      withLatestFrom(store.select(selectAllAlbums)),
+      // If the album is not in the store, fetch it
+      // filter(
+      //   ([action, albums]) =>
+      //     !albums.some((album) => album.id === action.payload.albumId)
+      // ),
+      tap(() => store.dispatch(SpinnerActions.showSpinner())),
+      // Fetch the album
+      mergeMap(([action]) =>
+        music.getAlbum(action.payload.albumId).then((data: MusicKit.Albums[]) =>
+          MusicAPIActions.getAlbumSuccess({
+            payload: {
+              data: data[0],
+            },
+          })
+        )
+      ),
+      // and replace the artwork url
+      map((data) => {
+        if (data.payload.data.attributes?.['artwork']?.url) {
+          data.payload.data.attributes['artwork'].url = transformArtworkUrl(
+            data.payload.data.attributes?.['artwork'].url,
+            400
+          );
+        }
+        return data;
+      }),
+
+      switchMap((data) =>
+        of(
+          data,
+          MusicAPIActions.setCurrentMedia({
+            payload: {
+              data: {
+                ...data.payload.data,
+                type: 'albums' as unknown as MusicKit.MediaItemType,
+              },
+              type: 'albums' as unknown as MusicKit.MediaItemType,
+              id: data.payload.data.id,
+            },
+          })
+        )
+      ),
+      tap(() => store.dispatch(SpinnerActions.hideSpinner()))
+    ),
+  { functional: true }
+);
+
+// Fetches a library playlist
+export const getLibraryPlaylist$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    music = inject(MusickitAPI),
+    store = inject(Store<MusicAPIState>)
+  ) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.getLibraryPlaylist),
+      tap(() => store.dispatch(SpinnerActions.showSpinner())),
+      // Check if the library playlist is in the store
+      withLatestFrom(store.select(selectAllLibraryPlaylists)),
+      // If the library playlist is not in the store, fetch it
+      switchMap(([action, libraryPlaylists]) =>
+        libraryPlaylists.some(
+          (libraryPlaylist) => libraryPlaylist.id === action.payload.playlistId
+        )
+          ? of(
+              MusicAPIActions.getLibraryPlaylistSuccess({
+                payload: {
+                  data: libraryPlaylists.find(
+                    (libraryPlaylist) =>
+                      libraryPlaylist.id === action.payload.playlistId
+                  )!,
+                },
+              })
+            ) // Fetch the library playlist
+          : music
+              .getLibraryPlaylist(action.payload.playlistId)
+              .then((data: MusicKit.LibraryPlaylists[]) =>
+                MusicAPIActions.getLibraryPlaylistSuccess({
+                  payload: {
+                    data: data[0],
+                  },
+                })
+              )
+              .then((data) => {
+                // and replace the artwork url
+                if (data.payload.data.attributes?.['artwork']?.url) {
+                  data.payload.data.attributes['artwork'].url =
+                    transformArtworkUrl(
+                      data.payload.data.attributes?.['artwork'].url,
+                      400
+                    );
+                }
+                return data;
+              })
+      ),
+      switchMap((data) =>
+        of(
+          data,
+          MusicAPIActions.setCurrentMedia({
+            payload: {
+              data: {
+                ...data.payload.data,
+                type: 'library-playlists' as unknown as MusicKit.MediaItemType,
+              },
+              type: 'library-playlists' as unknown as MusicKit.MediaItemType,
+              id: data.payload.data.id,
+            },
+          })
+        )
+      ),
+      tap(() => store.dispatch(SpinnerActions.hideSpinner()))
+    ),
+  { functional: true }
+);
+
+// Fetches a playlist
+export const getPlaylist$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    music = inject(MusickitAPI),
+    store = inject(Store<MusicAPIState>)
+  ) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.getPlaylist),
+      // Check if the playlist is in the store
+      tap(() => store.dispatch(SpinnerActions.showSpinner())),
+      withLatestFrom(store.select(selectAllPlaylists)),
+      // If the playlist is not in the store, fetch it
+      switchMap(([action, playlists]) =>
+        playlists.some(
+          (playlists) => playlists.id === action.payload.playlistId
+        )
+          ? of(
+              MusicAPIActions.getPlaylistSuccess({
+                payload: {
+                  data: playlists.find(
+                    (playlists) => playlists.id === action.payload.playlistId
+                  )!,
+                },
+              })
+            ) // Fetch the library playlist
+          : music
+              .getPlaylist(action.payload.playlistId)
+              .then((data: MusicKit.Playlists[]) =>
+                MusicAPIActions.getPlaylistSuccess({
+                  payload: {
+                    data: data[0],
+                  },
+                })
+              )
+              .then((data) => {
+                // and replace the artwork url for songs and playlist
+                if (data.payload.data.attributes?.artwork?.url) {
+                  data.payload.data.attributes.artwork.url =
+                    transformArtworkUrl(
+                      data.payload.data.attributes.artwork.url,
+                      400
+                    );
+                }
+
+                if (data.payload.data.relationships.tracks.data) {
+                  for (const track of data.payload.data.relationships.tracks
+                    .data) {
+                    if (track.attributes?.['artwork']?.url) {
+                      track.attributes['artwork'].url = transformArtworkUrl(
+                        track.attributes?.['artwork'].url,
+                        400
+                      );
+                    }
+                  }
+                }
+                return data;
+              })
+      ),
+      switchMap((data) =>
+        of(
+          data,
+          MusicAPIActions.setCurrentMedia({
+            payload: {
+              data: {
+                ...data.payload.data,
+                type: 'playlists' as unknown as MusicKit.MediaItemType,
+              },
+              type: 'playlists' as unknown as MusicKit.MediaItemType,
+              id: data.payload.data.id,
+            },
+          })
+        )
+      ),
+      tap(() => store.dispatch(SpinnerActions.hideSpinner()))
     ),
   { functional: true }
 );
 
 export const getRecommendationsAndRecentlyPlayed$ = createEffect(
-  (
-    actions$ = inject(Actions),
-    store = inject(Store),
-    musickit = inject(MusickitAPI)
-  ) =>
+  (actions$ = inject(Actions), store = inject(Store)) =>
     actions$.pipe(
       ofType(MusicAPIActions.getRecommendationsAndRecentlyPlayed),
       tap(() => store.dispatch(SpinnerActions.showSpinner())),
-      withLatestFrom(store.pipe(select('musicApi', 'homeTileLists'))),
-      tap((value) => console.log(value)),
-      switchMap(([, payload]) => {
-        if (
-          payload &&
-          payload?.[0]?.data?.length &&
-          payload?.[1]?.data?.length
-        ) {
-          console.log('recommendations already in store');
-          store.dispatch(SpinnerActions.hideSpinner());
-          return of(
-            MusicAPIActions.getRecommendationsAndRecentlyPlayedSuccess({
-              payload: {
-                data: {
-                  recommendations: payload[0].data,
-                  recentlyPlayed: payload[1].data,
-                },
-              },
-            })
-          );
-        } else {
-          console.log('recommendations are not in store');
-          return forkJoin([
-            musickit.getRecommendations(),
-            musickit.getRecentlyPlayed(),
-          ]).pipe(
-            map(([recommendations, recentlyPlayed]) => {
-              const modifiedRecommendations = recommendations.map(
-                (item: PersonalRecommendation) => ({
-                  ...item,
-                  relationships: {
-                    ...item.relationships,
-                    contents: {
-                      ...item.relationships?.contents,
-                      data: item.relationships?.contents?.data?.map(
-                        (item: Resource) => ({
-                          ...item,
-                          attributes: {
-                            ...item.attributes,
-                            artwork: {
-                              ...item.attributes?.artwork,
-                              url: transformArtworkUrl(
-                                item.attributes?.artwork?.url || '',
-                                200
-                              ),
-                            },
-                          },
-                        })
-                      ),
-                    },
-                  },
-                })
-              );
-
-              const modifiedRecentlyPlayed = recentlyPlayed.map(
-                (item: Resource) => ({
-                  ...item,
-                  attributes: {
-                    ...item.attributes,
-                    artwork: {
-                      ...item.attributes?.artwork,
-                      url: item.attributes?.artwork?.url
-                        .replace('{w}x{h}', '200x200')
-                        .replace('{f}', 'webp'),
-                    },
-                  },
-                })
-              );
-
-              store.dispatch(SpinnerActions.hideSpinner());
-              return MusicAPIActions.getRecommendationsAndRecentlyPlayedSuccess(
-                {
-                  payload: {
-                    data: {
-                      recommendations: modifiedRecommendations,
-                      recentlyPlayed: modifiedRecentlyPlayed,
-                    },
-                  },
-                }
-              );
-            })
-          );
-        }
-      })
+      // dispatch getRecommendations and getRecentlyPlayed actions
+      mergeMap(() => [
+        MusicAPIActions.getRecentlyPlayed(),
+        MusicAPIActions.getRecommendations(),
+      ]),
+      tap(() => store.dispatch(SpinnerActions.hideSpinner())),
+      catchError((error) =>
+        of(
+          MusicAPIActions.getRecommendationsAndRecentlyPlayedFailure({
+            payload: { error },
+          })
+        )
+      )
     ),
   { functional: true }
 );
 
 // Fetches user recommendations
 export const getRecommendations$ = createEffect(
-  (actions$ = inject(Actions), musickit = inject(MusickitAPI)) =>
+  (
+    actions$ = inject(Actions),
+    musickit = inject(MusickitAPI),
+    store = inject(Store<MusicAPIState>)
+  ) =>
     actions$.pipe(
       ofType(MusicAPIActions.getRecommendations),
-      switchMap(() =>
-        from(musickit.getRecommendations()).pipe(
-          map((recommendations) =>
-            MusicAPIActions.getRecommendationsSuccess({
-              payload: { data: recommendations },
-            })
-          ),
-          catchError((error) =>
-            of(
-              MusicAPIActions.getRecommendationsFailure({
-                payload: { error },
+      // Check if recommendations are already in store
+      withLatestFrom(store.select(selectAllPersonalRecommendations)),
+      switchMap(([, recommendationsStoreData]) =>
+        recommendationsStoreData.length > 0
+          ? of(
+              MusicAPIActions.getRecommendationsSuccess({
+                payload: { data: recommendationsStoreData },
               })
             )
-          )
-        )
+          : from(musickit.getRecommendations()).pipe(
+              // Convert images to webp
+              map((recommendations) => {
+                for (const recommendation of recommendations) {
+                  for (const resource of recommendation.relationships?.contents
+                    ?.data ?? []) {
+                    if (resource.attributes?.['artwork']?.url) {
+                      resource.attributes['artwork'].url = transformArtworkUrl(
+                        resource.attributes?.['artwork']?.url,
+                        160
+                      );
+                    }
+                  }
+                }
+
+                return recommendations;
+              }),
+
+              map((recommendations) =>
+                MusicAPIActions.getRecommendationsSuccess({
+                  payload: { data: recommendations },
+                })
+              ),
+              catchError((error) =>
+                of(
+                  MusicAPIActions.getRecommendationsFailure({
+                    payload: { error },
+                  })
+                )
+              )
+            )
       )
     ),
   { functional: true }
@@ -508,24 +710,48 @@ export const getRecommendations$ = createEffect(
 
 // Fetches recently played
 export const getRecentlyPlayed$ = createEffect(
-  (actions$ = inject(Actions), musickit = inject(MusickitAPI)) =>
+  (
+    actions$ = inject(Actions),
+    musickit = inject(MusickitAPI),
+    store = inject(Store<MusicAPIState>)
+  ) =>
     actions$.pipe(
       ofType(MusicAPIActions.getRecentlyPlayed),
-      switchMap(() =>
-        from(musickit.getRecentlyPlayed()).pipe(
-          map((recentlyPlayed) =>
-            MusicAPIActions.getRecentlyPlayedSuccess({
-              payload: { data: recentlyPlayed },
-            })
-          ),
-          catchError((error) =>
-            of(
-              MusicAPIActions.getRecentlyPlayedFailure({
-                payload: { error },
+      // Check if recently played is already in store
+      withLatestFrom(store.select(selectAllRecentlyPlayed)),
+      switchMap(([, recentlyPlayedStoreData]) =>
+        recentlyPlayedStoreData.length > 0
+          ? of(
+              MusicAPIActions.getRecentlyPlayedSuccess({
+                payload: { data: recentlyPlayedStoreData },
               })
             )
-          )
-        )
+          : from(musickit.getRecentlyPlayed()).pipe(
+              // Convert images to webp
+              map((recentlyPlayed) => {
+                for (const item of recentlyPlayed) {
+                  if (item.attributes?.['artwork']?.url) {
+                    item.attributes['artwork'].url = transformArtworkUrl(
+                      item.attributes['artwork'].url,
+                      160
+                    );
+                  }
+                }
+                return recentlyPlayed;
+              }),
+              map((recentlyPlayed) =>
+                MusicAPIActions.getRecentlyPlayedSuccess({
+                  payload: { data: recentlyPlayed },
+                })
+              ),
+              catchError((error) =>
+                of(
+                  MusicAPIActions.getRecentlyPlayedFailure({
+                    payload: { error },
+                  })
+                )
+              )
+            )
       )
     ),
   { functional: true }
@@ -534,261 +760,261 @@ export const getRecentlyPlayed$ = createEffect(
 // Fetches media item based on the type and id
 // look in the media cache and library playlists
 // if not found, fetch from musickit api by url and then add to cache
-export const getMediaItem$ = createEffect(
-  (
-    actions$ = inject(Actions),
-    musickit = inject(MusickitAPI),
-    store = inject(Store<MusicState & SpinnerState>)
-  ) =>
-    actions$.pipe(
-      ofType(MusicAPIActions.getMediaItem),
-      tap(() => store.dispatch(SpinnerActions.showSpinner())),
-      withLatestFrom(
-        store.pipe(select('musicApi', 'mediaCache')),
-        store.pipe(select('musicApi', 'libraryPlaylists'))
-      ),
-      switchMap(([action, mediaCache, libraryPlaylists]: any) => {
-        const { type, id } = action.payload;
-        const foundInCache = mediaCache?.find((item: any) => item.id === id);
+// export const getMediaItem$ = createEffect(
+//   (
+//     actions$ = inject(Actions),
+//     musickit = inject(MusickitAPI),
+//     store = inject(Store<MusicState & SpinnerState>)
+//   ) =>
+//     actions$.pipe(
+//       ofType(MusicAPIActions.getMediaItem),
+//       tap(() => store.dispatch(SpinnerActions.showSpinner())),
+//       withLatestFrom(
+//         store.pipe(select(selectAllMediaCache)),
+//         store.pipe(select(selectAllLibraryPlaylists))
+//       ),
+//       switchMap(([action, mediaCache, libraryPlaylists]) => {
+//         const { type, id } = action.payload;
+//         const foundInCache = mediaCache?.find((item: any) => item.id === id);
 
-        if (foundInCache) {
-          console.log('Found in cache');
-          store.dispatch(SpinnerActions.hideSpinner());
-          return of(
-            MusicAPIActions.getMediaItemSuccess({
-              payload: { data: copy(foundInCache) },
-            }),
-            MusicAPIActions.setCurrentMedia({
-              payload: { data: foundInCache, type, id },
-            })
-          );
-        } else {
-          const foundInLibrary = libraryPlaylists?.find(
-            (playlist: any) => playlist.id === id
-          );
+//         if (foundInCache) {
+//           console.log('Found in cache');
+//           store.dispatch(SpinnerActions.hideSpinner());
+//           return of(
+//             MusicAPIActions.getMediaItemSuccess({
+//               payload: { data: copy(foundInCache) },
+//             }),
+//             MusicAPIActions.setCurrentMedia({
+//               payload: { data: foundInCache, type, id },
+//             })
+//           );
+//         } else {
+//           const foundInLibrary = libraryPlaylists.find(
+//             (playlist: any) => playlist.id === id
+//           );
 
-          if (foundInLibrary) {
-            console.log('Found in library playlists');
-            console.log(foundInLibrary);
-            store.dispatch(SpinnerActions.hideSpinner());
-            return of(
-              MusicAPIActions.getMediaItemSuccess({
-                payload: { data: copy(foundInLibrary) },
-              }),
-              MusicAPIActions.setCurrentMedia({
-                payload: {
-                  data: foundInLibrary,
-                  type: 'library-playlists',
-                  id,
-                },
-              })
-            );
-          } else {
-            console.log("Didn't find in cache or library");
+//           if (foundInLibrary) {
+//             console.log('Found in library playlists');
+//             console.log(foundInLibrary);
+//             store.dispatch(SpinnerActions.hideSpinner());
+//             return of(
+//               MusicAPIActions.getMediaItemSuccess({
+//                 payload: { data: copy(foundInLibrary) },
+//               }),
+//               MusicAPIActions.setCurrentMedia({
+//                 payload: {
+//                   data: foundInLibrary,
+//                   type: 'library-playlists',
+//                   id,
+//                 },
+//               })
+//             );
+//           } else {
+//             console.log("Didn't find in cache or library");
 
-            return type === 'artists'
-              ? from(musickit.getArtist(id)).pipe(
-                  map((data) => {
-                    const [firstItem] = data as Artists[];
+//             return type === 'artists'
+//               ? from(musickit.getArtist(id)).pipe(
+//                   map((data) => {
+//                     const [firstItem] = data as Artists[];
 
-                    if (firstItem && firstItem.attributes?.artwork?.url) {
-                      firstItem.attributes.artwork.url =
-                        firstItem.attributes?.artwork.url
-                          .replace('{w}x{h}', '3000x2000')
-                          .replace('{f}', 'webp');
-                    }
+//                     if (firstItem && firstItem.attributes?.artwork?.url) {
+//                       firstItem.attributes.artwork.url =
+//                         firstItem.attributes?.artwork.url
+//                           .replace('{w}x{h}', '3000x2000')
+//                           .replace('{f}', 'webp');
+//                     }
 
-                    if (
-                      firstItem &&
-                      firstItem?.attributes?.editorialArtwork?.bannerUber?.url
-                    ) {
-                      firstItem.attributes.editorialArtwork.bannerUber.url =
-                        firstItem.attributes.editorialArtwork.bannerUber.url
-                          .replace('{w}x{h}', '3000x2000')
-                          .replace('{f}', 'webp');
-                    }
+//                     if (
+//                       firstItem &&
+//                       firstItem?.attributes?.editorialArtwork?.bannerUber?.url
+//                     ) {
+//                       firstItem.attributes.editorialArtwork.bannerUber.url =
+//                         firstItem.attributes.editorialArtwork.bannerUber.url
+//                           .replace('{w}x{h}', '3000x2000')
+//                           .replace('{f}', 'webp');
+//                     }
 
-                    if (
-                      firstItem &&
-                      firstItem?.attributes?.editorialArtwork?.storeFlowcase
-                        ?.url
-                    ) {
-                      firstItem.attributes.editorialArtwork.storeFlowcase.url =
-                        firstItem.attributes.editorialArtwork.storeFlowcase.url
-                          .replace('{w}x{h}', '3000x2000')
-                          .replace('{f}', 'webp');
-                    }
+//                     if (
+//                       firstItem &&
+//                       firstItem?.attributes?.editorialArtwork?.storeFlowcase
+//                         ?.url
+//                     ) {
+//                       firstItem.attributes.editorialArtwork.storeFlowcase.url =
+//                         firstItem.attributes.editorialArtwork.storeFlowcase.url
+//                           .replace('{w}x{h}', '3000x2000')
+//                           .replace('{f}', 'webp');
+//                     }
 
-                    if (firstItem && firstItem?.relationships?.albums?.data) {
-                      firstItem.relationships.albums.data =
-                        firstItem.relationships.albums.data.sort(
-                          (a: any, b: any) => {
-                            const aDate = new Date(a.attributes.releaseDate);
-                            const bDate = new Date(b.attributes.releaseDate);
-                            return bDate.getTime() - aDate.getTime();
-                          }
-                        );
-                    }
-                    // }
+//                     if (firstItem && firstItem?.relationships?.albums?.data) {
+//                       firstItem.relationships.albums.data =
+//                         firstItem.relationships.albums.data.sort(
+//                           (a: any, b: any) => {
+//                             const aDate = new Date(a.attributes.releaseDate);
+//                             const bDate = new Date(b.attributes.releaseDate);
+//                             return bDate.getTime() - aDate.getTime();
+//                           }
+//                         );
+//                     }
+//                     // }
 
-                    if (firstItem && firstItem?.relationships?.albums?.data) {
-                      for (const album of firstItem.relationships.albums.data) {
-                        if (album.attributes?.artwork?.url) {
-                          album.attributes.artwork.url =
-                            album.attributes?.artwork.url
-                              .replace('{w}x{h}', '400x400')
-                              .replace('{f}', 'webp');
-                        }
-                      }
-                    }
+//                     if (firstItem && firstItem?.relationships?.albums?.data) {
+//                       for (const album of firstItem.relationships.albums.data) {
+//                         if (album.attributes?.artwork?.url) {
+//                           album.attributes.artwork.url =
+//                             album.attributes?.artwork.url
+//                               .replace('{w}x{h}', '400x400')
+//                               .replace('{f}', 'webp');
+//                         }
+//                       }
+//                     }
 
-                    if (firstItem && firstItem?.views?.['top-songs']) {
-                      for (const track of firstItem.views['top-songs'].data) {
-                        if (track.attributes?.['artwork']?.url) {
-                          track.attributes['artwork'].url = track.attributes?.[
-                            'artwork'
-                          ].url
-                            .replace('{w}x{h}', '400x400')
-                            .replace('{f}', 'webp');
-                        }
-                      }
-                    }
+//                     if (firstItem && firstItem?.views?.['top-songs']) {
+//                       for (const track of firstItem.views['top-songs'].data) {
+//                         if (track.attributes?.['artwork']?.url) {
+//                           track.attributes['artwork'].url = track.attributes?.[
+//                             'artwork'
+//                           ].url
+//                             .replace('{w}x{h}', '400x400')
+//                             .replace('{f}', 'webp');
+//                         }
+//                       }
+//                     }
 
-                    if (firstItem && firstItem?.relationships?.playlists) {
-                      for (const playlist of firstItem.relationships.playlists
-                        .data as unknown as MusicKit.Playlists[]) {
-                        if (playlist.attributes?.artwork?.url) {
-                          playlist.attributes.artwork.url =
-                            playlist.attributes?.artwork.url
-                              .replace('{w}x{h}', '400x400')
-                              .replace('{f}', 'webp');
-                        }
-                      }
-                    }
+//                     if (firstItem && firstItem?.relationships?.playlists) {
+//                       for (const playlist of firstItem.relationships.playlists
+//                         .data as unknown as MusicKit.Playlists[]) {
+//                         if (playlist.attributes?.artwork?.url) {
+//                           playlist.attributes.artwork.url =
+//                             playlist.attributes?.artwork.url
+//                               .replace('{w}x{h}', '400x400')
+//                               .replace('{f}', 'webp');
+//                         }
+//                       }
+//                     }
 
-                    if (firstItem?.relationships?.['music-videos']) {
-                      for (const video of firstItem.relationships[
-                        'music-videos'
-                      ].data as unknown as MusicKit.MusicVideos[]) {
-                        if (video.attributes?.artwork?.url) {
-                          video.attributes.artwork.url =
-                            video.attributes?.artwork.url.replace(
-                              '{w}x{h}',
-                              '400x400'
-                            );
-                        }
-                      }
-                    }
+//                     if (firstItem?.relationships?.['music-videos']) {
+//                       for (const video of firstItem.relationships[
+//                         'music-videos'
+//                       ].data as unknown as MusicKit.MusicVideos[]) {
+//                         if (video.attributes?.artwork?.url) {
+//                           video.attributes.artwork.url =
+//                             video.attributes?.artwork.url.replace(
+//                               '{w}x{h}',
+//                               '400x400'
+//                             );
+//                         }
+//                       }
+//                     }
 
-                    if (firstItem && firstItem?.views?.['similar-artists']) {
-                      for (const artist of firstItem.views['similar-artists']
-                        .data) {
-                        if (artist.attributes?.['artwork']?.url) {
-                          artist.attributes['artwork'].url =
-                            artist.attributes?.['artwork'].url
-                              .replace('{w}x{h}', '400x400')
-                              .replace('{f}', 'webp');
-                        }
-                      }
-                    }
+//                     if (firstItem && firstItem?.views?.['similar-artists']) {
+//                       for (const artist of firstItem.views['similar-artists']
+//                         .data) {
+//                         if (artist.attributes?.['artwork']?.url) {
+//                           artist.attributes['artwork'].url =
+//                             artist.attributes?.['artwork'].url
+//                               .replace('{w}x{h}', '400x400')
+//                               .replace('{f}', 'webp');
+//                         }
+//                       }
+//                     }
 
-                    if (firstItem && firstItem?.views?.['latest-release']) {
-                      for (const artist of firstItem.views['latest-release']
-                        .data) {
-                        if (artist.attributes?.['artwork']?.url) {
-                          artist.attributes['artwork'].url =
-                            artist.attributes?.['artwork'].url
-                              .replace('{w}x{h}', '400x400')
-                              .replace('{f}', 'webp');
-                        }
-                      }
-                    }
+//                     if (firstItem && firstItem?.views?.['latest-release']) {
+//                       for (const artist of firstItem.views['latest-release']
+//                         .data) {
+//                         if (artist.attributes?.['artwork']?.url) {
+//                           artist.attributes['artwork'].url =
+//                             artist.attributes?.['artwork'].url
+//                               .replace('{w}x{h}', '400x400')
+//                               .replace('{f}', 'webp');
+//                         }
+//                       }
+//                     }
 
-                    if (firstItem && firstItem?.views?.['featured-albums']) {
-                      for (const artist of firstItem.views['featured-albums']
-                        .data) {
-                        if (artist.attributes?.['artwork']?.url) {
-                          artist.attributes['artwork'].url =
-                            artist.attributes?.['artwork'].url
-                              .replace('{w}x{h}', '400x400')
-                              .replace('{f}', 'webp');
-                        }
-                      }
-                    }
+//                     if (firstItem && firstItem?.views?.['featured-albums']) {
+//                       for (const artist of firstItem.views['featured-albums']
+//                         .data) {
+//                         if (artist.attributes?.['artwork']?.url) {
+//                           artist.attributes['artwork'].url =
+//                             artist.attributes?.['artwork'].url
+//                               .replace('{w}x{h}', '400x400')
+//                               .replace('{f}', 'webp');
+//                         }
+//                       }
+//                     }
 
-                    return MusicAPIActions.getMediaItemSuccess({
-                      payload: { data: copy(data) },
-                    });
-                  }),
-                  switchMap((data) =>
-                    of(
-                      data,
-                      MusicAPIActions.setCurrentMedia({
-                        payload: {
-                          data: data.payload.data,
-                          type: 'artists',
-                          id: id,
-                        },
-                      })
-                    )
-                  ),
-                  tap(() => store.dispatch(SpinnerActions.hideSpinner())),
-                  tap((payload) => console.log(payload))
-                )
-              : from(musickit.findByUrl(type, id)).pipe(
-                  map((data) => {
-                    const [firstItem] = data;
+//                     return MusicAPIActions.getMediaItemSuccess({
+//                       payload: { data: copy(data) },
+//                     });
+//                   }),
+//                   switchMap((data) =>
+//                     of(
+//                       data,
+//                       MusicAPIActions.setCurrentMedia({
+//                         payload: {
+//                           data: data.payload.data,
+//                           type: 'artists',
+//                           id: id,
+//                         },
+//                       })
+//                     )
+//                   ),
+//                   tap(() => store.dispatch(SpinnerActions.hideSpinner())),
+//                   tap((payload) => console.log(payload))
+//                 )
+//               : from(musickit.findByUrl(type, id)).pipe(
+//                   map((data) => {
+//                     const [firstItem] = data;
 
-                    if (firstItem && firstItem.attributes?.artwork?.url) {
-                      firstItem.attributes.artwork.url =
-                        firstItem.attributes?.artwork.url
-                          .replace('{w}x{h}', '400x400')
-                          .replace('{f}', 'webp');
-                    }
+//                     if (firstItem && firstItem.attributes?.artwork?.url) {
+//                       firstItem.attributes.artwork.url =
+//                         firstItem.attributes?.artwork.url
+//                           .replace('{w}x{h}', '400x400')
+//                           .replace('{f}', 'webp');
+//                     }
 
-                    if (firstItem && firstItem?.relationships?.tracks?.data) {
-                      for (const track of firstItem.relationships.tracks.data) {
-                        if (track.attributes?.artwork?.url) {
-                          track.attributes.artwork.url =
-                            track.attributes?.artwork.url
-                              .replace('{w}x{h}', '400x400')
-                              .replace('{f}', 'webp');
-                        }
-                      }
-                    }
+//                     if (firstItem && firstItem?.relationships?.tracks?.data) {
+//                       for (const track of firstItem.relationships.tracks.data) {
+//                         if (track.attributes?.artwork?.url) {
+//                           track.attributes.artwork.url =
+//                             track.attributes?.artwork.url
+//                               .replace('{w}x{h}', '400x400')
+//                               .replace('{f}', 'webp');
+//                         }
+//                       }
+//                     }
 
-                    store.dispatch(
-                      MusicAPIActions.getUserRatingsFromIDs({
-                        payload: {
-                          type: firstItem.relationships?.tracks?.data[0].type,
-                          ids: firstItem.relationships?.tracks?.data.map(
-                            (track: any) => track.id
-                          ),
-                        },
-                      })
-                    );
+//                     store.dispatch(
+//                       MusicAPIActions.getUserRatingsFromIDs({
+//                         payload: {
+//                           type: firstItem.relationships?.tracks?.data[0].type,
+//                           ids: firstItem.relationships?.tracks?.data.map(
+//                             (track: any) => track.id
+//                           ),
+//                         },
+//                       })
+//                     );
 
-                    return MusicAPIActions.getMediaItemSuccess({
-                      payload: { data: copy(firstItem) },
-                    });
-                  }),
-                  concatMap((data) =>
-                    of(
-                      data,
-                      MusicAPIActions.setCurrentMedia({
-                        payload: { data: data.payload.data, type, id },
-                      })
-                    )
-                  ),
-                  tap(() => store.dispatch(SpinnerActions.hideSpinner())),
-                  tap((payload) => console.log(payload))
-                );
-          }
-        }
-      })
-    ),
-  { functional: true }
-);
+//                     return MusicAPIActions.getMediaItemSuccess({
+//                       payload: { data: copy(firstItem) },
+//                     });
+//                   }),
+//                   concatMap((data) =>
+//                     of(
+//                       data,
+//                       MusicAPIActions.setCurrentMedia({
+//                         payload: { data: data.payload.data, type, id },
+//                       })
+//                     )
+//                   ),
+//                   tap(() => store.dispatch(SpinnerActions.hideSpinner())),
+//                   tap((payload) => console.log(payload))
+//                 );
+//           }
+//         }
+//       })
+//     ),
+//   { functional: true }
+// );
 
 // sets the current media item and returns it
 export const setCurrentMedia$ = createEffect(
@@ -965,5 +1191,8 @@ interface RouteParameters {
 }
 
 const transformArtworkUrl = (url: string, size: number) => {
-  return url.replace('{w}x{h}', `${size}x${size}`).replace('{f}', 'webp');
+  const newUrl = url
+    .replace('{w}x{h}', `${size}x${size}`)
+    .replace('{f}', 'webp');
+  return newUrl;
 };

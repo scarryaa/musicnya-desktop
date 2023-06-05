@@ -73,9 +73,6 @@ export class DrawerComponent
   ) {
     super();
     this.spinnerState$ = this.spinner.state$;
-    this.vm.currentView$.subscribe((view) => {
-      console.log(view);
-    });
   }
 
   @Input() width?: number;

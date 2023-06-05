@@ -1,6 +1,6 @@
-<ng-container *ngrxLet="state$ as media">
-  <ng-container *ngrxLet="musicAPIFacade as vm">
-    <ng-container *ngrxLet="musicState$">
+<ng-container *ngrxLet="music">
+  <ng-container *ngrxLet="vm">
+    <ng-container *ngrxLet="vm.selectMedia$ | async; let media">
       <div class="more-info">
         <div class="color-div"></div>
         <i
@@ -21,49 +21,39 @@
                 <div id="media-songs-genre-description">
                   <span id="songs-count"
                     >{{
-                      media?.currentMedia?.attributes?.trackCount ||
-                        media?.currentMedia?.relationships?.tracks?.data
+                      media?.attributes?.['trackCount ']||
+                        media?.relationships?.tracks?.data
                           ?.length ||
-                        media?.currentMedia?.songs?.length
+                        media?.songs?.length
                     }}
                     songs
                   </span>
-                  <span>{{
-                    media?.currentMedia?.duration | date : 'm:ss'
-                  }}</span>
-                  <p
-                    *ngIf="media?.currentMedia?.attributes?.genreNames"
-                    id="genres"
-                  >
-                    {{ media?.currentMedia?.attributes?.genreNames.join(', ') }}
+                  <span>{{ media?.duration | date : 'm:ss' }}</span>
+                  <p *ngIf="media?.attributes?.['genreNames']" id="genres">
+                    {{ media?.attributes?.['genreNames'].join(', ') }}
                   </p>
                   <p
                     *ngIf="
-                      media?.currentMedia?.attributes?.editorialNotes
-                        ?.standard ||
-                      media?.currentMedia?.attributes?.editorialNotes?.short
+                      media?.attributes?.['editorialNotes']?.standard ||
+                      media?.attributes?.['editorialNotes']?.short
                     "
                     id="media-description"
                     [innerHTML]="
-                      media?.currentMedia?.attributes?.editorialNotes
-                        ?.standard ||
-                      media?.currentMedia?.attributes?.editorialNotes?.short
+                      media?.attributes?.['editorialNotes']?.standard ||
+                      media?.attributes?.['editorialNotes']?.short
                     "
                   ></p>
-                  <p *ngIf="media?.currentMedia?.attributes?.releaseDate">
-                    {{ media?.currentMedia?.attributes?.releaseDate }}
+                  <p *ngIf="media?.attributes?.['releaseDate']">
+                    {{ media?.attributes?.['releaseDate'] }}
                   </p>
                   <p
                     id="recordLabel"
-                    *ngIf="media?.currentMedia?.attributes?.recordLabel"
+                    *ngIf="media?.attributes?.['recordLabel']"
                   >
-                    {{ media?.currentMedia?.attributes?.recordLabel }}
+                    {{ media?.attributes?.['recordLabel'] }}
                   </p>
-                  <p
-                    id="copyright"
-                    *ngIf="media?.currentMedia?.attributes?.copyright"
-                  >
-                    {{ media?.currentMedia?.attributes?.copyright }}
+                  <p id="copyright" *ngIf="media?.attributes?.['copyright']">
+                    {{ media?.attributes?.['copyright'] }}
                   </p>
                 </div>
               </div>
@@ -72,30 +62,20 @@
         </ui-media-details-dropdown>
       </div>
       <ui-virtual-table
-        [media]="media?.currentMedia?.type"
-        [data]="
-          media?.currentMedia?.songs ||
-          media?.currentMedia?.relationships?.tracks?.data
-        "
+        [media]="media?.type!"
+        [data]="media?.songs || media?.relationships?.tracks?.data"
         [ratings]="vm.getRatings$ | async"
-        [playingSong]="(musicState$.currentItem$ | async)?.id"
-        [playing]="(musicState$.playing$ | async)!"
+        [playingSong]="(music.currentItem$ | async)?.id"
+        [playing]="(music.playing$ | async)!"
         [routeChanges]="routeChangeEmitter"
-        (pauseEmitter)="musicState$.pause()"
-        (unpauseEmitter)="musicState$.play()"
+        (pauseEmitter)="music.pause()"
+        (unpauseEmitter)="music.play()"
         (indexEmitter)="
-          musicState$.setQueueAndPlayAtIndex(
-            media.currentMedia?.type,
-            media.currentMedia?.id,
-            $event
-          )
+          music.setQueueAndPlayAtIndex(media?.type!, media?.id!, $event)
         "
         (loveClickEmitter)="vm.love($event)"
         (idEmitter)="
-          musicState$.setQueueAndPlayAtIndex(
-            media.currentMedia?.type,
-            media.currentMedia?.id || $event
-          )
+          music.setQueueAndPlayAtIndex(media?.type!, media?.id || $event)
         "
       ></ui-virtual-table>
     </ng-container>

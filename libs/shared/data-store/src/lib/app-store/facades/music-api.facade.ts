@@ -1,53 +1,75 @@
 /* eslint-disable functional/prefer-immutable-types */
 import { Injectable, OnDestroy } from '@angular/core';
-import { createSelector, select, Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { MediaItemTypes } from '@nyan-inc/core';
-import { filter, map, skipWhile, Subscription, take, tap } from 'rxjs';
+import { MusicKit } from '@nyan-inc/shared-types';
+import { filter, map, Observable, skipWhile, Subscription, take } from 'rxjs';
 import { MusicAPIActions } from '../actions';
-import { fromMusicAPI } from '../reducers';
 import { MusicAPIState } from '../reducers/music-api.reducer';
+import {
+  selectAllPersonalRecommendations,
+  selectAllRecentlyPlayed,
+} from '../selectors';
+import { selectAllLibraryPlaylists } from '../selectors/library-playlists.selectors';
+import { selectMusicAPIState } from '../selectors/music-api.selectors';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MusicAPIFacade implements OnDestroy {
-  readonly subs = new Subscription();
-  readonly libraryPlaylists$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(map((value) => value.libraryPlaylists));
-  readonly currentMedia$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
+  subs = new Subscription();
+  libraryPlaylists$ = this.store
+    .select(selectAllLibraryPlaylists)
+    .pipe(skipWhile((value) => value.length === 0));
+  currentMedia$ = this.store
+    .pipe(select(selectMusicAPIState))
     .pipe(map((value) => value.currentMedia));
-  readonly musickitLoaded$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
+  musickitLoaded$ = this.store
+    .pipe(select(selectMusicAPIState))
     .pipe(map((value) => value.loaded));
-  readonly recommendations$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
+  recommendations$ = this.store
+    .pipe(select(selectMusicAPIState))
     .pipe(map((value) => value.personalRecommendations));
-  readonly recentlyPlayed$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
+  recentlyPlayed$ = this.store
+    .pipe(select(selectMusicAPIState))
     .pipe(map((value) => value.recentlyPlayed));
-  readonly state$ = this.store.pipe(select(fromMusicAPI.getMusicAPIState));
-  readonly type$ = this.store.pipe(select(fromMusicAPI.getMusicAPIState)).pipe(
+  state$ = this.store.pipe(select(selectMusicAPIState));
+  type$ = this.store.pipe(select(selectMusicAPIState)).pipe(
     filter((value) => value.currentMedia?.type !== undefined),
     map((value) => value.currentMedia?.type)
   );
-  readonly loaded$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
+  loaded$ = this.store
+    .pipe(select(selectMusicAPIState))
     .pipe(map((value) => value.loaded));
 
-  // artist selectors
+  // media-details vm
+  selectMedia$ = this.store.pipe(
+    select(selectMusicAPIState),
+    map((value) => value.currentMedia?.data)
+  );
 
+  // home vm
+  selectRecentlyPlayed$: Observable<MusicKit.Resource[]> = this.store.pipe(
+    select(selectAllRecentlyPlayed),
+    filter((recentlyPlayed) => recentlyPlayed !== undefined)
+  );
+
+  selectRecommendations$: Observable<MusicKit.Resource[]> = this.store.pipe(
+    select(selectAllPersonalRecommendations),
+    filter((recommendations) => recommendations !== undefined)
+  );
+
+  // artist selectors
   readonly artistName$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(select(selectMusicAPIState))
     .pipe(map((value) => value.currentMedia?.data?.attributes?.['name']));
 
   readonly artistID$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(select(selectMusicAPIState))
     .pipe(map((value) => value.currentMedia?.data?.id));
 
   readonly artistStationID$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(select(selectMusicAPIState))
     .pipe(
       map(
         (value) =>
@@ -56,39 +78,35 @@ export class MusicAPIFacade implements OnDestroy {
     );
 
   readonly artistTopSongs$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(select(selectMusicAPIState))
     .pipe(map((value) => value.currentMedia?.data?.views?.['top-songs']?.data));
 
-  readonly featuredAlbums$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(
-      filter(
-        (value: MusicAPIState) => value && value.currentMedia !== undefined
-      ),
-      filter(
-        (value: MusicAPIState) =>
-          value.currentMedia?.data?.views?.['latest-release'] !== undefined ||
-          value.currentMedia?.data?.views?.['featured-albums'] !== undefined
-      ),
-      map((value: MusicAPIState) =>
-        (
-          value.currentMedia?.data?.views?.['latest-release']?.data ||
-          value.currentMedia?.data?.views?.['featured-albums']?.data
-        )?.filter(
-          (album: any, index: number, self: any) =>
-            !album.attributes?.isSingle &&
-            !album.attributes?.isCompilation &&
-            !album.attributes.name.toLowerCase().includes('- single') &&
-            !album.attributes.name.toLowerCase().includes('- ep') &&
-            self.findIndex(
-              (t: any) => t.attributes.name === album.attributes.name
-            ) === index
-        )
+  readonly featuredAlbums$ = this.store.pipe(select(selectMusicAPIState)).pipe(
+    filter((value: MusicAPIState) => value && value.currentMedia !== undefined),
+    filter(
+      (value: MusicAPIState) =>
+        value.currentMedia?.data?.views?.['latest-release'] !== undefined ||
+        value.currentMedia?.data?.views?.['featured-albums'] !== undefined
+    ),
+    map((value: MusicAPIState) =>
+      (
+        value.currentMedia?.data?.views?.['latest-release']?.data ||
+        value.currentMedia?.data?.views?.['featured-albums']?.data
+      )?.filter(
+        (album: any, index: number, self: any) =>
+          !album.attributes?.isSingle &&
+          !album.attributes?.isCompilation &&
+          !album.attributes.name.toLowerCase().includes('- single') &&
+          !album.attributes.name.toLowerCase().includes('- ep') &&
+          self.findIndex(
+            (t: any) => t.attributes.name === album.attributes.name
+          ) === index
       )
-    );
+    )
+  );
 
   readonly featuredAlbumLink$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(select(selectMusicAPIState))
     .pipe(
       map(
         (value) =>
@@ -99,30 +117,26 @@ export class MusicAPIFacade implements OnDestroy {
       )
     );
 
-  readonly featuredReason$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(
-      filter(
-        (value: MusicAPIState) => value && value.currentMedia !== undefined
-      ),
-      filter(
-        (value: MusicAPIState) =>
-          value.currentMedia?.data?.views?.['latest-release'] !== undefined ||
-          value.currentMedia?.data?.views?.['featured-albums'] !== undefined
-      ),
-      map(
-        (value: MusicAPIState) =>
-          value.currentMedia?.data?.views?.['latest-release']?.attributes?.[
-            'title'
-          ] ||
-          value.currentMedia?.data?.views?.['featured-albums']?.attributes?.[
-            'title'
-          ]
-      )
-    );
+  readonly featuredReason$ = this.store.pipe(select(selectMusicAPIState)).pipe(
+    filter((value: MusicAPIState) => value && value.currentMedia !== undefined),
+    filter(
+      (value: MusicAPIState) =>
+        value.currentMedia?.data?.views?.['latest-release'] !== undefined ||
+        value.currentMedia?.data?.views?.['featured-albums'] !== undefined
+    ),
+    map(
+      (value: MusicAPIState) =>
+        value.currentMedia?.data?.views?.['latest-release']?.attributes?.[
+          'title'
+        ] ||
+        value.currentMedia?.data?.views?.['featured-albums']?.attributes?.[
+          'title'
+        ]
+    )
+  );
 
   readonly featuredTrackCount$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(select(selectMusicAPIState))
     .pipe(
       filter(
         (value: MusicAPIState) => value && value.currentMedia !== undefined
@@ -141,47 +155,39 @@ export class MusicAPIFacade implements OnDestroy {
       )
     );
 
-  readonly artistAlbums$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(
-      filter(
-        (value: MusicAPIState) => value && value.currentMedia !== undefined
-      ),
-      map((value: MusicAPIState) =>
-        value.currentMedia?.data?.relationships?.albums?.data?.filter(
-          (album: any, index: number, self: any) =>
-            !album.attributes?.isSingle &&
-            !album.attributes?.isCompilation &&
-            !album.attributes.name.toLowerCase().includes('- single') &&
-            !album.attributes.name.toLowerCase().includes('- ep') &&
-            self.findIndex(
-              (t: any) => t.attributes.name === album.attributes.name
-            ) === index
-        )
+  readonly artistAlbums$ = this.store.pipe(select(selectMusicAPIState)).pipe(
+    filter((value: MusicAPIState) => value && value.currentMedia !== undefined),
+    map((value: MusicAPIState) =>
+      value.currentMedia?.data?.relationships?.albums?.data?.filter(
+        (album: any, index: number, self: any) =>
+          !album.attributes?.isSingle &&
+          !album.attributes?.isCompilation &&
+          !album.attributes.name.toLowerCase().includes('- single') &&
+          !album.attributes.name.toLowerCase().includes('- ep') &&
+          self.findIndex(
+            (t: any) => t.attributes.name === album.attributes.name
+          ) === index
       )
-    );
+    )
+  );
 
-  readonly artistSingles$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(
-      filter(
-        (value: MusicAPIState) => value && value.currentMedia !== undefined
-      ),
-      map((value: MusicAPIState) =>
-        value.currentMedia?.data?.relationships?.albums?.data?.filter(
-          (album: any, index: number, self: any) =>
-            (album.attributes?.isSingle ||
-              album.attributes.name.toLowerCase().includes('- single') ||
-              album.attributes.name.toLowerCase().includes('- ep')) &&
-            self.findIndex(
-              (t: any) => t.attributes.name === album.attributes.name
-            ) === index
-        )
+  readonly artistSingles$ = this.store.pipe(select(selectMusicAPIState)).pipe(
+    filter((value: MusicAPIState) => value && value.currentMedia !== undefined),
+    map((value: MusicAPIState) =>
+      value.currentMedia?.data?.relationships?.albums?.data?.filter(
+        (album: any, index: number, self: any) =>
+          (album.attributes?.isSingle ||
+            album.attributes.name.toLowerCase().includes('- single') ||
+            album.attributes.name.toLowerCase().includes('- ep')) &&
+          self.findIndex(
+            (t: any) => t.attributes.name === album.attributes.name
+          ) === index
       )
-    );
+    )
+  );
 
   readonly artistMusicVideos$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
+    .pipe(select(selectMusicAPIState))
     .pipe(
       filter(
         (value: MusicAPIState) => value && value.currentMedia !== undefined
@@ -194,73 +200,48 @@ export class MusicAPIFacade implements OnDestroy {
       )
     );
 
-  readonly artistPlaylists$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(
-      filter(
-        (value: MusicAPIState) => value && value.currentMedia !== undefined
-      ),
-      map(
-        (value: MusicAPIState) =>
-          value.currentMedia?.data?.relationships?.playlists?.data?.filter(
-            (playlist: any, index: number, self: any) =>
-              self.findIndex((t: any) => t.id === playlist.id) === index
-          ) || []
-      )
-    );
-
-  readonly similarArtists$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(
-      filter(
-        (value: MusicAPIState) => value && value.currentMedia !== undefined
-      ),
-      map(
-        (value: MusicAPIState) =>
-          value.currentMedia?.data?.views?.['similar-artists']?.data?.filter(
-            (artist: any, index: number, self: any) =>
-              self.findIndex((t: any) => t.id === artist.id) === index
-          ) || []
-      )
-    );
-
-  readonly artistBanner$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(
-      filter(
-        (value: MusicAPIState) => value && value.currentMedia !== undefined
-      ),
-      map(
-        (value: MusicAPIState) =>
-          value.currentMedia?.data?.attributes?.['editorialArtwork']?.bannerUber
-            ?.url ||
-          value.currentMedia?.data?.attributes?.['artwork']?.url ||
-          value.currentMedia?.data?.attributes?.['editorialArtwork']
-            ?.storeFlowcase?.url ||
-          ''
-      )
-    );
-
-  // Other selectors
-  readonly getRatings$ = this.store.pipe(select(fromMusicAPI.getRatings)).pipe(
-    filter((value) => value !== undefined),
-    map((value) => value)
+  readonly artistPlaylists$ = this.store.pipe(select(selectMusicAPIState)).pipe(
+    filter((value: MusicAPIState) => value && value.currentMedia !== undefined),
+    map(
+      (value: MusicAPIState) =>
+        value.currentMedia?.data?.relationships?.playlists?.data?.filter(
+          (playlist: any, index: number, self: any) =>
+            self.findIndex((t: any) => t.id === playlist.id) === index
+        ) || []
+    )
   );
 
-  // media selectors/filters
-  readonly getLibraryPlaylists$ = this.store
-    .pipe(select(fromMusicAPI.getMusicAPIState))
-    .pipe(
-      // filter only playlists
-      // TODO convert to a shared library collection
-      filter(
-        (state) => state !== undefined && state.libraryPlaylists !== undefined
-      ),
-      map((state) => state.libraryPlaylists)
-    );
+  readonly similarArtists$ = this.store.pipe(select(selectMusicAPIState)).pipe(
+    filter((value: MusicAPIState) => value && value.currentMedia !== undefined),
+    map(
+      (value: MusicAPIState) =>
+        value.currentMedia?.data?.views?.['similar-artists']?.data?.filter(
+          (artist: any, index: number, self: any) =>
+            self.findIndex((t: any) => t.id === artist.id) === index
+        ) || []
+    )
+  );
+
+  readonly artistBanner$ = this.store.pipe(select(selectMusicAPIState)).pipe(
+    filter((value: MusicAPIState) => value && value.currentMedia !== undefined),
+    map(
+      (value: MusicAPIState) =>
+        value.currentMedia?.data?.attributes?.['editorialArtwork']?.bannerUber
+          ?.url ||
+        value.currentMedia?.data?.attributes?.['artwork']?.url ||
+        value.currentMedia?.data?.attributes?.['editorialArtwork']
+          ?.storeFlowcase?.url ||
+        ''
+    )
+  );
+
+  readonly getRatings$ = this.store.pipe(select(selectMusicAPIState)).pipe(
+    filter((state) => state !== undefined),
+    map((state) => state.ratings)
+  );
 
   // readonly getLibraryAlbums$ = this.store
-  //   .pipe(select(fromMusicAPI.getMusicAPIState))
+  //   .pipe(select(selectMusicAPIState))
   //   .pipe(
   //     filter((state) => state !== undefined),
   //     // filter only albums
@@ -272,7 +253,7 @@ export class MusicAPIFacade implements OnDestroy {
   //   );
 
   // readonly getLibraryArtists$ = this.store
-  //   .pipe(select(fromMusicAPI.getMusicAPIState))
+  //   .pipe(select(selectMusicAPIState))
   //   .pipe(
   //     filter((state) => state !== undefined),
   //     // filter only artists
@@ -284,7 +265,7 @@ export class MusicAPIFacade implements OnDestroy {
   //   );
 
   // readonly getLibrarySongs$ = this.store
-  //   .pipe(select(fromMusicAPI.getMusicAPIState))
+  //   .pipe(select(selectMusicAPIState))
   //   .pipe(
   //     filter((state) => state !== undefined),
   //     // filter only songs
@@ -304,7 +285,7 @@ export class MusicAPIFacade implements OnDestroy {
   love(event: { type: string; id: string }) {
     return this.store.dispatch(
       MusicAPIActions.loveMediaItem({
-        payload: { type: event.type as MediaItemTypes, id: event.id },
+        payload: { type: event.type as MusicKit.MediaItemType, id: event.id },
       })
     );
   }

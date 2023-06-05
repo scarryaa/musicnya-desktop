@@ -40,7 +40,7 @@ export class ArtistDetailsComponent {
   ) {
     console.log('ArtistDetailsComponent');
   }
-  readonly stationID?: string;
+  stationID?: string;
 
   play(type: string, id: string, shuffle = false) {
     shuffle

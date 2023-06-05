@@ -1,22 +1,25 @@
-<ng-container *ngrxLet="state$ as media">
-  <ng-container>
-    <!-- Home Recommendations -->
+<ng-container *ngrxLet="vm">
+  <!-- Recently Played -->
+  <ui-media-tile-list
+    *ngIf="vm.selectRecentlyPlayed$ | async"
+    (playEmitter)="play($event.type, $event.id)"
+    [listTitle]="'Recently Played'"
+    [listData]="(vm.selectRecentlyPlayed$ | async) || []"
+    [showMore]="false"
+  ></ui-media-tile-list>
+  <ng-container *ngIf="vm">
+    <!-- Personal Recommendations -->
     <ui-media-tile-list
-      *ngIf="media.homeTileLists?.[1]?.data"
+      *ngFor="
+        let item of vm.selectRecommendations$ | async;
+        let i = index;
+        trackBy: trackBy
+      "
       (playEmitter)="play($event.type, $event.id)"
-      [listTitle]="media.homeTileLists?.[1]?.title"
-      [listData]="media.homeTileLists?.[1]?.data || []"
-      [showMore]="media.homeTileLists?.[1]?.hasSeeAll || false"
+      [listTitle]="item?.attributes?.['title']?.stringForDisplay"
+      [listId]="item?.id"
+      [listData]="item.relationships?.['contents']?.data || []"
+      [showMore]="item?.attributes?.['hasSeeAll'] || false"
     ></ui-media-tile-list>
-    <ng-container *ngIf="media.homeTileLists?.[0]?.data as dataList">
-      <ui-media-tile-list
-        *ngFor="let item of dataList; let i = index; trackBy: trackBy"
-        (playEmitter)="play($event.type, $event.id)"
-        [listTitle]="item?.attributes?.title?.stringForDisplay"
-        [listId]="item?.id"
-        [listData]="item?.relationships?.contents?.data || []"
-        [showMore]="item?.attributes?.hasSeeAll || false"
-      ></ui-media-tile-list>
-    </ng-container>
   </ng-container>
 </ng-container>
