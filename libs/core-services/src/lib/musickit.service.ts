@@ -1,5 +1,5 @@
 /* eslint-disable functional/immutable-data */
-/* eslint-disable functional/prefer-immutable-types */
+
 import { Injectable } from '@angular/core';
 import { MusicKit } from '@nyan-inc/shared-types';
 import { HttpService } from './http/http.service';

@@ -1,0 +1,182 @@
+{
+  "name": "library",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "library",
+  "sourceRoot": "apps/library/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:webpack-browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/library/browser",
+        "index": "apps/library/src/index.html",
+        "main": "apps/library/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/library/tsconfig.app.json",
+        "assets": ["apps/library/src/favicon.ico", "apps/library/src/assets"],
+        "styles": ["apps/library/src/styles.scss"],
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/library/webpack.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "apps/library/webpack.prod.config.js"
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@nx/angular:webpack-dev-server",
+      "options": {
+        "port": 4208,
+        "publicHost": "http://localhost:4208"
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "library:build:production"
+        },
+        "development": {
+          "browserTarget": "library:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "library:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/library/**/*.ts", "apps/library/**/*.html"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/library/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "library:build",
+        "port": 4208,
+        "watch": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "library:build:development"
+        },
+        "production": {
+          "buildTarget": "library:build:production"
+        }
+      }
+    },
+    "server": {
+      "dependsOn": ["build"],
+      "executor": "@nx/angular:webpack-server",
+      "options": {
+        "outputPath": "dist/apps/library/server",
+        "main": "apps/library/server.ts",
+        "tsConfig": "apps/library/tsconfig.server.json",
+        "customWebpackConfig": {
+          "path": "apps/library/webpack.server.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "outputHashing": "media"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "sourceMap": true,
+          "extractLicenses": false,
+          "vendorChunk": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-ssr": {
+      "executor": "@nguniversal/builders:ssr-dev-server",
+      "configurations": {
+        "development": {
+          "browserTarget": "library:build:development",
+          "serverTarget": "library:server:development"
+        },
+        "production": {
+          "browserTarget": "library:build:production",
+          "serverTarget": "library:server:production"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4208
+      }
+    },
+    "prerender": {
+      "executor": "@nguniversal/builders:prerender",
+      "options": {
+        "routes": ["/"]
+      },
+      "configurations": {
+        "development": {
+          "browserTarget": "library:build:development",
+          "serverTarget": "library:server:development"
+        },
+        "production": {
+          "browserTarget": "library:build:production",
+          "serverTarget": "library:server:production"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "static-server": {
+      "dependsOn": ["build", "server"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "PORT=4208 node dist/apps/library/server/main.js"
+      }
+    }
+  }
+}

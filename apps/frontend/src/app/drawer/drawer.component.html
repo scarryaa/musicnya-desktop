@@ -6,6 +6,18 @@
   >
     <ng-container header>
       <core-base-button
+        class="ui-button-m outline-offset drawer-item header-button"
+        text="Search"
+        icon="search"
+        [routerLink]="'/search'"
+        routerLinkActive="active"
+        routerLink
+        coreDisableChildTabIndex
+        [coreTooltip]="'Search'"
+        [showDelay]="1000"
+        [position]="TooltipPosition.RIGHT"
+      ></core-base-button>
+      <core-base-button
         class="ui-button-m text-reg outline-offset drawer-item header-button"
         text="Home"
         icon="home"
@@ -18,14 +30,26 @@
         [position]="TooltipPosition.RIGHT"
       ></core-base-button>
       <core-base-button
-        class="ui-button-m outline-offset drawer-item header-button"
-        text="Search"
-        icon="search"
-        [routerLink]="'/search'"
+        class="ui-button-m text-reg outline-offset drawer-item header-button"
+        text="Browse"
+        icon="view_comfy_alt"
+        [routerLink]="'browse'"
         routerLinkActive="active"
-        routerLink
+        [routerLinkActiveOptions]="{ exact: true }"
         coreDisableChildTabIndex
-        [coreTooltip]="'Search'"
+        [coreTooltip]="'Browse'"
+        [showDelay]="1000"
+        [position]="TooltipPosition.RIGHT"
+      ></core-base-button>
+      <core-base-button
+        class="ui-button-m text-reg outline-offset drawer-item header-button"
+        text="Radio"
+        icon="podcasts"
+        [routerLink]="'radio'"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        coreDisableChildTabIndex
+        [coreTooltip]="'Radio'"
         [showDelay]="1000"
         [position]="TooltipPosition.RIGHT"
       ></core-base-button>
@@ -94,7 +118,11 @@
       <ng-scrollbar class="drawer-scroller" [autoHeightDisabled]="true">
         <div id="footer-wrapper">
           <ng-container
-            *ngFor="let media of vm.currentView$ | async; let i = index"
+            *ngFor="
+              let media of vm.currentView$ | async;
+              let i = index;
+              trackByIndex
+            "
           >
             <ui-album-tile
               coreFallbackImage

@@ -33,6 +33,7 @@ export interface MusicAPIState extends EntityState<MusicAPIEntity> {
   currentMedia?: { data?: MusicKit.MediaItem; type?: MusicKit.MediaItemType };
   recentlyPlayed: EntityState<MusicKit.Resource>;
   personalRecommendations: EntityState<MusicKit.PersonalRecommendation>;
+  browseCategories: EntityState<MusicKit.Groupings>;
 }
 
 export interface MusicAPIPartialState {
@@ -75,6 +76,8 @@ export const songsAdapter: EntityAdapter<MusicKit.Songs> =
   createEntityAdapter<MusicKit.Songs>();
 export const artistsAdapter: EntityAdapter<MusicKit.Artists> =
   createEntityAdapter<MusicKit.Artists>();
+export const browseCategoriesAdapter: EntityAdapter<MusicKit.Groupings> =
+  createEntityAdapter<MusicKit.Groupings>();
 
 //initial state
 export const initialState: MusicAPIState = {
@@ -94,6 +97,7 @@ export const initialState: MusicAPIState = {
   currentMedia: { data: undefined, type: undefined },
   recentlyPlayed: recentlyPlayedAdapter.getInitialState(),
   personalRecommendations: personalRecommendationsAdapter.getInitialState(),
+  browseCategories: browseCategoriesAdapter.getInitialState(),
 };
 
 // meta reducers
@@ -277,6 +281,22 @@ const reducer = createReducer(
     ),
   })),
   on(MusicAPIActions.getRecentlyPlayedFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  })),
+
+  // get browse categories
+  on(MusicAPIActions.getBrowseCategories, (state) => ({
+    ...state,
+  })),
+  on(MusicAPIActions.getBrowseCategoriesSuccess, (state, { payload }) => ({
+    ...state,
+    browseCategories: browseCategoriesAdapter.setAll(
+      payload.data,
+      state.browseCategories
+    ),
+  })),
+  on(MusicAPIActions.getBrowseCategoriesFailure, (state, { payload }) => ({
     ...state,
     payload: payload.error,
   })),

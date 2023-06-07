@@ -12,7 +12,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import {
   AlbumTileModule,
   BaseButtonModule,
@@ -69,7 +69,8 @@ export class DrawerComponent
     private changeReference: ChangeDetectorRef,
     public musicAPIFacade: MusicAPIFacade,
     public spinner: SpinnerFacade,
-    public vm: LayoutFacade
+    public vm: LayoutFacade,
+    private router: Router
   ) {
     super();
     this.spinnerState$ = this.spinner.state$;
@@ -85,19 +86,19 @@ export class DrawerComponent
   handleChipSelect(event: number) {
     switch (event) {
       case 0: {
-        this.vm.setView('songs');
+        this.router.navigateByUrl('/library/songs');
         break;
       }
       case 1: {
-        this.vm.setView('playlists');
+        this.router.navigateByUrl('/library/playlists');
         break;
       }
       case 2: {
-        this.vm.setView('albums');
+        this.router.navigateByUrl('/library/albums');
         break;
       }
       case 3: {
-        this.vm.setView('artists');
+        this.router.navigateByUrl('/library/artists');
         break;
       }
       default: {
@@ -121,5 +122,10 @@ export class DrawerComponent
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+  }
+
+  //trackBys
+  trackByIndex(index: number, item: any): any {
+    return index;
   }
 }

@@ -1,0 +1,12 @@
+:host {
+  padding-inline: 0.5rem;
+  padding-top: 4rem;
+  padding-bottom: 3rem;
+  display: grid !important;
+  position: relative;
+  flex-direction: column;
+  row-gap: 3rem;
+  box-sizing: border-box;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+}

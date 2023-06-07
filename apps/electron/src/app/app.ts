@@ -229,7 +229,7 @@ export default class App {
   private static SplashWindow() {
     App.splashWindow = new BrowserWindow({
       width: 450,
-      height: 600,
+      height: 800,
       frame: false,
       transparent: false,
       alwaysOnTop: true,
@@ -260,14 +260,14 @@ export default class App {
   private static initMainWindow() {
     const workAreaSize = screen.getPrimaryDisplay().workAreaSize;
     const width = Math.min(900, workAreaSize.width || 1280);
-    const height = Math.min(615, workAreaSize.height || 720);
+    const height = Math.min(700, workAreaSize.height || 720);
 
     // Create the browser window.
     App.mainWindow = new BrowserWindow({
       width: width,
       height: height,
       minWidth: 900,
-      minHeight: 615,
+      minHeight: 700,
       show: false,
       frame: false,
       fullscreenable: true,

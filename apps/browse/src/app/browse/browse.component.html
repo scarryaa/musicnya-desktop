@@ -1,0 +1,19 @@
+<ng-container *ngrxLet="vm">
+  <ng-container *ngIf="vm">
+    <!-- Browse Categories -->
+    <ng-container
+      *ngFor="
+        let item of vm.selectEditorialElementsData$ | async;
+        let i = index;
+        trackBy: trackBy
+      "
+    >
+      <ui-media-tile-list
+        (playEmitter)="play($event.type, $event.id)"
+        [listTitle]="item?.attributes?.name!"
+        [listId]="item?.id"
+        [listData]="item.relationships?.['contents']?.data || []"
+      ></ui-media-tile-list>
+    </ng-container>
+  </ng-container>
+</ng-container>

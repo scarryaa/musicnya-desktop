@@ -54,6 +54,11 @@
       overflow: hidden;
     }
 
+    &:has(.hover_underline) .media-tile__title:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
     .media-tile__title {
       word-break: break-all;
       display: -webkit-box;
@@ -64,11 +69,6 @@
       min-width: 100%;
       max-width: min-content;
       filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.3));
-
-      &:hover {
-        text-decoration: underline;
-        cursor: pointer;
-      }
     }
 
     .media-tile__subtitle {

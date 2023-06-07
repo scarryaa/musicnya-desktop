@@ -1,5 +1,5 @@
-<ng-container *ngrxLet="state$ | async as media">
-  <div class="background" *ngIf="media.loaded">
+<ng-container *ngrxLet="musicAPIFacade">
+  <div class="background" *ngIf="musicAPIFacade.loaded$ | async">
     <div class="details">
       <musicnya-song-album-details
         class="details__content"

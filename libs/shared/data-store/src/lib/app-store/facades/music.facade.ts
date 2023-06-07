@@ -1,4 +1,3 @@
-/* eslint-disable functional/prefer-immutable-types */
 import { Injectable, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { MusicKit } from '@nyan-inc/shared-types';

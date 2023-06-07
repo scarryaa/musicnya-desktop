@@ -32,6 +32,7 @@ import {
 } from '../selectors';
 import { MusicKit } from '@nyan-inc/shared-types';
 import { selectAllAlbums } from '../selectors/albums.selectors';
+import { selectAllBrowseCategories } from '../selectors/browse-categories.selectors';
 
 //Load music api
 export const loadMusicAPI$ = createEffect(
@@ -411,6 +412,12 @@ export const getMediaItemOnRouteChange$ = createEffect(
                   albumId: parameters.id,
                 },
               })
+            : parameters.type === 'artists'
+            ? MusicAPIActions.getArtist({
+                payload: {
+                  artistId: parameters.id,
+                },
+              })
             : MusicAPIActions.getPlaylist({
                 payload: {
                   playlistId: parameters.id,
@@ -649,6 +656,48 @@ export const getRecommendationsAndRecentlyPlayed$ = createEffect(
             payload: { error },
           })
         )
+      )
+    ),
+  { functional: true }
+);
+
+// Fetches browse categories
+export const getBrowseCategories$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    musickit = inject(MusickitAPI),
+    store = inject(Store<MusicAPIState>)
+  ) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.getBrowseCategories),
+      // Check if browse categories are already in store
+      withLatestFrom(store.select(selectAllBrowseCategories)),
+      switchMap(([, browseCategoriesStoreData]) =>
+        browseCategoriesStoreData.length > 0
+          ? of(
+              MusicAPIActions.getBrowseCategoriesSuccess({
+                payload: { data: browseCategoriesStoreData },
+              })
+            )
+          : from(musickit.getBrowseCategories()).pipe(
+              // Convert images to webp
+              map((browseCategories) => {
+                return transformBrowseCategories(browseCategories);
+              }),
+
+              map((browseCategories) =>
+                MusicAPIActions.getBrowseCategoriesSuccess({
+                  payload: { data: browseCategories },
+                })
+              ),
+              catchError((error) =>
+                of(
+                  MusicAPIActions.getBrowseCategoriesFailure({
+                    payload: { error },
+                  })
+                )
+              )
+            )
       )
     ),
   { functional: true }
@@ -1195,4 +1244,34 @@ const transformArtworkUrl = (url: string, size: number) => {
     .replace('{w}x{h}', `${size}x${size}`)
     .replace('{f}', 'webp');
   return newUrl;
+};
+
+const transformBrowseCategories: any = (node: any) => {
+  if (Array.isArray(node)) {
+    return node.map((element) => transformBrowseCategories(element));
+  } else if (node !== null && typeof node === 'object') {
+    const newNode = { ...node };
+
+    if (
+      newNode.attributes &&
+      newNode.attributes.artwork &&
+      newNode.attributes.artwork.url
+    ) {
+      const newAttributes = { ...newNode.attributes };
+      const newArtwork = { ...newAttributes.artwork };
+
+      newArtwork.url = transformArtworkUrl(newAttributes.artwork.url, 400);
+      newAttributes.artwork = newArtwork;
+      newNode.attributes = newAttributes;
+    }
+
+    for (const key in newNode) {
+      if (newNode[key] instanceof Object) {
+        newNode[key] = transformBrowseCategories(newNode[key]);
+      }
+    }
+
+    return newNode;
+  }
+  return node;
 };

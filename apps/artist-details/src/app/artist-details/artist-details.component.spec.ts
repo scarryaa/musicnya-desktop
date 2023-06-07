@@ -1,4 +1,3 @@
-/* eslint-disable functional/prefer-immutable-types */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-expression-statements */
 import { ComponentFixture, TestBed } from '@angular/core/testing';

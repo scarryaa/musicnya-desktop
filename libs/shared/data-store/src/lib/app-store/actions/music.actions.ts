@@ -1,4 +1,3 @@
-/* eslint-disable functional/prefer-immutable-types */
 import { createAction, props } from '@ngrx/store';
 import { MusicKit } from '@nyan-inc/shared-types';
 

@@ -1,4 +1,3 @@
-/* eslint-disable functional/prefer-immutable-types */
 // helper functions
 // determine type of media item
 export const processMediaType = (

@@ -18,7 +18,10 @@ import { DividerComponent } from '../divider/divider.component';
     <p *ngIf="showTitle" id="container-title">Top Songs</p>
     <core-divider></core-divider>
     <div class="content-container">
-      <div *ngFor="let media of songs; let i = index" class="tile-container">
+      <div
+        *ngFor="let media of songs; let i = index; trackByIndex"
+        class="tile-container"
+      >
         <core-media-tile-small
           [mediaImage]="media.attributes?.artwork?.url ?? ''"
           [mediaTitle]="media.attributes?.name ?? ''"
@@ -94,4 +97,8 @@ export class TopSongsComponent {
   @Input() index: number = 0;
   @Input() rows: number = 3;
   @Input() showTitle = true;
+
+  trackByIndex(index: number, item: any): any {
+    return index;
+  }
 }

@@ -1,0 +1,186 @@
+{
+  "name": "browse",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "nyan-inc",
+  "sourceRoot": "apps/browse/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:webpack-browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/browse/browser",
+        "index": "apps/browse/src/index.html",
+        "main": "apps/browse/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/browse/tsconfig.app.json",
+        "assets": ["apps/browse/src/favicon.ico", "apps/browse/src/assets"],
+        "styles": ["apps/browse/src/styles.scss"],
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/browse/webpack.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "6kb"
+            }
+          ],
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "apps/browse/webpack.prod.config.js"
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@nx/angular:webpack-dev-server",
+      "options": {
+        "port": 4206,
+        "publicHost": "http://localhost:4206"
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "browse:build:production"
+        },
+        "development": {
+          "browserTarget": "browse:build:development",
+          "liveReload": true
+        },
+        "options": {
+          "poll": 500
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "browse:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/browse/**/*.ts", "apps/browse/**/*.html"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/browse/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "browse:build",
+        "port": 4206,
+        "watch": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "browse:build:development"
+        },
+        "production": {
+          "buildTarget": "browse:build:production"
+        }
+      }
+    },
+    "server": {
+      "dependsOn": ["build"],
+      "executor": "@nx/angular:webpack-server",
+      "options": {
+        "outputPath": "dist/apps/browse/server",
+        "main": "apps/browse/server.ts",
+        "tsConfig": "apps/browse/tsconfig.server.json",
+        "customWebpackConfig": {
+          "path": "apps/browse/webpack.server.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "outputHashing": "media"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "sourceMap": true,
+          "extractLicenses": false,
+          "vendorChunk": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-ssr": {
+      "executor": "@nguniversal/builders:ssr-dev-server",
+      "configurations": {
+        "development": {
+          "browserTarget": "browse:build:development",
+          "serverTarget": "browse:server:development"
+        },
+        "production": {
+          "browserTarget": "browse:build:production",
+          "serverTarget": "browse:server:production"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4206
+      }
+    },
+    "prerender": {
+      "executor": "@nguniversal/builders:prerender",
+      "options": {
+        "routes": ["/"]
+      },
+      "configurations": {
+        "development": {
+          "browserTarget": "browse:build:development",
+          "serverTarget": "browse:server:development"
+        },
+        "production": {
+          "browserTarget": "browse:build:production",
+          "serverTarget": "browse:server:production"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "static-server": {
+      "dependsOn": ["build", "server"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "PORT=4206 node dist/apps/browse/server/main.js"
+      }
+    }
+  }
+}

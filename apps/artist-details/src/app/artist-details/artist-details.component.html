@@ -85,7 +85,7 @@
           <ng-container *ngIf="songs?.[0]">
             <p class="artist-details__content__top-songs__heading">Top Songs</p>
             <div class="artist-details__content__top-songs__scroll-wrapper">
-              <ng-container *ngFor="let song of songs">
+              <ng-container *ngFor="let song of songs; trackBy: trackByIndex">
                 <core-media-tile-small
                   class="artist-details__content__top-songs__scroll-wrapper__media-tile"
                   [mediaImage]="song.attributes?.artwork?.url || ''"
@@ -119,12 +119,14 @@
         <ng-container *ngIf="albums?.[0]">
           <p class="artist-details__content__albums__heading">Albums</p>
           <div class="artist-details__content__albums__scroll-wrapper">
-            <ng-container *ngFor="let album of albums">
+            <ng-container *ngFor="let album of albums; trackBy: trackByIndex">
               <core-media-tile
                 class="artist-details__content__albums__scroll-wrapper__media-tile"
                 [mediaImage]="album.attributes?.artwork?.url || ''"
                 [mediaImageSize]="10"
                 [mediaTitle]="album?.attributes?.name || ''"
+                [titleHover]="true"
+                [subtitleHover]="false"
                 [mediaSubtitle]="
                   album?.attributes?.releaseDate || '' | yearSlice
                 "
@@ -147,12 +149,14 @@
             Singles & EPs
           </p>
           <div class="artist-details__content__singles-eps__scroll-wrapper">
-            <ng-container *ngFor="let single of singles">
+            <ng-container *ngFor="let single of singles; trackByIndex">
               <core-media-tile
                 class="artist-details__content__singles-eps__scroll-wrapper__media-tile"
                 [mediaImage]="single.attributes?.artwork?.url || ''"
                 [mediaImageSize]="10"
                 [mediaTitle]="single?.attributes?.name || ''"
+                [titleHover]="true"
+                [subtitleHover]="false"
                 [mediaSubtitle]="
                   single?.attributes?.releaseDate || '' | yearSlice
                 "
@@ -178,7 +182,7 @@
             Music Videos
           </p>
           <div class="artist-details__content__music-videos__scroll-wrapper">
-            <ng-container *ngFor="let video of videos">
+            <ng-container *ngFor="let video of videos; trackByIndex">
               <core-video-tile
                 class="artist-details__content__music-videos__scroll-wrapper__media-tile artist-details__content__music-videos__scroll-wrapper__video-tile"
                 [videoImage]="video.attributes?.artwork?.url || ''"
@@ -202,7 +206,9 @@
             Similar Artists
           </p>
           <div class="artist-details__content__similar-artists__scroll-wrapper">
-            <ng-container *ngFor="let artist of vm.similarArtists$ | async">
+            <ng-container
+              *ngFor="let artist of vm.similarArtists$ | async; trackByIndex"
+            >
               <core-artist-tile
                 class="artist-details__content__similar-artists__scroll-wrapper__media-tile"
                 [image]="artist.attributes?.artwork?.url || ''"

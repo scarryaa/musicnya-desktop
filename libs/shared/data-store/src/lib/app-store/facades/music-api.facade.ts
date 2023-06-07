@@ -1,7 +1,5 @@
-/* eslint-disable functional/prefer-immutable-types */
 import { Injectable, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { MediaItemTypes } from '@nyan-inc/core';
 import { MusicKit } from '@nyan-inc/shared-types';
 import { filter, map, Observable, skipWhile, Subscription, take } from 'rxjs';
 import { MusicAPIActions } from '../actions';
@@ -10,6 +8,7 @@ import {
   selectAllPersonalRecommendations,
   selectAllRecentlyPlayed,
 } from '../selectors';
+import { selectAllBrowseCategories } from '../selectors/browse-categories.selectors';
 import { selectAllLibraryPlaylists } from '../selectors/library-playlists.selectors';
 import { selectMusicAPIState } from '../selectors/music-api.selectors';
 
@@ -46,6 +45,26 @@ export class MusicAPIFacade implements OnDestroy {
   selectMedia$ = this.store.pipe(
     select(selectMusicAPIState),
     map((value) => value.currentMedia?.data)
+  );
+
+  //browse vm
+  selectBrowseCategories$ = this.store.pipe(
+    select(selectAllBrowseCategories),
+    filter((categories) => categories !== undefined)
+  );
+
+  selectEditorialElements$ = this.store.pipe(
+    select(selectAllBrowseCategories),
+    map((categories) => categories?.[0]?.relationships.tabs.data?.[0])
+  );
+
+  selectEditorialElementsData$ = this.store.pipe(
+    select(selectAllBrowseCategories),
+    map(
+      (categories) =>
+        categories?.[0]?.relationships.tabs.data?.[0]?.relationships.children
+          .data
+    )
   );
 
   // home vm
@@ -318,6 +337,17 @@ export class MusicAPIFacade implements OnDestroy {
         this.store.dispatch(
           MusicAPIActions.getRecommendationsAndRecentlyPlayed()
         )
+      );
+  }
+
+  getBrowseCategories() {
+    return this.musickitLoaded$
+      .pipe(
+        skipWhile((loaded) => loaded !== true),
+        take(1)
+      )
+      .subscribe(() =>
+        this.store.dispatch(MusicAPIActions.getBrowseCategories())
       );
   }
 

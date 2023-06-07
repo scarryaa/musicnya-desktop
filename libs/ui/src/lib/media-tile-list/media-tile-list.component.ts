@@ -31,7 +31,7 @@ import { MusicKit } from '@nyan-inc/shared-types';
     <div id="album-tile-container">
       <core-media-tile
         class="album-tile"
-        *ngFor="let item of listData; let i = index"
+        *ngFor="let item of listData; let i = index; trackBy: trackByIndex"
         [id]="listData[i].id"
         #items
         [mediaTitle]="listData[i].attributes?.['name'] ?? ''"
@@ -41,6 +41,8 @@ import { MusicKit } from '@nyan-inc/shared-types';
         [mediaImageSize]="10"
         [mediaImage]="listData[i].attributes?.['artwork']?.url ?? ''"
         (playEmitter)="emit(i)"
+        [subtitleHover]="listData[i].type !== 'stations'"
+        [titleHover]="listData[i].type !== 'stations'"
         [subtitleLink]="
           '/media/' +
           'artists/' +
@@ -68,5 +70,9 @@ export class MediaTileListComponent {
       type: this.listData[i].type,
       id: this.listData[i].id,
     });
+  }
+
+  trackByIndex(index: number, item: any): any {
+    return index;
   }
 }

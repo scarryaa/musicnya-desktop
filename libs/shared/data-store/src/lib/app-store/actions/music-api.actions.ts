@@ -12,6 +12,19 @@ export const loadMusicAPIFailure = createAction(
   props<{ payload: { error: Error } }>()
 );
 
+// Browse Categories Actions
+export const getBrowseCategories = createAction(
+  '[Music/API] Get Browse Categories'
+);
+export const getBrowseCategoriesSuccess = createAction(
+  '[Music/API] Get Browse Categories Success',
+  props<{ payload: { data: MusicKit.Groupings[] } }>()
+);
+export const getBrowseCategoriesFailure = createAction(
+  '[Music/API] Get Browse Categories Failure',
+  props<{ payload: { error: Error } }>()
+);
+
 // Library Playlists Actions
 export const getLibraryPlaylists = createAction(
   '[Music/API] Get Library Playlists'

@@ -1,4 +1,3 @@
-/* eslint-disable functional/prefer-immutable-types */
 import { inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';

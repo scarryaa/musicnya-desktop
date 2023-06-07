@@ -1,0 +1,182 @@
+{
+  "name": "radio",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "nyan-inc",
+  "sourceRoot": "apps/radio/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:webpack-browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/radio/browser",
+        "index": "apps/radio/src/index.html",
+        "main": "apps/radio/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/radio/tsconfig.app.json",
+        "assets": ["apps/radio/src/favicon.ico", "apps/radio/src/assets"],
+        "styles": ["apps/radio/src/styles.scss"],
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/radio/webpack.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "apps/radio/webpack.prod.config.js"
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@nx/angular:webpack-dev-server",
+      "options": {
+        "port": 4207,
+        "publicHost": "http://localhost:4207"
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "radio:build:production"
+        },
+        "development": {
+          "browserTarget": "radio:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "radio:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/radio/**/*.ts", "apps/radio/**/*.html"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/radio/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "radio:build",
+        "port": 4207,
+        "watch": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "radio:build:development"
+        },
+        "production": {
+          "buildTarget": "radio:build:production"
+        }
+      }
+    },
+    "server": {
+      "dependsOn": ["build"],
+      "executor": "@nx/angular:webpack-server",
+      "options": {
+        "outputPath": "dist/apps/radio/server",
+        "main": "apps/radio/server.ts",
+        "tsConfig": "apps/radio/tsconfig.server.json",
+        "customWebpackConfig": {
+          "path": "apps/radio/webpack.server.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "outputHashing": "media"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "sourceMap": true,
+          "extractLicenses": false,
+          "vendorChunk": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-ssr": {
+      "executor": "@nguniversal/builders:ssr-dev-server",
+      "configurations": {
+        "development": {
+          "browserTarget": "radio:build:development",
+          "serverTarget": "radio:server:development"
+        },
+        "production": {
+          "browserTarget": "radio:build:production",
+          "serverTarget": "radio:server:production"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4207
+      }
+    },
+    "prerender": {
+      "executor": "@nguniversal/builders:prerender",
+      "options": {
+        "routes": ["/"]
+      },
+      "configurations": {
+        "development": {
+          "browserTarget": "radio:build:development",
+          "serverTarget": "radio:server:development"
+        },
+        "production": {
+          "browserTarget": "radio:build:production",
+          "serverTarget": "radio:server:production"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "static-server": {
+      "dependsOn": ["build", "server"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "PORT=4207 node dist/apps/radio/server/main.js"
+      }
+    }
+  }
+}

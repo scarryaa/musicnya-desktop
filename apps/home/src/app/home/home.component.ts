@@ -1,13 +1,8 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  OnDestroy,
-  AfterViewInit,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { HeadingComponent, MediaTileListComponent } from '@nyan-inc/ui';
-import { MusicAPIFacade, MusicAPIState, MusicFacade } from '@nyan-inc/shared';
+import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
 import { LetDirective } from '@ngrx/component';
 import { SpinnerComponent } from '@nyan-inc/core';
 

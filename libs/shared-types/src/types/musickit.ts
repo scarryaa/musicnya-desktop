@@ -1,7 +1,7 @@
 /* eslint-disable functional/type-declaration-immutability */
 /* eslint-disable functional/no-classes */
 /* eslint-disable @typescript-eslint/no-namespace */
-/* eslint-disable functional/prefer-immutable-types */
+
 /**Use the MusicKit namespace to configure MusicKit on the Web and access the singleton instance.
  *
  * It is also a global variable on the window object, and a namespace for other utils and enums.
@@ -1393,6 +1393,75 @@ export declare namespace MusicKit {
     isLibrary?: boolean;
     globalId?: string;
     versionHash?: string;
+  }
+
+  interface Groupings {
+    attributes: {
+      genreNames: string[];
+      name: string;
+    };
+    id: string;
+    href: string;
+    type: string;
+    relationships: {
+      tabs: {
+        data: Array<{
+          id: string;
+          type: string;
+          attributes: {
+            doNotFilter: boolean;
+            editorialElementKind: string;
+          };
+          relationships: {
+            children: {
+              data: Array<EditorialElements>;
+            };
+          };
+        }>;
+        href: string;
+      };
+      curator: {
+        data: {
+          id: string;
+          type: string;
+        };
+        href: string;
+      };
+    };
+  }
+
+  interface EditorialElements {
+    type: 'editorial-elements';
+    id: string;
+    attributes?: {
+      artwork?: Artwork;
+      designBadge?: string;
+      designTag: string;
+      doNotFilter: boolean;
+      editorialElementKind: string;
+      lastModifiedDate: string;
+      links?: {
+        url: string;
+        label: string;
+      };
+      name: string;
+      url: string;
+    };
+    relationships: {
+      contents?: {
+        data: Array<Resource | MediaItem>;
+      };
+      room?: {
+        data: {
+          id: string;
+          type: string;
+          href: 'rooms';
+        };
+      };
+      children: {
+        data: Array<EditorialElements>;
+      };
+    };
   }
 
   /**

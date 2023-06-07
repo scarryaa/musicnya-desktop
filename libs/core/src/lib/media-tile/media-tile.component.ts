@@ -23,7 +23,10 @@ import { OptionsButtonComponent } from '../options-button/options-button.compone
           [style.minHeight.rem]="mediaImageSize"
           [style.aspectRatio]="1"
         />
-        <div class="media-tile__image-overlay" [routerLink]="mediaLink">
+        <div
+          class="media-tile__image-overlay"
+          [routerLink]="titleHover ? mediaLink : undefined"
+        >
           <core-play-button
             class="media-tile__image-overlay__play-button"
             (playEmitter)="handlePlayClick()"
@@ -36,7 +39,8 @@ import { OptionsButtonComponent } from '../options-button/options-button.compone
       </div>
       <div
         class="media-tile__title"
-        [routerLink]="mediaLink"
+        [routerLink]="titleHover ? mediaLink : undefined"
+        [ngClass]="{ hover_underline: titleHover }"
         [title]="mediaTitle"
       >
         {{ mediaTitle }}
@@ -63,6 +67,7 @@ export class MediaTileComponent {
   @Input() id?: string;
   @Input() type?: string;
   @Input() subtitleHover = true;
+  @Input() titleHover = true;
 
   @Output() playEmitter = new EventEmitter<{ type: string; id: string }>();
   @Output() optionsEmitter = new EventEmitter();

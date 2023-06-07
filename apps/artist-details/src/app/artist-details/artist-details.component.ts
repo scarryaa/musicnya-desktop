@@ -1,4 +1,3 @@
-/* eslint-disable functional/prefer-immutable-types */
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LetDirective } from '@ngrx/component';
@@ -54,4 +53,9 @@ export class ArtistDetailsComponent {
   }
 
   options(arguments_: any) {}
+
+  //trackBys
+  trackByIndex(index: number, item: any): any {
+    return index;
+  }
 }
