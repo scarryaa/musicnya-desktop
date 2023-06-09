@@ -1,5 +1,6 @@
 #title-bar {
   width: 100%;
+  margin-top: 5px;
   height: 2.2rem;
   position: relative;
   display: flex;
@@ -20,6 +21,7 @@
   width: 30px;
   height: 30px;
   outline-offset: -0.2rem;
+  margin-top: -5px;
 
   i {
     font-weight: var(--font-weight-thin);
@@ -40,6 +42,7 @@
 }
 
 #titlebar-file-menu-wrapper {
+  margin-top: -5px;
   display: flex;
   justify-content: flex-start;
   justify-self: flex-start;

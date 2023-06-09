@@ -60,5 +60,5 @@
       "style": "scss"
     }
   },
-  "defaultProject": "electron"
+  "defaultProject": "src-tauri"
 }

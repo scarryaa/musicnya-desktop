@@ -29,7 +29,7 @@ import { Input, Output } from '@angular/core';
     MenuItemComponent,
     MusicnyaMenuComponent,
   ],
-  template: `<div id="title-bar">
+  template: `<div id="title-bar" data-tauri-drag-region>
       <div id="titlebar-file-menu-wrapper">
         <core-base-button
           [cdkMenuTriggerFor]="menu"

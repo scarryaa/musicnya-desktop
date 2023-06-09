@@ -36,14 +36,14 @@ import { AppService } from './services/app/app.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (loginService: LoginService) => () => {
-        loginService.listenForCookies();
-      },
-      deps: [LoginService],
-      multi: true,
-    },
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: (loginService: LoginService) => () => {
+    //     loginService.listenForCookies();
+    //   },
+    //   deps: [LoginService],
+    //   multi: true,
+    // },
     {
       provide: APP_INITIALIZER,
       useFactory: (appService: AppService) => () => appService.waitForSplash(),

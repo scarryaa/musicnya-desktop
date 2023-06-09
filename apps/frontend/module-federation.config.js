@@ -22,4 +22,12 @@ module.exports = {
       'process.env': JSON.stringify(process.env),
     }),
   ],
+  webpack: {
+    resolve: {
+      fallback: {
+        os: 'empty',
+        fs: 'empty',
+      },
+    },
+  },
 };
