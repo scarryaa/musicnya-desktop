@@ -28,7 +28,7 @@ import { MusicKit } from '@nyan-inc/shared-types';
         listTitle
       }}</ui-heading>
     </div>
-    <div id="album-tile-container">
+    <div id="album-tile-container" [style.flexWrap]="wrap ? 'wrap' : 'nowrap'">
       <core-media-tile
         class="album-tile"
         *ngFor="let item of listData; let i = index; trackBy: trackByIndex"
@@ -62,6 +62,7 @@ export class MediaTileListComponent {
   @Input() listId?: string;
   @Input() listData!: MusicKit.Resource[];
   @Input() clickEnabled = true;
+  @Input() wrap = false;
   @Output() readonly playEmitter: EventEmitter<{ type: string; id: string }> =
     new EventEmitter();
 

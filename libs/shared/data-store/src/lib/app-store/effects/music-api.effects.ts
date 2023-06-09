@@ -388,7 +388,8 @@ export const getMediaItemOnRouteChange$ = createEffect(
       mergeMap((parameters: RouteParameters) => [
         // switch based on the type of media item
         parameters.type
-          ? parameters.type === 'library-playlist'
+          ? parameters.type === 'library-playlist' ||
+            parameters.type === 'library-playlists'
             ? MusicAPIActions.getLibraryPlaylist({
                 payload: {
                   playlistId: parameters.id,

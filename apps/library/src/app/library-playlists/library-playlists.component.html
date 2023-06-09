@@ -1,1 +1,12 @@
-<p>library-playlists works!</p>
+<ng-container *ngrxLet="vm">
+  <div class="library-playlists-container">
+    <ui-media-tile-list
+      *ngIf="vm.libraryPlaylists$ | async"
+      (playEmitter)="play($event.type, $event.id)"
+      [listTitle]="'Playlists'"
+      [listData]="(vm.libraryPlaylists$ | async) || []"
+      [showMore]="false"
+      [wrap]="true"
+    ></ui-media-tile-list>
+  </div>
+</ng-container>
