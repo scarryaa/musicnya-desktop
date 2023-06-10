@@ -1496,10 +1496,34 @@ export declare namespace MusicKit {
     standard?: string;
   }
 
+  interface SearchSuggestionsResponse {
+    results: {
+      suggestions: Array<TermSuggestion | TopResultSuggestion>;
+    };
+  }
+
+  interface TermSuggestion {
+    content: any;
+    displayTerm: string;
+    kind: 'terms';
+    searchTerm: string;
+  }
+
+  interface TopResultSuggestion {
+    content: any;
+    kind: 'topResults';
+  }
+
+  interface SearchResponse<T> {
+    results: {
+      [key: string]: SearchResult<T>;
+    };
+  }
+
   interface SearchResult<T> {
     data: T[];
-    href?: string;
-    next?: string;
+    href: string;
+    next: string;
   }
 
   interface SearchChartResult<T> {

@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeroTileComponent } from '@nyan-inc/core';
+import { HeroTileComponent, SearchbarComponent } from '@nyan-inc/core';
 import { MusicAPIFacade } from '@nyan-inc/shared';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'musicnya-search',
   standalone: true,
-  imports: [CommonModule, HeroTileComponent],
+  imports: [CommonModule, HeroTileComponent, RouterModule, SearchbarComponent],
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,6 +16,6 @@ export class SearchComponent {
   constructor(public vm: MusicAPIFacade) {}
 
   search(value: string) {
-    console.log(value);
+    this.vm.search(value);
   }
 }

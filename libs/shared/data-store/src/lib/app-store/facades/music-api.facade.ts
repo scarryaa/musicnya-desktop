@@ -1,7 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { MusicKit } from '@nyan-inc/shared-types';
-import { filter, map, Observable, skipWhile, Subscription, take } from 'rxjs';
+import {
+  filter,
+  map,
+  Observable,
+  skipWhile,
+  Subscription,
+  take,
+  tap,
+} from 'rxjs';
 import { MusicAPIActions } from '../actions';
 import { MusicAPIState } from '../reducers/music-api.reducer';
 import {
@@ -12,6 +20,7 @@ import { selectAllBrowseCategories } from '../selectors/browse-categories.select
 import { selectAllLibraryPlaylists } from '../selectors/library-playlists.selectors';
 import { selectMusicAPIState } from '../selectors/music-api.selectors';
 import { selectAllSearchCategories } from '../selectors/search-categories.selectors';
+import { selectAllSearchResults } from '../selectors/search-results.selectors';
 
 @Injectable({
   providedIn: 'root',
@@ -79,9 +88,18 @@ export class MusicAPIFacade implements OnDestroy {
   }
 
   // search vm
-  selectSearchResults$ = this.store.pipe(
+  search(term: string) {
+    this.store.dispatch(MusicAPIActions.search({ payload: { term } }));
+  }
+
+  selectSearchTerms$ = this.store.pipe(
     select(selectMusicAPIState),
-    map((value) => value.searchResults)
+    map((value) => value.searchTerms)
+  );
+
+  selectSearchResults$ = this.store.pipe(
+    select(selectAllSearchResults),
+    map((value) => value)
   );
 
   selectSearchCategories$ = this.store.pipe(

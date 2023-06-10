@@ -1,6 +1,5 @@
 import { createSelector } from '@ngrx/store';
 import {
-  browseCategoriesAdapter,
   MusicAPIState,
   searchCategoriesAdapter,
 } from '../reducers/music-api.reducer';

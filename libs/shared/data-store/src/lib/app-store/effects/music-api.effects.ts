@@ -740,6 +740,33 @@ export const getLibraryPlaylist$ = createEffect(
   { functional: true }
 );
 
+// Searches for a term
+export const search$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    music = inject(MusickitAPI),
+    store = inject(Store<MusicAPIState>)
+  ) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.search),
+      // tap(() => store.dispatch(SpinnerActions.showSpinner())),
+      // Fetch the search results
+      switchMap((action) =>
+        music
+          .getSearchSuggestions(action.payload.term)
+          .then((data: MusicKit.SearchSuggestionsResponse) =>
+            MusicAPIActions.searchSuccess({
+              payload: {
+                data: data.results.suggestions,
+              },
+            })
+          )
+      )
+      // tap(() => store.dispatch(SpinnerActions.hideSpinner()))
+    ),
+  { functional: true }
+);
+
 // Fetches a playlist
 export const getPlaylist$ = createEffect(
   (

@@ -46,3 +46,7 @@ export * from './lib/tooltip/tooltip.enums';
 export * from './lib/dynamic-component-loader/dynamic-component-loader.component';
 
 export * from './lib/hero-tile/hero-tile.component';
+
+export * from './lib/search-item/search-item.component';
+
+export * from './lib/searchbar/searchbar.component';

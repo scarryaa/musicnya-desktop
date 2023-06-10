@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import { MusicKit } from '@nyan-inc/shared-types';
 import { MusickitBase } from './musickit-base.service';
+import {
+  Observable,
+  filter,
+  from,
+  lastValueFrom,
+  of,
+  skipWhile,
+  take,
+} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -129,6 +138,16 @@ export class MusickitAPI {
     );
 
     return request as MusicKit.PersonalRecommendation[];
+  }
+
+  async getSearchSuggestions(
+    query: string
+  ): Promise<MusicKit.SearchSuggestionsResponse> {
+    const request = await this.instance.api.v3.music(
+      `/v1/catalog/us/search/suggestions?term=${query}&fields%5Balbums%5D=artwork%2Cname%2CplayParams%2Curl%2CartistName%2Cid%2CcontentRating&fields%5Bartists%5D=url%2Cname%2Cartwork%2Cid&fields%5Bsongs%5D=artwork%2Cname%2CplayParams%2Curl%2CartistName%2Cid%2CcontentRating%2CalbumName&kinds=terms%2CtopResults&limit%5Bresults%3Aterms%5D=1&limit%5Bresults%3AtopResults%5D=10&omit%5Bresource%5D=autos&platform=web&types=activities%2Calbums%2Cartists%2Ceditorial-items%2Cmusic-movies%2Cplaylists%2Crecord-labels%2Csongs%2Cstations`
+    );
+    console.log(request);
+    return (request as any).data as MusicKit.SearchSuggestionsResponse;
   }
 
   async getBrowseCategories(): Promise<MusicKit.Groupings[]> {

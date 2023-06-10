@@ -304,6 +304,23 @@ export const getRecentlyPlayedFailure = createAction(
   props<{ payload: { error: Error } }>()
 );
 
+export const search = createAction(
+  '[Music/API] Search',
+  props<{ payload: { term: string } }>()
+);
+export const searchSuccess = createAction(
+  '[Music/API] Search Success',
+  props<{
+    payload: {
+      data: Array<MusicKit.TermSuggestion | MusicKit.TopResultSuggestion>;
+    };
+  }>()
+);
+export const searchFailure = createAction(
+  '[Music/API] Search Failure',
+  props<{ payload: { error: Error } }>()
+);
+
 // Get Recommendations and Recently Played Actions
 export const getRecommendationsAndRecentlyPlayed = createAction(
   '[Music/API] Get Recommendations and Recently Played'
@@ -368,7 +385,9 @@ export const getSearchCategoriesFailure = createAction(
 // Get search results
 export const getSearchResults = createAction(
   '[Music/API] Get Search Results',
-  props<{ payload: { term: string } }>()
+  props<{
+    payload: { term: MusicKit.TopResultSuggestion | MusicKit.TermSuggestion };
+  }>()
 );
 export const getSearchResultsSuccess = createAction(
   '[Music/API] Get Search Results Success',

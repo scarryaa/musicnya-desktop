@@ -36,7 +36,11 @@ export interface MusicAPIState extends EntityState<MusicAPIEntity> {
   browseCategories: EntityState<MusicKit.Groupings>;
   curatorCategories: EntityState<MusicKit.Groupings>;
   searchCategories: EntityState<MusicKit.PersonalRecommendation>;
-  searchResults: EntityState<any>;
+  searchResults: EntityState<
+    MusicKit.TopResultSuggestion | MusicKit.TermSuggestion
+  >;
+  searchTerms: string;
+  searchHints: EntityState<string>;
 }
 
 export interface MusicAPIPartialState {
@@ -85,8 +89,15 @@ export const curatorCategoriesAdapter: EntityAdapter<MusicKit.Groupings> =
   createEntityAdapter<MusicKit.Groupings>();
 export const searchCategoriesAdapter: EntityAdapter<MusicKit.PersonalRecommendation> =
   createEntityAdapter<MusicKit.PersonalRecommendation>();
-export const searchResultsAdapter: EntityAdapter<any> =
-  createEntityAdapter<any>();
+export const searchResultsAdapter: EntityAdapter<
+  MusicKit.TopResultSuggestion | MusicKit.TermSuggestion
+> = createEntityAdapter({
+  selectId: (
+    suggestion: MusicKit.TopResultSuggestion | MusicKit.TermSuggestion
+  ) => suggestion.content?.id || suggestion.content?.name,
+});
+export const searchHintsAdapter: EntityAdapter<string> =
+  createEntityAdapter<string>();
 
 //initial state
 export const initialState: MusicAPIState = {
@@ -110,6 +121,8 @@ export const initialState: MusicAPIState = {
   curatorCategories: curatorCategoriesAdapter.getInitialState(),
   searchCategories: searchCategoriesAdapter.getInitialState(),
   searchResults: searchResultsAdapter.getInitialState(),
+  searchHints: searchHintsAdapter.getInitialState(),
+  searchTerms: '',
 };
 
 // meta reducers
@@ -346,17 +359,17 @@ const reducer = createReducer(
   })),
 
   // get search results
-  on(MusicAPIActions.getSearchResults, (state) => ({
+  on(MusicAPIActions.search, (state) => ({
     ...state,
   })),
-  on(MusicAPIActions.getSearchResultsSuccess, (state, { payload }) => ({
+  on(MusicAPIActions.searchSuccess, (state, { payload }) => ({
     ...state,
     searchResults: searchResultsAdapter.setAll(
       payload.data,
       state.searchResults
     ),
   })),
-  on(MusicAPIActions.getSearchResultsFailure, (state, { payload }) => ({
+  on(MusicAPIActions.searchFailure, (state, { payload }) => ({
     ...state,
     payload: payload.error,
   })),

@@ -9,7 +9,7 @@ import {
   VirtualTableModule,
   VirtualTableSmartModule,
 } from '@nyan-inc/ui';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { MusicFacade, MusicAPIFacade } from '@nyan-inc/shared';
 import { LetDirective } from '@ngrx/component';
 
