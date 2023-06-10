@@ -16,6 +16,7 @@ module.exports = {
     'browse',
     'radio',
     'library',
+    'curator-details',
   ],
   plugins: [
     new webpack.DefinePlugin({

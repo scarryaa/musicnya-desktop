@@ -12,9 +12,10 @@ import {
   BaseButtonModule,
   YearSlicePipe,
 } from '@nyan-inc/core';
+import { MediaTileListComponent } from '@nyan-inc/ui';
 
 @Component({
-  selector: 'artist-details-main',
+  selector: 'curator-details-main',
   standalone: true,
   imports: [
     CommonModule,
@@ -27,17 +28,19 @@ import {
     ArtistTileComponent,
     BaseButtonModule,
     YearSlicePipe,
+    MediaTileComponent,
+    MediaTileListComponent,
   ],
-  templateUrl: './artist-details.component.html',
-  styleUrls: ['./artist-details.component.scss'],
+  templateUrl: './curator-details.component.html',
+  styleUrls: ['./curator-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ArtistDetailsComponent {
-  constructor(p
+export class CuratorDetailsComponent {
+  constructor(
     public readonly musicAPIFacade: MusicAPIFacade,
     private readonly musicFacade: MusicFacade
   ) {
-    console.log('ArtistDetailsComponent');
+    console.log('CuratorDetailsComponent');
   }
   stationID?: string;
 

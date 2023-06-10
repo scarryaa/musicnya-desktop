@@ -14,6 +14,13 @@ export const appRoutes: Route[] = [
       import('artist-details/Routes').then((m) => m.remoteRoutes),
   },
   {
+    path: 'media/curators/:id',
+    loadChildren: () =>
+      import('../../../curator-details/src/app/remote-entry/entry.routes').then(
+        (m) => m.remoteRoutes
+      ),
+  },
+  {
     path: 'media/:type/:id',
     loadChildren: () =>
       import('../../../media-details/src/app/remote-entry/entry.routes').then(

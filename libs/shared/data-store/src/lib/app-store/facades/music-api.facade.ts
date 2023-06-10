@@ -4,10 +4,7 @@ import { MusicKit } from '@nyan-inc/shared-types';
 import { filter, map, Observable, skipWhile, Subscription, take } from 'rxjs';
 import { MusicAPIActions } from '../actions';
 import { MusicAPIState } from '../reducers/music-api.reducer';
-import {
-  selectAllPersonalRecommendations,
-  selectAllRecentlyPlayed,
-} from '../selectors';
+import { selectAllCuratorCategories, selectAllPersonalRecommendations } from '../selectors';
 import { selectAllBrowseCategories } from '../selectors/browse-categories.selectors';
 import { selectAllLibraryPlaylists } from '../selectors/library-playlists.selectors';
 import { selectMusicAPIState } from '../selectors/music-api.selectors';
@@ -68,15 +65,55 @@ export class MusicAPIFacade implements OnDestroy {
   );
 
   // home vm
-  selectRecentlyPlayed$: Observable<MusicKit.Resource[]> = this.store.pipe(
-    select(selectAllRecentlyPlayed),
-    filter((recentlyPlayed) => recentlyPlayed !== undefined)
-  );
-
   selectRecommendations$: Observable<MusicKit.Resource[]> = this.store.pipe(
     select(selectAllPersonalRecommendations),
     filter((recommendations) => recommendations !== undefined)
   );
+
+  getCurator(id: string) {
+    this.store.dispatch(MusicAPIActions.getCuratorID({ payload: { id } }));
+  }
+
+  // curator selectors
+  readonly curatorName$ = this.store
+    .pipe(select(selectMusicAPIState))
+    .pipe(map((value) => value.currentMedia?.data?.attributes?.['name']));
+
+  readonly curatorID$ = this.store
+    .pipe(select(selectMusicAPIState))
+    .pipe(map((value) => value.currentMedia?.data?.id));
+
+  readonly curatorBanner$ = this.store.pipe(select(selectMusicAPIState)).pipe(
+    filter((value: MusicAPIState) => value && value.currentMedia !== undefined),
+    map(
+      (value: MusicAPIState) =>
+        value.currentMedia?.data?.attributes?.['editorialArtwork']
+          ?.superHeroWide?.url ||
+        value.currentMedia?.data?.attributes?.['editorialArtwork']
+          ?.staticDetailSquare?.url ||
+        value.currentMedia?.data?.attributes?.['editorialArtwork']
+          ?.storeFlowcase?.url ||
+        '' ||
+        value.currentMedia?.data?.attributes?.['artwork']?.url
+    )
+  );
+
+  curatorData$ = this.store.pipe(
+    select(selectAllCuratorCategories),
+    map(
+      (categories) =>
+        categories?.[0]?.relationships.tabs.data?.[0]?.relationships.children
+          .data
+    )
+  );
+
+  readonly curatorPlaylists$ = this.store
+    .pipe(select(selectMusicAPIState))
+    .pipe(map((value) => value.currentMedia?.data?.relationships?.playlists));
+
+  readonly curatorFeatured$ = this.store
+    .pipe(select(selectMusicAPIState))
+    .pipe(map((value) => value.currentMedia?.data?.relationships?.featured));
 
   // artist selectors
   readonly artistName$ = this.store

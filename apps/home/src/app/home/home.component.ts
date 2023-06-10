@@ -32,6 +32,10 @@ export class HomeComponent implements OnDestroy {
     this.music.setQueueThenPlay(type, id);
   }
 
+  handleCurator(id: string) {
+    this.vm.getCurator(id);
+  }
+
   ngOnDestroy(): void {
     this._destroy$.next();
   }

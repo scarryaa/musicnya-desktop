@@ -36,18 +36,15 @@ import { MusicKit } from '@nyan-inc/shared-types';
         #items
         [mediaTitle]="listData[i].attributes?.['name'] ?? ''"
         [mediaLink]="'/media/' + listData[i].type + '/' + listData[i].id"
-        [mediaSubtitle]="listData[i].attributes?.['artistName'] ?? ''"
+        [mediaSubtitle]="listData[i].attributes?.['artistName'] || listData[i].attributes?.['curatorName'] || ''"
         [type]="listData[i].type"
         [mediaImageSize]="10"
         [mediaImage]="listData[i].attributes?.['artwork']?.url ?? ''"
         (playEmitter)="emit(i)"
         [subtitleHover]="listData[i].type !== 'stations'"
         [titleHover]="listData[i].type !== 'stations'"
-        [subtitleLink]="
-          '/media/' +
-          'artists/' +
-          listData[i].attributes?.['artistUrl']?.split('/').at(-1)
-        "
+        [artistID]="listData[i].relationships?.['artists']?.data?.[0]?.id"
+        (needCuratorEmitter)="needCuratorEmitter.emit(listData[i].id)"
       ></core-media-tile>
     </div>`,
   styleUrls: ['./media-tile-list.component.scss'],
@@ -64,6 +61,8 @@ export class MediaTileListComponent {
   @Input() clickEnabled = true;
   @Input() wrap = false;
   @Output() readonly playEmitter: EventEmitter<{ type: string; id: string }> =
+    new EventEmitter();
+  @Output() readonly needCuratorEmitter: EventEmitter<string> =
     new EventEmitter();
 
   emit(i: number) {

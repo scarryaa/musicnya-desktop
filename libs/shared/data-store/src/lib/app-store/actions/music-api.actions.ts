@@ -25,6 +25,19 @@ export const getBrowseCategoriesFailure = createAction(
   props<{ payload: { error: Error } }>()
 );
 
+// Curator Categories Actions
+export const getCuratorCategories = createAction(
+  '[Music/API] Get Curator Categories'
+);
+export const getCuratorCategoriesSuccess = createAction(
+  '[Music/API] Get Curator Categories Success',
+  props<{ payload: { data: MusicKit.Groupings[] } }>()
+);
+export const getCuratorCategoriesFailure = createAction(
+  '[Music/API] Get Curator Categories Failure',
+  props<{ payload: { error: Error } }>()
+);
+
 // Library Playlists Actions
 export const getLibraryPlaylists = createAction(
   '[Music/API] Get Library Playlists'
@@ -325,6 +338,20 @@ export const getArtistFailure = createAction(
   props<{ payload: { error: Error } }>()
 );
 
+// Get curator based on id
+export const getCurator = createAction(
+  '[Music/API] Get Curator',
+  props<{ payload: { curatorId: string } }>()
+);
+export const getCuratorSuccess = createAction(
+  '[Music/API] Get Curator Success',
+  props<{ payload: { data: MusicKit.Curators } }>()
+);
+export const getCuratorFailure = createAction(
+  '[Music/API] Get Curator Failure',
+  props<{ payload: { error: Error } }>()
+);
+
 // Get user ratings from IDs
 export const getUserRatingsFromIDs = createAction(
   '[Music/API] Get User Ratings From IDs',
@@ -364,6 +391,19 @@ export const getMediaItemOnRouteChangeSuccess = createAction(
 );
 export const getMediaItemOnRouteChangeFailure = createAction(
   '[Music/API] Get Media Item On Route Change Failure',
+  props<{ payload: { error: Error } }>()
+);
+
+export const getCuratorID = createAction(
+  '[Music/API] Get Curator ID',
+  props<{ payload: { id: string } }>()
+);
+export const getCuratorIDSuccess = createAction(
+  '[Music/API] Get Curator ID Success',
+  props<{ payload: { id: string } }>()
+);
+export const getCuratorIDFailure = createAction(
+  '[Music/API] Get Curator ID Failure',
   props<{ payload: { error: Error } }>()
 );
 

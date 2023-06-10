@@ -47,7 +47,6 @@ import { JoinPipeModule } from '../join.pipe';
             }"
             #span
             id="title"
-            [title]="mediaTitle"
             [routerLink]="titleRouterLink"
             [tabIndex]="-1"
             >{{ mediaTitle }}</span
@@ -58,7 +57,6 @@ import { JoinPipeModule } from '../join.pipe';
             [ngClass]="{ 'hover-underline': hoverUnderline }"
             #span
             id="artists"
-            [title]="artists"
             [routerLink]="artistsRouterLink"
             [tabIndex]="-1"
             >{{ artists }}</span

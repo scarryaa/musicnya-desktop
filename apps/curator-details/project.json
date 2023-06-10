@@ -1,0 +1,188 @@
+{
+  "name": "curator-details",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "nyan-inc",
+  "sourceRoot": "apps/curator-details/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:webpack-browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/curator-details/browser",
+        "index": "apps/curator-details/src/index.html",
+        "main": "apps/curator-details/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/curator-details/tsconfig.app.json",
+        "assets": [
+          "apps/curator-details/src/favicon.ico",
+          "apps/curator-details/src/assets"
+        ],
+        "styles": ["apps/curator-details/src/styles.scss"],
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/curator-details/webpack.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "apps/curator-details/webpack.prod.config.js"
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@nx/angular:webpack-dev-server",
+      "options": {
+        "port": 4209,
+        "publicHost": "http://localhost:4209"
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "curator-details:build:production"
+        },
+        "development": {
+          "browserTarget": "curator-details:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "curator-details:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "apps/curator-details/**/*.ts",
+          "apps/curator-details/**/*.html"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/curator-details/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "curator-details:build",
+        "port": 4209,
+        "watch": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "curator-details:build:development"
+        },
+        "production": {
+          "buildTarget": "curator-details:build:production"
+        }
+      }
+    },
+    "server": {
+      "dependsOn": ["build"],
+      "executor": "@nx/angular:webpack-server",
+      "options": {
+        "outputPath": "dist/apps/curator-details/server",
+        "main": "apps/curator-details/server.ts",
+        "tsConfig": "apps/curator-details/tsconfig.server.json",
+        "customWebpackConfig": {
+          "path": "apps/curator-details/webpack.server.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "outputHashing": "media"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "sourceMap": true,
+          "extractLicenses": false,
+          "vendorChunk": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-ssr": {
+      "executor": "@nguniversal/builders:ssr-dev-server",
+      "configurations": {
+        "development": {
+          "browserTarget": "curator-details:build:development",
+          "serverTarget": "curator-details:server:development"
+        },
+        "production": {
+          "browserTarget": "curator-details:build:production",
+          "serverTarget": "curator-details:server:production"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4209
+      }
+    },
+    "prerender": {
+      "executor": "@nguniversal/builders:prerender",
+      "options": {
+        "routes": ["/"]
+      },
+      "configurations": {
+        "development": {
+          "browserTarget": "curator-details:build:development",
+          "serverTarget": "curator-details:server:development"
+        },
+        "production": {
+          "browserTarget": "curator-details:build:production",
+          "serverTarget": "curator-details:server:production"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "static-server": {
+      "dependsOn": ["build", "server"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "PORT=4209 node dist/apps/curator-details/server/main.js"
+      }
+    }
+  }
+}

@@ -1,0 +1,73 @@
+<ng-container *ngrxLet="musicAPIFacade as vm">
+  <div
+    *ngIf="vm.loaded$ | async"
+    class="curator-details"
+    [style.background]="
+      'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url(' +
+      (vm.curatorBanner$ | async) +
+      ')'
+    "
+  >
+    <div
+      *ngIf="vm.loaded$ | async"
+      class="curator-details__info"
+      [style.backgroundSize]="'cover'"
+      [style.backgroundRepeat]="'no-repeat'"
+      [style.backgroundPosition]="'center'"
+    >
+      <div class="curator-details__info__image-wrapper">
+        <picture>
+          <source [srcset]="vm.curatorBanner$ | async" />
+          <img
+            class="curator-details__info__image-wrapper__image"
+            [src]="
+              (vm.curatorBanner$ | async) || 'assets/images/music_note.webp'
+            "
+          />
+        </picture>
+      </div>
+      <div class="curator-details__info__text-wrapper">
+        <p class="curator-details__info__text-wrapper__curator-name">
+          {{ vm.curatorName$ | async }}
+        </p>
+        <div
+          class="curator-details__info__text-wrapper__buttons"
+          *ngIf="vm.artistStationID$ | async as stationID"
+        >
+          <core-base-button
+            (click)="play('stations', $any(stationID))"
+            class="curator-details__info__text-wrapper__buttons-button curator-details__info__text-wrapper__buttons__play-button"
+            [icon]="'play_arrow'"
+            [componentStyleClass]="'ui-button-l media-action-button'"
+          ></core-base-button>
+          <core-base-button
+            (click)="play('stations', $any(stationID), true)"
+            class="curator-details__info__text-wrapper__buttons-button curator-details__info__text-wrapper__buttons__shuffle-button"
+            [icon]="'shuffle'"
+            [componentStyleClass]="'ui-button-l media-action-button'"
+          ></core-base-button>
+          <core-base-button
+            class="curator-details__info__text-wrapper__buttons-button curator-details__info__text-wrapper__buttons__more-button"
+            [icon]="'more_horiz'"
+            [componentStyleClass]="'ui-button-l media-action-button'"
+          ></core-base-button>
+        </div>
+      </div>
+    </div>
+    <div class="content-wrapper">
+      <ng-container
+        *ngFor="
+          let item of vm.curatorData$ | async;
+          let i = index;
+          trackBy: trackByIndex
+        "
+      >
+        <ui-media-tile-list
+          (playEmitter)="play($event.type, $event.id)"
+          [listTitle]="item?.attributes?.name!"
+          [listId]="item?.id"
+          [listData]="item.relationships?.['contents']?.data || []"
+        ></ui-media-tile-list>
+      </ng-container>
+    </div></div
+></ng-container>

@@ -1057,6 +1057,7 @@ export declare namespace MusicKit {
     };
     relationships: {
       playlists: Relationship<Playlists>;
+      grouping: Relationship<Groupings>;
     };
   }
 

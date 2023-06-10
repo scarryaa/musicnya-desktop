@@ -1,12 +1,4 @@
 <ng-container *ngrxLet="vm">
-  <!-- Recently Played -->
-  <ui-media-tile-list
-    *ngIf="vm.selectRecentlyPlayed$ | async"
-    (playEmitter)="play($event.type, $event.id)"
-    [listTitle]="'Recently Played'"
-    [listData]="(vm.selectRecentlyPlayed$ | async) || []"
-    [showMore]="false"
-  ></ui-media-tile-list>
   <ng-container *ngIf="vm">
     <!-- Personal Recommendations -->
     <ui-media-tile-list
@@ -20,6 +12,7 @@
       [listId]="item?.id"
       [listData]="item.relationships?.['contents']?.data || []"
       [showMore]="item?.attributes?.['hasSeeAll'] || false"
+      (needCuratorEmitter)="handleCurator($event)"
     ></ui-media-tile-list>
   </ng-container>
 </ng-container>

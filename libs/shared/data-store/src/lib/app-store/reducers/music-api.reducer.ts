@@ -34,6 +34,7 @@ export interface MusicAPIState extends EntityState<MusicAPIEntity> {
   recentlyPlayed: EntityState<MusicKit.Resource>;
   personalRecommendations: EntityState<MusicKit.PersonalRecommendation>;
   browseCategories: EntityState<MusicKit.Groupings>;
+  curatorCategories: EntityState<MusicKit.Groupings>;
 }
 
 export interface MusicAPIPartialState {
@@ -78,6 +79,8 @@ export const artistsAdapter: EntityAdapter<MusicKit.Artists> =
   createEntityAdapter<MusicKit.Artists>();
 export const browseCategoriesAdapter: EntityAdapter<MusicKit.Groupings> =
   createEntityAdapter<MusicKit.Groupings>();
+export const curatorCategoriesAdapter: EntityAdapter<MusicKit.Groupings> =
+  createEntityAdapter<MusicKit.Groupings>();
 
 //initial state
 export const initialState: MusicAPIState = {
@@ -98,6 +101,7 @@ export const initialState: MusicAPIState = {
   recentlyPlayed: recentlyPlayedAdapter.getInitialState(),
   personalRecommendations: personalRecommendationsAdapter.getInitialState(),
   browseCategories: browseCategoriesAdapter.getInitialState(),
+  curatorCategories: curatorCategoriesAdapter.getInitialState(),
 };
 
 // meta reducers
@@ -297,6 +301,22 @@ const reducer = createReducer(
     ),
   })),
   on(MusicAPIActions.getBrowseCategoriesFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  })),
+
+  // get curator categories
+  on(MusicAPIActions.getCuratorCategories, (state) => ({
+    ...state,
+  })),
+  on(MusicAPIActions.getCuratorCategoriesSuccess, (state, { payload }) => ({
+    ...state,
+    curatorCategories: curatorCategoriesAdapter.setAll(
+      payload.data,
+      state.curatorCategories
+    ),
+  })),
+  on(MusicAPIActions.getCuratorCategoriesFailure, (state, { payload }) => ({
     ...state,
     payload: payload.error,
   })),

@@ -5,4 +5,5 @@ export * from './ratings.selectors';
 export * from './recently-played.selectors';
 export * from './library-albums.selectors';
 export * from './playlists.selectors';
+export * from './curator-details.selectors';
 export * from './router.selectors';

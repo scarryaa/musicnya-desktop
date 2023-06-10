@@ -42,7 +42,6 @@ import { PreloadImageDirective } from '../preload-image.directive';
     </div>
     <core-base-button
       cdkDrag
-      [cdkDragStartDelay]="500"
       [tabIndex]="0"
       class="album-tile-large"
       (keyUp.Space)="emitRoute($event)"

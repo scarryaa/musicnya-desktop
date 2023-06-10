@@ -1,8 +1,16 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { PlayButtonComponent } from '../play-button/play-button.component';
 import { OptionsButtonComponent } from '../options-button/options-button.component';
+import { FallbackImageDirective } from '../fallback-image.directive';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'core-media-tile',
@@ -12,16 +20,18 @@ import { OptionsButtonComponent } from '../options-button/options-button.compone
     RouterModule,
     PlayButtonComponent,
     OptionsButtonComponent,
+    FallbackImageDirective,
   ],
   template: `<div class="media-tile-wrapper">
     <div class="media-tile">
       <div class="media-tile__image-wrapper">
         <img
           class="media-tile__image-wrapper__image"
-          [src]="mediaImage"
+          [src]="mediaImage || ''"
           [style.minWidth.rem]="mediaImageSize"
           [style.minHeight.rem]="mediaImageSize"
           [style.aspectRatio]="1"
+          coreFallbackImage
         />
         <div
           class="media-tile__image-overlay"
@@ -47,9 +57,9 @@ import { OptionsButtonComponent } from '../options-button/options-button.compone
       </div>
       <div
         [ngClass]="{ hover_underline: subtitleHover }"
-        [routerLink]="subtitleHover ? subtitleLink : undefined"
         class="media-tile__subtitle"
         [title]="mediaSubtitle"
+        (click)="handleSubtitleClick()"
       >
         {{ mediaSubtitle }}
       </div>
@@ -57,7 +67,7 @@ import { OptionsButtonComponent } from '../options-button/options-button.compone
   </div>`,
   styleUrls: ['./media-tile.component.scss'],
 })
-export class MediaTileComponent {
+export class MediaTileComponent implements OnDestroy {
   @Input() mediaTitle: string | undefined = undefined;
   @Input() mediaSubtitle: string | undefined = undefined;
   @Input() mediaImage: string | undefined = undefined;
@@ -68,15 +78,31 @@ export class MediaTileComponent {
   @Input() type?: string;
   @Input() subtitleHover = true;
   @Input() titleHover = true;
+  @Input() subtitleEmitter?: EventEmitter<string>;
+  @Input() artistID?: string;
 
+  @Output() destroyed$ = new Subject<void>();
   @Output() playEmitter = new EventEmitter<{ type: string; id: string }>();
   @Output() optionsEmitter = new EventEmitter();
+  @Output() needCuratorEmitter = new EventEmitter();
+
+  constructor(private router: Router) {}
 
   handlePlayClick() {
     this.playEmitter.emit({ type: this.type || '', id: this.id || '' });
   }
 
+  handleSubtitleClick() {
+    this.artistID
+      ? this.router.navigateByUrl('/media/artists/' + this.artistID)
+      : this.needCuratorEmitter.emit();
+  }
+
   handleOptionsClick() {
     this.optionsEmitter.emit();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
   }
 }
