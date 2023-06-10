@@ -123,6 +123,14 @@ export class MusickitAPI {
     return request as MusicKit.PersonalRecommendation[];
   }
 
+  async getSearchCategories(): Promise<MusicKit.PersonalRecommendation[]> {
+    const request = await this.requestData(
+      `/v1/recommendations/us?name=search-landing&platform=web&extend=editorialArtwork&art[url]=f,c&types=editorial-items,apple-curators,activities`
+    );
+
+    return request as MusicKit.PersonalRecommendation[];
+  }
+
   async getBrowseCategories(): Promise<MusicKit.Groupings[]> {
     const request = await this.requestData(
       `/v1/editorial/us/groupings?art[url]=f&extend=artistUrl,editorialArtwork,plainEditorialNotes&extend[station-events]=editorialVideo&fields[albums]=artistName,artistUrl,artwork,contentRating,editorialArtwork,plainEditorialNotes,name,playParams,releaseDate,url,trackCount&fields[artists]=name,url,artwork&include[albums]=artists&include[music-videos]=artists&include[songs]=artists&include[stations]=events&name=music&omit[resource:artists]=relationships&platform=web&relate[songs]=albums&tabs=subscriber`

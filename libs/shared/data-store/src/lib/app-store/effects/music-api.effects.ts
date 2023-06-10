@@ -358,6 +358,69 @@ export const getArtist$ = createEffect(
   { functional: true }
 );
 
+// Fetches search categories
+export const getSearchCategories$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    store = inject(Store<MusicState & SpinnerState & RouterState>),
+    musickit = inject(MusickitAPI)
+  ) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.getSearchCategories),
+      tap(() => store.dispatch(SpinnerActions.showSpinner())),
+      switchMap(() => from(musickit.getSearchCategories())),
+      // convert to webp
+      map((data) => {
+        for (const item of data[2].relationships?.['contents']?.data ?? []) {
+          if (item.attributes?.['editorialArtwork']?.bannerUber?.url) {
+            item.attributes['editorialArtwork'].bannerUber.url =
+              item.attributes?.['editorialArtwork'].bannerUber.url
+                .replace('{w}x{h}', '800x800')
+                .replace('{c}', '')
+                .replace('{f}', 'webp');
+          }
+
+          if (item.attributes?.['editorialArtwork']?.subscriptionHero?.url) {
+            item.attributes['editorialArtwork'].subscriptionHero.url =
+              item.attributes?.['editorialArtwork'].subscriptionHero.url
+                .replace('{w}x{h}', '800x800')
+                .replace('{c}', '')
+                .replace('{f}', 'webp');
+          }
+
+          if (item.attributes?.['artwork']?.url) {
+            item.attributes['artwork'].url = item.attributes?.['artwork'].url
+              .replace('{w}x{h}', '800x800')
+              .replace('{c}', '')
+              .replace('{f}', 'webp');
+          }
+
+          if (item.attributes?.['editorialArtwork']?.subscriptionCover?.url) {
+            item.attributes['editorialArtwork'].subscriptionCover.url =
+              item.attributes?.['editorialArtwork']?.subscriptionCover.url
+                .replace('{w}x{h}', '800x800')
+                .replace('{c}', '')
+                .replace('{f}', 'webp');
+          }
+
+          if (item.attributes?.['editorialArtwork']?.superHeroWide?.url) {
+            item.attributes['editorialArtwork'].superHeroWide.url =
+              item.attributes?.['editorialArtwork']?.superHeroWide.url
+                .replace('{w}x{h}', '800x800')
+                .replace('{c}', '')
+                .replace('{f}', 'webp');
+          }
+        }
+        return data;
+      }),
+      map((data) =>
+        MusicAPIActions.getSearchCategoriesSuccess({ payload: { data: data } })
+      ),
+      tap(() => store.dispatch(SpinnerActions.hideSpinner()))
+    ),
+  { functional: true }
+);
+
 // Fetches artist from payload id if they're not in the store
 export const getCurator$ = createEffect(
   (
@@ -484,7 +547,6 @@ export const getMediaItemOnRouteChange$ = createEffect(
     actions$.pipe(
       ofType(ROUTER_NAVIGATED),
       map((router) => router.payload?.routerState?.root?.firstChild),
-      filter((routeData: any) => !!routeData.params?.id),
       tap(() => store$.dispatch(SpinnerActions.showSpinner())),
       mergeMap((routeData: any) => [
         // switch based on the type of media item
@@ -533,6 +595,8 @@ export const getMediaItemOnRouteChange$ = createEffect(
                   playlistId: routeData.params?.id,
                 },
               })
+          : routeData.routeConfig.path.includes('search')
+          ? MusicAPIActions.getSearchCategories()
           : routeData.routeConfig.path.includes('curators')
           ? MusicAPIActions.getCurator({
               payload: {

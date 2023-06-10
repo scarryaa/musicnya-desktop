@@ -352,6 +352,33 @@ export const getCuratorFailure = createAction(
   props<{ payload: { error: Error } }>()
 );
 
+// Get search categories
+export const getSearchCategories = createAction(
+  '[Music/API] Get Search Categories'
+);
+export const getSearchCategoriesSuccess = createAction(
+  '[Music/API] Get Search Categories Success',
+  props<{ payload: { data: MusicKit.PersonalRecommendation[] } }>()
+);
+export const getSearchCategoriesFailure = createAction(
+  '[Music/API] Get Search Categories Failure',
+  props<{ payload: { error: Error } }>()
+);
+
+// Get search results
+export const getSearchResults = createAction(
+  '[Music/API] Get Search Results',
+  props<{ payload: { term: string } }>()
+);
+export const getSearchResultsSuccess = createAction(
+  '[Music/API] Get Search Results Success',
+  props<{ payload: { data: any } }>()
+);
+export const getSearchResultsFailure = createAction(
+  '[Music/API] Get Search Results Failure',
+  props<{ payload: { error: Error } }>()
+);
+
 // Get user ratings from IDs
 export const getUserRatingsFromIDs = createAction(
   '[Music/API] Get User Ratings From IDs',

@@ -13,6 +13,7 @@
         [listTitle]="item?.attributes?.name!"
         [listId]="item?.id"
         [listData]="item.relationships?.['contents']?.data || []"
+        (needCuratorEmitter)="handleCurator($event)"
       ></ui-media-tile-list>
     </ng-container>
   </ng-container>

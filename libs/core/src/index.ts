@@ -44,3 +44,5 @@ export * from './lib/chip/chip.component';
 export * from './lib/tooltip/tooltip.enums';
 
 export * from './lib/dynamic-component-loader/dynamic-component-loader.component';
+
+export * from './lib/hero-tile/hero-tile.component';

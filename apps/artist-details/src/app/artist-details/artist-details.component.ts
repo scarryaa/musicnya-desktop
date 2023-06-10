@@ -33,7 +33,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArtistDetailsComponent {
-  constructor(p
+  constructor(
     public readonly musicAPIFacade: MusicAPIFacade,
     private readonly musicFacade: MusicFacade
   ) {

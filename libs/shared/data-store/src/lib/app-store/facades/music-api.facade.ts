@@ -4,10 +4,14 @@ import { MusicKit } from '@nyan-inc/shared-types';
 import { filter, map, Observable, skipWhile, Subscription, take } from 'rxjs';
 import { MusicAPIActions } from '../actions';
 import { MusicAPIState } from '../reducers/music-api.reducer';
-import { selectAllCuratorCategories, selectAllPersonalRecommendations } from '../selectors';
+import {
+  selectAllCuratorCategories,
+  selectAllPersonalRecommendations,
+} from '../selectors';
 import { selectAllBrowseCategories } from '../selectors/browse-categories.selectors';
 import { selectAllLibraryPlaylists } from '../selectors/library-playlists.selectors';
 import { selectMusicAPIState } from '../selectors/music-api.selectors';
+import { selectAllSearchCategories } from '../selectors/search-categories.selectors';
 
 @Injectable({
   providedIn: 'root',
@@ -73,6 +77,17 @@ export class MusicAPIFacade implements OnDestroy {
   getCurator(id: string) {
     this.store.dispatch(MusicAPIActions.getCuratorID({ payload: { id } }));
   }
+
+  // search vm
+  selectSearchResults$ = this.store.pipe(
+    select(selectMusicAPIState),
+    map((value) => value.searchResults)
+  );
+
+  selectSearchCategories$ = this.store.pipe(
+    select(selectAllSearchCategories),
+    map((categories) => categories?.[2]?.relationships?.contents?.data)
+  );
 
   // curator selectors
   readonly curatorName$ = this.store

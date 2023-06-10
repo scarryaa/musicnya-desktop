@@ -1,1 +1,22 @@
-<p>search works!</p>
+<div class="search">
+  <div class="search-container">
+    <input
+      type="text"
+      class="search-container__input"
+      placeholder="Search"
+      (keyup)="search($any($event.target).value)"
+    />
+    <button class="search-container__button">
+      <i class="material-symbols-rounded">search</i>
+    </button>
+  </div>
+
+  <div class="search__categories">
+    <ng-container *ngFor="let category of vm.selectSearchCategories$ | async">
+      <core-hero-tile
+        [image]="category.attributes?.['editorialArtwork']?.subscriptionCover?.url || category.attributes?.['editorialArtwork']?.superHeroWide?.url || category.attributes?.['editorialArtwork'].subscriptionHero.url || category.attributes?.['artwork']?.url"
+        [title]="category.attributes?.['editorialNotes']?.name || category.attributes?.['name']"
+      ></core-hero-tile>
+    </ng-container>
+  </div>
+</div>
