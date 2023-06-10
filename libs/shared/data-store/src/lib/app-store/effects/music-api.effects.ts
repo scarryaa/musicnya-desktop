@@ -541,12 +541,38 @@ export const getUserRatings$ = createEffect(
   { functional: true }
 );
 
+const VALID_ROUTES = new Set([
+  'library-playlists',
+  'library-playlist',
+  'library-albums',
+  'library-album',
+  'library-songs',
+  'library-song',
+  'library-artists',
+  'library-artist',
+  'albums',
+  'album',
+  'artists',
+  'artist',
+  'playlists',
+  'playlist',
+  'curators',
+  'curator',
+  'search',
+]);
+
 // Listens to route changes and dispatches the appropriate actions
 export const getMediaItemOnRouteChange$ = createEffect(
   (actions$ = inject(Actions), store$ = inject(Store<SpinnerState>)) =>
     actions$.pipe(
       ofType(ROUTER_NAVIGATED),
       map((router) => router.payload?.routerState?.root?.firstChild),
+      filter(
+        (route) =>
+          VALID_ROUTES.has(route?.routeConfig?.path) ||
+          VALID_ROUTES.has(route?.params?.type) ||
+          VALID_ROUTES.has(route?.routeConfig?.path?.split('/')[1])
+      ),
       tap(() => store$.dispatch(SpinnerActions.showSpinner())),
       mergeMap((routeData: any) => [
         // switch based on the type of media item

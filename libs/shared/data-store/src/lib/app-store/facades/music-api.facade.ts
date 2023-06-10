@@ -99,6 +99,7 @@ export class MusicAPIFacade implements OnDestroy {
 
   selectSearchResults$ = this.store.pipe(
     select(selectAllSearchResults),
+    filter((results) => results !== undefined),
     map((value) => value)
   );
 

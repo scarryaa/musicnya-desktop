@@ -11,7 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MusicAPIFacade } from '@nyan-inc/shared';
+import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
 import { SearchItemComponent } from '../search-item/search-item.component';
 import {
   Subject,
@@ -23,6 +23,7 @@ import {
   tap,
 } from 'rxjs';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'core-searchbar',
@@ -49,19 +50,32 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
         [autoWidthDisabled]="true"
       >
         <ng-container *ngIf="vm.selectSearchResults$ | async as results">
-          <core-search-item
-            *ngFor="let data of results"
-            [image]="
-              data.content?.attributes?.artwork?.url?.replace(
-                '{w}x{h}',
-                '200x200'
-              )
-            "
-            [title]="data.content?.attributes?.name || $any(data)?.displayTerm"
-            [subtitle]="data.content?.attributes?.artistName"
-          >
-            "]></core-search-item
-          >
+          <ng-container *ngFor="let data of results">
+            <core-search-item
+              (clickEmitter)="handleClick(data.content?.type, data.content?.id)"
+              class="searchbar__item"
+              *ngIf="data.content?.attributes?.artwork?.url"
+              [type]="data.content?.type"
+              [image]="
+                data.content?.attributes?.artwork?.url?.replace(
+                  '{w}x{h}',
+                  '200x200'
+                )
+              "
+              [title]="
+                data.content?.attributes?.name || $any(data)?.displayTerm
+              "
+              [subtitle]="
+                data.content?.attributes?.artistName
+                  ? data.content?.attributes?.artistName +
+                    ' • ' +
+                    data.content?.type
+                  : data.content?.type
+              "
+            >
+              "]></core-search-item
+            >
+          </ng-container>
         </ng-container>
       </ng-scrollbar>
     </div>
@@ -71,16 +85,27 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 })
 export class SearchbarComponent implements AfterViewInit, OnDestroy {
   @Input() searchTerm?: string | null;
-  @ViewChild('searchbar')
-  searchbar?: ElementRef<HTMLInputElement>;
   @Output() searchEmitter: EventEmitter<string> = new EventEmitter<string>();
   @Output() destroy$ = new Subject<void>();
   _continueSearch = false;
 
-  constructor(public vm: MusicAPIFacade) {}
+  @ViewChild('searchbar')
+  searchbar?: ElementRef<HTMLInputElement>;
+
+  @ViewChild('searchbar__results')
+  searchbarResults?: ElementRef<HTMLDivElement>;
+
+  @ViewChild('searchbar__item')
+  searchbarItem?: ElementRef<HTMLDivElement>;
+
+  constructor(
+    public vm: MusicAPIFacade,
+    private music: MusicFacade,
+    private router: Router
+  ) {}
 
   ngAfterViewInit(): void {
-    fromEvent(this.searchbar?.nativeElement!, 'scroll')
+    fromEvent(this.searchbar?.nativeElement!, 's')
       .pipe(
         filter(() => !!this.searchbar),
         debounceTime(100),
@@ -109,8 +134,10 @@ export class SearchbarComponent implements AfterViewInit, OnDestroy {
         filter(() => !!this.searchbar),
         takeUntil(this.destroy$)
       )
-      .subscribe(() => {
-        this.searchbar?.nativeElement?.classList.remove('searchbar--active');
+      .subscribe(($event) => {
+        if (!(event as any).relatedTarget) {
+          this.searchbar?.nativeElement?.classList.remove('searchbar--active');
+        }
       });
 
     fromEvent(this.searchbar?.nativeElement!, 'keyup')
@@ -141,6 +168,20 @@ export class SearchbarComponent implements AfterViewInit, OnDestroy {
                 this._continueSearch = true;
               }
               break;
+            case 'Tab':
+              // check if tab is on results
+              if (
+                this.searchbar?.nativeElement?.classList.contains(
+                  'searchbar--active'
+                ) &&
+                this.searchbarResults?.nativeElement?.contains(event.target)
+              ) {
+                this.searchbar?.nativeElement?.classList.remove(
+                  'searchbar--active'
+                );
+                this._continueSearch = false;
+              }
+              break;
             default:
               if (
                 !this.searchbar?.nativeElement?.classList.contains(
@@ -164,6 +205,155 @@ export class SearchbarComponent implements AfterViewInit, OnDestroy {
           this.searchEmitter.emit(event.target.value);
         }
       });
+
+    fromEvent(this.searchbar?.nativeElement!, 'keydown')
+      .pipe(
+        filter(() => !!this.searchbar),
+        tap((event: any) => {
+          switch (event.key) {
+            case 'Escape':
+            case 'Esc':
+            case 'Enter':
+              event.preventDefault();
+              event.stopPropagation();
+              break;
+            default:
+              break;
+          }
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
+
+    fromEvent(this.searchbarResults?.nativeElement!, 'scroll')
+      .pipe(
+        filter(() => !!this.searchbarResults),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((event: any) => {
+        const { scrollTop, scrollHeight, clientHeight } =
+          this.searchbarResults?.nativeElement!;
+        if (scrollTop + clientHeight >= scrollHeight) {
+          this.vm.search(this.searchTerm!);
+        }
+      });
+
+    fromEvent(this.searchbarResults?.nativeElement!, 'keyup')
+      .pipe(
+        filter(() => !!this.searchbarResults),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((event: any) => {
+        switch (event.key) {
+          case 'Escape':
+          case 'Esc':
+            this.searchbar?.nativeElement?.classList.remove(
+              'searchbar--active'
+            );
+            break;
+          case 'Tab':
+            // check if tab is on results
+            if (
+              this.searchbar?.nativeElement?.classList.contains(
+                'searchbar--active'
+              ) &&
+              this.searchbarResults?.nativeElement?.contains(event.target)
+            ) {
+              this.searchbar?.nativeElement?.classList.remove(
+                'searchbar--active'
+              );
+            }
+            break;
+          default:
+            break;
+        }
+      });
+
+    fromEvent(this.searchbarResults?.nativeElement!, 'keydown')
+      .pipe(
+        filter(() => !!this.searchbarResults),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((event: any) => {
+        switch (event.key) {
+          case 'Escape':
+          case 'Esc':
+          case 'Enter':
+            this.searchbar?.nativeElement?.classList.remove(
+              'searchbar--active'
+            );
+            break;
+          default:
+            break;
+        }
+      });
+
+    fromEvent(this.searchbarItem?.nativeElement!, 'blur')
+      .pipe(
+        filter(() => !!this.searchbarItem),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((event: any) => {
+        if (!(event as any).relatedTarget) {
+          this.searchbar?.nativeElement?.classList.remove('searchbar--active');
+        }
+      });
+
+    fromEvent(this.searchbarItem?.nativeElement!, 'keyup')
+      .pipe(
+        filter(() => !!this.searchbarItem),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((event: any) => {
+        switch (event.key) {
+          case 'Escape':
+          case 'Esc':
+            this.searchbar?.nativeElement?.classList.remove(
+              'searchbar--active'
+            );
+            break;
+          case 'Tab':
+            // check if tab is on results
+            if (
+              this.searchbar?.nativeElement?.classList.contains(
+                'searchbar--active'
+              ) &&
+              this.searchbarItem?.nativeElement?.contains(event.target)
+            ) {
+              this.searchbar?.nativeElement?.classList.remove(
+                'searchbar--active'
+              );
+            }
+            break;
+          default:
+            break;
+        }
+      });
+  }
+
+  handleClick(type: string, id: string) {
+    switch (type) {
+      case 'songs':
+        this.music.setQueueThenPlay(type, id);
+        break;
+      case 'albums':
+        this.router.navigate(['media/albums', id]);
+        break;
+      case 'artists':
+        this.router.navigate(['media/artists', id]);
+        break;
+      case 'playlists':
+        this.router.navigate(['media/playlists', id]);
+        break;
+      case 'stations':
+        //
+        break;
+      case 'music-videos':
+        //
+        break;
+      default:
+        break;
+    }
   }
 
   ngOnDestroy(): void {

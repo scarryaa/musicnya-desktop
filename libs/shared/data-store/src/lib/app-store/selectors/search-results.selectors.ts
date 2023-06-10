@@ -20,6 +20,6 @@ export const {
 export const selectSearchResultsIds = (state: MusicAPIState) => {
   return selectAllSearchResults(
     (result: MusicKit.TermSuggestion | MusicKit.TopResultSuggestion) =>
-      result.content.id
+      result?.content?.id
   );
 };
