@@ -1,18 +1,18 @@
 <ng-container *ngrxLet="vm">
   <ng-container *ngIf="vm">
     <!-- Personal Recommendations -->
-    <ui-media-tile-list
+    <ng-container
       *ngFor="
         let item of vm.selectRecommendations$ | async;
         let i = index;
         trackBy: trackBy
       "
-      (playEmitter)="play($event.type, $event.id)"
-      [listTitle]="item?.attributes?.['title']?.stringForDisplay"
-      [listId]="item?.id"
-      [listData]="item.relationships?.['contents']?.data || []"
-      [showMore]="item?.attributes?.['hasSeeAll'] || false"
-      (needCuratorEmitter)="handleCurator($event)"
-    ></ui-media-tile-list>
+    >
+      <core-tile-selector
+        [data]="item.relationships?.['contents']?.data || []"
+        [title]="item?.attributes?.['title']?.stringForDisplay"
+      >
+      </core-tile-selector
+    ></ng-container>
   </ng-container>
 </ng-container>

@@ -4,7 +4,7 @@ import { Subject, Subscription } from 'rxjs';
 import { HeadingComponent, MediaTileListComponent } from '@nyan-inc/ui';
 import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
 import { LetDirective } from '@ngrx/component';
-import { SpinnerComponent } from '@nyan-inc/core';
+import { SpinnerComponent, TileSelectorComponent } from '@nyan-inc/core';
 
 @Component({
   standalone: true,
@@ -14,6 +14,7 @@ import { SpinnerComponent } from '@nyan-inc/core';
     MediaTileListComponent,
     LetDirective,
     SpinnerComponent,
+    TileSelectorComponent,
   ],
   selector: 'musicnya-home',
   templateUrl: './home.component.html',
