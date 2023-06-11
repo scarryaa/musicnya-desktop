@@ -32,6 +32,7 @@ import {
 import { MusicKit } from '@nyan-inc/shared-types';
 import { selectAllAlbums } from '../selectors/albums.selectors';
 import { selectAllBrowseCategories } from '../selectors/browse-categories.selectors';
+import { selectAllRadioCategories } from '../selectors/radio-categories.selectors';
 
 //Load music api
 export const loadMusicAPI$ = createEffect(
@@ -892,6 +893,43 @@ export const getRecommendationsAndRecentlyPlayed$ = createEffect(
             payload: { error },
           })
         )
+      )
+    ),
+  { functional: true }
+);
+
+// Fetches radio categories
+export const getRadioCategories$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    musickit = inject(MusickitAPI),
+    store = inject(Store<MusicAPIState>)
+  ) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.getRadioCategories),
+      tap(() => store.dispatch(SpinnerActions.showSpinner())),
+      // Check if radio categories are already in store
+      withLatestFrom(store.select(selectAllRadioCategories)),
+      switchMap(([, radioCategoriesStoreData]) =>
+        radioCategoriesStoreData.length > 0
+          ? of(
+              MusicAPIActions.getRadioCategoriesSuccess({
+                payload: { data: radioCategoriesStoreData },
+              })
+            )
+          : from(musickit.getRadioCategories()).pipe(
+              // Convert images to webp
+              map((radioCategories) => {
+                return transformBrowseCategories(radioCategories);
+              }),
+
+              tap(() => store.dispatch(SpinnerActions.hideSpinner())),
+              map((radioCategories) =>
+                MusicAPIActions.getRadioCategoriesSuccess({
+                  payload: { data: radioCategories },
+                })
+              )
+            )
       )
     ),
   { functional: true }

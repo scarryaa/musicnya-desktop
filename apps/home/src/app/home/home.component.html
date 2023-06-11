@@ -13,6 +13,8 @@
         [title]="item?.attributes?.['title']?.stringForDisplay"
         [isGlass]="item?.attributes?.['display'].kind === 'MusicNotesHeroShelf'"
         [isSuperhero]="item?.attributes?.['display'].kind === 'MusicSuperHeroShelf'"
+        (needCuratorEmitter)="handleCurator($event)"
+        (playEmitter)="play($event.type, $event.id)"
       >
       </core-tile-selector
     ></ng-container>

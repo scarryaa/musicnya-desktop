@@ -10,9 +10,8 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { HeadingComponent } from '../heading/heading.component';
 import { RouterModule } from '@angular/router';
-import { MediaTileComponent } from '@nyan-inc/core';
+import { HeadingComponent, MediaTileComponent } from '@nyan-inc/core';
 import { MusicKit } from '@nyan-inc/shared-types';
 
 @Component({
@@ -24,9 +23,12 @@ import { MusicKit } from '@nyan-inc/shared-types';
       [ngClass]="{ hide: !showMore }"
       [routerLink]="showMore ? '/show-more/' + listId : undefined"
     >
-      <ui-heading id="heading" size="medium" [ngClass]="{ hide: !showMore }">{{
-        listTitle
-      }}</ui-heading>
+      <core-heading
+        id="heading"
+        size="medium"
+        [ngClass]="{ hide: !showMore }"
+        >{{ listTitle }}</core-heading
+      >
     </div>
     <div id="album-tile-container" [style.flexWrap]="wrap ? 'wrap' : 'nowrap'">
       <core-media-tile

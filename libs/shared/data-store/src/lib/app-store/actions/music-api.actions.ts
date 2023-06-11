@@ -12,6 +12,19 @@ export const loadMusicAPIFailure = createAction(
   props<{ payload: { error: Error } }>()
 );
 
+// Radio Categories Actions
+export const getRadioCategories = createAction(
+  '[Music/API] Get Radio Categories'
+);
+export const getRadioCategoriesSuccess = createAction(
+  '[Music/API] Get Radio Categories Success',
+  props<{ payload: { data: MusicKit.Groupings[] } }>()
+);
+export const getRadioCategoriesFailure = createAction(
+  '[Music/API] Get Radio Categories Failure',
+  props<{ payload: { error: Error } }>()
+);
+
 // Browse Categories Actions
 export const getBrowseCategories = createAction(
   '[Music/API] Get Browse Categories'

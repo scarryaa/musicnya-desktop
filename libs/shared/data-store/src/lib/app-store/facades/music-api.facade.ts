@@ -422,6 +422,17 @@ export class MusicAPIFacade implements OnDestroy {
       );
   }
 
+  getRadioCategories() {
+    return this.musickitLoaded$
+      .pipe(
+        skipWhile((loaded) => loaded !== true),
+        take(1)
+      )
+      .subscribe(() =>
+        this.store.dispatch(MusicAPIActions.getRadioCategories())
+      );
+  }
+
   getLibraryPlaylists() {
     return this.musickitLoaded$
       .pipe(

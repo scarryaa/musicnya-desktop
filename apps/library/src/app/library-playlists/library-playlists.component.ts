@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeadingComponent, MediaTileListComponent } from '@nyan-inc/ui';
 import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
 import { LetDirective } from '@ngrx/component';
+import { MediaTileListComponent } from '@nyan-inc/ui';
+import { HeadingComponent } from '@nyan-inc/core';
 
 @Component({
   selector: 'library-library-playlists',

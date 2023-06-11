@@ -6,4 +6,6 @@ export * from './recently-played.selectors';
 export * from './library-albums.selectors';
 export * from './playlists.selectors';
 export * from './curator-details.selectors';
+export * from './browse-categories.selectors';
+export * from './radio-categories.selectors';
 export * from './router.selectors';

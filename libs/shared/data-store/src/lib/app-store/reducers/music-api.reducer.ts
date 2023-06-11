@@ -34,6 +34,7 @@ export interface MusicAPIState extends EntityState<MusicAPIEntity> {
   recentlyPlayed: EntityState<MusicKit.Resource>;
   personalRecommendations: EntityState<MusicKit.PersonalRecommendation>;
   browseCategories: EntityState<MusicKit.Groupings>;
+  radioCategories: EntityState<MusicKit.Groupings>;
   curatorCategories: EntityState<MusicKit.Groupings>;
   searchCategories: EntityState<MusicKit.PersonalRecommendation>;
   searchResults: EntityState<
@@ -85,6 +86,8 @@ export const artistsAdapter: EntityAdapter<MusicKit.Artists> =
   createEntityAdapter<MusicKit.Artists>();
 export const browseCategoriesAdapter: EntityAdapter<MusicKit.Groupings> =
   createEntityAdapter<MusicKit.Groupings>();
+export const radioCategoriesAdapter: EntityAdapter<MusicKit.Groupings> =
+  createEntityAdapter<MusicKit.Groupings>();
 export const curatorCategoriesAdapter: EntityAdapter<MusicKit.Groupings> =
   createEntityAdapter<MusicKit.Groupings>();
 export const searchCategoriesAdapter: EntityAdapter<MusicKit.PersonalRecommendation> =
@@ -118,6 +121,7 @@ export const initialState: MusicAPIState = {
   recentlyPlayed: recentlyPlayedAdapter.getInitialState(),
   personalRecommendations: personalRecommendationsAdapter.getInitialState(),
   browseCategories: browseCategoriesAdapter.getInitialState(),
+  radioCategories: radioCategoriesAdapter.getInitialState(),
   curatorCategories: curatorCategoriesAdapter.getInitialState(),
   searchCategories: searchCategoriesAdapter.getInitialState(),
   searchResults: searchResultsAdapter.getInitialState(),
@@ -322,6 +326,22 @@ const reducer = createReducer(
     ),
   })),
   on(MusicAPIActions.getBrowseCategoriesFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  })),
+
+  // get radio categories
+  on(MusicAPIActions.getRadioCategories, (state) => ({
+    ...state,
+  })),
+  on(MusicAPIActions.getRadioCategoriesSuccess, (state, { payload }) => ({
+    ...state,
+    radioCategories: radioCategoriesAdapter.setAll(
+      payload.data,
+      state.radioCategories
+    ),
+  })),
+  on(MusicAPIActions.getRadioCategoriesFailure, (state, { payload }) => ({
     ...state,
     payload: payload.error,
   })),

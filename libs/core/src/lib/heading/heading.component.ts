@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'ui-heading',
+  selector: 'core-heading',
   standalone: true,
   imports: [CommonModule],
   template: `<span id="heading-text"><ng-content></ng-content></span>`,

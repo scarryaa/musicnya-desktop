@@ -1,4 +1,4 @@
-<ui-heading size="medium" class="heading">{{ title }}</ui-heading>
+<core-heading size="medium" class="heading">{{ title }}</core-heading>
 <div class="container" [ngClass]="{ songs: data?.[0]?.type === 'songs' }">
   <ng-container [ngSwitch]="item.type" *ngFor="let item of data">
     <ng-container *ngIf="isGlass; else switchBlock">

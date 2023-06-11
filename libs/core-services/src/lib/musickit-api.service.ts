@@ -150,6 +150,14 @@ export class MusickitAPI {
     return (request as any).data as MusicKit.SearchSuggestionsResponse;
   }
 
+  async getRadioCategories(): Promise<MusicKit.Groupings[]> {
+    const request = await this.requestData(
+      `https://amp-api.music.apple.com/v1/editorial/us/groupings?platform=web&name=radio&omit%5Bresource%3Aartists%5D=relationships&include%5Balbums%5D=artists&include%5Bsongs%5D=artists&include%5Bmusic-videos%5D=artists&extend=editorialArtwork%2CartistUrl&fields%5Bartists%5D=name%2Curl%2Cartwork%2CeditorialArtwork%2CgenreNames%2CeditorialNotes&art%5Burl%5D=f`
+    );
+    console.log(request);
+    return request as MusicKit.Groupings[];
+  }
+
   async getBrowseCategories(): Promise<MusicKit.Groupings[]> {
     const request = await this.requestData(
       `/v1/editorial/us/groupings?art[url]=f&extend=artistUrl,editorialArtwork,plainEditorialNotes&extend[station-events]=editorialVideo&fields[albums]=artistName,artistUrl,artwork,contentRating,editorialArtwork,plainEditorialNotes,name,playParams,releaseDate,url,trackCount&fields[artists]=name,url,artwork&include[albums]=artists&include[music-videos]=artists&include[songs]=artists&include[stations]=events&name=music&omit[resource:artists]=relationships&platform=web&relate[songs]=albums&tabs=subscriber`

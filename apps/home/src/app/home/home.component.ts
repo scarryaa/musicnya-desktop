@@ -1,10 +1,14 @@
 import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject, Subscription } from 'rxjs';
-import { HeadingComponent, MediaTileListComponent } from '@nyan-inc/ui';
 import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
 import { LetDirective } from '@ngrx/component';
-import { SpinnerComponent, TileSelectorComponent } from '@nyan-inc/core';
+import {
+  HeadingComponent,
+  SpinnerComponent,
+  TileSelectorComponent,
+} from '@nyan-inc/core';
+import { MediaTileListComponent } from '@nyan-inc/ui';
 
 @Component({
   standalone: true,
