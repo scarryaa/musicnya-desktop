@@ -1,99 +1,129 @@
 <ui-heading size="medium" class="heading">{{ title }}</ui-heading>
 <div class="container" [ngClass]="{ songs: data?.[0]?.type === 'songs' }">
   <ng-container [ngSwitch]="item.type" *ngFor="let item of data">
-    <ng-container
-      *ngSwitchCase="
-        ['albums', 'playlists'].includes(item.type) ? item.type : ''
-      "
-    >
-      <core-media-tile
-        class="media-tile"
+    <ng-container *ngIf="isGlass; else switchBlock">
+      <core-glass-tile
+        [badge]="item.meta?.reason?.stringForDisplay"
         [id]="item.id"
-        [mediaTitle]="item.attributes?.['name'] || 'Unknown'"
-        [mediaSubtitle]="item.attributes?.['artistName'] || item.attributes?.['curatorName'] || 'Unknown Artist'"
-        [mediaLink]="'/media/' + item.type + '/' + item.id"
-        [type]="item.type"
-        [mediaImage]="item.attributes?.['artwork']?.['url']"
-        [mediaImageSize]="10"
-        [titleHover]="true"
-        [subtitleHover]="true"
-        [artistID]="item.relationships?.['artists']?.data?.[0]?.id"
-        (playEmitter)="playEmitter.emit({ type: item.type, id: item.id })"
-        (needCuratorEmitter)="needCuratorEmitter.emit(item.id)"
-      ></core-media-tile>
+        [title]="item.attributes?.['name'] || item.attributes?.['plainEditorialNotes']?.name"
+        [artist]="item.attributes?.['artistNames'] || item.attributes?.['artistName']"
+        [subtitle]="item.attributes?.['plainEditorialNotes']?.short || item.attributes?.['releaseDate']"
+        [image]="item.attributes?.['artwork']?.['url'] || item.attributes?.['editorialArtwork'].superHeroTall?.url.replace('{w}x{h}', '600x600').replace('{f}', 'webp') || ''"
+        [link]="'/media/' + item.type + '/' + item.id"
+        [titleLink]="item.attributes?.['link']?.url"
+      ></core-glass-tile>
     </ng-container>
-    <ng-container
-      *ngSwitchCase="
-        ['music-videos', 'uploaded-videos'].includes(item.type) ? item.type : ''
-      "
-    >
-      <ng-container>
-        <core-video-tile
-          class="video-tile"
-          [videoImage]="item.attributes?.['artwork']?.url || ''"
-          [videoImageSize]="10"
-          [videoTitle]="item?.attributes?.['name'] || ''"
-          [videoSubtitle]="
-            item?.attributes?.['artistName'] || ''
+    <ng-template #switchBlock>
+      <ng-container *ngIf="isSuperhero; else glassTemplate">
+        <core-banner-hero-tile
+          [id]="item.id"
+          [title]="item.attributes?.['name'] || item.attributes?.['plainEditorialNotes']?.name"
+          [subtitle]="item.attributes?.['plainEditorialNotes']?.short || item.attributes?.['releaseDate']"
+          [image]="item.attributes?.['artwork']?.['url'] || item.attributes?.['editorialArtwork'].superHeroTall?.url.replace('{w}x{h}', '600x600').replace('{f}', 'webp') || ''"
+        ></core-banner-hero-tile>
+      </ng-container>
+      <ng-template #glassTemplate>
+        <ng-container
+          *ngSwitchCase="
+            ['albums', 'playlists'].includes(item.type) ? item.type : ''
           "
-          [id]="item?.id"
-          [type]="'musicVideo'"
-          [videoSubtitleLink]="
-            '/media/artists/' +
-            item?.attributes?.['artistUrl']?.split('/')?.at(-1)?.split('?')?.[0]
-            || undefined "
-          [subtitleHover]="true"
-          (playClick)="playEmitter.emit({ type: $event.type, id: $event.id })"
-        ></core-video-tile
-      ></ng-container>
-    </ng-container>
-    <ng-container
-      *ngSwitchCase="
-        ['apple-curators', 'stations'].includes(item.type) ? item.type : ''
-      "
-    >
-      <core-media-tile
-        class="apple-curator-tile"
-        [id]="item.id"
-        [mediaTitle]="item.attributes?.['name'] || 'Unknown'"
-        [mediaSubtitle]="item.attributes?.['plainEditorialNotes']?.short || ''"
-        [type]="item.type"
-        [mediaImage]="item.attributes?.['artwork']?.['url']"
-        [mediaImageSize]="10"
-        [titleHover]="false"
-        [subtitleHover]="false"
-        [artistID]="item.relationships?.['artists']?.data?.[0]?.id"
-        (playEmitter)="playEmitter.emit({ type: item.type, id: item.id })"
-        (needCuratorEmitter)="needCuratorEmitter.emit(item.id)"
-      ></core-media-tile>
-    </ng-container>
-    <ng-container *ngSwitchCase="'artists'">
-      <ng-container>artist</ng-container>
-    </ng-container>
-    <ng-container *ngSwitchCase="'songs'">
-      <core-media-tile-small
-        class="top-songs__media-tile"
-        [mediaImage]="item.attributes?.['artwork']?.url || ''"
-        [mediaImageSize]="10"
-        [mediaTitle]="item?.attributes?.['name'] || ''"
-        [mediaSubtitle]="
-        item?.attributes?.['artistName'] ||
-        'Unknown Artist' +
-          ' • ' +
-      item?.attributes?.['albumName'] ||
-        'Unknown Album'
-      "
-        [mediaLink]="
-      '/media/albums/' +
-      item?.attributes?.['url']?.split('/')?.at(-1)?.split('?')?.[0]
-      || undefined "
-        [id]="item?.attributes?.['url']?.split('/')?.at(-1)?.split('?')?.[0]
-      || ''"
-        [type]="'albums'"
-        (playEmitter)="playEmitter.emit({ type: $event.type, id: $event.id })"
-      >
-      </core-media-tile-small>
-    </ng-container>
-    <ng-container *ngSwitchDefault> </ng-container>
+        >
+          <core-media-tile
+            class="media-tile"
+            [id]="item.id"
+            [mediaTitle]="item.attributes?.['name'] || 'Unknown'"
+            [mediaSubtitle]="item.attributes?.['artistName'] || item.attributes?.['curatorName'] || 'Unknown Artist'"
+            [mediaLink]="'/media/' + item.type + '/' + item.id"
+            [type]="item.type"
+            [mediaImage]="item.attributes?.['artwork']?.['url']"
+            [mediaImageSize]="10"
+            [titleHover]="true"
+            [subtitleHover]="true"
+            [artistID]="item.relationships?.['artists']?.data?.[0]?.id"
+            (playEmitter)="playEmitter.emit({ type: item.type, id: item.id })"
+            (needCuratorEmitter)="needCuratorEmitter.emit(item.id)"
+          ></core-media-tile>
+        </ng-container>
+        <ng-container
+          *ngSwitchCase="
+            ['music-videos', 'uploaded-videos'].includes(item.type)
+              ? item.type
+              : ''
+          "
+        >
+          <ng-container>
+            <core-video-tile
+              class="video-tile"
+              [videoImage]="item.attributes?.['artwork']?.url || ''"
+              [videoImageSize]="10"
+              [videoTitle]="item?.attributes?.['name'] || ''"
+              [videoSubtitle]="
+              item?.attributes?.['artistName'] || ''
+            "
+              [id]="item?.id"
+              [type]="'musicVideo'"
+              [videoSubtitleLink]="
+              '/media/artists/' +
+              item?.attributes?.['artistUrl']?.split('/')?.at(-1)?.split('?')?.[0]
+              || undefined "
+              [subtitleHover]="true"
+              (playClick)="
+                playEmitter.emit({ type: $event.type, id: $event.id })
+              "
+            ></core-video-tile
+          ></ng-container>
+        </ng-container>
+        <ng-container
+          *ngSwitchCase="
+            ['apple-curators', 'stations'].includes(item.type) ? item.type : ''
+          "
+        >
+          <core-media-tile
+            class="apple-curator-tile"
+            [id]="item.id"
+            [mediaTitle]="item.attributes?.['name'] || 'Unknown'"
+            [mediaSubtitle]="item.attributes?.['plainEditorialNotes']?.short || ''"
+            [type]="item.type"
+            [mediaImage]="item.attributes?.['artwork']?.['url']"
+            [mediaImageSize]="10"
+            [titleHover]="false"
+            [subtitleHover]="false"
+            [artistID]="item.relationships?.['artists']?.data?.[0]?.id"
+            (playEmitter)="playEmitter.emit({ type: item.type, id: item.id })"
+            (needCuratorEmitter)="needCuratorEmitter.emit(item.id)"
+          ></core-media-tile>
+        </ng-container>
+        <ng-container *ngSwitchCase="'artists'">
+          <ng-container>artist</ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="'songs'">
+          <core-media-tile-small
+            class="top-songs__media-tile"
+            [mediaImage]="item.attributes?.['artwork']?.url || ''"
+            [mediaImageSize]="10"
+            [mediaTitle]="item?.attributes?.['name'] || ''"
+            [mediaSubtitle]="
+          item?.attributes?.['artistName'] ||
+          'Unknown Artist' +
+            ' • ' +
+        item?.attributes?.['albumName'] ||
+          'Unknown Album'
+        "
+            [mediaLink]="
+        '/media/albums/' +
+        item?.attributes?.['url']?.split('/')?.at(-1)?.split('?')?.[0]
+        || undefined "
+            [id]="item?.attributes?.['url']?.split('/')?.at(-1)?.split('?')?.[0]
+        || ''"
+            [type]="'albums'"
+            (playEmitter)="
+              playEmitter.emit({ type: $event.type, id: $event.id })
+            "
+          >
+          </core-media-tile-small>
+        </ng-container>
+        <ng-container *ngSwitchDefault> </ng-container>
+      </ng-template>
+    </ng-template>
   </ng-container>
 </div>

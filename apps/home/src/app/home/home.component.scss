@@ -9,4 +9,10 @@
   box-sizing: border-box;
   min-width: 0;
   grid-template-columns: minmax(0, 1fr);
+
+  ::ng-deep {
+    core-banner-hero-tile {
+      width: 100%;
+    }
+  }
 }

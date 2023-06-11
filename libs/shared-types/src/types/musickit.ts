@@ -635,6 +635,12 @@ export declare namespace MusicKit {
     type: MusicKit.MediaItemType;
     views?: Record<string, View<any>>;
     relationships?: any;
+    meta?: {
+      reason?: {
+        contentIds: string[];
+        stringForDisplay: string;
+      };
+    };
 
     // Methods
 

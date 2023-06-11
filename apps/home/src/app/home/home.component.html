@@ -11,6 +11,8 @@
       <core-tile-selector
         [data]="item.relationships?.['contents']?.data || []"
         [title]="item?.attributes?.['title']?.stringForDisplay"
+        [isGlass]="item?.attributes?.['display'].kind === 'MusicNotesHeroShelf'"
+        [isSuperhero]="item?.attributes?.['display'].kind === 'MusicSuperHeroShelf'"
       >
       </core-tile-selector
     ></ng-container>

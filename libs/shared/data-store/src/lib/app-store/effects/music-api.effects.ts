@@ -969,7 +969,7 @@ export const getRecommendations$ = createEffect(
                     if (resource.attributes?.['artwork']?.url) {
                       resource.attributes['artwork'].url = transformArtworkUrl(
                         resource.attributes?.['artwork']?.url,
-                        160
+                        400
                       );
                     }
                   }

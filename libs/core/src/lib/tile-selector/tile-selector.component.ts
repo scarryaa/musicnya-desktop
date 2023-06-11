@@ -12,6 +12,8 @@ import { MediaTileComponent } from '../media-tile/media-tile.component';
 import { VideoTileComponent } from '../video-tile/video-tile.component';
 import { HeadingComponent } from '@nyan-inc/ui';
 import { MediaTileSmallComponent } from '../media-tile-small/media-tile-small.component';
+import { GlassTileComponent } from '../glass-tile/glass-tile.component';
+import { BannerHeroTileComponent } from '../banner-hero-tile/banner-hero-tile.component';
 
 @Component({
   selector: 'core-tile-selector',
@@ -22,6 +24,8 @@ import { MediaTileSmallComponent } from '../media-tile-small/media-tile-small.co
     VideoTileComponent,
     HeadingComponent,
     MediaTileSmallComponent,
+    GlassTileComponent,
+    BannerHeroTileComponent,
   ],
   templateUrl: './tile-selector.component.html',
   styleUrls: ['./tile-selector.component.scss'],
@@ -30,6 +34,8 @@ import { MediaTileSmallComponent } from '../media-tile-small/media-tile-small.co
 export class TileSelectorComponent {
   @Input() data?: Array<MusicKit.MediaItem | MusicKit.Resource>;
   @Input() title?: string;
+  @Input() isGlass = false;
+  @Input() isSuperhero = false;
 
   @Output() readonly playEmitter: EventEmitter<{ type: string; id: string }> =
     new EventEmitter();

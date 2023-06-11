@@ -60,3 +60,5 @@ export * from './lib/banner-tile/banner-tile.component';
 export * from './lib/banner-hero-tile/banner-hero-tile.component';
 
 export * from './lib/tile-selector/tile-selector.component';
+
+export * from './lib/glass-tile/glass-tile.component';
