@@ -1,0 +1,68 @@
+.spacer-3 {
+  height: 3rem;
+}
+
+:host {
+  padding-inline: 0.5rem;
+  padding-top: 4rem;
+  padding-bottom: 3rem;
+  display: grid !important;
+  position: relative;
+  flex-direction: column;
+  row-gap: 3rem;
+  box-sizing: border-box;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+
+  .banner-tiles__heading {
+    margin-bottom: 1rem;
+    margin-left: 0.5rem;
+    display: block;
+  }
+
+  .banner-tiles {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: scroll;
+    overflow-y: visible;
+    gap: 1rem;
+    flex-direction: row;
+
+    .banner-tile {
+      &:hover {
+        background-color: oklch(100% 0 0/15%);
+      }
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .hero-banner-tiles {
+    padding-left: 0.5rem;
+    display: flex;
+    position: relative;
+    overflow-x: scroll;
+    overflow-y: visible;
+    gap: 1rem;
+    flex-direction: row;
+
+    .banner-tile {
+      &:hover {
+        background-color: oklch(100% 0 0/15%);
+      }
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .link-tiles {
+    margin-left: 0.5rem;
+  }
+}

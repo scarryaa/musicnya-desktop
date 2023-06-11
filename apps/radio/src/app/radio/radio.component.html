@@ -3,7 +3,7 @@
     <!-- Browse Categories -->
     <ng-container
       *ngFor="
-        let item of vm.selectEditorialElementsData$ | async;
+        let item of vm.selectRadioElementsData$ | async;
         let i = index;
         trackBy: trackBy
       "
@@ -11,6 +11,7 @@
       <ng-container [ngSwitch]="item.attributes?.editorialElementKind">
         <ng-container *ngSwitchDefault>
           <core-tile-selector
+            *ngIf="item.relationships?.['contents']?.data"
             [data]="item.relationships?.['contents']?.data"
             [title]="item.attributes?.['name'] || 'Unknown Category'"
           ></core-tile-selector>
@@ -21,11 +22,11 @@
               *ngFor="let item of item.relationships?.children?.data"
             >
               <core-banner-hero-tile
-                [badge]="item.attributes?.designBadge || ''"
-                [title]="item.attributes?.designTag || item.relationships?.contents?.data?.[0]?.attributes?.['name'] || ''"
-                [subtitle]="item.relationships?.contents?.data?.[0]?.attributes?.['curatorName'] || item.relationships?.contents?.data?.[0]?.attributes?.['artistName'] || ''"
+                [badge]="item.attributes?.designBadge"
+                [title]="item.relationships?.contents?.data?.[0]?.attributes?.['name'] || item.attributes?.designBadge || ''"
+                [subtitle]="item.relationships?.contents?.data?.[0]?.attributes?.['editorialNotes']?.tagline || item.relationships?.contents?.data?.[0]?.attributes?.['name'] || item.attributes?.designTag"
                 [description]="item.relationships?.contents?.data?.[0]?.attributes?.['plainEditorialNotes']?.short || ''"
-                [image]="item.attributes?.artwork?.url || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork']?.subscriptionHero.url.replace('{w}x{h}', '1200x1200').replace('{f}', 'webp') || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork']?.subscriptionCover.url.replace('{w}x{h}', '1200x1200').replace('{f}', 'webp') ||''"
+                [image]=" item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork']?.subscriptionHero.url.replace('{w}x{h}', '1200x1200').replace('{f}', 'webp') || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork']?.subscriptionCover.url.replace('{w}x{h}', '1200x1200').replace('{f}', 'webp') || item.attributes?.artwork?.url"
                 >{{ item.attributes?.designTag }}</core-banner-hero-tile
               >
             </ng-container>

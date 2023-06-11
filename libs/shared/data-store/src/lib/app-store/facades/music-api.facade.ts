@@ -15,6 +15,7 @@ import { MusicAPIState } from '../reducers/music-api.reducer';
 import {
   selectAllCuratorCategories,
   selectAllPersonalRecommendations,
+  selectAllRadioCategories,
 } from '../selectors';
 import { selectAllBrowseCategories } from '../selectors/browse-categories.selectors';
 import { selectAllLibraryPlaylists } from '../selectors/library-playlists.selectors';
@@ -55,6 +56,26 @@ export class MusicAPIFacade implements OnDestroy {
   selectMedia$ = this.store.pipe(
     select(selectMusicAPIState),
     map((value) => value.currentMedia?.data)
+  );
+
+  // radio vm
+  selectRadioCategories$ = this.store.pipe(
+    select(selectAllRadioCategories),
+    filter((categories) => categories !== undefined)
+  );
+
+  selectRadioElements$ = this.store.pipe(
+    select(selectAllRadioCategories),
+    map((categories) => categories?.[0]?.relationships.tabs.data?.[0])
+  );
+
+  selectRadioElementsData$ = this.store.pipe(
+    select(selectAllRadioCategories),
+    map(
+      (categories) =>
+        categories?.[0]?.relationships.tabs.data?.[0]?.relationships.children
+          .data
+    )
   );
 
   //browse vm
