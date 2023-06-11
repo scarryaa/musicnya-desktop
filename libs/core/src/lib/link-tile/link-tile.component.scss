@@ -1,0 +1,25 @@
+:host {
+  .link-tile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background-color: var(--gray-900);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    padding-left: 1rem;
+    min-height: 60px;
+    color: var(--secondary-300, --red-400);
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      background-color: var(--gray-800);
+    }
+  }
+
+  .link-tile__arrow {
+    margin-left: auto;
+    margin-right: 1rem;
+    color: var(--secondary-300, --red-400);
+  }
+}

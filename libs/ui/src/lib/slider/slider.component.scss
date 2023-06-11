@@ -1,6 +1,6 @@
 :host {
   --slider-color: oklch(100% 0 0 / 20%);
-  --thumb-color: var(--accent-color, oklch(100% 0 0));
+  --thumb-color: var(--accent, oklch(100% 0 0));
   --base-width: 14rem;
   --base-height: 0.25rem;
   display: flex;

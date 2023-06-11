@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeroTileComponent, SearchbarComponent } from '@nyan-inc/core';
-import { MusicAPIFacade } from '@nyan-inc/shared';
+import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -13,7 +13,7 @@ import { RouterModule } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchComponent {
-  constructor(public vm: MusicAPIFacade) {}
+  constructor(public vm: MusicAPIFacade, public music: MusicFacade) {}
 
   search(value: string) {
     this.vm.search(value);

@@ -44,7 +44,7 @@ import { CommonModule } from '@angular/common';
         width: 3rem;
         height: 3rem;
         border-radius: 50%;
-        background-color: var(--accent-color, red);
+        background-color: var(--secondary, red);
 
         .play-button-wrapper__icon {
           width: 1.5rem;

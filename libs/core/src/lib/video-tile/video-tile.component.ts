@@ -8,11 +8,17 @@ import {
 import { CommonModule } from '@angular/common';
 import { PlayButtonComponent } from '../play-button/play-button.component';
 import { OptionsButtonComponent } from '../options-button/options-button.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'core-video-tile',
   standalone: true,
-  imports: [CommonModule, PlayButtonComponent, OptionsButtonComponent],
+  imports: [
+    CommonModule,
+    PlayButtonComponent,
+    OptionsButtonComponent,
+    RouterModule,
+  ],
   template: `<div class="video-tile-wrapper">
     <div class="video-tile">
       <div class="video-tile__image-wrapper">
@@ -31,7 +37,12 @@ import { OptionsButtonComponent } from '../options-button/options-button.compone
         </div>
       </div>
       <div class="video-tile__title" [title]="videoTitle">{{ videoTitle }}</div>
-      <div class="video-tile__subtitle" [title]="videoSubtitle">
+      <div
+        class="video-tile__subtitle"
+        [title]="videoSubtitle"
+        [ngClass]="{ 'video-tile__subtitle--hover': subtitleHover }"
+        [routerLink]="subtitleHover ? videoSubtitleLink : undefined"
+      >
         {{ videoSubtitle }}
       </div>
     </div>
@@ -46,6 +57,8 @@ export class VideoTileComponent {
   @Input() videoImageSize: number | undefined = undefined;
   @Input() id?: string;
   @Input() type = 'videos';
+  @Input() subtitleHover = false;
+  @Input() videoSubtitleLink?: string;
 
   @Output() playClick = new EventEmitter<{ type: string; id: string }>();
   @Output() optionsClick = new EventEmitter<void>();

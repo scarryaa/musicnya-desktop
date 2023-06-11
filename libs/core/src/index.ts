@@ -50,3 +50,11 @@ export * from './lib/hero-tile/hero-tile.component';
 export * from './lib/search-item/search-item.component';
 
 export * from './lib/searchbar/searchbar.component';
+
+export * from './lib/link-tile/link-tile.component';
+
+export * from './lib/link-tile-set/link-tile-set.component';
+
+export * from './lib/banner-tile/banner-tile.component';
+
+export * from './lib/banner-hero-tile/banner-hero-tile.component';

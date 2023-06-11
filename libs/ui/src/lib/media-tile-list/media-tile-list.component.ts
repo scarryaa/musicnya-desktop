@@ -60,6 +60,7 @@ export class MediaTileListComponent {
   @Input() listData!: MusicKit.Resource[];
   @Input() clickEnabled = true;
   @Input() wrap = false;
+  @Input() type?: string;
   @Output() readonly playEmitter: EventEmitter<{ type: string; id: string }> =
     new EventEmitter();
   @Output() readonly needCuratorEmitter: EventEmitter<string> =

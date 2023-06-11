@@ -1,0 +1,15 @@
+:host {
+  .link-tile-set {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 1rem;
+    margin-block: 1rem;
+    margin-inline: 0;
+    padding-inline: 0;
+    list-style: none;
+  }
+
+  > * {
+    min-height: 120px;
+  }
+}

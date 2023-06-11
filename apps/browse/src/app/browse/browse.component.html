@@ -8,13 +8,123 @@
         trackBy: trackBy
       "
     >
-      <ui-media-tile-list
-        (playEmitter)="play($event.type, $event.id)"
-        [listTitle]="item?.attributes?.name!"
-        [listId]="item?.id"
-        [listData]="item.relationships?.['contents']?.data || []"
-        (needCuratorEmitter)="handleCurator($event)"
-      ></ui-media-tile-list>
+      <ng-container [ngSwitch]="item.attributes?.editorialElementKind">
+        <ui-media-tile-list
+          *ngSwitchDefault
+          (playEmitter)="play($event.type, $event.id)"
+          [listTitle]="item?.attributes?.name!"
+          [listId]="item?.id"
+          [listData]="item.relationships?.['contents']?.data || []"
+          (needCuratorEmitter)="handleCurator($event)"
+        ></ui-media-tile-list>
+        <div *ngSwitchCase="'316'">
+          <div class="hero-banner-tiles">
+            <ng-container *ngFor="let item of item.relationships.children.data">
+              <core-banner-hero-tile
+                [badge]="item.attributes?.designBadge || ''"
+                [title]="item.attributes?.designTag || item.relationships?.contents?.data?.[0]?.attributes?.['name'] || ''"
+                [subtitle]="item.relationships?.contents?.data?.[0]?.attributes?.['curatorName'] || item.relationships?.contents?.data?.[0]?.attributes?.['artistName'] || ''"
+                [description]="item.relationships?.contents?.data?.[0]?.attributes?.['plainEditorialNotes']?.short || ''"
+                [image]="item.attributes?.artwork?.url || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork']?.subscriptionHero.url.replace('{w}x{h}', '1200x1200').replace('{f}', 'webp') || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork']?.subscriptionCover.url.replace('{w}x{h}', '1200x1200').replace('{f}', 'webp') ||''"
+                >{{ item.attributes?.designTag }}</core-banner-hero-tile
+              >
+            </ng-container>
+          </div>
+        </div>
+        <div class="link-tiles" *ngSwitchCase="'322'"></div>
+        <div *ngSwitchCase="'385'">
+          <ui-heading
+            class="banner-tiles__heading"
+            size="medium"
+            >{{item.attributes?.['name']}}</ui-heading
+          >
+          <div class="banner-tiles">
+            <ng-container *ngFor="let item of item.relationships.children.data">
+              <!-- TODO REPLACE .REPLACE -->
+              <core-banner-tile
+                [image]="item.attributes?.artwork?.url || '' || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork'].subscriptionHero?.url.replace('{w}x{h}', '600x600').replace('{f}', 'webp') || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork'].subscriptionCover?.url.replace('{w}x{h}', '600x600').replace('{f}', 'webp')"
+                >{{ item.relationships?.contents?.data?.[0]?.attributes?.['name'] || item.attributes?.designTag }}</core-banner-tile
+              >
+            </ng-container>
+          </div>
+        </div>
+        <div *ngSwitchCase="'323'">
+          <ng-container *ngFor="let item of item.relationships.children.data">
+            <ng-container [ngSwitch]="item.attributes?.editorialElementKind">
+              <div *ngSwitchCase="'336'">
+                <ui-heading
+                  class="top-songs__heading"
+                  size="medium"
+                  >{{item.attributes?.['name']}}</ui-heading
+                >
+                <div class="top-songs">
+                  <ng-container
+                    *ngFor="let song of item.relationships?.['contents']?.data"
+                  >
+                    <core-media-tile-small
+                      class="top-songs__media-tile"
+                      [mediaImage]="song.attributes?.['artwork']?.url || ''"
+                      [mediaImageSize]="10"
+                      [mediaTitle]="song?.attributes?.['name'] || ''"
+                      [mediaSubtitle]="
+                        song?.attributes?.['artistName'] ||
+                        '' +
+                          ' •
+                      ' +
+                          song?.attributes?.['albumName'] ||
+                        ''
+                      "
+                      [mediaLink]="
+                      '/media/albums/' +
+                      song?.attributes?.['url']?.split('/')?.at(-1)?.split('?')?.[0]
+                      || undefined "
+                      [id]="song?.attributes?.['url']?.split('/')?.at(-1)?.split('?')?.[0]
+                      || ''"
+                      [type]="'albums'"
+                      (playEmitter)="play($event.type, $event.id)"
+                    >
+                    </core-media-tile-small>
+                  </ng-container>
+                </div>
+              </div>
+              <div *ngSwitchCase="'339'">
+                <ui-heading
+                  class="top-songs__heading"
+                  size="medium"
+                  >{{item.attributes?.['name']}}</ui-heading
+                >
+                <div class="top-videos">
+                  <ng-container
+                    *ngFor="let video of item.relationships?.['contents']?.data"
+                  >
+                    <core-video-tile
+                      class="top-videos__video-tile"
+                      [videoImage]="video.attributes?.['artwork']?.url || ''"
+                      [videoImageSize]="10"
+                      [videoTitle]="video?.attributes?.['name'] || ''"
+                      [videoSubtitle]="
+                        video?.attributes?.['artistName'] || ''
+                      "
+                      [id]="video?.id"
+                      [type]="'musicVideo'"
+                      [videoSubtitleLink]="
+                        '/media/artists/' +
+                        video?.attributes?.['artistUrl']?.split('/')?.at(-1)?.split('?')?.[0]
+                        || undefined "
+                      [subtitleHover]="true"
+                      (playClick)="play($event.type, $event.id)"
+                    ></core-video-tile>
+                  </ng-container>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+        <div class="link-tiles" *ngSwitchCase="'391'">
+          <core-link-tile-set [links]="item.attributes?.links">
+          </core-link-tile-set>
+        </div>
+      </ng-container>
     </ng-container>
   </ng-container>
 </ng-container>

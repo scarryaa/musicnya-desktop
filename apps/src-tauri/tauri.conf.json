@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "musicnya",
-    "version": "0.0.0"
+    "version": "1.0.0-alpha.0"
   },
   "tauri": {
     "allowlist": {
@@ -41,10 +41,10 @@
         "fullscreen": false,
         "resizable": true,
         "title": "musicnya",
-        "width": 800,
+        "width": 830,
         "height": 700,
         "minHeight": 700,
-        "minWidth": 800,
+        "minWidth": 830,
         "decorations": false
       }
     ]

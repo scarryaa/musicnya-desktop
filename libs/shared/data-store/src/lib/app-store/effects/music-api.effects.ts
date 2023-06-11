@@ -18,7 +18,6 @@ import copy from 'fast-copy';
 import { select, Store } from '@ngrx/store';
 import { ROUTER_NAVIGATED } from '@ngrx/router-store';
 import { MusickitAPI } from '@nyan-inc/core-services';
-import { MediaItemTypes, Songs } from '@nyan-inc/core';
 import { MusicState } from '../reducers/music.reducer';
 import { SpinnerState } from '../reducers/spinner.reducer';
 import { Router, RouterState } from '@angular/router';
@@ -74,7 +73,7 @@ export const getLibraryPlaylists$ = createEffect(
               forkJoin(
                 playlists.map((playlist) =>
                   from(musickit.getLibraryPlaylistSongs(playlist.id)).pipe(
-                    map((songs: Songs[]) => ({
+                    map((songs: MusicKit.Songs[]) => ({
                       ...playlist,
                       attributes: {
                         ...playlist.attributes,
@@ -105,7 +104,7 @@ export const getLibraryPlaylists$ = createEffect(
                           ),
                         },
                       },
-                      songs: songs.map((song: Songs) => ({
+                      songs: songs.map((song: MusicKit.Songs) => ({
                         ...song,
                         attributes: {
                           ...song?.attributes,
@@ -506,13 +505,17 @@ export const getCurator$ = createEffect(
         }),
         MusicAPIActions.getCuratorCategoriesSuccess({
           payload: {
-            data: data.payload.data.relationships.grouping.data.map(
-              (category) => {
-                const transformedCategory = transformBrowseCategories(category);
-                console.log(transformedCategory);
-                return transformedCategory;
-              }
-            ),
+            data:
+              data.payload.data.relationships?.grouping?.data.map(
+                (category) => {
+                  const transformedCategory =
+                    transformBrowseCategories(category);
+                  console.log(transformedCategory);
+                  return transformedCategory;
+                }
+              ) ||
+              data.payload.data.relationships?.playlists.data ||
+              [],
           },
         }),
       ]),
@@ -1223,12 +1226,6 @@ export const setCurrentViewType$ = createEffect(
 );
 
 // utility functions
-
-interface RouteParameters {
-  id: string;
-  type: MediaItemTypes;
-}
-
 const transformArtworkUrl = (url: string, size: number) => {
   const newUrl = url
     .replace('{w}x{h}', `${size}x${size}`)
@@ -1250,7 +1247,7 @@ const transformBrowseCategories: any = (node: any) => {
       const newAttributes = { ...newNode.attributes };
       const newArtwork = { ...newAttributes.artwork };
 
-      newArtwork.url = transformArtworkUrl(newAttributes.artwork.url, 400);
+      newArtwork.url = transformArtworkUrl(newAttributes.artwork.url, 1200);
       newAttributes.artwork = newArtwork;
       newNode.attributes = newAttributes;
     }

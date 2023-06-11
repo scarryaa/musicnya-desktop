@@ -3,6 +3,8 @@
     class="search__searchbar"
     [searchTerm]="vm.selectSearchTerms$ | async"
     (searchEmitter)="vm.search($event)"
+    (songEmitter)="music.setQueueThenPlay('songs', $event)"
+    [vm]="vm"
   ></core-searchbar>
 
   <div class="search__categories">

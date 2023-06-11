@@ -3,8 +3,8 @@ import {
   MusicAPIState,
   MUSIC_API_FEATURE_KEY,
 } from '../reducers/music-api.reducer';
-import { MusicAPIEntity } from 'libs/shared/data-store/src/lib/app-store/models/music-api.models';
 import { createEntityAdapter } from '@ngrx/entity';
+import { MusicAPIEntity } from '../models';
 
 export const selectMusicAPIState = createFeatureSelector<MusicAPIState>(
   MUSIC_API_FEATURE_KEY

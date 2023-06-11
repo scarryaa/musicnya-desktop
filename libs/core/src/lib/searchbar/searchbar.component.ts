@@ -11,7 +11,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
 import { SearchItemComponent } from '../search-item/search-item.component';
 import {
   Subject,
@@ -23,7 +22,7 @@ import {
   tap,
 } from 'rxjs';
 import { NgScrollbarModule } from 'ngx-scrollbar';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'core-searchbar',
@@ -50,7 +49,7 @@ import { Router, RouterModule } from '@angular/router';
         [autoWidthDisabled]="true"
       >
         <ng-container *ngIf="vm.selectSearchResults$ | async as results">
-          <ng-container *ngFor="let data of results">
+          <ng-container *ngFor="let data of $any(results)">
             <core-search-item
               (clickEmitter)="handleClick(data.content?.type, data.content?.id)"
               class="searchbar__item"
@@ -86,6 +85,8 @@ import { Router, RouterModule } from '@angular/router';
 export class SearchbarComponent implements AfterViewInit, OnDestroy {
   @Input() searchTerm?: string | null;
   @Output() searchEmitter: EventEmitter<string> = new EventEmitter<string>();
+  @Output() songEmitter: EventEmitter<string> = new EventEmitter<string>();
+  @Input() vm: any;
   @Output() destroy$ = new Subject<void>();
   _continueSearch = false;
 
@@ -98,27 +99,9 @@ export class SearchbarComponent implements AfterViewInit, OnDestroy {
   @ViewChild('searchbar__item')
   searchbarItem?: ElementRef<HTMLDivElement>;
 
-  constructor(
-    public vm: MusicAPIFacade,
-    private music: MusicFacade,
-    private router: Router
-  ) {}
+  constructor(private router: Router) {}
 
   ngAfterViewInit(): void {
-    fromEvent(this.searchbar?.nativeElement!, 's')
-      .pipe(
-        filter(() => !!this.searchbar),
-        debounceTime(100),
-        takeUntil(this.destroy$)
-      )
-      .subscribe(() => {
-        const { scrollTop, scrollHeight, clientHeight } =
-          this.searchbar?.nativeElement!;
-        if (scrollTop + clientHeight >= scrollHeight) {
-          this.vm.search(this.searchTerm!);
-        }
-      });
-
     fromEvent(this.searchbar?.nativeElement!, 'focus')
       .pipe(
         filter(() => !!this.searchbar),
@@ -225,19 +208,6 @@ export class SearchbarComponent implements AfterViewInit, OnDestroy {
       )
       .subscribe();
 
-    fromEvent(this.searchbarResults?.nativeElement!, 'scroll')
-      .pipe(
-        filter(() => !!this.searchbarResults),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((event: any) => {
-        const { scrollTop, scrollHeight, clientHeight } =
-          this.searchbarResults?.nativeElement!;
-        if (scrollTop + clientHeight >= scrollHeight) {
-          this.vm.search(this.searchTerm!);
-        }
-      });
-
     fromEvent(this.searchbarResults?.nativeElement!, 'keyup')
       .pipe(
         filter(() => !!this.searchbarResults),
@@ -334,7 +304,7 @@ export class SearchbarComponent implements AfterViewInit, OnDestroy {
   handleClick(type: string, id: string) {
     switch (type) {
       case 'songs':
-        this.music.setQueueThenPlay(type, id);
+        this.songEmitter.emit(id);
         break;
       case 'albums':
         this.router.navigate(['media/albums', id]);

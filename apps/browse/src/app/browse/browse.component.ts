@@ -1,15 +1,31 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LetDirective } from '@ngrx/component';
-import { MediaTileListComponent } from '@nyan-inc/ui';
+import { HeadingComponent, MediaTileListComponent } from '@nyan-inc/ui';
 import { MusicAPIFacade, MusicFacade } from '@nyan-inc/shared';
-import { MusickitAPI } from '@nyan-inc/core-services';
 import { Router } from '@angular/router';
+import {
+  BannerHeroTileComponent,
+  BannerTileComponent,
+  LinkTileSetComponent,
+  MediaTileSmallComponent,
+  VideoTileComponent,
+} from '@nyan-inc/core';
 
 @Component({
   selector: 'browse-entry',
   standalone: true,
-  imports: [CommonModule, LetDirective, MediaTileListComponent],
+  imports: [
+    CommonModule,
+    LetDirective,
+    MediaTileListComponent,
+    LinkTileSetComponent,
+    VideoTileComponent,
+    MediaTileSmallComponent,
+    HeadingComponent,
+    BannerTileComponent,
+    BannerHeroTileComponent,
+  ],
   templateUrl: './browse.component.html',
   styleUrls: ['./browse.component.scss'],
 })

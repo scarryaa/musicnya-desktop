@@ -1441,10 +1441,7 @@ export declare namespace MusicKit {
       doNotFilter: boolean;
       editorialElementKind: string;
       lastModifiedDate: string;
-      links?: {
-        url: string;
-        label: string;
-      };
+      links?: EditorialLinks[];
       name: string;
       url: string;
     };
@@ -1463,6 +1460,12 @@ export declare namespace MusicKit {
         data: Array<EditorialElements>;
       };
     };
+  }
+
+  export interface EditorialLinks {
+    url: string;
+    label: string;
+    target?: 'internal' | 'external';
   }
 
   /**

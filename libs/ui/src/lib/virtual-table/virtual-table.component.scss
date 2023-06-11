@@ -388,9 +388,9 @@ table {
 }
 
 .accent-color {
-  color: var(--accent-color, red) !important;
+  color: var(--secondary, red) !important;
 
   #title {
-    color: var(--accent-color, red) !important;
+    color: var(--secondary, red) !important;
   }
 }

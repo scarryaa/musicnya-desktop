@@ -70,7 +70,7 @@
   --menu-background-color: var(--font-color-faded);
   --menu-highlight-color: var(--font-color);
   --drawer-background-color: oklch(98% 0 0);
-  --ui-background-color: var(--accent-color, oklch(85% 0 0));
+  --ui-background-color: var(--accent, oklch(85% 0 0));
   --drawer-font-color: var(--font-color);
   --font-color-hover: var(--font-color-faded);
   --font-color-active: var(--font-color-faded2);
@@ -93,7 +93,7 @@
   --menu-background-color: var(--font-color-faded);
   --menu-highlight-color: var(--font-color);
   --drawer-background-color: oklch(16% 0 0);
-  --ui-background-color: var(--accent-color, oklch(0% 0 0));
+  --ui-background-color: var(--accent, oklch(0% 0 0));
   --drawer-font-color: var(--font-color-faded);
   --font-color-hover: var(--font-color);
   --font-color-active: var(--font-color-faded2);

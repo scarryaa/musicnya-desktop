@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createSelector, select, Store } from '@ngrx/store';
-import { MusicAPIState } from '@nyan-inc/shared';
+import { MusicAPIState, selectAllLibraryPlaylists } from '@nyan-inc/shared';
 import { MusicKit } from '@nyan-inc/shared-types';
-import { selectAllLibraryPlaylists } from 'libs/shared/data-store/src/lib/app-store/selectors/library-playlists.selectors';
 import { filter } from 'rxjs';
 import { LayoutActions } from '../actions';
 import { getLayoutState, LayoutState } from '../reducers/layout.reducer';
