@@ -58,3 +58,5 @@ export * from './lib/link-tile-set/link-tile-set.component';
 export * from './lib/banner-tile/banner-tile.component';
 
 export * from './lib/banner-hero-tile/banner-hero-tile.component';
+
+export * from './lib/tile-selector/tile-selector.component';

@@ -1447,7 +1447,7 @@ export declare namespace MusicKit {
       name: string;
       url: string;
     };
-    relationships: {
+    relationships?: {
       contents?: {
         data: Array<Resource | MediaItem>;
       };

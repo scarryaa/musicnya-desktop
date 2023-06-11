@@ -9,6 +9,7 @@ import {
   BannerTileComponent,
   LinkTileSetComponent,
   MediaTileSmallComponent,
+  TileSelectorComponent,
   VideoTileComponent,
 } from '@nyan-inc/core';
 
@@ -25,6 +26,7 @@ import {
     HeadingComponent,
     BannerTileComponent,
     BannerHeroTileComponent,
+    TileSelectorComponent,
   ],
   templateUrl: './browse.component.html',
   styleUrls: ['./browse.component.scss'],
