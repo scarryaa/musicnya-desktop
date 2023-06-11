@@ -1435,6 +1435,8 @@ export declare namespace MusicKit {
     type: 'editorial-elements';
     id: string;
     attributes?: {
+      artistName: string;
+      artistUrl: string;
       artwork?: Artwork;
       designBadge?: string;
       designTag: string;
