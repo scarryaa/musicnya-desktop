@@ -45,7 +45,7 @@ export class ArtistDetailsComponent {
     shuffle
       ? this.musicFacade.shufflePlay(type, id)
       : this.musicFacade.setQueueThenPlay(type, id);
-    setTimeout(() => this.musicFacade.play(), 1000);
+    setTimeout(() => this.musicFacade.play(), 2000);
   }
 
   playAtIndex(type: string, id: string, index: number) {
