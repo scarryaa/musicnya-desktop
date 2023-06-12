@@ -12,6 +12,12 @@ export const loadMusicAPIFailure = createAction(
   props<{ payload: { error: Error } }>()
 );
 
+// Loading Actions
+export const setLoading = createAction(
+  '[Music/API] Set Loading',
+  props<{ payload: { loading: boolean } }>()
+);
+
 // Radio Categories Actions
 export const getRadioCategories = createAction(
   '[Music/API] Get Radio Categories'

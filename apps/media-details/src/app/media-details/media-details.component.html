@@ -1,14 +1,16 @@
 <ng-container *ngrxLet="musicAPIFacade">
-  <div class="background" *ngIf="musicAPIFacade.loaded$ | async">
-    <div class="details">
-      <musicnya-song-album-details
-        class="details__content"
-      ></musicnya-song-album-details>
-    </div>
-    <div class="content">
-      <musicnya-song-album-content
-        class="content__list"
-      ></musicnya-song-album-content>
+  <div *ngIf="musicAPIFacade.loaded$ | async">
+    <div class="background">
+      <div class="details">
+        <musicnya-song-album-details
+          class="details__content"
+        ></musicnya-song-album-details>
+      </div>
+      <div class="content">
+        <musicnya-song-album-content
+          class="content__list"
+        ></musicnya-song-album-content>
+      </div>
     </div>
   </div>
 </ng-container>

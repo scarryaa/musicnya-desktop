@@ -1107,11 +1107,13 @@ export const getCuratorID$ = createEffect(
 
 // sets the current media item and returns it
 export const setCurrentMedia$ = createEffect(
-  (actions$ = inject(Actions)) =>
+  (actions$ = inject(Actions), store = inject(Store<MusicAPIState>)) =>
     actions$.pipe(
       ofType(MusicAPIActions.setCurrentMedia),
+      tap(() => store.dispatch(SpinnerActions.showSpinner())),
       map((action) => action.payload),
       map(() => MusicAPIActions.setCurrentMediaSuccess()),
+      tap(() => store.dispatch(SpinnerActions.hideSpinner())),
       catchError((error) =>
         of(MusicAPIActions.setCurrentMediaFailure({ payload: { error } }))
       )

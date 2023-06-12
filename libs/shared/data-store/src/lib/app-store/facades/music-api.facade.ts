@@ -48,9 +48,11 @@ export class MusicAPIFacade implements OnDestroy {
     filter((value) => value.currentMedia?.type !== undefined),
     map((value) => value.currentMedia?.type)
   );
-  loaded$ = this.store
-    .pipe(select(selectMusicAPIState))
-    .pipe(map((value) => value.loaded));
+
+  loaded$ = this.store.pipe(select(selectMusicAPIState)).pipe(
+    filter((value) => value.loaded !== undefined),
+    map((value) => value.loaded)
+  );
 
   // media-details vm
   selectMedia$ = this.store.pipe(

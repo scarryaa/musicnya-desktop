@@ -186,13 +186,16 @@ const reducer = createReducer(
   on(MusicAPIActions.setCurrentMedia, (state, { payload }) => ({
     ...state,
     currentMedia: payload,
+    loaded: false,
   })),
   on(MusicAPIActions.setCurrentMediaSuccess, (state) => ({
     ...state,
+    loaded: true,
   })),
   on(MusicAPIActions.setCurrentMediaFailure, (state, { payload }) => ({
     ...state,
     payload: payload.error,
+    loaded: true,
   })),
 
   on(MusicAPIActions.getLibraryPlaylistSongs, (state) => ({ ...state })),
@@ -232,6 +235,12 @@ const reducer = createReducer(
   on(MusicAPIActions.getFromUrlFailure, (state, { payload }) => ({
     ...state,
     payload: payload.error,
+  })),
+
+  // set loading
+  on(MusicAPIActions.setLoading, (state, { payload }) => ({
+    ...state,
+    loaded: payload.loading,
   })),
 
   // // get media item
@@ -423,10 +432,12 @@ const reducer = createReducer(
   // get album
   on(MusicAPIActions.getAlbum, (state) => ({
     ...state,
+    loaded: false,
   })),
   on(MusicAPIActions.getAlbumSuccess, (state, { payload }) => ({
     ...state,
     albums: albumsAdapter.setOne(payload.data, state.albums),
+    loaded: true,
   })),
   on(MusicAPIActions.getAlbumFailure, (state, { payload }) => ({
     ...state,
