@@ -18,9 +18,14 @@ import { TitleBarComponent } from './title-bar/title-bar.component';
 import {
   DraggableDirective,
   NavigationButtonSmartModule,
+  SpinnerComponent,
 } from '@nyan-inc/core';
 import { NavigationButtonsComponent } from './navigation-buttons/navigation-buttons.component';
-import { MusicAPIFacade, MusicEventListeners } from '@nyan-inc/shared';
+import {
+  MusicAPIFacade,
+  MusicEventListeners,
+  SpinnerFacade,
+} from '@nyan-inc/shared';
 import { AppState } from '../store/reducers/app.reducer';
 import { LetDirective } from '@ngrx/component';
 import { AppFacade, LayoutFacade } from '../store/facades';
@@ -38,6 +43,7 @@ import { HttpService } from '@nyan-inc/core-services';
     NavigationButtonSmartModule,
     NavigationButtonsComponent,
     LetDirective,
+    SpinnerComponent,
   ],
   selector: 'musicnya-root',
   templateUrl: './app.component.html',
@@ -52,6 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
   destroy$ = new Subject<void>();
   drawerOpen$ = this.layout.drawerOpen$;
   state$!: Observable<AppState>;
+  spinnerState$: any;
 
   @ContentChildren(DraggableDirective, { descendants: true, read: ElementRef })
   draggables!: QueryList<DraggableDirective>;
@@ -62,9 +69,11 @@ export class AppComponent implements OnInit, OnDestroy {
     private app: AppFacade,
     private layout: LayoutFacade,
     private eventListeners: MusicEventListeners,
+    public spinner: SpinnerFacade,
     private router: Router
   ) {
     this.state$ = this.app.state$;
+    this.spinnerState$ = this.spinner.state$;
   }
 
   @HostListener('mousedown', ['$event']) onClick(event: MouseEvent) {

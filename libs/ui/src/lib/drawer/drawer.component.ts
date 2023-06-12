@@ -72,7 +72,7 @@ import { BaseComponent } from '@nyan-inc/core';
         thumbClass="scrollbar-thumb"
         [autoHeightDisabled]="true"
       >
-        <ng-content select="[body-content]"></ng-content>
+        <ng-content select="[body-content]"> </ng-content>
       </ng-scrollbar>
     </div>
   `,

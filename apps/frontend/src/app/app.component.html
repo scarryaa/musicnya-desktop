@@ -17,6 +17,7 @@
         (drawerOpened$)="toggleDrawer()"
         [open]="(drawerOpen$ | async)!"
       >
+        <core-spinner *ngIf="spinner.show$ | async"> </core-spinner>
         <router-outlet></router-outlet>
       </musicnya-drawer>
       <musicnya-footer></musicnya-footer>

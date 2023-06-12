@@ -882,10 +882,7 @@ export const getRecommendationsAndRecentlyPlayed$ = createEffect(
       ofType(MusicAPIActions.getRecommendationsAndRecentlyPlayed),
       tap(() => store.dispatch(SpinnerActions.showSpinner())),
       // dispatch getRecommendations and getRecentlyPlayed actions
-      mergeMap(() => [
-        MusicAPIActions.getRecentlyPlayed(),
-        MusicAPIActions.getRecommendations(),
-      ]),
+      mergeMap(() => [MusicAPIActions.getRecommendations()]),
       tap(() => store.dispatch(SpinnerActions.hideSpinner())),
       catchError((error) =>
         of(
@@ -993,39 +990,44 @@ export const getRecommendations$ = createEffect(
     actions$.pipe(
       ofType(MusicAPIActions.getRecommendations),
       // Check if recommendations are already in store
+      tap(() => store.dispatch(SpinnerActions.showSpinner())),
       withLatestFrom(store.select(selectAllPersonalRecommendations)),
-      switchMap(([, recommendationsStoreData]) =>
-        recommendationsStoreData.length > 0
-          ? of(
-              MusicAPIActions.getRecommendationsSuccess({
-                payload: { data: recommendationsStoreData },
-              })
-            )
-          : from(musickit.getRecommendations()).pipe(
-              // Convert images to webp
-              map(async (recommendations) => {
-                for (const recommendation of recommendations) {
-                  for (const resource of recommendation.relationships?.contents
-                    ?.data ?? []) {
-                    if (resource.attributes?.['artwork']?.url) {
-                      resource.attributes['artwork'].url = transformArtworkUrl(
-                        resource.attributes?.['artwork']?.url,
-                        400
-                      );
-                    }
+      switchMap(([, recommendationsStoreData]) => {
+        if (recommendationsStoreData.length > 0) {
+          store.dispatch(SpinnerActions.hideSpinner());
+          return of(
+            MusicAPIActions.getRecommendationsSuccess({
+              payload: { data: recommendationsStoreData },
+            })
+          );
+        } else {
+          return from(musickit.getRecommendations()).pipe(
+            // Convert images to webp
+            map(async (recommendations) => {
+              for (const recommendation of recommendations) {
+                for (const resource of recommendation.relationships?.contents
+                  ?.data ?? []) {
+                  if (resource.attributes?.['artwork']?.url) {
+                    resource.attributes['artwork'].url = transformArtworkUrl(
+                      resource.attributes?.['artwork']?.url,
+                      400
+                    );
                   }
                 }
-                return recommendations;
-              }),
-              //map promise to observable and emit
-              switchMap((recommendations) => from(recommendations)),
-              map((recommendations) =>
-                MusicAPIActions.getRecommendationsSuccess({
-                  payload: { data: recommendations },
-                })
-              )
+              }
+              return recommendations;
+            }),
+            //map promise to observable and emit
+            switchMap((recommendations) => from(recommendations)),
+            map((recommendations) =>
+              MusicAPIActions.getRecommendationsSuccess({
+                payload: { data: recommendations },
+              })
             )
-      )
+          );
+        }
+      }),
+      tap(() => store.dispatch(SpinnerActions.hideSpinner()))
     ),
   { functional: true }
 );
