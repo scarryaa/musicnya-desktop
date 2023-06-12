@@ -4,7 +4,9 @@
     <ng-container *ngIf="isGlass; else switchBlock">
       <core-glass-tile
         [badge]="item.meta?.reason?.stringForDisplay"
+        (playEmitter)="handlePlayClick(item.type, item.id)"
         [id]="item.id"
+        [type]="item.type"
         [title]="item.attributes?.['name'] || item.attributes?.['plainEditorialNotes']?.name"
         [artist]="item.attributes?.['artistNames'] || item.attributes?.['artistName']"
         [subtitle]="item.attributes?.['plainEditorialNotes']?.short || item.attributes?.['releaseDate']"

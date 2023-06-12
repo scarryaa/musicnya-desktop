@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MediaTileComponent } from '../media-tile/media-tile.component';
 
@@ -15,6 +21,7 @@ import { MediaTileComponent } from '../media-tile/media-tile.component';
         [mediaImage]="image"
         [type]="type"
         [mediaLink]="link"
+        (playEmitter)="playEmitter.emit({ type: type!, id: id! })"
       ></core-media-tile>
       <div class="glass-tile__info">
         <img class="content__blur__image" [src]="image" />
@@ -47,6 +54,10 @@ export class GlassTileComponent {
   @Input() subtitle?: string;
   @Input() image?: string;
   @Input() type?: string;
+  @Input() id?: string;
   @Input() link?: string;
   @Input() titleLink?: string;
+
+  @Output() playEmitter = new EventEmitter<{ type: string; id: string }>();
+  @Output() optionsEmitter = new EventEmitter<string>();
 }
