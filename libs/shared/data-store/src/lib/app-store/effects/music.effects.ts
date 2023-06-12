@@ -292,10 +292,7 @@ export const setVolume$ = createEffect(
     actions$.pipe(
       ofType(MusicActions.setVolume),
       map((action) => music.setVolume(action.payload.volume)),
-      map(() => MusicActions.setVolumeSuccess()),
-      catchError(() => {
-        return of(MusicActions.setVolumeFailure);
-      })
+      map(() => MusicActions.setVolumeSuccess())
     ),
   { functional: true }
 );

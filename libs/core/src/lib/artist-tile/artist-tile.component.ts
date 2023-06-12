@@ -74,6 +74,7 @@ import { PlayButtonComponent } from '../play-button/play-button.component';
           }
 
           .artist-tile-wrapper__image-wrapper__image {
+            aspect-ratio: 1 / 1;
             flex: 1;
             background: var(--backgroundColor, black);
             border-radius: 50%;

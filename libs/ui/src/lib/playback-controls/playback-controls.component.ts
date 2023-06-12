@@ -198,7 +198,7 @@ export class MiscellaneousControlsComponent extends BaseButtonComponent {
 
   handleMute(event: number): void {
     if (this._muted) {
-      this.volumeEmitter.emit(this._savedValue);
+      this.volumeEmitter.emit(this._savedValue / 5);
       this.slider.updateValue(this._savedValue);
       this._muted = false;
       return;
@@ -213,7 +213,7 @@ export class MiscellaneousControlsComponent extends BaseButtonComponent {
   handleSlider(event: number): void {
     this._muted = event === 0;
     this.slider.value = event;
-    this.volumeEmitter.emit(event);
+    this.volumeEmitter.emit(event / 5);
   }
 }
 
