@@ -1,13 +1,16 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
   NgModule,
+  OnDestroy,
   Output,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SliderModule } from '../slider/slider.component';
+import { SliderComponent, SliderModule } from '../slider/slider.component';
 import {
   BaseButtonComponent,
   BaseButtonModule,
@@ -21,10 +24,13 @@ import {
   template: ` <div id="track-wrapper">
       <ui-slider
         #slider
-        [max]="playbackTime?.currentPlaybackDuration || 0"
+        [max]="100"
         [value]="
-          (dragging ? slider.value : playbackTime?.currentPlaybackTime) - 10 ||
-          0
+          dragging
+            ? slider.value
+            : (playbackTime?.currentPlaybackTime /
+                playbackTime.currentPlaybackDuration) *
+                100 || 0
         "
         (value)="playbackTime.currentPlaybackTime = $event || 0"
         (dragging)="handleDrag($event)"
@@ -35,7 +41,9 @@ import {
       <span id="current-time"
         >{{
           dragging
-            ? (slider.value * 1000 | date : 'mm:ss')
+            ? (((slider.value * playbackTime.currentPlaybackDuration) / 100) *
+                1000 -
+                100 | date : 'mm:ss')
             : (playbackTime.currentPlaybackTime * 1000 || 0 | date : 'mm:ss')
         }}
       </span>
@@ -122,12 +130,16 @@ export class PlaybackControlsComponent extends BaseButtonComponent {
   handleDrag(event: number): void {
     this.dragging = true;
     this.dragTime = event;
-    this.dragEmitter.emit(event);
+    this.dragEmitter.emit(
+      (event / 100) * this.playbackTime.currentPlaybackDuration
+    );
   }
 
   handleDragStop(event: number): void {
     this.dragging = false;
-    this.dragStopEmitter.emit(event);
+    this.dragStopEmitter.emit(
+      (event / 100) * this.playbackTime.currentPlaybackDuration
+    );
   }
 }
 
@@ -159,14 +171,16 @@ export class PlaybackControlsComponent extends BaseButtonComponent {
       class="album-tile ui-drawer-item core-base-button-rounded"
       icon="volume_down"
       id="volume-button"
+      (click)="handleMute(slider.value)"
     >
     </core-base-button>
     <div id="volume-track-wrapper">
       <ui-slider
         #slider
-        (input)="volumeEmitter.emit(slider.value)"
+        (input)="handleSlider(slider.value)"
+        [value]="sliderValue"
         [width]="5"
-        [max]="20"
+        [max]="100"
       ></ui-slider>
     </div>
   </div>`,
@@ -174,9 +188,33 @@ export class PlaybackControlsComponent extends BaseButtonComponent {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MiscellaneousControlsComponent extends BaseButtonComponent {
-  @Output() readonly volumeEmitter: EventEmitter<number> =
-    new EventEmitter<number>();
+  _muted = false;
+  _savedValue = 0;
+  sliderValue = 20;
+
+  @Output() volumeEmitter: EventEmitter<number> = new EventEmitter<number>();
+  @ViewChild('slider') slider!: SliderComponent;
   TooltipPosition = TooltipPosition;
+
+  handleMute(event: number): void {
+    if (this._muted) {
+      this.volumeEmitter.emit(this._savedValue);
+      this.slider.updateValue(this._savedValue);
+      this._muted = false;
+      return;
+    } else {
+      this._savedValue = event;
+      this.volumeEmitter.emit(0);
+      this.slider.updateValue(0);
+      this._muted = true;
+    }
+  }
+
+  handleSlider(event: number): void {
+    this._muted = event === 0;
+    this.slider.value = event;
+    this.volumeEmitter.emit(event);
+  }
 }
 
 @NgModule({

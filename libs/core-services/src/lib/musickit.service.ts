@@ -68,8 +68,9 @@ export class Musickit {
     return await this.instance.setQueue({ ...options });
   };
 
-  async setVolume(volume: Readonly<number>) {
-    return (this.instance.volume = volume);
+  setVolume(volume: number) {
+    this.instance.volume = volume;
+    return this.instance.volume;
   }
 
   /**

@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -22,15 +23,16 @@ import { debounceTime, fromEvent, Subscription, tap, throttleTime } from 'rxjs';
 @Component({
   selector: 'ui-slider',
   template: `<input
-    type="range"
-    class="slider"
-    #slider
-    [min]="min"
-    [max]="max"
-    [value]="value"
-    [step]="1"
-    [style.width.rem]="width"
-  />`,
+      type="range"
+      class="slider"
+      #slider
+      [min]="min"
+      [max]="max"
+      [value]="value"
+      [step]="1"
+      [style.width.rem]="width"
+    />
+    <div class="slider-track" [style.width.%]="value"></div>`,
   styleUrls: ['./slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -46,8 +48,14 @@ export class SliderComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Output() dragStop = new EventEmitter<number>();
 
   @HostBinding('style.width.rem') @Input() width!: number;
-
   @ViewChild('slider', { read: ElementRef }) slider!: ElementRef;
+
+  constructor(private changeReference: ChangeDetectorRef) {}
+
+  updateValue(value: number) {
+    this.value = value;
+    this.changeReference.detectChanges();
+  }
 
   ngAfterViewInit() {
     const inputEvents$ = fromEvent(this.slider.nativeElement, 'input');
@@ -59,9 +67,7 @@ export class SliderComponent implements AfterViewInit, OnChanges, OnDestroy {
           tap((event: any) => {
             this.isDragging = true;
             this.value = event.target.value;
-            this.updateGradient();
           }),
-          throttleTime(50),
           tap((event: any) => {
             this.dragging.emit(this.value);
           })
@@ -75,7 +81,6 @@ export class SliderComponent implements AfterViewInit, OnChanges, OnDestroy {
             this.value = event.target.value;
             this.valueChange.emit(this.value);
             this.dragStop.emit(this.value);
-            this.updateGradient();
           })
         )
         .subscribe()
@@ -87,33 +92,10 @@ export class SliderComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['value'] && !this.isDragging && this.slider?.nativeElement) {
+    if (changes['value'] && this.slider?.nativeElement) {
       this.value = changes['value'].currentValue;
       this.valueChange.emit(this.value);
-
-      setTimeout(() => {
-        if (this.slider) this.updateGradient();
-      }, 200);
     }
-  }
-
-  updateGradient() {
-    const slider = this.slider.nativeElement as HTMLInputElement;
-    let percentage =
-      ((Number.parseInt(slider.value, 10) - Number.parseInt(slider.min, 10)) /
-        Number.parseInt(slider.max, 10) -
-        Number.parseInt(slider.min, 10)) *
-      100;
-    if (percentage < 20 && percentage > 0) {
-      percentage += 3;
-    } else if (
-      (percentage > 80 && this.width > 10) ||
-      this.width == undefined
-    ) {
-      percentage -= 1;
-    }
-
-    slider.style.setProperty('--percentage', `${percentage}%`);
   }
 }
 

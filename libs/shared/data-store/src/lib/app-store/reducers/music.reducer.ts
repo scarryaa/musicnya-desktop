@@ -377,8 +377,6 @@ const reducer = createReducer(
 
   on(MusicActions.setVolume, (state, { payload: { volume } }) => ({
     ...state,
-    loaded: false,
-    error: undefined,
     musicPlayer: {
       ...state.musicPlayer,
       currentPlaybackVolume: volume,
@@ -386,8 +384,6 @@ const reducer = createReducer(
   })),
   on(MusicActions.setVolumeSuccess, (state) => ({
     ...state,
-    loaded: true,
-    error: undefined,
   })),
   on(MusicActions.setVolumeFailure, (state, { payload: { error } }) => ({
     ...state,

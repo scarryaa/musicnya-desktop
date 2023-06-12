@@ -28,16 +28,6 @@
     max-width: 20rem;
     width: 30vw;
     outline: none;
-
-    &::before {
-      position: absolute;
-      left: 0;
-      content: '';
-      width: var(--percentage);
-      height: var(--base-height);
-      background-color: currentColor;
-      border-radius: 4px;
-    }
   }
 
   ::-webkit-slider-thumb {
@@ -60,6 +50,16 @@
     height: 0.85rem;
     border-radius: 12px;
     opacity: 0;
+  }
+
+  .slider-track {
+    position: absolute;
+    height: var(--base-height);
+    margin-top: 2px;
+    z-index: -1;
+    width: 100%;
+    background: white;
+    border-radius: 5px;
   }
 
   input.slider,

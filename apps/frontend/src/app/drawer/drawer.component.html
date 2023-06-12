@@ -71,6 +71,7 @@
         <core-base-button
           class="library__add-button"
           uiButton
+          [tabIndex]="open ? 0 : -1"
           icon="add"
           [coreTooltip]="'New Playlist'"
           [showDelay]="200"

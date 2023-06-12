@@ -14,6 +14,7 @@ import {
   withLatestFrom,
   mergeMap,
   map,
+  take,
 } from 'rxjs';
 import { MusicActions } from '../actions';
 import { fromMusic } from '../reducers';
@@ -290,8 +291,8 @@ export const setVolume$ = createEffect(
   (actions$ = inject(Actions), music = inject(Musickit)) =>
     actions$.pipe(
       ofType(MusicActions.setVolume),
-      switchMap((action) => from(music.setVolume(action.payload.volume))),
-      switchMap(() => of(MusicActions.setVolumeSuccess())),
+      map((action) => music.setVolume(action.payload.volume)),
+      map(() => MusicActions.setVolumeSuccess()),
       catchError(() => {
         return of(MusicActions.setVolumeFailure);
       })

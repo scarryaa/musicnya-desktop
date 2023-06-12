@@ -11,14 +11,12 @@ import { MusicState } from './reducers/music.reducer';
   deps: [MusickitBase, Store],
 })
 export class MusicEventListeners implements OnDestroy {
-  store: Store<MusicState>;
   instance!: MusicKit.MusicKitInstance;
   playbackTimeDidChange$!: Observable<any>;
   destroy$: Subject<void> = new Subject();
 
-  constructor(store: Store<MusicState>) {
-    this.store = store;
-  }
+  constructor(private store: Store<MusicState>) {}
+
   addEventListeners() {
     console.log('Adding event listeners');
     this.instance = (window as any).MusicKit;
@@ -62,14 +60,6 @@ export class MusicEventListeners implements OnDestroy {
               songId: this.instance.nowPlayingItem.id,
             },
           })
-        );
-      }
-    });
-
-    this.instance.addEventListener('playbackVolumeDidChange', (event: any) => {
-      if (this.instance.volume !== this.instance.volume) {
-        this.store.dispatch(
-          MusicActions.setVolume({ payload: { volume: this.instance.volume } })
         );
       }
     });

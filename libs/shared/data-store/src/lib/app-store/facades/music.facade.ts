@@ -20,6 +20,9 @@ export class MusicFacade implements OnDestroy {
   readonly volume$ = this.state$.pipe(
     map((state) => state.musicPlayer.playbackVolume)
   );
+  readonly muted$ = this.state$.pipe(
+    map((state) => state.musicPlayer.playbackVolume === 0)
+  );
   readonly paused$ = this.state$.pipe(
     map((state) => state.musicPlayer.isPaused)
   );
@@ -64,7 +67,8 @@ export class MusicFacade implements OnDestroy {
     this.store.dispatch(MusicActions.seekToTime({ payload: { time } }));
   }
 
-  setVolume(volume: Readonly<number>) {
+  setVolume(volume: number) {
+    console.log('setVolume', volume);
     this.store.dispatch(MusicActions.setVolume({ payload: { volume } }));
   }
 
