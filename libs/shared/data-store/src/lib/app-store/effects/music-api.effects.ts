@@ -910,27 +910,30 @@ export const getRadioCategories$ = createEffect(
       tap(() => store.dispatch(SpinnerActions.showSpinner())),
       // Check if radio categories are already in store
       withLatestFrom(store.select(selectAllRadioCategories)),
-      switchMap(([, radioCategoriesStoreData]) =>
-        radioCategoriesStoreData.length > 0
-          ? of(
+      switchMap(([, radioCategoriesStoreData]) => {
+        if (radioCategoriesStoreData.length > 0) {
+          store.dispatch(SpinnerActions.hideSpinner());
+          return of(
+            MusicAPIActions.getRadioCategoriesSuccess({
+              payload: { data: radioCategoriesStoreData },
+            })
+          );
+        } else {
+          return from(musickit.getRadioCategories()).pipe(
+            // Convert images to webp
+            map((radioCategories) => {
+              return transformBrowseCategories(radioCategories);
+            }),
+
+            tap(() => store.dispatch(SpinnerActions.hideSpinner())),
+            map((radioCategories) =>
               MusicAPIActions.getRadioCategoriesSuccess({
-                payload: { data: radioCategoriesStoreData },
+                payload: { data: radioCategories },
               })
             )
-          : from(musickit.getRadioCategories()).pipe(
-              // Convert images to webp
-              map((radioCategories) => {
-                return transformBrowseCategories(radioCategories);
-              }),
-
-              tap(() => store.dispatch(SpinnerActions.hideSpinner())),
-              map((radioCategories) =>
-                MusicAPIActions.getRadioCategoriesSuccess({
-                  payload: { data: radioCategories },
-                })
-              )
-            )
-      )
+          );
+        }
+      })
     ),
   { functional: true }
 );

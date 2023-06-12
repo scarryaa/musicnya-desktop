@@ -21,10 +21,10 @@ import { OptionsButtonComponent } from '../options-button/options-button.compone
     >
       <div class="banner-tile__overlay">
         <core-play-button
-          (playEmitter)="playEmitter.emit($event)"
+          (playEmitter)="playEmitter.emit({ type: type, id })"
         ></core-play-button>
         <core-options-button
-          (optionsEmitter)="optionsEmitter.emit($event)"
+          (optionsEmitter)="optionsEmitter.emit('')"
         ></core-options-button>
       </div>
     </div>
@@ -36,7 +36,9 @@ import { OptionsButtonComponent } from '../options-button/options-button.compone
 })
 export class BannerTileComponent {
   @Input() image?: string;
+  @Input() type!: string;
+  @Input() id!: string;
 
-  @Output() optionsEmitter = new EventEmitter();
-  @Output() playEmitter = new EventEmitter();
+  @Output() playEmitter = new EventEmitter<{ type: string; id: string }>();
+  @Output() optionsEmitter = new EventEmitter<string>();
 }

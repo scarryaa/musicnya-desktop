@@ -38,9 +38,11 @@ export class TileSelectorComponent {
   @Input() isSuperhero = false;
 
   @Output() readonly playEmitter: EventEmitter<{ type: string; id: string }> =
-    new EventEmitter();
+    new EventEmitter<{ type: string; id: string }>();
   @Output() readonly needCuratorEmitter: EventEmitter<string> =
-    new EventEmitter();
+    new EventEmitter<string>();
 
-  @HostBinding('ngIf') ngIf = this.data;
+  handlePlayClick(type: string, id: string) {
+    this.playEmitter.emit({ type, id });
+  }
 }

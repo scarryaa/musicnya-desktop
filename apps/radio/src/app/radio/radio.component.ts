@@ -39,8 +39,6 @@ import { MediaTileListComponent } from '@nyan-inc/ui';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RadioComponent {
-  @Output() needCuratorEmitter = new EventEmitter();
-
   constructor(
     public vm: MusicAPIFacade,
     private music: MusicFacade,

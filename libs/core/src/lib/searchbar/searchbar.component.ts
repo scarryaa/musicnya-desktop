@@ -303,6 +303,7 @@ export class SearchbarComponent implements AfterViewInit, OnDestroy {
 
   handleClick(type: string, id: string) {
     switch (type) {
+      //TODO implement stations and music videos
       case 'songs':
         this.songEmitter.emit(id);
         break;

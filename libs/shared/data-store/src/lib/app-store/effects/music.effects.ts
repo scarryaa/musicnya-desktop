@@ -105,10 +105,7 @@ export const setQueueThenPlay$ = createEffect(
           startPlaying: true,
         } as any),
       ]),
-      switchMap(() => of(MusicActions.setQueueThenPlaySuccess())),
-      catchError(() => {
-        return of(MusicActions.setQueueThenPlayFailure);
-      })
+      switchMap(() => of(MusicActions.setQueueThenPlaySuccess()))
     ),
   { functional: true }
 );

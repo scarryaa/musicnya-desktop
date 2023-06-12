@@ -40,7 +40,7 @@
             [titleHover]="true"
             [subtitleHover]="true"
             [artistID]="item.relationships?.['artists']?.data?.[0]?.id"
-            (playEmitter)="playEmitter.emit({ type: item.type, id: item.id })"
+            (playEmitter)="handlePlayClick(item.type, item.id)"
             (needCuratorEmitter)="needCuratorEmitter.emit(item.id)"
           ></core-media-tile>
         </ng-container>

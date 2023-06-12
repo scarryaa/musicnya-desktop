@@ -11,6 +11,8 @@
       <ng-container [ngSwitch]="item.attributes?.editorialElementKind">
         <ng-container *ngSwitchDefault>
           <core-tile-selector
+            (playEmitter)="play($event.type, $event.id)"
+            (needCuratorEmitter)="handleCurator($event)"
             *ngIf="item.relationships?.['contents']?.data"
             [data]="item.relationships?.['contents']?.data"
             [title]="item.attributes?.['name'] || 'Unknown Category'"
@@ -57,6 +59,8 @@
                 <core-tile-selector
                   [data]="item.relationships?.['contents']?.data"
                   [title]="item.attributes?.['name'] || 'Unknown Category'"
+                  (playEmitter)="play($event.type, $event.id)"
+                  (needCuratorEmitter)="handleCurator($event)"
                 ></core-tile-selector>
               </div>
               <div *ngSwitchCase="'339'">
@@ -64,6 +68,8 @@
                 <core-tile-selector
                   [data]="item.relationships?.['contents']?.data"
                   [title]="item.attributes?.['name'] || 'Unknown Category'"
+                  (playEmitter)="play($event.type, $event.id)"
+                  (needCuratorEmitter)="handleCurator($event)"
                 ></core-tile-selector>
               </div>
             </ng-container>

@@ -10,6 +10,12 @@ export const processMediaType = (
     case 'albums': {
       return 'album';
     }
+    case 'library-albums': {
+      return 'album';
+    }
+    case 'library-artists': {
+      return 'artist';
+    }
     case 'artists': {
       return 'artist';
     }
