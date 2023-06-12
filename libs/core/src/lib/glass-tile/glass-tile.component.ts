@@ -20,7 +20,7 @@ import { MediaTileComponent } from '../media-tile/media-tile.component';
         [mediaSubtitle]="artist"
         [mediaImage]="image"
         [type]="type"
-        [mediaLink]="link"
+        [mediaLink]="type !== 'stations' ? link : undefined"
         (playEmitter)="playEmitter.emit({ type: type!, id: id! })"
       ></core-media-tile>
       <div class="glass-tile__info">

@@ -33,6 +33,10 @@
     aspect-ratio: auto 1/1;
 
     ::ng-deep {
+      core-media-tile img {
+        max-width: 400px !important;
+      }
+
       .media-tile,
       .media-tile__image-wrapper__image,
       .media-tile__image-overlay {
@@ -54,6 +58,7 @@
 
     .glass-tile__info {
       max-height: 68px;
+      max-width: 400px;
       overflow: hidden;
       border-bottom-left-radius: 8px;
       border-bottom-right-radius: 8px;

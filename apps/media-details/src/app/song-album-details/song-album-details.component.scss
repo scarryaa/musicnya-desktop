@@ -106,7 +106,8 @@
       }
 
       button {
-        color: var(--background-300);
+        color: #bdbdbd !important;
+        mix-blend-mode: luminosity;
         width: 6rem;
         font-size: var(--font-size-xl);
         font-weight: var(--font-weight-thin);

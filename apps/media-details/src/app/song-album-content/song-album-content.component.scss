@@ -29,7 +29,7 @@
     }
 
     .info-border {
-      border-bottom: 1px solid var(--background-300);
+      border-bottom: 1px solid black;
       position: absolute;
       top: 17.85rem;
       left: calc(50% - 11.5rem);
@@ -51,7 +51,7 @@
       clip: auto;
 
       .dropdown-content {
-        background: var(--background-300);
+        background: rgb(40, 40, 40);
         color: var(--text-inverse);
         max-width: 100%;
         min-height: 0;
@@ -70,7 +70,7 @@
     i {
       z-index: 2;
       transition: transform 0.3s ease;
-      color: white;
+      color: #8a8a8a !important;
       position: absolute;
       top: 12.3rem;
       left: 50%;
@@ -95,9 +95,9 @@
   }
 
   #media-songs-genre-description {
-    color: var(--font-color-black);
+    color: var(--text-inverse);
     font-weight: var(--font-weight-bold);
-    background-color: var(--background-300);
+    background: rgb(40, 40, 40);
 
     #genres {
       padding: 0;
@@ -106,7 +106,7 @@
 
     #songs-count {
       font-weight: var(--font-weight-bold);
-      color: var(--font-color-black);
+      color: var(--text-inverse);
     }
 
     #recordLabel,

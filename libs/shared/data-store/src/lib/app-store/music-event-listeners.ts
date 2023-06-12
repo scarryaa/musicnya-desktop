@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MusickitBase } from '@nyan-inc/core-services';
 import { MusicKit } from '@nyan-inc/shared-types';
-import { Observable, throttleTime } from 'rxjs';
+import { Observable, Subject, takeUntil, throttleTime } from 'rxjs';
 import { MusicActions } from './actions';
 import { MusicState } from './reducers/music.reducer';
 
@@ -10,15 +10,15 @@ import { MusicState } from './reducers/music.reducer';
   providedIn: 'root',
   deps: [MusickitBase, Store],
 })
-export class MusicEventListeners {
+export class MusicEventListeners implements OnDestroy {
   store: Store<MusicState>;
   instance!: MusicKit.MusicKitInstance;
   playbackTimeDidChange$!: Observable<any>;
+  destroy$: Subject<void> = new Subject();
 
   constructor(store: Store<MusicState>) {
     this.store = store;
   }
-
   addEventListeners() {
     console.log('Adding event listeners');
     this.instance = (window as any).MusicKit;
@@ -26,7 +26,7 @@ export class MusicEventListeners {
       this.instance
     );
     this.playbackTimeDidChange$
-      .pipe(throttleTime(100))
+      .pipe(throttleTime(100), takeUntil(this.destroy$))
       .subscribe((event: any) => {
         this.store.dispatch(
           MusicActions.setPlaybackTime({ payload: { time: event } })
@@ -127,6 +127,11 @@ export class MusicEventListeners {
     // instance.addEventListener('authorizationStatusDidChange', (event: Event) => {
     //   store.dispatch(MusicActions.setAuthorized({ payload: event }));
     // });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

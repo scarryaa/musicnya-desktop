@@ -3,7 +3,6 @@
 }
 
 :host {
-  padding-inline: 0.5rem;
   padding-top: 4rem;
   padding-bottom: 3rem;
   display: grid !important;
@@ -16,13 +15,12 @@
 
   .banner-tiles__heading {
     margin-bottom: 1rem;
-    margin-left: 0.5rem;
+    margin-left: 1rem;
     display: block;
   }
 
   .banner-tiles {
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
+    padding-inline: 1rem;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -43,7 +41,7 @@
   }
 
   .hero-banner-tiles {
-    padding-left: 0.5rem;
+    padding-left: 1rem;
     display: flex;
     position: relative;
     overflow-x: scroll;
@@ -63,6 +61,6 @@
   }
 
   .link-tiles {
-    margin-left: 0.5rem;
+    margin-left: 1rem;
   }
 }
