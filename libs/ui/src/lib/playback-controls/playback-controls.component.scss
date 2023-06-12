@@ -75,7 +75,7 @@
 
       :not(:active):not(:hover):not(:focus-visible) {
         i {
-          color: var(--font-color-faded3);
+          color: var(--text-500);
         }
       }
     }
@@ -83,7 +83,7 @@
     #play-button {
       button {
         i:not(:active) {
-          color: var(--font-color);
+          color: var(--text);
         }
       }
     }
@@ -101,7 +101,7 @@
       #queue-button {
         :not(:active):not(:hover):not(:focus-visible) {
           i {
-            color: var(--font-color-faded3);
+            color: var(--text-600);
           }
         }
 

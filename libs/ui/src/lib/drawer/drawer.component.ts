@@ -154,9 +154,7 @@ export class DrawerComponent implements OnDestroy, AfterContentInit {
               item.setStyle(
                 '#baseButton button:hover img',
                 'outline',
-                this.collapsed
-                  ? '4px solid var(--drawer-highlight-color'
-                  : 'none'
+                this.collapsed ? '4px solid var(--text-100)' : 'none'
               );
               setTimeout(() =>
                 item.setStyle(

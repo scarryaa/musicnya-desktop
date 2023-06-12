@@ -70,7 +70,7 @@ table {
   th {
     text-align: left;
     padding-bottom: 0.4rem;
-    color: var(--table-header-color);
+    color: var(--text);
     font-weight: var(--font-weight-bold) !important;
     border-bottom: 1px solid rgba(0, 0, 0, 0.25);
 
@@ -151,7 +151,7 @@ table {
       }
 
       #artists {
-        color: rgb(200, 200, 200);
+        color: var(--text-500);
       }
 
       div#album-info {
@@ -170,7 +170,7 @@ table {
 
   &#album-table-header,
   .album-content {
-    color: rgb(200, 200, 200);
+    color: var(--text-500);
     width: 25%;
     max-width: 160px;
     white-space: nowrap;
@@ -196,7 +196,7 @@ table {
 
   #duration-table-header,
   .duration-content {
-    color: rgb(200, 200, 200);
+    color: var(--text-500);
     padding-left: 1.5rem;
     padding-right: 3rem;
     width: 10%;
@@ -367,15 +367,15 @@ table {
 
 .font-color {
   #title {
-    color: var(--text-inverse) !important;
+    color: var(--text) !important;
   }
 }
 
 .font-faded-color {
-  color: rgb(200, 200, 200) !important;
+  color: var(--text-500) !important;
 
   div {
-    color: rgb(200, 200, 200) !important;
+    color: var(--text-500) !important;
   }
 }
 

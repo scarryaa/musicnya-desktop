@@ -64,13 +64,13 @@
 
     &:hover {
       i {
-        color: var(--font-color-faded);
+        color: var(--text-300);
       }
     }
 
     &:active {
       i {
-        color: var(--font-color-active);
+        color: var(--text-500);
       }
     }
   }
@@ -86,7 +86,7 @@
 
     svg {
       path {
-        fill: var(--font-color-faded3);
+        fill: var(--text-500);
       }
     }
 
@@ -95,7 +95,7 @@
 
       svg {
         path {
-          fill: var(--font-color-faded);
+          fill: var(--text-300);
         }
       }
     }
@@ -105,7 +105,7 @@
 
       svg {
         path {
-          fill: var(--font-color-active);
+          fill: var(--text-500);
         }
       }
     }

@@ -10,7 +10,7 @@
 
   .seperator {
     font-size: var(--font-size-l) !important;
-    color: var(--text-inverse-500);
+    color: var(--text-500);
   }
 
   ui-album-tile-large {
@@ -48,16 +48,16 @@
         line-clamp: 2;
         -webkit-line-clamp: 2;
         overflow: hidden;
-        color: var(--text-inverse);
+        color: var(--text);
         filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.2));
       }
 
       #media-artist-year {
         margin-top: 0.3rem;
-        color: var(--text-inverse);
+        color: var(--text);
 
         #year {
-          color: var(--text-inverse-400);
+          color: var(--text-500);
         }
       }
     }

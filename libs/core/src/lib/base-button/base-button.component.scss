@@ -22,7 +22,23 @@
     &:focus-visible:not(:disabled) {
       i,
       span {
-        color: var(--font-color-hover);
+        color: var(--text-100);
+      }
+    }
+
+    &:enabled {
+      &:hover {
+        i,
+        span {
+          color: var(--text-100);
+        }
+      }
+    }
+
+    &:focus-visible {
+      i,
+      span {
+        color: var(--text-100);
       }
     }
 
@@ -30,14 +46,14 @@
       &:active {
         i,
         span {
-          color: var(--font-color-active);
+          color: var(--text-800);
         }
       }
     }
 
     span,
     i {
-      color: var(--drawer-font-color);
+      color: var(--text-600);
     }
   }
 
@@ -70,7 +86,7 @@
 
     i,
     span {
-      color: var(--font-color-faded);
+      color: var(--text-300);
     }
   }
 

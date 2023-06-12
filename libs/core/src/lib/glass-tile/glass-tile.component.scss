@@ -92,7 +92,7 @@
         font-size: var(--font-size-sm);
         margin-top: 0.5rem;
         display: block;
-        color: var(--text-inverse);
+        color: var(--text);
         filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.25));
         white-space: pre-wrap;
         text-decoration: none;
@@ -101,7 +101,7 @@
 
       .content__blur__artist-subtitle {
         margin-top: 0.5rem;
-        color: var(--text-inverse);
+        color: var(--text);
         filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.25));
         white-space: pre-wrap;
         display: -webkit-box;
@@ -113,7 +113,7 @@
         .content__blur__artist-subtitle__artist {
           margin-top: 0.5rem;
           display: block;
-          color: var(--text-inverse);
+          color: var(--text);
           filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.25));
           white-space: pre-wrap;
         }
@@ -121,7 +121,7 @@
         .content__blur__artist-subtitle__subtitle {
           margin-top: 0.5rem;
           display: block;
-          color: var(--text-inverse);
+          color: var(--text);
           filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.25));
           white-space: pre-wrap;
         }

@@ -28,7 +28,7 @@
     &:focus:not(:disabled) {
       i,
       span:not(#artists) {
-        color: var(--font-color-hover);
+        color: var(--text-100);
       }
     }
 
@@ -36,14 +36,14 @@
       &:active {
         i,
         span:not(#artists) {
-          color: var(--font-color-active);
+          color: var(--text-500);
         }
       }
     }
 
     span:not(#artists),
     i {
-      color: var(--drawer-font-color);
+      color: var(--text-300);
     }
   }
 
@@ -66,10 +66,10 @@
     border-radius: 50%;
     padding: 0.4rem;
     font-size: var(--font-size-3xl);
-    color: var(--font-color-faded);
+    color: var(--text-300);
 
     &:hover {
-      color: var(--font-color);
+      color: var(--text);
     }
   }
 
@@ -103,7 +103,7 @@
 
     i {
       align-self: center;
-      color: var(--font-color);
+      color: var(--text);
       font-size: var(--font-size-6xl);
     }
   }
@@ -119,7 +119,7 @@
     position: absolute;
     top: 6rem;
     left: 6rem;
-    background-color: var(--secondary, var(--theme-contrast-color));
+    background-color: var(--secondary, var(--inverse));
     border-radius: 48px;
     z-index: 999;
     width: 3.5rem;
@@ -128,7 +128,7 @@
     border: 2px solid transparent;
 
     i {
-      color: var(--background-color);
+      color: var(--background);
       font-size: var(--font-size-6hxl);
       align-self: center;
       padding-left: 0.4rem;
@@ -148,7 +148,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    color: var(--font-color);
+    color: var(--text);
     line-height: 1.5 !important;
   }
 
@@ -186,7 +186,7 @@
 
     #title-large {
       font-size: var(--font-size-hxl);
-      color: var(--font-color);
+      color: var(--text);
       margin-top: 0.5rem;
     }
 

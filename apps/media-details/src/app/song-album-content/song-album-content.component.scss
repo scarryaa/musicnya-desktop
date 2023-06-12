@@ -52,7 +52,7 @@
 
       .dropdown-content {
         background: rgb(40, 40, 40);
-        color: var(--text-inverse);
+        color: var(--text);
         max-width: 100%;
         min-height: 0;
         padding-inline: 3rem;
@@ -95,7 +95,7 @@
   }
 
   #media-songs-genre-description {
-    color: var(--text-inverse);
+    color: var(--text);
     font-weight: var(--font-weight-bold);
     background: rgb(40, 40, 40);
 
@@ -106,7 +106,7 @@
 
     #songs-count {
       font-weight: var(--font-weight-bold);
-      color: var(--text-inverse);
+      color: var(--text);
     }
 
     #recordLabel,

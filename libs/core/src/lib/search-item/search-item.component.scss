@@ -40,13 +40,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: var(--text-inverse);
+    color: var(--text);
   }
 
   .search-item__subtitle {
     font-size: var(--font-size-sm);
     color: #777;
-    color: var(--text-inverse-500);
+    color: var(--text-500);
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;

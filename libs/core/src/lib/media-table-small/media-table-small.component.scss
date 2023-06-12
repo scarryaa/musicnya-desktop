@@ -5,7 +5,7 @@
 table {
   --drop-shadow: drop-shadow(0 0 2px oklch(0% 0 0 / 20%));
   table-layout: fixed;
-  color: var(--table-text-color);
+  color: var(--text);
   border-collapse: separate;
   border-spacing: 0 0rem;
   padding-inline: 1rem;
@@ -92,7 +92,7 @@ table {
       }
 
       #artists {
-        color: var(--table-faded-text-color) !important;
+        color: var(text-500) !important;
       }
 
       div#album-info {
@@ -111,7 +111,7 @@ table {
 
   &#album-table-header,
   .album-content {
-    color: var(--table-faded-text-color);
+    color: var(--text-500);
     width: 25%;
     max-width: 160px;
     white-space: nowrap;
@@ -137,7 +137,7 @@ table {
 
   #duration-table-header,
   .duration-content {
-    color: var(--table-faded-text-color);
+    color: var(--text-500);
     padding-left: 1.5rem;
     padding-right: 3rem;
     width: 10%;

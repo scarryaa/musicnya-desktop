@@ -121,16 +121,28 @@
   --secondary-800: #9b2c2c;
   --secondary-900: #742a2a;
 
-  --background: #ffffff;
-  --background-100: #ffffff;
-  --background-200: #edf2f7;
-  --background-300: #e2e8f0;
-  --background-400: #cbd5e0;
-  --background-500: #a0aec0;
-  --background-600: #718096;
-  --background-700: #4a5568;
-  --background-800: #2d3748;
-  --background-900: #1a202c;
+  --ui-background: #000000;
+  --background: rgb(20, 20, 20);
+  --background-100: rgb(40, 40, 40);
+  --background-200: rgb(60, 60, 60);
+  --background-300: rgb(80, 80, 80);
+  --background-400: rgb(100, 100, 100);
+  --background-500: rgb(120, 120, 120);
+  --background-600: rgb(140, 140, 140);
+  --background-700: rgb(160, 160, 160);
+  --background-800: rgb(180, 180, 180);
+  --background-900: rgb(200, 200, 200);
+
+  --inverse: #ffffff;
+  --inverse-100: #edf2f7;
+  --inverse-200: #eeeeee;
+  --inverse-300: #e0e0e0;
+  --inverse-400: #c4c4c4;
+  --inverse-500: #949494;
+  --inverse-600: #696969;
+  --inverse-700: #4b4b4b;
+  --inverse-800: #2d2d2d;
+  --inverse-900: #171717;
 
   --border: #cbd5e0;
   --border-100: #cbd5e0;
@@ -138,29 +150,94 @@
   --border-300: #718096;
   --border-400: #4a5568;
   --border-500: #2d3748;
+  --border-600: #1a202c;
+  --border-700: #171923;
+  --border-800: #0f131a;
+  --border-900: #000000;
 
+  --text: #ffffff;
+  --text-100: #ffffff;
+  --text-200: #edf2f7;
+  --text-300: #eeeeee;
+  --text-400: #e0e0e0;
+  --text-500: #c4c4c4;
+  --text-600: #949494;
+  --text-700: #696969;
+  --text-800: #4b4b4b;
+  --text-900: #1a202c;
+
+  --hover: rgba(255, 255, 255, 0.1);
+  --hover-100: rgba(255, 255, 255, 0.2);
+  --hover-200: rgba(255, 255, 255, 0.3);
+  --hover-300: rgba(255, 255, 255, 0.4);
+
+  --hover-inverse: rgba(0, 0, 0, 0.1);
+  --hover-inverse-100: rgba(0, 0, 0, 0.2);
+  --hover-inverse-200: rgba(0, 0, 0, 0.3);
+  --hover-inverse-300: rgba(0, 0, 0, 0.4);
+
+  --active: rgba(255, 255, 255, 0.05);
+  --active-inverse: rgba(255, 255, 255, 0.1);
+}
+
+@mixin lighten() {
   --text: #000;
-  --text-100: #2d3748;
-  --text-200: #4a5568;
-  --text-300: #718096;
-  --text-400: #a0aec0;
-  --text-500: #cbd5e0;
-  --text-600: #e2e8f0;
-  --text-700: #edf2f7;
-  --text-800: #ffffff;
+  --text-100: #1a202c;
+  --text-200: #4b4b4b;
+  --text-300: #696969;
+  --text-400: #949494;
+  --text-500: #c4c4c4;
+  --text-600: #e0e0e0;
+  --text-700: #eeeeee;
+  --text-800: #edf2f7;
   --text-900: #ffffff;
 
-  --text-inverse: #ffffff;
-  --text-inverse-100: #ffffff;
-  --text-inverse-200: #edf2f7;
-  --text-inverse-300: #e2e8f0;
-  --text-inverse-400: #cbd5e0;
-  --text-inverse-500: #a0aec0;
-  --text-inverse-600: #718096;
-  --text-inverse-700: #4a5568;
-  --text-inverse-800: #2d3748;
-  --text-inverse-900: #1a202c;
+  --border: #000000;
+  --border-100: #0f131a;
+  --border-200: #171923;
+  --border-300: #1a202c;
+  --border-400: #2d3748;
+  --border-500: #4a5568;
+  --border-600: #718096;
+  --border-700: #a0aec0;
+  --border-800: #cbd5e0;
+  --border-900: #ffffff;
 
-  --text-muted: #718096;
-  --text-inverse-muted: #d5d8db;
+  --inverse: #000000;
+  --inverse-100: #171717;
+  --inverse-200: #2d2d2d;
+  --inverse-300: #4b4b4b;
+  --inverse-400: #696969;
+  --inverse-500: #949494;
+  --inverse-600: #c4c4c4;
+  --inverse-700: #e0e0e0;
+  --inverse-800: #eeeeee;
+  --inverse-900: #ffffff;
+
+  --hover: rgba(0, 0, 0, 0.1);
+  --hover-100: rgba(0, 0, 0, 0.2);
+  --hover-200: rgba(0, 0, 0, 0.3);
+  --hover-300: rgba(0, 0, 0, 0.4);
+
+  --hover-inverse: rgba(255, 255, 255, 0.1);
+  --hover-inverse-100: rgba(255, 255, 255, 0.2);
+  --hover-inverse-200: rgba(255, 255, 255, 0.3);
+  --hover-inverse-300: rgba(255, 255, 255, 0.4);
+
+  --active: rgba(255, 255, 255, 0.1);
+  --active-inverse: rgba(0, 0, 0, 0.1);
+
+  color-scheme: light;
+
+  --ui-background: rgb(245, 245, 245);
+  --background: rgb(240, 240, 240);
+  --background-100: rgb(220, 220, 220);
+  --background-200: rgb(200, 200, 200);
+  --background-300: rgb(180, 180, 180);
+  --background-400: rgb(160, 160, 160);
+  --background-500: rgb(140, 140, 140);
+  --background-600: rgb(120, 120, 120);
+  --background-700: rgb(100, 100, 100);
+  --background-800: rgb(80, 80, 80);
+  --background-900: rgb(60, 60, 60);
 }

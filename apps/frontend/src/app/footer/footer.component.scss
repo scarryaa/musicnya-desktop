@@ -1,8 +1,45 @@
+:root {
+  --button-color: var(--text);
+}
+
 :host {
   z-index: 99 !important;
 
   ::ng-deep {
-    color: var(--font-color);
+    color: var(--text) !important;
+
+    ui-drawer-item {
+      i,
+      span {
+        color: var(--text) !important;
+      }
+
+      .button:not(.ui-button-no-hover) span,
+      .button:not(.ui-button-no-hover) i {
+        color: var(--text) !important;
+      }
+
+      &:hover {
+        i,
+        span {
+          color: var(--text-100) !important;
+        }
+      }
+
+      &:focus-visible {
+        i,
+        span {
+          color: var(--text-100) !important;
+        }
+      }
+
+      &:active {
+        i,
+        span {
+          color: var(--text-600) !important;
+        }
+      }
+    }
   }
 
   ::ng-deep {

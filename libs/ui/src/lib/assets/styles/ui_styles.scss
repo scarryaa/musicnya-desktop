@@ -35,78 +35,15 @@
   --letter-spacing-n6xl: -0.05rem;
   --letter-spacing-n7xl: -0.06rem;
   --letter-spacing-n8xl: -0.07rem;
-
-  --font-color-white: oklch(100% 0 0);
-  --font-color-white-faded: oklch(70% 0 0);
-  --font-color-white-faded2: oklch(60% 0 0);
-  --font-color-white-faded3: oklch(50% 0 0);
-
-  --font-color-black: oklch(0% 0 0);
-  --font-color-black-faded: oklch(20% 0 0);
-  --font-color-black-faded2: oklch(40% 0 0);
-  --font-color-black-faded3: oklch(60% 0 0);
-
-  --nav-button-hover: oklch(0% 0 0 / 60%);
-  --nav-button-active: oklch(0% 0 0 / 30%);
-
-  --table-text-color: oklch(0% 0 0);
-  --table-faded-text-color: oklch(30.5% 0 0);
-  --table-header-color: oklch(100% 0 0);
 }
 
-@mixin lighten() {
-  --theme-color: white;
-  --background-color: oklch(100% 0 0);
-  --button-active-color: oklch(0% 0 0 / 50%);
-  --drawer-highlight-color: oklch(0% 0 0 / 10%);
-  --drawer-active-color: oklch(0% 0 0 / 20%);
-  --font-color-inverse: oklch(100% 0 0);
-  --font-color: oklch(0% 0 0);
-  --font-color-slightly-faded: oklch(10% 0 0);
-  --font-color-faded: oklch(30% 0 0);
-  --font-color-faded2: oklch(50% 0 0);
-  --font-color-faded3: oklch(70% 0 0);
-  --theme-contrast-color: oklch(0% 0 0);
-  --menu-background-color: var(--font-color-faded);
-  --menu-highlight-color: var(--font-color);
-  --drawer-background-color: oklch(98% 0 0);
-  --ui-background-color: var(--accent, oklch(85% 0 0));
-  --drawer-font-color: var(--font-color);
-  --font-color-hover: var(--font-color-faded);
-  --font-color-active: var(--font-color-faded2);
-  color-scheme: light;
-}
+// body.dark {
+//   @include darken();
+// }
 
-@mixin darken() {
-  --theme-color: black;
-  --background-color: oklch(20.02% 0 0);
-  --button-active-color: oklch(100% 0 0 / 20%);
-  --drawer-highlight-color: oklch(100% 0 0 / 10%);
-  --drawer-active-color: oklch(15% 0 0 / 100%);
-  --font-color-inverse: oklch(0% 0 0);
-  --font-color: oklch(100% 0 0);
-  --font-color-slightly-faded: oklch(90% 0 0);
-  --font-color-faded: oklch(70% 0 0);
-  --font-color-faded2: oklch(60% 0 0);
-  --font-color-faded3: oklch(50% 0 0);
-  --theme-contrast-color: oklch(100% 0 0);
-  --menu-background-color: var(--font-color-faded);
-  --menu-highlight-color: var(--font-color);
-  --drawer-background-color: oklch(16% 0 0);
-  --ui-background-color: var(--accent, oklch(0% 0 0));
-  --drawer-font-color: var(--font-color-faded);
-  --font-color-hover: var(--font-color);
-  --font-color-active: var(--font-color-faded2);
-  color-scheme: dark;
-}
-
-body.dark {
-  @include darken();
-}
-
-body.light {
-  @include lighten();
-}
+// body.light {
+//   @include lighten();
+// }
 
 :host {
   position: relative;
@@ -194,7 +131,7 @@ body.light {
 }
 
 *:focus-visible {
-  outline: 2px solid var(--theme-contrast-color);
+  outline: 2px solid var(--inverse);
 }
 
 .outline-offset-small {
@@ -215,10 +152,6 @@ span,
   font-size: var(--font-size-base);
   font-family: 'Haskoy';
   transition: opacity 0.15s linear;
-}
-
-.button-active {
-  background-color: var(--button-active-color);
 }
 
 //button
@@ -280,93 +213,6 @@ span,
   &:active {
     i {
       color: var(--font-color-white-faded);
-    }
-  }
-}
-
-//accordion
-.p-accordion .p-accordion-content {
-  transition: background-color 0.3s linear, border-color 0.3s linear !important;
-  background: var(--background-color-light) !important;
-}
-
-p-accordion
-  .p-accordion
-  p-accordiontab
-  .p-accordion-tab
-  .p-accordion-header-link {
-  border-top-left-radius: 4px !important;
-  border-top-right-radius: 4px !important;
-  border: 0.15rem solid transparent;
-  outline: none;
-  transition: background-color 0.3s linear !important;
-  background-color: var(--background-color-light);
-}
-
-.p-accordion .p-accordion-header:not(.p-highlight):not(.p-disabled):hover {
-  transition: background-color 0.3s linear, border-color 0.3s linear !important;
-  background: var(--background-color-light) !important;
-}
-
-.p-accordion-header:hover,
-.p-accordion-header:focus {
-  transition: background-color 0.3s linear, border-color 0.3s linear !important;
-  background: var(--background-color-light) !important;
-}
-
-.p-accordion-header.p-highlight {
-  transition: background-color 0.3s linear, border-color 0.3s linear !important;
-  background: var(--background-color-light) !important;
-
-  .p-accordion-header-link {
-    background: var(--background-color-light) !important;
-  }
-}
-
-.p-accordion
-  p-accordiontab:last-child
-  .p-accordion-header:not(.p-highlight)
-  .p-accordion-header-link {
-  background: var(--background-color-light) !important;
-}
-
-.p-accordion-header:not(.p-highlight):not(.p-disabled):hover
-  .p-accordion-header-link {
-  background: var(--background-color-light) !important;
-}
-
-.p-accordion-tab {
-  .p-accordion-header {
-    background: var(--background-color-light) !important;
-    transition: background-color 0.3s linear !important;
-    border-radius: 4px;
-  }
-
-  .p-accordion-header-text {
-    transition: color 0.2s linear, background-color 0.3s linear,
-      border-color 0.3s linear !important;
-    color: var(--text-color);
-  }
-}
-
-.p-accordion-header-link {
-  transition: background 0.3s linear, border-color 0s linear !important;
-}
-
-//input switch
-.accessibility-container:has(p-inputswitch) {
-  p-inputswitch {
-    .p-inputswitch {
-      &:not(.p-inputswitch-checked) {
-        .p-inputswitch-slider {
-          background: var(--theme-contrast-color) !important;
-          opacity: 0.3;
-        }
-      }
-
-      .p-inputswitch-slider {
-        transition: opacity 0s, background-color 0s linear !important;
-      }
     }
   }
 }

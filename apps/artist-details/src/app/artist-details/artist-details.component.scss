@@ -1,10 +1,6 @@
 :host {
   display: block;
-  background: linear-gradient(
-    180deg,
-    var(--color-gray-700) 0%,
-    var(--color-gray-900) 100%
-  );
+  background: linear-gradient(180deg, var(--gray-700) 0%, var(--gray-900) 100%);
 
   .artist-details {
     margin: 0 auto;
@@ -43,7 +39,7 @@
       .artist-details__info__text-wrapper__artist-name {
         font-size: var(--font-size-xxxxxl);
         font-weight: var(--font-weight-bold);
-        color: var(--text-inverse);
+        color: var(--text);
         filter: drop-shadow(0 0 0.75rem rgba(0, 0, 0, 0.5));
       }
 
@@ -138,7 +134,7 @@
       display: block;
       position: relative;
       width: 100%;
-      color: var(--text-inverse);
+      color: var(--text);
     }
 
     .artist-details__content__top-songs__heading,
@@ -155,13 +151,13 @@
       padding-left: 1rem;
       margin-top: 2rem;
       margin-bottom: 0.5rem;
-      color: var(--text-inverse);
+      color: var(--text);
     }
 
     .artist-details__content__top-songs-featured {
       display: flex;
       flex-direction: row;
-      color: var(--text-inverse);
+      color: var(--text);
     }
   }
 

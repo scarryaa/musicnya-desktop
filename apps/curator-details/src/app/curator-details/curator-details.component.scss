@@ -42,7 +42,7 @@
       .curator-details__info__text-wrapper__curator-name {
         font-size: var(--font-size-xxxxxl);
         font-weight: var(--font-weight-bold);
-        color: var(--text-inverse);
+        color: var(--text);
         filter: drop-shadow(0 0 0.75rem rgba(0, 0, 0, 0.5));
       }
 
@@ -144,11 +144,11 @@
       }
 
       .media-tile__title {
-        color: var(--text-inverse) !important;
+        color: var(--text) !important;
       }
 
       #heading-text {
-        color: var(--text-inverse) !important;
+        color: var(--text) !important;
       }
     }
   }

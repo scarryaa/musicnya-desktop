@@ -19,7 +19,7 @@
     content: '\e5cc';
     position: sticky;
     font-family: 'Material Symbols Rounded';
-    color: var(--font-color);
+    color: var(--text);
     font-size: var(--font-size-6xl);
     font-weight: var(--font-weight-bold);
     padding-top: 1rem;
@@ -59,6 +59,6 @@
   border-radius: 0.5rem;
 
   .album-tile {
-    color: var(--font-color);
+    color: var(--text);
   }
 }

@@ -60,13 +60,12 @@
     }
 
     .video-tile__subtitle {
-      color: var(--gray-600) !important;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       line-clamp: 2;
       -webkit-line-clamp: 2;
       overflow: hidden;
-      color: var(--font-color-black-faded3);
+      color: var(--text-500);
       filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.1));
     }
   }
