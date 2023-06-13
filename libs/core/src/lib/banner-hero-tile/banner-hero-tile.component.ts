@@ -25,7 +25,7 @@ import { OptionsButtonComponent } from '../options-button/options-button.compone
       [style.background]="'url(' + image + ') no-repeat center center / cover'"
     >
       <div class="gradient"></div>
-      <div class="overlay">
+      <div class="overlay" (click)="handleClick()">
         <core-play-button
           (playEmitter)="playEmitter.emit({ type: type, id })"
         ></core-play-button>
@@ -50,4 +50,9 @@ export class BannerHeroTileComponent {
 
   @Output() playEmitter = new EventEmitter<{ type: string; id: string }>();
   @Output() optionsEmitter = new EventEmitter<string>();
+  @Output() linkEmitter = new EventEmitter<{ type: string; id: string }>();
+
+  handleClick() {
+    this.linkEmitter.emit({ type: this.type, id: this.id });
+  }
 }

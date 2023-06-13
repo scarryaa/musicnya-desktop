@@ -41,8 +41,15 @@ export class TileSelectorComponent {
     new EventEmitter<{ type: string; id: string }>();
   @Output() readonly needCuratorEmitter: EventEmitter<string> =
     new EventEmitter<string>();
+  @Output() readonly linkEmitter: EventEmitter<{ type: string; id: string }> =
+    new EventEmitter<{ type: string; id: string }>();
 
   handlePlayClick(type: string, id: string) {
     this.playEmitter.emit({ type, id });
+  }
+
+  handleLinkClick(type: string, id: string) {
+    console.log('handleLinkClick', type, id);
+    this.linkEmitter.emit({ type, id });
   }
 }

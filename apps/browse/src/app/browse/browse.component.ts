@@ -57,6 +57,30 @@ export class BrowseComponent {
     this.vm.getCurator(id);
   }
 
+  handleLinkClick(type: string, id: string) {
+    switch (type) {
+      case 'apple-curators': {
+        this.router.navigate(['media/curators/', id]);
+        break;
+      }
+      case 'playlists': {
+        this.router.navigate(['media/playlists/', id]);
+        break;
+      }
+      case 'albums': {
+        this.router.navigate(['media/albums/', id]);
+        break;
+      }
+      case 'editorial-elements': {
+        this.router.navigate(['media/multirooms/', id]);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }
+
   trackBy(index: number, item: any) {
     return item.id;
   }
