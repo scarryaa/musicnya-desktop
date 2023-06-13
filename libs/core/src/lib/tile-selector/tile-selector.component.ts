@@ -36,6 +36,7 @@ export class TileSelectorComponent {
   @Input() title?: string;
   @Input() isGlass = false;
   @Input() isSuperhero = false;
+  @Input() parentId?: string;
 
   @Output() readonly playEmitter: EventEmitter<{ type: string; id: string }> =
     new EventEmitter<{ type: string; id: string }>();

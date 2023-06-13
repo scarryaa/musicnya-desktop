@@ -64,6 +64,8 @@
     "serve": {
       "executor": "@nx/angular:module-federation-dev-server",
       "options": {
+        "hmr": false,
+        "watch": true,
         "port": 4200,
         "publicHost": "http://localhost:4200",
         "proxyConfig": "apps/frontend/proxy.conf.json"

@@ -50,7 +50,7 @@
               <core-banner-tile
                 (playEmitter)="play($event.type, $event.id)"
                 [id]="item.relationships?.contents?.data?.[0]?.id || ''"
-                [type]="item.relationships?.contents?.data?.[0]?.type || ''"
+                [type]="item.relationships?.contents?.data?.[0]?.type || item.type || ''"
                 [image]="item.attributes?.artwork?.url || '' || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork'].subscriptionHero?.url.replace('{w}x{h}', '600x600').replace('{f}', 'webp') || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork'].subscriptionCover?.url.replace('{w}x{h}', '600x600').replace('{f}', 'webp')"
                 >{{ item.relationships?.contents?.data?.[0]?.attributes?.['name'] || item.attributes?.designTag }}</core-banner-tile
               >
@@ -62,6 +62,7 @@
             <ng-container [ngSwitch]="item.attributes?.editorialElementKind">
               <div *ngSwitchCase="'336'">
                 <core-tile-selector
+                  [parentId]="item.id"
                   (playEmitter)="play($event.type, $event.id)"
                   (needCuratorEmitter)="handleCurator($event)"
                   [data]="item.relationships?.['contents']?.data"

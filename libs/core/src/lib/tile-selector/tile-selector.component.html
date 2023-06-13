@@ -18,9 +18,14 @@
     <ng-template #switchBlock>
       <ng-container *ngIf="isSuperhero; else glassTemplate">
         <core-banner-hero-tile
-          [id]="item.type === 'editorial-elements' ? item.attributes?.['url']?.split('/')?.at(-1)?.split('?')?.[0] || item.id : item.id"
-          [type]="item.type"
-          (linkEmitter)="handleLinkClick(item.type, item.id)"
+          [id]="item.id || parentId || 'no id found'"
+          [type]="item.type || 'no type found'"
+          (linkEmitter)="
+            handleLinkClick(
+              item.type || 'no type found',
+              item.id || item.attributes?.['link']?.url.split('/').at(-1) || ''
+            )
+          "
           (playEmitter)="handlePlayClick(item.type, item.id)"
           [title]="item.attributes?.['name'] || item.attributes?.['plainEditorialNotes']?.name"
           [subtitle]="item.attributes?.['plainEditorialNotes']?.short || item.attributes?.['releaseDate']"

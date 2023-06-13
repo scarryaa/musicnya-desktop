@@ -53,6 +53,7 @@ export class BannerHeroTileComponent {
   @Output() linkEmitter = new EventEmitter<{ type: string; id: string }>();
 
   handleClick() {
+    console.log('handleClick', this.type, this.id);
     this.linkEmitter.emit({ type: this.type, id: this.id });
   }
 }

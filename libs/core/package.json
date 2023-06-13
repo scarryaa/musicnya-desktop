@@ -5,6 +5,7 @@
     "@angular/common": "^16.0.0",
     "@angular/core": "^16.0.0"
   },
+  "isModule": true,
   "dependencies": {
     "tslib": "^2.3.0"
   },
