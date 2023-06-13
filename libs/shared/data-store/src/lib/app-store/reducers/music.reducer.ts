@@ -40,8 +40,8 @@ interface MusicPlayerState {
   currentPlaybackDuration: number | undefined;
   currentPlaybackTimeRemaining: number | undefined;
   currentPlaybackTime: number | undefined;
-  currentPlaybackShuffleMode: MusicKit.PlayerShuffleMode | undefined;
-  currentPlaybackRepeatMode: MusicKit.PlayerRepeatMode | undefined;
+  currentPlaybackShuffleMode: MusicKit.PlayerShuffleMode | 0 | 1;
+  currentPlaybackRepeatMode: 'none' | 'one' | 'all';
   currentPlaybackState: MusicKit.PlaybackStates;
   currentPlaybackBufferedProgress: number | undefined;
 }
@@ -82,8 +82,8 @@ export const initialMusicState: MusicState = musicAdapter.getInitialState({
     currentPlaybackDuration: undefined,
     currentPlaybackTimeRemaining: undefined,
     currentPlaybackTime: undefined,
-    currentPlaybackShuffleMode: undefined,
-    currentPlaybackRepeatMode: undefined,
+    currentPlaybackShuffleMode: 0,
+    currentPlaybackRepeatMode: 'none',
     currentPlaybackState: 0,
     currentPlaybackBufferedProgress: undefined,
   },
@@ -366,7 +366,10 @@ const reducer = createReducer(
       ...state,
       loaded: true,
       error: undefined,
-      currentPlaybackShuffleMode: shuffleMode,
+      musicPlayer: {
+        ...state.musicPlayer,
+        currentPlaybackShuffleMode: shuffleMode,
+      },
     })
   ),
   on(MusicActions.setShuffleModeFailure, (state, { payload: { error } }) => ({

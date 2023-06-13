@@ -82,6 +82,14 @@
         span {
           color: var(--text) !important;
         }
+
+        &:hover {
+          color: #b9b9b9 !important;
+        }
+
+        &:active {
+          color: #666666 !important;
+        }
       }
 
       &#play-button {
@@ -126,6 +134,16 @@
 
       .media-action-button {
         color: #7f7f7f !important;
+
+        i {
+          &:hover {
+            color: #b9b9b9 !important;
+          }
+
+          &:active {
+            color: #666666 !important;
+          }
+        }
       }
     }
   }

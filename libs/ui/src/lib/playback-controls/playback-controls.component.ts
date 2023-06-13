@@ -54,11 +54,13 @@ import {
     <div id="controls-wrapper">
       <core-base-button
         #button
-        (click)="shuffleEmitter.emit()"
+        (click)="handleShuffle()"
         [tabIndex]="0"
         class="album-tile ui-drawer-item core-base-button-rounded"
         icon="shuffle"
-        [ngClass]="{ red: shuffleMode === 1 }"
+        [ngClass]="{
+          shuffleOn: shuffleMode === 1,
+        }"
         id="shuffle-button"
       >
       </core-base-button
@@ -97,8 +99,17 @@ import {
         (click)="repeatEmitter.emit()"
         [tabIndex]="0"
         class="album-tile ui-drawer-item core-base-button-rounded"
-        icon="repeat"
-        [ngClass]="{ red: repeatMode === 'all', green: repeatMode === 'one' }"
+        [icon]="
+          repeatMode === 'all'
+            ? 'repeat'
+            : repeatMode === 'one'
+            ? 'repeat_one'
+            : 'repeat'
+        "
+        [ngClass]="{
+          repeatAll: repeatMode === 'all',
+          repeatOne: repeatMode === 'one'
+        }"
         id="repeat-button"
       >
       </core-base-button>
@@ -140,6 +151,11 @@ export class PlaybackControlsComponent extends BaseButtonComponent {
     this.dragStopEmitter.emit(
       (event / 100) * this.playbackTime.currentPlaybackDuration
     );
+  }
+
+  handleShuffle(): void {
+    console.log(this.shuffleMode);
+    this.shuffleEmitter.emit();
   }
 }
 

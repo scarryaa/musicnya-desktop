@@ -993,7 +993,7 @@ export const getRecommendations$ = createEffect(
       tap(() => store.dispatch(SpinnerActions.showSpinner())),
       withLatestFrom(store.select(selectAllPersonalRecommendations)),
       switchMap(([, recommendationsStoreData]) => {
-        if (recommendationsStoreData.length > 0) {
+        if (false) {
           store.dispatch(SpinnerActions.hideSpinner());
           return of(
             MusicAPIActions.getRecommendationsSuccess({

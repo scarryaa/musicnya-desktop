@@ -1,6 +1,24 @@
-.red {
-  i {
-    color: red !important;
+.shuffleOn {
+  ::ng-deep button {
+    i {
+      color: var(--accent, var(--secondary)) !important;
+    }
+  }
+}
+
+.repeatOne {
+  ::ng-deep button {
+    i {
+      color: var(--accent, var(--secondary)) !important;
+    }
+  }
+}
+
+.repeatAll {
+  ::ng-deep button {
+    i {
+      color: var(--accent, var(--secondary)) !important;
+    }
   }
 }
 
@@ -57,6 +75,12 @@
       button {
         border-radius: 12px;
         outline-offset: -0.5rem;
+      }
+
+      :not(:active):not(:hover):not(:focus-visible) {
+        i {
+          color: var(--text-500);
+        }
       }
     }
 

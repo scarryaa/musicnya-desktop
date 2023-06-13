@@ -197,14 +197,6 @@ span,
     }
   }
 
-  &:hover {
-    filter: brightness(120%);
-  }
-
-  &:active {
-    filter: brightness(80%);
-  }
-
   i {
     color: var(--font-color-white);
     font-size: var(--font-size-6hxl);

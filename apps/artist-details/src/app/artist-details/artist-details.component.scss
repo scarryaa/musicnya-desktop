@@ -95,7 +95,7 @@
         padding: 0.5rem 1rem;
         padding-left: 1.5rem;
         border-radius: 4px;
-        background-color: var(--gray-300);
+        background-color: #1a1a1a;
         font-size: var(--font-size-md);
         font-weight: var(--font-weight-bold);
         color: var(--text) !important;
@@ -107,11 +107,11 @@
         }
 
         &:hover {
-          background-color: var(--gray-200);
+          background-color: #313131;
         }
 
         &:active {
-          background-color: var(--gray-300);
+          background-color: #111111;
         }
       }
     }

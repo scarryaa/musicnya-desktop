@@ -134,22 +134,14 @@ export const setShuffleMode$ = createEffect(
   (actions$ = inject(Actions), music = inject(Musickit)) =>
     actions$.pipe(
       ofType(MusicActions.setShuffleMode),
-      tap(() => {
-        if (
-          music.instance.shuffleMode.valueOf() ===
-          MusicKit.PlayerShuffleMode.off
-        ) {
-          (music.instance.shuffleMode as any) =
-            MusicKit.PlayerShuffleMode.songs;
-        } else {
-          (music.instance.shuffleMode as any) = MusicKit.PlayerShuffleMode.off;
-        }
+      map(() => {
+        music.instance.shuffleMode = music.instance.shuffleMode === 0 ? 1 : 0;
       }),
       switchMap(() =>
         of(
           MusicActions.setShuffleModeSuccess({
             payload: {
-              shuffleMode: music.instance.shuffleMode.valueOf() as any,
+              shuffleMode: music.instance.shuffleMode,
             },
           })
         )
@@ -165,20 +157,19 @@ export const setRepeatMode$ = createEffect(
   (actions$ = inject(Actions), music = inject(Musickit)) =>
     actions$.pipe(
       ofType(MusicActions.setRepeatMode),
-      tap(() => {
+      map(() => {
         (music.instance.repeatMode as any) =
-          music.instance.repeatMode.valueOf() === MusicKit.PlayerRepeatMode.none
-            ? MusicKit.PlayerRepeatMode.one
-            : music.instance.repeatMode.valueOf() ===
-              MusicKit.PlayerRepeatMode.one
-            ? MusicKit.PlayerRepeatMode.all
-            : MusicKit.PlayerRepeatMode.none;
+          music.instance.repeatMode === 'none'
+            ? 'one'
+            : music.instance.repeatMode === 'one'
+            ? 'all'
+            : 'none';
       }),
       switchMap(() =>
         of(
           MusicActions.setRepeatModeSuccess({
             payload: {
-              repeatMode: music.instance.repeatMode.valueOf() as any,
+              repeatMode: music.instance.repeatMode,
             },
           })
         )

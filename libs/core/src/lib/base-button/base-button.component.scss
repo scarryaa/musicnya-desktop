@@ -80,19 +80,6 @@
   i {
     padding-right: 0.5rem;
   }
-
-  &:hover {
-    filter: brightness(1.2);
-
-    i,
-    span {
-      color: var(--text-300);
-    }
-  }
-
-  &:active {
-    filter: brightness(0.8);
-  }
 }
 
 .core-base-button-rounded {

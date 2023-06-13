@@ -98,7 +98,7 @@ export const setVolumeFailure = createAction(
 export const setRepeatMode = createAction('[Music] Set Repeat Mode');
 export const setRepeatModeSuccess = createAction(
   '[Music] Set Repeat Mode Success',
-  props<{ payload: { repeatMode: MusicKit.PlayerRepeatMode } }>()
+  props<{ payload: { repeatMode: 'all' | 'one' | 'none' } }>()
 );
 export const setRepeatModeFailure = createAction(
   '[Music] Set Repeat Mode Failure',
@@ -108,7 +108,7 @@ export const setRepeatModeFailure = createAction(
 export const setShuffleMode = createAction('[Music] Set Shuffle Mode');
 export const setShuffleModeSuccess = createAction(
   '[Music] Set Shuffle Mode Success',
-  props<{ payload: { shuffleMode: MusicKit.PlayerShuffleMode } }>()
+  props<{ payload: { shuffleMode: 1 | 0 } }>()
 );
 export const setShuffleModeFailure = createAction(
   '[Music] Set Shuffle Mode Failure',

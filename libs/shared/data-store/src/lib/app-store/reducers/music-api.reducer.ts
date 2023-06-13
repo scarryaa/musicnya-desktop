@@ -256,18 +256,15 @@ const reducer = createReducer(
   // })),
 
   // get media item on route change
-  on(MusicAPIActions.getMediaItemOnRouteChange, (state) => ({ ...state })),
+  on(MusicAPIActions.getMediaItemOnRouteChange, (state) => ({
+    ...state,
+    loaded: false,
+  })),
   on(
     MusicAPIActions.getMediaItemOnRouteChangeSuccess,
     (state, { payload }) => ({
       ...state,
-      // add to cache
-      // songs: songsAdapter.setOne(payload.data, state.songs),
-      // albums: albumsAdapter.setOne(payload.data, state.albums),
-      // artists: artistsAdapter.setOne(
-      //   payload.data,
-      //   state.artists
-      // ),
+      loaded: true,
     })
   ),
   on(
