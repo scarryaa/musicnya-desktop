@@ -1123,7 +1123,7 @@ export const setCurrentMedia$ = createEffect(
         }
         const ids = data.map(
           (song: MusicKit.Songs | MusicKit.Resource) =>
-            song.id || song.relationships?.catalog?.data?.[0].id
+            song.relationships?.catalog?.data?.[0].id || song.id
         );
 
         // TODO implement a better solution
@@ -1131,7 +1131,9 @@ export const setCurrentMedia$ = createEffect(
           store.dispatch(
             MusicAPIActions.getItemLikes({
               payload: {
-                type: data[0].type,
+                type:
+                  data[0].relationships?.catalog?.data?.[0].type ||
+                  data[0].type,
                 ids: ids,
               },
             })
@@ -1254,7 +1256,6 @@ export const unloveMediaItem$ = createEffect(
     ),
   { functional: true }
 );
-
 
 // Love media item
 export const loveMediaItem$ = createEffect(
