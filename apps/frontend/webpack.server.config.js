@@ -31,5 +31,6 @@ module.exports = withModuleFederationForSSR(config, {
       strictVersion: false,
       requiredVersion: 'auto',
       eager: true,
+    },
   },
 });

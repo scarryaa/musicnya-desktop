@@ -64,7 +64,7 @@
       <ui-virtual-table
         [media]="media?.type!"
         [data]="media?.songs || media?.relationships?.tracks?.data"
-        [ratings]="vm.getRatings$ | async"
+        [ratings]="(vm.getRatings$ | async) ?? []"
         [playingSong]="(music.currentItem$ | async)?.id"
         [playing]="(music.playing$ | async)!"
         [routeChanges]="routeChangeEmitter"
@@ -73,7 +73,7 @@
         (indexEmitter)="
           music.setQueueAndPlayAtIndex(media?.type!, media?.id!, $event)
         "
-        (loveClickEmitter)="vm.love($event)"
+        (loveClickEmitter)="vm.handleLove($event)"
         (idEmitter)="
           music.setQueueAndPlayAtIndex(media?.type!, media?.id || $event)
         "

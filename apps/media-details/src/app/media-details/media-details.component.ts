@@ -1,8 +1,6 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  HostBinding,
-  AfterViewInit,
   OnDestroy,
   AfterContentInit,
 } from '@angular/core';
@@ -57,16 +55,7 @@ export class MediaDetailsComponent implements AfterContentInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(async (media): Promise<any> => {
         // TODO move this to a service
-        if (!media.loaded) {
-          document.documentElement.style.setProperty(
-            '--backgroundColor',
-            'var(--backgroundColor)'
-          );
-          document.documentElement.style.setProperty(
-            '--backgroundColorLight',
-            'var(--backgroundColorLight)'
-          );
-        } else if (media.loaded && media) {
+        if (media) {
           await this.color
             .getAverageColor(
               media?.currentMedia?.data?.attributes?.['artwork']?.url ||
@@ -88,11 +77,6 @@ export class MediaDetailsComponent implements AfterContentInit, OnDestroy {
                 c: (color as any).c - 0.1,
                 l: 0.905,
               };
-
-              document.documentElement.style.setProperty(
-                '--backgroundColorLight',
-                newColor.toString()
-              );
             });
         }
       });

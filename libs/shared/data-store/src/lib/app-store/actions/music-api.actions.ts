@@ -70,6 +70,29 @@ export const getLibraryPlaylistsFailure = createAction(
   props<{ payload: { error: Error } }>()
 );
 
+// Item Likes Actions
+export const getItemLikes = createAction(
+  '[Music/API] Get Item Likes',
+  props<{
+    payload: {
+      type: 'albums' | 'artists' | 'playlists' | 'songs';
+      ids: string[];
+    };
+  }>()
+);
+export const getItemLikesSuccess = createAction(
+  '[Music/API] Get Item Likes Success',
+  props<{
+    payload: {
+      items: MusicKit.Ratings[];
+    };
+  }>()
+);
+export const getItemLikesFailure = createAction(
+  '[Music/API] Get Item Likes Failure',
+  props<{ payload: { error: Error } }>()
+);
+
 // Library Albums Actions
 export const getLibraryAlbums = createAction(
   '[Music/API] Get Library Albums',
@@ -428,6 +451,20 @@ export const getUserRatingsFromIDsSuccess = createAction(
 );
 export const getUserRatingsFromIDsFailure = createAction(
   '[Music/API] Get User Ratings From IDs Failure',
+  props<{ payload: { error: Error } }>()
+);
+
+// Unlove a mediaitem
+export const unloveMediaItem = createAction(
+  '[Music/API] Unlove Media Item',
+  props<{ payload: { type: MusicKit.MediaItemType; id: string } }>()
+);
+export const unloveMediaItemSuccess = createAction(
+  '[Music/API] Unlove Media Item Success',
+  props<{ payload: { data: MusicKit.Ratings[] } }>()
+);
+export const unloveMediaItemFailure = createAction(
+  '[Music/API] Unlove Media Item Failure',
   props<{ payload: { error: Error } }>()
 );
 

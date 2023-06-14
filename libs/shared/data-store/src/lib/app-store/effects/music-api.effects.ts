@@ -638,8 +638,7 @@ export const getMediaItemOnRouteChange$ = createEffect(
                 artistId: routeData.params?.id,
               },
             }),
-      ]),
-      tap(() => store$.dispatch(SpinnerActions.hideSpinner()))
+      ])
     ),
   { functional: true }
 );
@@ -1110,13 +1109,60 @@ export const setCurrentMedia$ = createEffect(
   (actions$ = inject(Actions), store = inject(Store<MusicAPIState>)) =>
     actions$.pipe(
       ofType(MusicAPIActions.setCurrentMedia),
-      tap(() => store.dispatch(SpinnerActions.showSpinner())),
       map((action) => action.payload),
-      map(() => MusicAPIActions.setCurrentMediaSuccess()),
-      tap(() => store.dispatch(SpinnerActions.hideSpinner())),
-      catchError((error) =>
-        of(MusicAPIActions.setCurrentMediaFailure({ payload: { error } }))
-      )
+      tap((payload) => {
+        console.log(payload);
+        const data =
+          payload.data.songs ||
+          payload.data.relationships?.tracks?.data ||
+          payload.data.relationships?.songs?.data;
+        console.log(data);
+
+        if (data === undefined || data.length === 0) {
+          return;
+        }
+        const ids = data.map(
+          (song: MusicKit.Songs | MusicKit.Resource) =>
+            song.id || song.relationships?.catalog?.data?.[0].id
+        );
+
+        // TODO implement a better solution
+        if (ids !== undefined && ids.length > 0) {
+          store.dispatch(
+            MusicAPIActions.getItemLikes({
+              payload: {
+                type: data[0].type,
+                ids: ids,
+              },
+            })
+          );
+        }
+      }),
+      map(() => MusicAPIActions.setCurrentMediaSuccess())
+    ),
+  { functional: true }
+);
+
+// Fetches likes for all songs in a media item
+export const getItemLikes$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    musickit = inject(MusickitAPI),
+    store = inject(Store<MusicAPIState>)
+  ) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.getItemLikes),
+      tap(() => store.dispatch(SpinnerActions.showSpinner())),
+      switchMap((action) =>
+        from(musickit.getLikes(action.payload.type, action.payload.ids)).pipe(
+          map((data) =>
+            MusicAPIActions.getItemLikesSuccess({
+              payload: { items: data as MusicKit.Ratings[] },
+            })
+          )
+        )
+      ),
+      tap(() => store.dispatch(SpinnerActions.hideSpinner()))
     ),
   { functional: true }
 );
@@ -1183,6 +1229,33 @@ export const getLibraryPlaylistSongs$ = createEffect(
   { functional: true }
 );
 
+// Unlove media item
+export const unloveMediaItem$ = createEffect(
+  (actions$ = inject(Actions), musickit = inject(MusickitAPI)) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.unloveMediaItem),
+      switchMap((action) =>
+        from(musickit.unloveItem(action.payload.type, action.payload.id)).pipe(
+          map(() =>
+            MusicAPIActions.unloveMediaItemSuccess({
+              payload: {
+                data: [
+                  {
+                    id: action.payload.id,
+                    attributes: { value: 0 },
+                    type: 'ratings',
+                  },
+                ],
+              },
+            })
+          )
+        )
+      )
+    ),
+  { functional: true }
+);
+
+
 // Love media item
 export const loveMediaItem$ = createEffect(
   (actions$ = inject(Actions), musickit = inject(MusickitAPI)) =>
@@ -1202,9 +1275,6 @@ export const loveMediaItem$ = createEffect(
                 ],
               },
             })
-          ),
-          catchError((error) =>
-            of(MusicAPIActions.loveMediaItemFailure({ payload: { error } }))
           )
         )
       )

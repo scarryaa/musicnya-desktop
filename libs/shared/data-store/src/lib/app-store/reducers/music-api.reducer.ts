@@ -101,6 +101,8 @@ export const searchResultsAdapter: EntityAdapter<
 });
 export const searchHintsAdapter: EntityAdapter<string> =
   createEntityAdapter<string>();
+export const likesAdapter: EntityAdapter<MusicKit.Ratings> =
+  createEntityAdapter<MusicKit.Ratings>();
 
 //initial state
 export const initialState: MusicAPIState = {
@@ -304,6 +306,19 @@ const reducer = createReducer(
     payload: payload.error,
   })),
 
+  // get media likes
+  on(MusicAPIActions.getItemLikes, (state) => ({
+    ...state,
+  })),
+  on(MusicAPIActions.getItemLikesSuccess, (state, { payload }) => ({
+    ...state,
+    ratings: ratingsAdapter.setAll(payload.items, state.ratings),
+  })),
+  on(MusicAPIActions.getItemLikesFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  })),
+
   // get recently played
   on(MusicAPIActions.getRecentlyPlayed, (state) => ({
     ...state,
@@ -481,13 +496,20 @@ const reducer = createReducer(
   })),
   on(MusicAPIActions.loveMediaItemSuccess, (state, { payload }) => ({
     ...state,
-    ratings: {
-      ...state.ratings,
-      ...payload.data,
-    },
+    ratings: ratingsAdapter.addOne(payload.data[0], state.ratings),
   })),
   on(MusicAPIActions.loveMediaItemFailure, (state, { payload }) => ({
     ...state,
     payload: payload.error,
+  })),
+
+  // Unloved media item
+  on(MusicAPIActions.unloveMediaItem, (state) => ({
+    ...state,
+    loaded: false,
+  })),
+  on(MusicAPIActions.unloveMediaItemSuccess, (state, { payload }) => ({
+    ...state,
+    ratings: ratingsAdapter.removeOne(payload.data[0].id, state.ratings),
   }))
 );

@@ -100,6 +100,7 @@ export class VirtualTableComponent implements OnChanges, AfterViewChecked {
     console.log(params);
     event.stopPropagation();
     this.loveClickEmitter.emit({ type: params.type, id: params.id });
+    this.changeReference.detectChanges();
   }
 
   handleClick(event: MouseEvent) {}

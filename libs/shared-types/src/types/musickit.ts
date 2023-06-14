@@ -927,6 +927,7 @@ export declare namespace MusicKit {
       artists: Relationship<Artists>;
       genres: Relationship<Genres>;
       station: Relationship<Stations>;
+      catalog?: Relationship<Songs>;
       composers: Relationship<Artists>;
       library: Relationship<LibraryAlbums>;
       'music-videos': Relationship<MusicVideos>;
@@ -1548,7 +1549,11 @@ export declare namespace MusicKit {
   type QueryParameters = Record<string, any>;
 
   type FetchOptions = {
-    fetchOptions: { method: 'POST' | 'GET' | 'PUT'; body?: any; headers?: any };
+    fetchOptions: {
+      method: 'POST' | 'GET' | 'PUT' | 'DELETE';
+      body?: any;
+      headers?: any;
+    };
   };
 
   type APIResponseObject = {

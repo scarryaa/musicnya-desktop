@@ -334,6 +334,7 @@ table {
   }
 
   #like-button-container {
+    z-index: 99;
     margin-right: 2rem;
 
     #like-button {

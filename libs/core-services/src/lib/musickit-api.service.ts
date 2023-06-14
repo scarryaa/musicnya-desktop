@@ -80,6 +80,15 @@ export class MusickitAPI {
     );
   }
 
+  async getLikes(
+    type: MusicKit.MediaItemType,
+    ids: string[]
+  ): Promise<MusicKit.Resource[]> {
+    return this.requestData(
+      `/v1/me/ratings/${type}/?platform=web&ids=${ids.join(',')}`
+    );
+  }
+
   async getAlbum(id: string): Promise<MusicKit.Albums[]> {
     return (await this.requestData(
       `/v1/catalog/us/albums/${id}${this.getQueryString()}`
@@ -185,6 +194,18 @@ export class MusickitAPI {
       `v1/me/ratings/${type}/?platform=web&ids=${ids.join(',')}`
     );
     return request.data.data;
+  }
+
+  async unloveItem(type: any, id: string): Promise<any> {
+    await this.musickit.instance.api.v3.music(
+      `v1/me/ratings/${type}/${id}`,
+      undefined,
+      {
+        fetchOptions: {
+          method: 'DELETE',
+        },
+      }
+    );
   }
 
   async loveItem(type: any, id: string): Promise<any> {

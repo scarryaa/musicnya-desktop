@@ -55,7 +55,16 @@ export const reducer = createReducer(
   })),
   on(LayoutActions.setPlaylistsViewSuccess, (state: LayoutState) => ({
     ...state,
+  })),
+
+  // set background color actions
+  on(LayoutActions.setBackgroundColor, (state: LayoutState) => ({
+    ...state,
+  })),
+  on(LayoutActions.setBackgroundColorSuccess, (state: LayoutState) => ({
+    ...state,
   }))
+
   // on(LayoutActions.setSongsView, (state: LayoutState) => ({
   //   ...state,
   //   currentView: 'songs',

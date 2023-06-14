@@ -28,3 +28,9 @@ export const setPlaylistsView = createAction('[Layout] Set Playlists View');
 export const setPlaylistsViewSuccess = createAction(
   '[Layout] Set Playlists View Success'
 );
+
+export const setBackgroundColor = createAction('[Layout] Set Background Color');
+export const setBackgroundColorSuccess = createAction(
+  '[Layout] Set Background Color Success',
+  props<{ payload: { color: string } }>()
+);

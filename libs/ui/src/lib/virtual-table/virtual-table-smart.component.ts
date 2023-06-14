@@ -54,7 +54,7 @@ export class VirtualTableSmartComponent implements OnChanges, OnDestroy {
   destroy$ = new Subject<void>();
 
   @Input() data!: Songs[];
-  @Input() ratings?: any | null;
+  @Input() ratings?: (string | number)[];
   @Input() media!: MusicKit.MediaItemType;
   @Input() playingSong: string | undefined = undefined;
   @Input() playing = false;

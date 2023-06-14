@@ -3,6 +3,7 @@ import { select, Store } from '@ngrx/store';
 import { MusicKit } from '@nyan-inc/shared-types';
 import {
   filter,
+  forkJoin,
   map,
   Observable,
   skipWhile,
@@ -16,6 +17,7 @@ import {
   selectAllCuratorCategories,
   selectAllPersonalRecommendations,
   selectAllRadioCategories,
+  selectAllRatings,
 } from '../selectors';
 import { selectAllBrowseCategories } from '../selectors/browse-categories.selectors';
 import { selectAllLibraryPlaylists } from '../selectors/library-playlists.selectors';
@@ -350,7 +352,7 @@ export class MusicAPIFacade implements OnDestroy {
 
   readonly getRatings$ = this.store.pipe(select(selectMusicAPIState)).pipe(
     filter((state) => state !== undefined),
-    map((state) => state.ratings)
+    map((state) => state.ratings.ids)
   );
 
   // readonly getLibraryAlbums$ = this.store
@@ -395,12 +397,35 @@ export class MusicAPIFacade implements OnDestroy {
     return this.subs.unsubscribe();
   }
 
-  love(event: { type: string; id: string }) {
-    return this.store.dispatch(
-      MusicAPIActions.loveMediaItem({
-        payload: { type: event.type as MusicKit.MediaItemType, id: event.id },
-      })
-    );
+  handleLove(event: { type: string; id: string }) {
+    return this.store
+      .pipe(
+        select(selectMusicAPIState),
+        take(1),
+        map((state) => {
+          return state.ratings && state.ratings.entities
+            ? state.ratings.entities[event.id]
+            : undefined;
+        })
+      )
+      .subscribe((rating) => {
+        if (rating) {
+          this.store.dispatch(
+            MusicAPIActions.unloveMediaItem({
+              payload: { type: event.type as any, id: event.id },
+            })
+          );
+        } else {
+          this.store.dispatch(
+            MusicAPIActions.loveMediaItem({
+              payload: {
+                type: event.type as any,
+                id: event.id,
+              },
+            })
+          );
+        }
+      });
   }
 
   loadAPI() {

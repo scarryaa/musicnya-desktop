@@ -2,9 +2,10 @@ import { inject } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { MusicAPIActions, MusicAPIState } from '@nyan-inc/shared';
-import { switchMap, of, tap } from 'rxjs';
+import { switchMap, of, tap, withLatestFrom, from, mergeMap, map } from 'rxjs';
 import { LayoutActions } from '../actions';
 import { LayoutState } from '../reducers/layout.reducer';
+import { ColorService } from '@nyan-inc/core';
 
 export const setView$ = createEffect(
   (actions$ = inject(Actions), store = inject(Store<LayoutState>)) =>
@@ -34,6 +35,39 @@ export const setView$ = createEffect(
           }
         }
       })
+    ),
+  { functional: true }
+);
+
+export const setBackgroundColor$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    store = inject(Store<LayoutState & MusicAPIState>),
+    colorService = inject(ColorService)
+  ) =>
+    actions$.pipe(
+      ofType(LayoutActions.setBackgroundColor),
+      withLatestFrom(
+        store.select(
+          (state: MusicAPIState) =>
+            state.currentMedia?.data?.attributes?.['artwork']?.url ||
+            state.currentMedia?.data?.songs?.[0]?.attributes?.['artwork']?.url
+        )
+      ),
+      switchMap(([action, artworkUrl]) =>
+        from(colorService.getAverageColor(artworkUrl)).pipe(
+          map((color) => {
+            document.documentElement.style.setProperty(
+              '--backgroundColor',
+              (color as any)?.hex
+            );
+
+            return LayoutActions.setBackgroundColorSuccess({
+              payload: { color: (color as any)?.hex },
+            });
+          })
+        )
+      )
     ),
   { functional: true }
 );
