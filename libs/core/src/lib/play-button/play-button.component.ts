@@ -69,7 +69,7 @@ import { CommonModule } from '@angular/common';
           outline: 2px solid var(--color-gray-100);
         }
 
-        svg {
+        :is(svg) {
           width: 1.5rem;
           height: 1.5rem;
           fill: white;
