@@ -12,9 +12,6 @@
       }
     }
   },
-  "cli": {
-    "defaultCollection": "nx-electron"
-  },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],

@@ -1,6 +1,7 @@
 :host {
   display: block;
   position: relative;
+  max-width: min-content;
 
   &:hover {
     .video-tile__image-overlay {

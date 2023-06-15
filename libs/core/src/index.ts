@@ -14,7 +14,6 @@ export * from './lib/drag-tooltip/drag-tooltip.component';
 export * from './lib/tooltip/tooltip.component';
 export * from './lib/tooltip/tooltip.directive';
 export * from './lib/color/color.service';
-export * from './lib/electron/window.service';
 export * from './lib/models/music.types';
 export * from './lib/utils/music-utils';
 export * from './lib/fallback-image.directive';
