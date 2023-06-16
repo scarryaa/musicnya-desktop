@@ -1,86 +1,95 @@
-use axum::{
-    body::{self, Body},
-    http::{Method, Request, StatusCode},
-    response::{IntoResponse, Response},
-    routing::get,
-    Router,
-};
-use hyper::upgrade::Upgraded;
-use std::net::SocketAddr;
-use tokio::net::TcpStream;
-use tower::{make::Shared, ServiceExt};
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use actix_web::{web, App, HttpResponse, HttpRequest, HttpServer, Responder};
+use actix_web::http::header;
+use reqwest::header::HeaderMap;
+use reqwest::Client;
+use actix_cors::Cors;
+use regex::Regex;
 
-#[tokio::main]
-async fn main() {
-    tracing_subscriber::registry()
-        .with(
-            tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "example_http_proxy=trace,tower_http=debug".into()),
-        )
-        .with(tracing_subscriber::fmt::layer())
-        .init();
+const BASE_URL: &str = "https://amp-api.music.apple.com";
 
-    let router_svc = Router::new().route("/", get(|| async { "Hello, World!" }));
+async fn base(req: HttpRequest) -> HeaderMap {
+    let headers_from_user = req.headers();
+    let mut headers = HeaderMap::new();
 
-    let service = tower::service_fn(move |req: Request<Body>| {
-        let router_svc = router_svc.clone();
-        async move {
-            if req.method() == Method::CONNECT {
-                proxy(req).await
-            } else {
-                router_svc.oneshot(req).await.map_err(|err| match err {})
+    for (header_name, header_value) in headers_from_user.iter() {
+        match header_name {
+            &header::CONTENT_LENGTH => {},
+            &header::HOST => {},
+            &header::CONNECTION => {},
+            &header::ACCEPT => {},
+            &header::USER_AGENT => {},
+            &header::REFERER => {},
+            &header::ACCEPT_ENCODING => {},
+            &header::ACCEPT_LANGUAGE => {},
+            &header::COOKIE => {},
+            &header::CACHE_CONTROL => {},
+            &header::PRAGMA => {},
+            &header::DNT => {},
+            &header::UPGRADE_INSECURE_REQUESTS => {},
+            &header::ACCESS_CONTROL_REQUEST_METHOD => {},
+            &header::ACCESS_CONTROL_REQUEST_HEADERS => {},
+            _ => {
+                headers.insert(header_name.clone(), header_value.clone());
             }
         }
-    });
-
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
-    tracing::debug!("listening on {}", addr);
-    axum::Server::bind(&addr)
-        .http1_preserve_header_case(true)
-        .http1_title_case_headers(true)
-        .serve(Shared::new(service))
-        .await
-        .unwrap();
-}
-
-async fn proxy(req: Request<Body>) -> Result<Response, hyper::Error> {
-    tracing::trace!(?req);
-
-    if let Some(host_addr) = req.uri().authority().map(|auth| auth.to_string()) {
-        tokio::task::spawn(async move {
-            match hyper::upgrade::on(req).await {
-                Ok(upgraded) => {
-                    if let Err(e) = tunnel(upgraded, host_addr).await {
-                        tracing::warn!("server io error: {}", e);
-                    };
-                }
-                Err(e) => tracing::warn!("upgrade error: {}", e),
-            }
-        });
-
-        Ok(Response::new(body::boxed(body::Empty::new())))
-    } else {
-        tracing::warn!("CONNECT host is not socket addr: {:?}", req.uri());
-        Ok((
-            StatusCode::BAD_REQUEST,
-            "CONNECT must be to a socket address",
-        )
-            .into_response())
     }
+
+    headers.insert(header::ACCEPT, "application/json".parse().unwrap());
+    headers.insert(header::USER_AGENT, "musicnya/1.0.0".parse().unwrap());
+    headers.insert(header::CONTENT_TYPE, "application/json".parse().unwrap());
+    headers.insert(header::ORIGIN, "https://beta.music.apple.com".parse().unwrap());
+    
+    headers
 }
 
-async fn tunnel(mut upgraded: Upgraded, addr: String) -> std::io::Result<()> {
-    let mut server = TcpStream::connect(addr).await?;
+async fn library_albums(client: web::Data<Client>, req: HttpRequest, path: web::Path<(String,)>) -> impl Responder {
+    let headers: HeaderMap = base(req.clone()).await;
+    let endpoint = &path.0;
 
-    let (from_client, from_server) =
-        tokio::io::copy_bidirectional(&mut upgraded, &mut server).await?;
+    let url = format!("{}{}", BASE_URL.clone(), "/".to_owned() + endpoint + "?" + req.clone().query_string());
 
-    tracing::debug!(
-        "client wrote {} bytes and received {} bytes",
-        from_client,
-        from_server
-    );
+    let response = client
+        .get(&url)
+        .headers(headers)
+        .send()
+        .await;
 
-    Ok(())
+        match response {
+            Ok(res) => {
+                let replacements = [
+                    (r"\{w\}x\{h\}", "400x400"),
+                    (r"\{f\}", "webp")
+                ];
+
+                let mut result = String::from(res.text().await.unwrap());
+
+                for (pattern, replacement) in replacements.iter() {
+                    let re = Regex::new(pattern).unwrap();
+                    result = re.replace_all(&result, *replacement).to_string();
+                }
+                
+                HttpResponse::Ok().body(result)
+            }
+            Err(err) => {
+                eprintln!("Error: {:?}", err);
+                HttpResponse::InternalServerError().finish()
+            }
+        }
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    let client = reqwest::Client::new();
+
+    HttpServer::new(move|| {
+        let cors = Cors::default().allow_any_origin().send_wildcard().allowed_methods(vec!["GET", "POST", "OPTIONS"]).allow_any_header().max_age(3600);
+
+        App::new()
+            .wrap(cors)
+            .data(client.clone())
+            .route("/{path:.*}", web::get().to(library_albums))
+    })
+    .bind("localhost:3001")?
+    .run()
+    .await
 }

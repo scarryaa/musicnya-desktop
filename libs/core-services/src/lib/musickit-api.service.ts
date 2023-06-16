@@ -1,26 +1,20 @@
 import { Injectable } from '@angular/core';
 import { MusicKit } from '@nyan-inc/shared-types';
 import { MusickitBase } from './musickit-base.service';
-import {
-  Observable,
-  filter,
-  from,
-  lastValueFrom,
-  of,
-  skipWhile,
-  take,
-} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MusickitAPI {
-  private readonly _instance!: MusicKit.MusicKitInstance;
-
   constructor(private readonly musickit: MusickitBase) {
-    this._instance = this.musickit.instance;
   }
 
+    // Fetch the data from the music api
+    async requestData(url: string): Promise<any> {
+      const result = await this.instance?.api?.v3.music(url);
+      return result.data.data;
+    }
+    
   /**
    * Get the instance
    */
@@ -59,12 +53,6 @@ export class MusickitAPI {
         '/' +
         `${id}${this.getQueryString()}`
     );
-  }
-
-  // Fetch the data from the music api
-  async requestData(url: string): Promise<any> {
-    const result = await this.instance?.api?.v3.music(url);
-    return result.data.data;
   }
 
   // Here we define the methods using the requestData function
@@ -134,11 +122,10 @@ export class MusickitAPI {
   }
 
   async getRecommendations(): Promise<MusicKit.PersonalRecommendation[]> {
-    const request = await this.requestData(
-      `/v1/me/recommendations?art%5Burl%5D=f&displayFilter%5Bkind%5D=MusicCircleCoverShelf%2CMusicCoverGrid%2CMusicCoverShelf%2CMusicNotesHeroShelf%2CMusicSocialCardShelf%2CMusicSuperHeroShelf&extend=editorialVideo%2CplainEditorialCard%2CplainEditorialNotes&extend%5Bplaylists%5D=artistNames&extend%5Bstations%5D=airTime%2CsupportsAirTimeUpdates&fields%5Bartists%5D=name%2Cartwork%2Curl&include%5Balbums%5D=artists&include%5Bpersonal-recommendation%5D=primary-content&meta%5Bstations%5D=inflectionPoints&name=listen-now&omit%5Bresource%5D=autos&platform=web&timezone=-07%3A00&types=activities%2Calbums%2Capple-curators%2Cartists%2Ccurators%2Ceditorial-items%2Clibrary-albums%2Clibrary-playlists%2Cmusic-movies%2Cplaylists%2Csocial-profiles%2Csocial-upsells%2Csongs%2Cstations%2Ctv-shows%2Cuploaded-audios%2Cuploaded-videos&with=friendsMix%2Clibrary%2Csocial`
-    );
-    console.log(request);
-    return request as MusicKit.PersonalRecommendation[];
+  const response = await fetch(`http://127.0.0.1:3001/v1/me/recommendations?art%5Burl%5D=f&displayFilter%5Bkind%5D=MusicCircleCoverShelf%2CMusicCoverGrid%2CMusicCoverShelf%2CMusicNotesHeroShelf%2CMusicSocialCardShelf%2CMusicSuperHeroShelf&extend=editorialVideo%2CplainEditorialCard%2CplainEditorialNotes&extend%5Bplaylists%5D=artistNames&extend%5Bstations%5D=airTime%2CsupportsAirTimeUpdates&fields%5Bartists%5D=name%2Cartwork%2Curl&include%5Balbums%5D=artists&include%5Bpersonal-recommendation%5D=primary-content&meta%5Bstations%5D=inflectionPoints&name=listen-now&omit%5Bresource%5D=autos&platform=web&timezone=-07%3A00&types=activities%2Calbums%2Capple-curators%2Cartists%2Ccurators%2Ceditorial-items%2Clibrary-albums%2Clibrary-playlists%2Cmusic-movies%2Cplaylists%2Csocial-profiles%2Csocial-upsells%2Csongs%2Cstations%2Ctv-shows%2Cuploaded-audios%2Cuploaded-videos&with=friendsMix%2Clibrary%2Csocial`,
+  { headers: { 'media-user-token': (this.instance as any).musicUserToken, 'authorization': `Bearer ${(this.instance as any).developerToken}`, 'origin': 'https://beta.music.apple.com', 'access-control-allow-origin': '*' }, mode: 'cors'});
+  const json = await response.json();
+    return json.data as MusicKit.PersonalRecommendation[];
   }
 
   async getSearchCategories(): Promise<MusicKit.PersonalRecommendation[]> {
@@ -160,19 +147,17 @@ export class MusickitAPI {
   }
 
   async getRadioCategories(): Promise<MusicKit.Groupings[]> {
-    const request = await this.requestData(
-      `/v1/editorial/us/groupings?platform=web&name=radio&omit%5Bresource%3Aartists%5D=relationships&include%5Balbums%5D=artists&include%5Bsongs%5D=artists&include%5Bmusic-videos%5D=artists&extend=editorialArtwork%2CartistUrl&fields%5Bartists%5D=name%2Curl%2Cartwork%2CeditorialArtwork%2CgenreNames%2CeditorialNotes&art%5Burl%5D=f`
-    );
-    console.log(request);
-    return request as MusicKit.Groupings[];
+    const response = await fetch(`http://127.0.0.1:3001/v1/editorial/us/groupings?platform=web&name=radio&omit%5Bresource%3Aartists%5D=relationships&include%5Balbums%5D=artists&include%5Bsongs%5D=artists&include%5Bmusic-videos%5D=artists&extend=editorialArtwork%2CartistUrl&fields%5Bartists%5D=name%2Curl%2Cartwork%2CeditorialArtwork%2CgenreNames%2CeditorialNotes&art%5Burl%5D=f`,
+    { headers: { 'media-user-token': (this.instance as any).musicUserToken, 'authorization': `Bearer ${(this.instance as any).developerToken}`, 'origin': 'https://beta.music.apple.com', 'access-control-allow-origin': '*' }, mode: 'cors'});
+    const json = await response.json();
+    return json.data as MusicKit.Groupings[];
   }
 
   async getBrowseCategories(): Promise<MusicKit.Groupings[]> {
-    const request = await this.requestData(
-      `/v1/editorial/us/groupings?art[url]=f&extend=artistUrl,editorialArtwork,plainEditorialNotes&extend[station-events]=editorialVideo&fields[albums]=artistName,artistUrl,artwork,contentRating,editorialArtwork,plainEditorialNotes,name,playParams,releaseDate,url,trackCount&fields[artists]=name,url,artwork&include[albums]=artists&include[music-videos]=artists&include[songs]=artists&include[stations]=events&name=music&omit[resource:artists]=relationships&platform=web&relate[songs]=albums&tabs=subscriber`
-    );
-    console.log(request);
-    return request as MusicKit.Groupings[];
+    const response = await fetch(`http://127.0.0.1:3001/v1/editorial/us/groupings?art[url]=f&extend=artistUrl,editorialArtwork,plainEditorialNotes&extend[station-events]=editorialVideo&fields[albums]=artistName,artistUrl,artwork,contentRating,editorialArtwork,plainEditorialNotes,name,playParams,releaseDate,url,trackCount&fields[artists]=name,url,artwork&include[albums]=artists&include[music-videos]=artists&include[songs]=artists&include[stations]=events&name=music&omit[resource:artists]=relationships&platform=web&relate[songs]=albums&tabs=subscriber`,
+    { headers: { 'media-user-token': (this.instance as any).musicUserToken, 'authorization': `Bearer ${(this.instance as any).developerToken}`, 'origin': 'https://beta.music.apple.com', 'access-control-allow-origin': '*' }, mode: 'cors'});
+    const json = await response.json();
+    return json.data as MusicKit.Groupings[];
   }
 
   async getArtistFromSongID(id: string): Promise<any> {

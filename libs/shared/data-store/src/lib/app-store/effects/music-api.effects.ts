@@ -916,11 +916,6 @@ export const getRadioCategories$ = createEffect(
           );
         } else {
           return from(musickit.getRadioCategories()).pipe(
-            // Convert images to webp
-            map((radioCategories) => {
-              return transformBrowseCategories(radioCategories);
-            }),
-
             tap(() => store.dispatch(SpinnerActions.hideSpinner())),
             map((radioCategories) =>
               MusicAPIActions.getRadioCategoriesSuccess({
@@ -955,9 +950,6 @@ export const getBrowseCategories$ = createEffect(
             )
           : from(musickit.getBrowseCategories()).pipe(
               // Convert images to webp
-              map((browseCategories) => {
-                return transformBrowseCategories(browseCategories);
-              }),
 
               tap(() => store.dispatch(SpinnerActions.hideSpinner())),
               map((browseCategories) =>
@@ -1001,23 +993,7 @@ export const getRecommendations$ = createEffect(
           );
         } else {
           return from(musickit.getRecommendations()).pipe(
-            // Convert images to webp
-            map(async (recommendations) => {
-              for (const recommendation of recommendations) {
-                for (const resource of recommendation.relationships?.contents
-                  ?.data ?? []) {
-                  if (resource.attributes?.['artwork']?.url) {
-                    resource.attributes['artwork'].url = transformArtworkUrl(
-                      resource.attributes?.['artwork']?.url,
-                      400
-                    );
-                  }
-                }
-              }
-              return recommendations;
-            }),
             //map promise to observable and emit
-            switchMap((recommendations) => from(recommendations)),
             map((recommendations) =>
               MusicAPIActions.getRecommendationsSuccess({
                 payload: { data: recommendations },
