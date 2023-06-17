@@ -17,8 +17,6 @@ import { CommonModule } from '@angular/common';
     <div class="options-button-wrapper__icon">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="1.5rem"
-        height="1.5rem"
         viewBox="0 0 24 24"
         fill="white"
         stroke="white"

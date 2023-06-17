@@ -19,8 +19,8 @@ export class MusickitBase {
         instance.volume = 0.05;
         instance.clearQueue();
         instance.stop();
+        await instance.authorize();
 
-        (window as any).MusicKit = instance;
         return instance;
       });
     });

@@ -14,7 +14,6 @@ fn main() {
     tauri::Builder::default()
         .setup(|app| {
             let window = app.get_window("main").unwrap();
-            set_shadow(&window, true).expect("Unsupported platform!");
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![greet])

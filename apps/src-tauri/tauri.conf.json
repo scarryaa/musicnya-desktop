@@ -3,7 +3,7 @@
     "beforeDevCommand": "",
     "beforeBuildCommand": "",
     "devPath": "http://localhost:4200",
-    "distDir": "../dist/apps/frontend",
+    "distDir": "../../dist/apps/frontend",
     "withGlobalTauri": false
   },
   "package": {
@@ -12,13 +12,10 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false,
+      "all": true,
       "shell": {
         "all": false,
         "open": true
-      },
-      "window": {
-        "all": true
       }
     },
     "bundle": {

@@ -35,8 +35,6 @@ import { FallbackImageDirective } from '../fallback-image.directive';
             <div class="media-tile__image-overlay__play-button__icon">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="1.5rem"
-                height="1.5rem"
                 viewBox="0 0 24 24"
                 fill="white"
                 stroke="white"
