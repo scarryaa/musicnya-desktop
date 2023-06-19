@@ -62,3 +62,6 @@ export * from './lib/tile-selector/tile-selector.component';
 
 export * from './lib/glass-tile/glass-tile.component';
 export * from './lib/heading/heading.component';
+export * from './lib/formatImageURL/format-image-url.pipe';
+export * from './lib/regex-split/regex-split.pipe';
+export * from './lib/room-type.pipe';

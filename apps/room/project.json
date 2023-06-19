@@ -1,0 +1,205 @@
+{
+  "name": "room",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "nyan-inc",
+  "sourceRoot": "apps/room/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:webpack-browser",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/room/browser",
+        "index": "apps/room/src/index.html",
+        "main": "apps/room/src/main.ts",
+        "polyfills": [
+          "zone.js"
+        ],
+        "tsConfig": "apps/room/tsconfig.app.json",
+        "assets": [
+          "apps/room/src/favicon.ico",
+          "apps/room/src/assets"
+        ],
+        "styles": [
+          "apps/room/src/styles.scss"
+        ],
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/room/webpack.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "apps/room/webpack.prod.config.js"
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@nx/angular:webpack-dev-server",
+      "options": {
+        "port": 4210,
+        "publicHost": "http://localhost:4210"
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "room:build:production"
+        },
+        "development": {
+          "browserTarget": "room:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "room:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "apps/room/**/*.ts",
+          "apps/room/**/*.html"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "apps/room/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "room:build",
+        "port": 4210,
+        "watch": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "room:build:development"
+        },
+        "production": {
+          "buildTarget": "room:build:production"
+        }
+      }
+    },
+    "server": {
+      "dependsOn": [
+        "build"
+      ],
+      "executor": "@nx/angular:webpack-server",
+      "options": {
+        "outputPath": "dist/apps/room/server",
+        "main": "apps/room/server.ts",
+        "tsConfig": "apps/room/tsconfig.server.json",
+        "customWebpackConfig": {
+          "path": "apps/room/webpack.server.config.js"
+        }
+      },
+      "configurations": {
+        "production": {
+          "outputHashing": "media"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "sourceMap": true,
+          "extractLicenses": false,
+          "vendorChunk": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-ssr": {
+      "executor": "@nguniversal/builders:ssr-dev-server",
+      "configurations": {
+        "development": {
+          "browserTarget": "room:build:development",
+          "serverTarget": "room:server:development"
+        },
+        "production": {
+          "browserTarget": "room:build:production",
+          "serverTarget": "room:server:production"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4210
+      }
+    },
+    "prerender": {
+      "executor": "@nguniversal/builders:prerender",
+      "options": {
+        "routes": [
+          "/"
+        ]
+      },
+      "configurations": {
+        "development": {
+          "browserTarget": "room:build:development",
+          "serverTarget": "room:server:development"
+        },
+        "production": {
+          "browserTarget": "room:build:production",
+          "serverTarget": "room:server:production"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "static-server": {
+      "dependsOn": [
+        "build",
+        "server"
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "PORT=4210 node dist/apps/room/server/main.js"
+      }
+    }
+  }
+}

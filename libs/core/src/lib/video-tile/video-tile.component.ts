@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { PlayButtonComponent } from '../play-button/play-button.component';
 import { OptionsButtonComponent } from '../options-button/options-button.component';
 import { RouterModule } from '@angular/router';
+import { FormatImageURLPipe } from '../formatImageURL/format-image-url.pipe';
 
 @Component({
   selector: 'core-video-tile',
@@ -18,13 +19,14 @@ import { RouterModule } from '@angular/router';
     PlayButtonComponent,
     OptionsButtonComponent,
     RouterModule,
+    FormatImageURLPipe
   ],
   template: `<div class="video-tile-wrapper">
     <div class="video-tile">
       <div class="video-tile__image-wrapper">
         <img
           class="video-tile__image-wrapper__image"
-          [src]="videoImage"
+          [src]="(videoImage || '') | formatImageURL: 400"
           [style.minWidth.rem]="videoImageSize"
         />
         <div class="video-tile__image-overlay">

@@ -28,7 +28,7 @@
                 [title]="item.relationships?.contents?.data?.[0]?.attributes?.['name'] || item.attributes?.designBadge || ''"
                 [subtitle]="item.relationships?.contents?.data?.[0]?.attributes?.['editorialNotes']?.tagline || item.relationships?.contents?.data?.[0]?.attributes?.['name'] || item.attributes?.designTag"
                 [description]="item.relationships?.contents?.data?.[0]?.attributes?.['plainEditorialNotes']?.short || ''"
-                [image]=" item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork']?.subscriptionHero.url.replace('{w}x{h}', '1200x1200').replace('{f}', 'webp') || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork']?.subscriptionCover.url.replace('{w}x{h}', '1200x1200').replace('{f}', 'webp') || item.attributes?.artwork?.url"
+                [image]=" item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork']?.subscriptionHero.url || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork']?.subscriptionCover.url || item.attributes?.artwork?.url"
                 >{{ item.attributes?.designTag }}</core-banner-hero-tile
               >
             </ng-container>
@@ -44,9 +44,8 @@
             <ng-container
               *ngFor="let item of item.relationships?.children?.data"
             >
-              <!-- TODO REPLACE .REPLACE -->
               <core-banner-tile
-                [image]="item.attributes?.artwork?.url || '' || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork'].subscriptionHero?.url.replace('{w}x{h}', '600x600').replace('{f}', 'webp') || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork'].subscriptionCover?.url.replace('{w}x{h}', '600x600').replace('{f}', 'webp')"
+                [image]="item.attributes?.artwork?.url || '' || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork'].subscriptionHero?.url || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork'].subscriptionCover?.url"
                 >{{ item.relationships?.contents?.data?.[0]?.attributes?.['name'] || item.attributes?.designTag }}</core-banner-tile
               >
             </ng-container>

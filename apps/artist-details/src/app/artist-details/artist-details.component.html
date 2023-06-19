@@ -17,11 +17,11 @@
     >
       <div class="artist-details__info__image-wrapper">
         <picture>
-          <source [srcset]="vm.artistBanner$ | async" />
+          <source [srcset]="(vm.artistBanner$ | async) | formatImageURL: 400 || ''" />
           <img
             class="artist-details__info__image-wrapper__image"
             [src]="
-              (vm.artistBanner$ | async) || 'assets/images/music_note.webp'
+              ((vm.artistBanner$ | async) || 'assets/images/music_note.webp') | formatImageURL: 400
             "
           />
         </picture>

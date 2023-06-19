@@ -9,3 +9,4 @@ export * from './curator-details.selectors';
 export * from './browse-categories.selectors';
 export * from './radio-categories.selectors';
 export * from './router.selectors';
+export * from './rooms.selectors';

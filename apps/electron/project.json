@@ -30,6 +30,7 @@
     "serve": {
       "executor": "nx-electron:execute",
       "options": {
+        "args": ["--no-sandbox", "--in-progress-gpu"],
         "buildTarget": "electron:build"
       }
     },

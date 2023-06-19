@@ -1030,6 +1030,16 @@ export declare namespace MusicKit {
     };
   }
 
+  interface RoomResults {
+    results: {
+      target: {
+        id: string;
+        href: string;
+        type: 'apple-curators' | 'curators';
+      };
+    };
+  }
+
   /**
    * A resource object that represents an Apple curator.
    * https://developer.apple.com/documentation/applemusicapi/applecurators/
@@ -1407,11 +1417,36 @@ export declare namespace MusicKit {
     attributes: {
       genreNames: string[];
       name: string;
+      url: string;
+      shortName: string;
+      kind: string;
+      editorialArtwork: Artwork;
+      artwork: Artwork;
     };
     id: string;
     href: string;
     type: string;
     relationships: {
+      grouping: {
+        href: string;
+        data: Array<Groupings>;
+      };
+      playlists: {
+        data: Array<{
+          id: string;
+          type: string;
+          attributes: {
+            doNotFilter: boolean;
+            editorialElementKind: string;
+          };
+          relationships: {
+            children: {
+              data: Array<EditorialElements>;
+            };
+          };
+        }>;
+        href: string;
+      };
       tabs: {
         data: Array<{
           id: string;
@@ -1438,18 +1473,56 @@ export declare namespace MusicKit {
     };
   }
 
+  interface Multiplexes {
+    attributes: {
+      lastModifiedDate: string;
+      href: string;
+      id: string;
+      uber?: {
+        backgroundColor?: string;
+        name?: string;
+        description?: string;
+        headerTextColor: string;
+        masterArt?: Artwork;
+        primaryTextColor?: string;
+        primaryTextColorOnBlack?: string;
+        titleTextColor?: string;
+        titleTextColorOnBlack?: string;
+      };
+    };
+    relationships: {
+      children: {
+        data: Array<EditorialElements>;
+        href: string;
+      };
+    };
+  }
+
   interface EditorialElements {
     type: 'editorial-elements';
     id: string;
     attributes?: {
       artistName: string;
       artistUrl: string;
+      description: string;
       artwork?: Artwork;
       designBadge?: string;
+      uber: {
+        backgroundColor: string;
+        name: string;
+        description: string;
+        headerTextColor: string;
+        masterArt: Artwork;
+        primaryTextColor: string;
+        primaryTextColorOnBlack: string;
+        titleTextColor: string;
+        titleTextColorOnBlack: string;
+      };
       designTag: string;
       doNotFilter: boolean;
       editorialElementKind: string;
       lastModifiedDate: string;
+      link: EditorialLinks;
       links?: EditorialLinks[];
       name: string;
       url: string;

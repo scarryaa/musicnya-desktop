@@ -7,12 +7,12 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MediaTileComponent } from '../media-tile/media-tile.component';
+import { FormatImageURLPipe } from "../formatImageURL/format-image-url.pipe";
 
 @Component({
-  selector: 'core-glass-tile',
-  standalone: true,
-  imports: [CommonModule, MediaTileComponent],
-  template: `<span class="content__badge">{{ badge }}</span>
+    selector: 'core-glass-tile',
+    standalone: true,
+    template: `<span class="content__badge">{{ badge }}</span>
     <div class="glass-tile">
       <core-media-tile
         class="glass-tile__media"
@@ -24,7 +24,7 @@ import { MediaTileComponent } from '../media-tile/media-tile.component';
         (playEmitter)="playEmitter.emit({ type: type!, id: id! })"
       ></core-media-tile>
       <div class="glass-tile__info">
-        <img class="content__blur__image" [src]="image" />
+        <img class="content__blur__image" [src]="(image || '') | formatImageURL: 400" />
         <div class="content__blur">
           <a
             class="content__blur__title"
@@ -44,8 +44,9 @@ import { MediaTileComponent } from '../media-tile/media-tile.component';
         </div>
       </div>
     </div>`,
-  styleUrls: ['./glass-tile.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['./glass-tile.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [CommonModule, MediaTileComponent, FormatImageURLPipe]
 })
 export class GlassTileComponent {
   @Input() badge?: string;

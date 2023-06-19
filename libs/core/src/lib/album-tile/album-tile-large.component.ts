@@ -18,6 +18,7 @@ import { DisableChildTabIndexDirective } from '../disable-child-tabindex.directi
 import { FallbackImageDirective } from '../fallback-image.directive';
 import { JoinPipeModule } from '../join.pipe';
 import { PreloadImageDirective } from '../preload-image.directive';
+import { FormatImageURLPipe } from '../formatImageURL/format-image-url.pipe';
 
 @Component({
   selector: 'ui-album-tile-large-presentation',
@@ -70,7 +71,7 @@ import { PreloadImageDirective } from '../preload-image.directive';
         [style.height.rem]="tileSize"
         alt="{{ mediaInfo.name + ' ' + mediaInfo.type }} art"
         id="artwork"
-        [src]="imageSource"
+        [src]="(imageSource || '') | formatImageURL: 400"
         coreDisableChildTabIndex
         coreDisableChildFocus
       />
@@ -175,6 +176,7 @@ export class AlbumTileLargeComponent
     DragDropModule,
     FallbackImageDirective,
     PreloadImageDirective,
+    FormatImageURLPipe,
   ],
   exports: [AlbumTileLargeComponent],
   declarations: [AlbumTileLargeComponent],

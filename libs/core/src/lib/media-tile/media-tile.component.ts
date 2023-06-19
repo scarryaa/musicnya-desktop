@@ -11,23 +11,17 @@ import { PlayButtonComponent } from '../play-button/play-button.component';
 import { OptionsButtonComponent } from '../options-button/options-button.component';
 import { FallbackImageDirective } from '../fallback-image.directive';
 import { Subject, takeUntil } from 'rxjs';
+import { FormatImageURLPipe } from "../formatImageURL/format-image-url.pipe";
 
 @Component({
-  selector: 'core-media-tile',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    PlayButtonComponent,
-    OptionsButtonComponent,
-    FallbackImageDirective,
-  ],
-  template: `<div class="media-tile-wrapper">
+    selector: 'core-media-tile',
+    standalone: true,
+    template: `<div class="media-tile-wrapper">
     <div class="media-tile">
       <div class="media-tile__image-wrapper">
         <img
           class="media-tile__image-wrapper__image"
-          [src]="mediaImage || ''"
+          [src]="(mediaImage || '') | formatImageURL: 400"
           [style.minWidth.rem]="mediaImageSize"
           [style.minHeight.rem]="mediaImageSize"
           [style.aspectRatio]="1"
@@ -65,7 +59,15 @@ import { Subject, takeUntil } from 'rxjs';
       </div>
     </div>
   </div>`,
-  styleUrls: ['./media-tile.component.scss'],
+    styleUrls: ['./media-tile.component.scss'],
+    imports: [
+        CommonModule,
+        RouterModule,
+        PlayButtonComponent,
+        OptionsButtonComponent,
+        FallbackImageDirective,
+        FormatImageURLPipe
+    ]
 })
 export class MediaTileComponent implements OnDestroy {
   @Input() mediaTitle: string | undefined = undefined;

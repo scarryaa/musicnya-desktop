@@ -7,12 +7,12 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormatImageURLPipe } from "../formatImageURL/format-image-url.pipe";
 
 @Component({
-  selector: 'core-footer-media-tile',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  template: `<div class="footer-media-tile-wrapper">
+    selector: 'core-footer-media-tile',
+    standalone: true,
+    template: `<div class="footer-media-tile-wrapper">
     <div class="footer-media-tile">
       <div
         class="footer-media-tile__expand-button-overlay"
@@ -27,7 +27,7 @@ import { RouterModule } from '@angular/router';
       <div class="footer-media-tile__image-wrapper" [routerLink]="mediaLink">
         <img
           class="footer-media-tile__image-wrapper__image"
-          [src]="mediaImage"
+          [src]="(mediaImage || '') | formatImageURL: 100"
           [style.minWidth.rem]="mediaImageSize"
           [style.minHeight.rem]="mediaImageSize"
           [style.aspectRatio]="1"
@@ -51,8 +51,9 @@ import { RouterModule } from '@angular/router';
       </div>
     </div>
   </div>`,
-  styleUrls: ['./footer-media-tile.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['./footer-media-tile.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [CommonModule, RouterModule, FormatImageURLPipe]
 })
 export class FooterMediaTileComponent {
   @Input() mediaImage?: string = undefined;

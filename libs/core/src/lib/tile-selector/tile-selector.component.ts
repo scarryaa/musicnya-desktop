@@ -14,6 +14,7 @@ import { MediaTileSmallComponent } from '../media-tile-small/media-tile-small.co
 import { GlassTileComponent } from '../glass-tile/glass-tile.component';
 import { BannerHeroTileComponent } from '../banner-hero-tile/banner-hero-tile.component';
 import { HeadingComponent } from '../heading/heading.component';
+import { ArtistTileComponent } from '../artist-tile/artist-tile.component';
 
 @Component({
   selector: 'core-tile-selector',
@@ -26,6 +27,7 @@ import { HeadingComponent } from '../heading/heading.component';
     MediaTileSmallComponent,
     GlassTileComponent,
     BannerHeroTileComponent,
+    ArtistTileComponent
   ],
   templateUrl: './tile-selector.component.html',
   styleUrls: ['./tile-selector.component.scss'],

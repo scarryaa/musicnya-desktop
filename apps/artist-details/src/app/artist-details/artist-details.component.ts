@@ -11,26 +11,28 @@ import {
   ArtistTileComponent,
   BaseButtonModule,
   YearSlicePipe,
+  FormatImageURLPipe,
 } from '@nyan-inc/core';
 
 @Component({
-  selector: 'artist-details-main',
-  standalone: true,
-  imports: [
-    CommonModule,
-    LetDirective,
-    MediaTileComponent,
-    VideoTileComponent,
-    FeaturedTileComponent,
-    TopSongsComponent,
-    MediaTileSmallComponent,
-    ArtistTileComponent,
-    BaseButtonModule,
-    YearSlicePipe,
-  ],
-  templateUrl: './artist-details.component.html',
-  styleUrls: ['./artist-details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'artist-details-main',
+    standalone: true,
+    templateUrl: './artist-details.component.html',
+    styleUrls: ['./artist-details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        LetDirective,
+        MediaTileComponent,
+        VideoTileComponent,
+        FeaturedTileComponent,
+        TopSongsComponent,
+        MediaTileSmallComponent,
+        ArtistTileComponent,
+        BaseButtonModule,
+        YearSlicePipe,
+        FormatImageURLPipe
+    ]
 })
 export class ArtistDetailsComponent {
   constructor(

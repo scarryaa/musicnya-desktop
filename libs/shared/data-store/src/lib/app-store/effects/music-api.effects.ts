@@ -97,12 +97,10 @@ export const getLibraryPlaylists$ = createEffect(
                           ...playlist.attributes?.artwork,
                           height: playlist.attributes?.artwork?.height || 0,
                           width: playlist.attributes?.artwork?.width || 0,
-                          url: transformArtworkUrl(
+                          url:
                             playlist.attributes?.artwork?.url ||
-                              songs?.[0]?.attributes?.artwork.url ||
-                              '',
-                            200
-                          ),
+                            songs?.[0]?.attributes?.artwork.url ||
+                            '',
                         },
                       },
                       songs: songs.map((song: MusicKit.Songs) => ({
@@ -111,10 +109,7 @@ export const getLibraryPlaylists$ = createEffect(
                           ...song?.attributes,
                           artwork: {
                             ...song.attributes?.artwork,
-                            url: transformArtworkUrl(
-                              song.attributes?.artwork?.url || '',
-                              48
-                            ),
+                            url: song.attributes?.artwork?.url || '',
                           },
                         },
                       })),
@@ -164,14 +159,6 @@ export const getLibraryAlbums$ = createEffect(
           : from(musickit.getLibraryAlbums()).pipe(
               // Convert images to webp
               map((recentlyPlayed) => {
-                for (const item of libraryAlbumsStoreData) {
-                  if (item.attributes?.['artwork']?.url) {
-                    item.attributes['artwork'].url = transformArtworkUrl(
-                      item.attributes['artwork'].url,
-                      160
-                    );
-                  }
-                }
                 return libraryAlbumsStoreData;
               }),
               map((libraryAlbumsStoreData) =>
@@ -216,121 +203,6 @@ export const getArtist$ = createEffect(
       map((data) => {
         const [firstItem] = data as MusicKit.Artists[];
 
-        if (firstItem && firstItem.attributes?.artwork?.url) {
-          firstItem.attributes.artwork.url = firstItem.attributes?.artwork.url
-            .replace('{w}x{h}', '1000x500')
-            .replace('{f}', 'webp');
-        }
-
-        if (
-          firstItem &&
-          firstItem?.attributes?.editorialArtwork?.bannerUber?.url
-        ) {
-          firstItem.attributes.editorialArtwork.bannerUber.url =
-            firstItem.attributes.editorialArtwork.bannerUber.url
-              .replace('{w}x{h}', '1000x500')
-              .replace('{f}', 'webp');
-        }
-
-        if (
-          firstItem &&
-          firstItem?.attributes?.editorialArtwork?.storeFlowcase?.url
-        ) {
-          firstItem.attributes.editorialArtwork.storeFlowcase.url =
-            firstItem.attributes.editorialArtwork.storeFlowcase.url
-              .replace('{w}x{h}', '1000x500')
-              .replace('{f}', 'webp');
-        }
-
-        if (firstItem && firstItem?.relationships?.albums?.data) {
-          firstItem.relationships.albums.data =
-            firstItem.relationships.albums.data.sort((a: any, b: any) => {
-              const aDate = new Date(a.attributes.releaseDate);
-              const bDate = new Date(b.attributes.releaseDate);
-              return bDate.getTime() - aDate.getTime();
-            });
-        }
-        // }
-
-        if (firstItem && firstItem?.relationships?.albums?.data) {
-          for (const album of firstItem.relationships.albums.data) {
-            if (album.attributes?.artwork?.url) {
-              album.attributes.artwork.url = album.attributes?.artwork.url
-                .replace('{w}x{h}', '400x400')
-                .replace('{f}', 'webp');
-            }
-          }
-        }
-
-        if (firstItem && firstItem?.views?.['top-songs']) {
-          for (const track of firstItem.views['top-songs'].data) {
-            if (track.attributes?.['artwork']?.url) {
-              track.attributes['artwork'].url = track.attributes?.[
-                'artwork'
-              ].url
-                .replace('{w}x{h}', '400x400')
-                .replace('{f}', 'webp');
-            }
-          }
-        }
-
-        if (firstItem && firstItem?.relationships?.playlists) {
-          for (const playlist of firstItem.relationships.playlists
-            .data as unknown as MusicKit.Playlists[]) {
-            if (playlist.attributes?.artwork?.url) {
-              playlist.attributes.artwork.url = playlist.attributes?.artwork.url
-                .replace('{w}x{h}', '400x400')
-                .replace('{f}', 'webp');
-            }
-          }
-        }
-
-        if (firstItem?.relationships?.['music-videos']) {
-          for (const video of firstItem.relationships['music-videos']
-            .data as unknown as MusicKit.MusicVideos[]) {
-            if (video.attributes?.artwork?.url) {
-              video.attributes.artwork.url =
-                video.attributes?.artwork.url.replace('{w}x{h}', '400x400');
-            }
-          }
-        }
-
-        if (firstItem && firstItem?.views?.['similar-artists']) {
-          for (const artist of firstItem.views['similar-artists'].data) {
-            if (artist.attributes?.['artwork']?.url) {
-              artist.attributes['artwork'].url = artist.attributes?.[
-                'artwork'
-              ].url
-                .replace('{w}x{h}', '400x400')
-                .replace('{f}', 'webp');
-            }
-          }
-        }
-
-        if (firstItem && firstItem?.views?.['latest-release']) {
-          for (const artist of firstItem.views['latest-release'].data) {
-            if (artist.attributes?.['artwork']?.url) {
-              artist.attributes['artwork'].url = artist.attributes?.[
-                'artwork'
-              ].url
-                .replace('{w}x{h}', '400x400')
-                .replace('{f}', 'webp');
-            }
-          }
-        }
-
-        if (firstItem && firstItem?.views?.['featured-albums']) {
-          for (const artist of firstItem.views['featured-albums'].data) {
-            if (artist.attributes?.['artwork']?.url) {
-              artist.attributes['artwork'].url = artist.attributes?.[
-                'artwork'
-              ].url
-                .replace('{w}x{h}', '400x400')
-                .replace('{f}', 'webp');
-            }
-          }
-        }
-
         return MusicAPIActions.getArtistSuccess({
           payload: {
             data: firstItem,
@@ -370,49 +242,6 @@ export const getSearchCategories$ = createEffect(
       tap(() => store.dispatch(SpinnerActions.showSpinner())),
       switchMap(() => from(musickit.getSearchCategories())),
       // convert to webp
-      map((data) => {
-        for (const item of data[2].relationships?.['contents']?.data ?? []) {
-          if (item.attributes?.['editorialArtwork']?.bannerUber?.url) {
-            item.attributes['editorialArtwork'].bannerUber.url =
-              item.attributes?.['editorialArtwork'].bannerUber.url
-                .replace('{w}x{h}', '800x800')
-                .replace('{c}', '')
-                .replace('{f}', 'webp');
-          }
-
-          if (item.attributes?.['editorialArtwork']?.subscriptionHero?.url) {
-            item.attributes['editorialArtwork'].subscriptionHero.url =
-              item.attributes?.['editorialArtwork'].subscriptionHero.url
-                .replace('{w}x{h}', '800x800')
-                .replace('{c}', '')
-                .replace('{f}', 'webp');
-          }
-
-          if (item.attributes?.['artwork']?.url) {
-            item.attributes['artwork'].url = item.attributes?.['artwork'].url
-              .replace('{w}x{h}', '800x800')
-              .replace('{c}', '')
-              .replace('{f}', 'webp');
-          }
-
-          if (item.attributes?.['editorialArtwork']?.subscriptionCover?.url) {
-            item.attributes['editorialArtwork'].subscriptionCover.url =
-              item.attributes?.['editorialArtwork']?.subscriptionCover.url
-                .replace('{w}x{h}', '800x800')
-                .replace('{c}', '')
-                .replace('{f}', 'webp');
-          }
-
-          if (item.attributes?.['editorialArtwork']?.superHeroWide?.url) {
-            item.attributes['editorialArtwork'].superHeroWide.url =
-              item.attributes?.['editorialArtwork']?.superHeroWide.url
-                .replace('{w}x{h}', '800x800')
-                .replace('{c}', '')
-                .replace('{f}', 'webp');
-          }
-        }
-        return data;
-      }),
       map((data) =>
         MusicAPIActions.getSearchCategoriesSuccess({ payload: { data: data } })
       ),
@@ -444,48 +273,6 @@ export const getCurator$ = createEffect(
       ),
       map((data) => {
         const [firstItem] = data as MusicKit.Curators[];
-
-        if (firstItem && firstItem.attributes?.artwork?.url) {
-          firstItem.attributes.artwork.url = firstItem.attributes?.artwork.url
-            .replace('{w}x{h}', '1000x500')
-            .replace('{f}', 'webp');
-        }
-
-        if (firstItem && firstItem?.views?.['similar-artists']) {
-          for (const artist of firstItem.views['similar-artists'].data) {
-            if (artist.attributes?.['artwork']?.url) {
-              artist.attributes['artwork'].url = artist.attributes?.[
-                'artwork'
-              ].url
-                .replace('{w}x{h}', '400x400')
-                .replace('{f}', 'webp');
-            }
-          }
-        }
-
-        if (firstItem && firstItem?.views?.['latest-release']) {
-          for (const artist of firstItem.views['latest-release'].data) {
-            if (artist.attributes?.['artwork']?.url) {
-              artist.attributes['artwork'].url = artist.attributes?.[
-                'artwork'
-              ].url
-                .replace('{w}x{h}', '400x400')
-                .replace('{f}', 'webp');
-            }
-          }
-        }
-
-        if (firstItem && firstItem?.views?.['featured-albums']) {
-          for (const artist of firstItem.views['featured-albums'].data) {
-            if (artist.attributes?.['artwork']?.url) {
-              artist.attributes['artwork'].url = artist.attributes?.[
-                'artwork'
-              ].url
-                .replace('{w}x{h}', '400x400')
-                .replace('{f}', 'webp');
-            }
-          }
-        }
 
         return MusicAPIActions.getCuratorSuccess({
           payload: {
@@ -670,17 +457,6 @@ export const getAlbum$ = createEffect(
           })
         )
       ),
-      // and replace the artwork url
-      map((data) => {
-        if (data.payload.data.attributes?.['artwork']?.url) {
-          data.payload.data.attributes['artwork'].url = transformArtworkUrl(
-            data.payload.data.attributes?.['artwork'].url,
-            400
-          );
-        }
-        return data;
-      }),
-
       switchMap((data) =>
         of(
           data,
@@ -737,17 +513,6 @@ export const getLibraryPlaylist$ = createEffect(
                   },
                 })
               )
-              .then((data) => {
-                // and replace the artwork url
-                if (data.payload.data.attributes?.['artwork']?.url) {
-                  data.payload.data.attributes['artwork'].url =
-                    transformArtworkUrl(
-                      data.payload.data.attributes?.['artwork'].url,
-                      400
-                    );
-                }
-                return data;
-              })
       ),
       switchMap((data) =>
         of(
@@ -831,29 +596,6 @@ export const getPlaylist$ = createEffect(
                   },
                 })
               )
-              .then((data) => {
-                // and replace the artwork url for songs and playlist
-                if (data.payload.data.attributes?.artwork?.url) {
-                  data.payload.data.attributes.artwork.url =
-                    transformArtworkUrl(
-                      data.payload.data.attributes.artwork.url,
-                      400
-                    );
-                }
-
-                if (data.payload.data.relationships.tracks.data) {
-                  for (const track of data.payload.data.relationships.tracks
-                    .data) {
-                    if (track.attributes?.['artwork']?.url) {
-                      track.attributes['artwork'].url = transformArtworkUrl(
-                        track.attributes?.['artwork'].url,
-                        400
-                      );
-                    }
-                  }
-                }
-                return data;
-              })
       ),
       switchMap((data) =>
         of(
@@ -1026,18 +768,6 @@ export const getRecentlyPlayed$ = createEffect(
               })
             )
           : from(musickit.getRecentlyPlayed()).pipe(
-              // Convert images to webp
-              map((recentlyPlayed) => {
-                for (const item of recentlyPlayed) {
-                  if (item.attributes?.['artwork']?.url) {
-                    item.attributes['artwork'].url = transformArtworkUrl(
-                      item.attributes['artwork'].url,
-                      230
-                    );
-                  }
-                }
-                return recentlyPlayed;
-              }),
               map((recentlyPlayed) =>
                 MusicAPIActions.getRecentlyPlayedSuccess({
                   payload: { data: recentlyPlayed },
@@ -1179,10 +909,7 @@ export const getLibraryPlaylistSongs$ = createEffect(
                   ...song.attributes?.artwork,
                   height: song.attributes?.artwork.height || 0,
                   width: song.attributes?.artwork.width || 0,
-                  url: transformArtworkUrl(
-                    song.attributes?.artwork?.url || '',
-                    40
-                  ),
+                  url: song.attributes?.artwork?.url || '',
                 },
               },
             }));
@@ -1317,6 +1044,29 @@ export const setCurrentViewType$ = createEffect(
   { functional: true }
 );
 
+// Fetches room
+export const getRoom$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    musickit = inject(MusickitAPI),
+    router = inject(Router)
+  ) =>
+    actions$.pipe(
+      ofType(MusicAPIActions.getRoom),
+      switchMap((action) =>
+        from(musickit.getRoom(action.payload.id, action.payload.type))
+      ),
+      tap((data) => console.log(data)),
+      tap((data) => router.navigateByUrl(`/media/rooms/${data.id}`)),
+      map((room) =>
+        MusicAPIActions.getRoomSuccess({
+          payload: { data: copy(room) },
+        })
+      )
+    ),
+  { functional: true }
+);
+
 // utility functions
 const transformArtworkUrl = (url: string, size: number) => {
   const newUrl = url
@@ -1339,15 +1089,8 @@ const transformBrowseCategories: any = (node: any) => {
       const newAttributes = { ...newNode.attributes };
       const newArtwork = { ...newAttributes.artwork };
 
-      newArtwork.url = transformArtworkUrl(newAttributes.artwork.url, 1200);
       newAttributes.artwork = newArtwork;
       newNode.attributes = newAttributes;
-    }
-
-    for (const key in newNode) {
-      if (newNode[key] instanceof Object) {
-        newNode[key] = transformBrowseCategories(newNode[key]);
-      }
     }
 
     return newNode;

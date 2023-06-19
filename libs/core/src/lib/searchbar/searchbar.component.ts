@@ -56,10 +56,7 @@ import { Router } from '@angular/router';
               *ngIf="data.content?.attributes?.artwork?.url"
               [type]="data.content?.type"
               [image]="
-                data.content?.attributes?.artwork?.url?.replace(
-                  '{w}x{h}',
-                  '200x200'
-                )
+                data.content?.attributes?.artwork?.url
               "
               [title]="
                 data.content?.attributes?.name || $any(data)?.displayTerm

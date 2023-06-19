@@ -19,6 +19,10 @@
     }
   }
 
+  .artist-tile {
+    color: var(--text);
+  }
+
   .songs {
     display: inline-grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

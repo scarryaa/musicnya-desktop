@@ -8,12 +8,12 @@ import {
 import { CommonModule } from '@angular/common';
 import { PlayButtonComponent } from '../play-button/play-button.component';
 import { OptionsButtonComponent } from '../options-button/options-button.component';
+import { FormatImageURLPipe } from "../formatImageURL/format-image-url.pipe";
 
 @Component({
-  selector: 'core-banner-hero-tile',
-  standalone: true,
-  imports: [CommonModule, PlayButtonComponent, OptionsButtonComponent],
-  template: `
+    selector: 'core-banner-hero-tile',
+    standalone: true,
+    template: `
     <div class="info">
       <span class="banner-hero-tile__badge">{{ badge }}</span>
       <span class="banner-hero-tile__title">{{ title }}</span>
@@ -22,7 +22,7 @@ import { OptionsButtonComponent } from '../options-button/options-button.compone
     <div
       class="banner-hero-tile"
       [style.background-blend-mode]="'overlay'"
-      [style.background]="'url(' + image + ') no-repeat center center / cover'"
+      [style.background]="'url(' + ((image || '') | formatImageURL: 1200 ) + ') no-repeat center center / cover'"
     >
       <div class="gradient"></div>
       <div class="overlay" (click)="handleClick()">
@@ -36,8 +36,9 @@ import { OptionsButtonComponent } from '../options-button/options-button.compone
       <span class="banner-hero-tile__description">{{ description }}</span>
     </div>
   `,
-  styleUrls: ['./banner-hero-tile.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['./banner-hero-tile.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [CommonModule, PlayButtonComponent, OptionsButtonComponent, FormatImageURLPipe]
 })
 export class BannerHeroTileComponent {
   @Input() badge?: string;
@@ -50,10 +51,10 @@ export class BannerHeroTileComponent {
 
   @Output() playEmitter = new EventEmitter<{ type: string; id: string }>();
   @Output() optionsEmitter = new EventEmitter<string>();
-  @Output() linkEmitter = new EventEmitter<{ type: string; id: string }>();
+  @Output() clickEmitter = new EventEmitter<{ type: string; id: string }>();
 
   handleClick() {
     console.log('handleClick', this.type, this.id);
-    this.linkEmitter.emit({ type: this.type, id: this.id });
+    this.clickEmitter.emit({ type: this.type, id: this.id });
   }
 }

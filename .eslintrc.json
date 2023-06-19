@@ -1,98 +1,13 @@
 {
-  "root": true,
-  "plugins": ["@nrwl/nx", "unicorn", "functional"],
-  "ignorePatterns": ["!**/*"],
-  "env": {
-    "es2022": true
-  },
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@nrwl/nx/typescript",
-    "plugin:@angular-eslint/recommended",
-    "plugin:unicorn/recommended",
-    "plugin:prettier/recommended",
-    "plugin:functional/no-mutations"
-  ],
-  "parserOptions": {
-    "ecmaVersion": "latest",
-    "sourceType": "module"
-  },
-  "rules": {
-    "@nrwl/nx/enforce-module-boundaries": [
-      "error",
-      {
-        "enforceBuildableLibDependency": true,
-        "allow": [],
-        "depConstraints": [
-          {
-            "sourceTag": "*",
-            "onlyDependOnLibsWithTags": ["*"]
-          }
-        ]
-      }
-    ],
-    "functional/no-classes": "off",
-    "functional/functional-parameters": "off",
-    "functional/no-expression-statements": "off",
-    "functional/prefer-immutable-types": "off",
-    "functional/type-declaration-immutability": "off",
-    "functional/immutable-data": "off",
-    "prettier/prettier": [
-      "error",
-      {
-        "endOfLine": "auto"
-      }
-    ]
-  },
-  "overrides": [
-    {
-      "files": ["*.ts, .tsx, *.js, *.jsx"],
-      "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@nrwl/nx/typescript",
-        "plugin:@angular-eslint/template/process-inline-templates",
-        "plugin:@nrwl/nx/angular-template",
-        "plugin:functional/recommended"
-      ],
-      "parser": "@typescript-eslint/parser",
-      "parserOptions": {
-        "project": ["tsconfig.*?.json"]
-      },
-      "rules": {
-        "@rxjs-angular/prefer-takeuntil": "error",
-        "@rxjs-angular/prefer-async-pipe": "error",
-        "@rxjs-angular/prefer-composition": "error",
-        "@angular-eslint/directive-selector": [
-          "error",
-          {
-            "type": "attribute",
-            "prefix": "musicnya",
-            "style": "camelCase"
-          }
-        ],
-        "@angular-eslint/component-selector": [
-          "error",
-          {
-            "type": "element",
-            "prefix": "musicnya",
-            "style": "kebab-case"
-          }
-        ],
-        "@angular-eslint/template/no-call-expression": "error",
-        "functional/no-classes": ["off"]
-      }
+    "env": {
+        "browser": true,
+        "es2021": true
     },
-    {
-      "files": ["*.component.html"],
-      "parser": "@angular-eslint/template-parser",
-      "parserOptions": {
-        "project": "./tsconfig.app.json",
-        "ecmaVersion": 2020,
+    "extends": "standard-with-typescript",
+    "parserOptions": {
+        "ecmaVersion": "latest",
         "sourceType": "module"
-      },
-      "plugins": ["@angular-eslint/template"]
+    },
+    "rules": {
     }
-  ]
 }

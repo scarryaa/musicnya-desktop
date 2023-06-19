@@ -25,6 +25,7 @@ export interface MusicAPIState extends EntityState<MusicAPIEntity> {
   error?: string | Error | null;
 
   // caches
+  rooms: EntityState<any>;
   playlists: EntityState<MusicKit.Playlists>;
   albums: EntityState<MusicKit.Albums>;
   songs: EntityState<MusicKit.Songs>;
@@ -49,6 +50,7 @@ export interface MusicAPIPartialState {
 }
 
 // adapters
+export const roomsAdapter: EntityAdapter<any> = createEntityAdapter<any>();
 export const mediaCacheAdapter: EntityAdapter<MusicKit.MediaItem> =
   createEntityAdapter<MusicKit.MediaItem>();
 export const ratingsAdapter: EntityAdapter<MusicKit.Ratings> =
@@ -114,6 +116,7 @@ export const initialState: MusicAPIState = {
   libraryAlbums: libraryAlbumsAdapter.getInitialState(),
   libraryArtists: libraryArtistsAdapter.getInitialState(),
   librarySongs: librarySongsAdapter.getInitialState(),
+  rooms: roomsAdapter.getInitialState(),
   playlists: playlistsAdapter.getInitialState(),
   albums: albumsAdapter.getInitialState(),
   songs: songsAdapter.getInitialState(),
@@ -209,6 +212,17 @@ const reducer = createReducer(
     },
   })),
   on(MusicAPIActions.getLibraryPlaylistSongsFailure, (state, { payload }) => ({
+    ...state,
+    payload: payload.error,
+  })),
+
+  // get room
+  on(MusicAPIActions.getRoom, (state) => ({ ...state })),
+  on(MusicAPIActions.getRoomSuccess, (state, { payload }) => ({
+    ...state,
+    rooms: roomsAdapter.setAll([payload.data], state.rooms),
+  })),
+  on(MusicAPIActions.getRoomFailure, (state, { payload }) => ({
     ...state,
     payload: payload.error,
   })),

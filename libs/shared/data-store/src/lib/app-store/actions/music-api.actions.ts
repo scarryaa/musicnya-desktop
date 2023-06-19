@@ -44,6 +44,20 @@ export const getBrowseCategoriesFailure = createAction(
   props<{ payload: { error: Error } }>()
 );
 
+// Room actions
+export const getRoom = createAction(
+  '[Music/API] Get Room',
+  props<{ payload: { id: string; type: string } }>()
+);
+export const getRoomSuccess = createAction(
+  '[Music/API] Get Room Success',
+  props<{ payload: { data: MusicKit.Curators | MusicKit.AppleCurators } }>()
+);
+export const getRoomFailure = createAction(
+  '[Music/API] Get Room Failure',
+  props<{ payload: { error: Error } }>()
+);
+
 // Curator Categories Actions
 export const getCuratorCategories = createAction(
   '[Music/API] Get Curator Categories'

@@ -1,12 +1,20 @@
 import { Route } from '@angular/router';
 
 export const appRoutes: Route[] = [
+    {
+    path: 'room',
+    loadChildren: () => import('room/Routes').then(m => m.remoteRoutes)
+    },
   {
     path: '',
     loadChildren: () =>
       import('../../../home/src/app/remote-entry/entry.routes').then(
         (m) => m.remoteRoutes
       ),
+  },
+  {
+    path: 'media/rooms/:id',
+    loadChildren: () => import('../../../room/src/app/remote-entry/entry.routes').then(m => m.remoteRoutes)
   },
   {
     path: 'media/artists/:id',

@@ -18,17 +18,21 @@ import {
   selectAllPersonalRecommendations,
   selectAllRadioCategories,
   selectAllRatings,
+  selectAllRooms,
 } from '../selectors';
 import { selectAllBrowseCategories } from '../selectors/browse-categories.selectors';
 import { selectAllLibraryPlaylists } from '../selectors/library-playlists.selectors';
 import { selectMusicAPIState } from '../selectors/music-api.selectors';
 import { selectAllSearchCategories } from '../selectors/search-categories.selectors';
 import { selectAllSearchResults } from '../selectors/search-results.selectors';
+import { RoomType } from '@nyan-inc/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MusicAPIFacade implements OnDestroy {
+  constructor(private readonly store: Store<MusicAPIState>) {}
+
   subs = new Subscription();
   libraryPlaylists$ = this.store
     .select(selectAllLibraryPlaylists)
@@ -111,6 +115,36 @@ export class MusicAPIFacade implements OnDestroy {
   getCurator(id: string) {
     this.store.dispatch(MusicAPIActions.getCuratorID({ payload: { id } }));
   }
+
+  getRoom(id: string, type: string) {
+    this.store.dispatch(MusicAPIActions.getRoom({ payload: { id, type } }));
+  }
+
+  // room vm
+  selectRoomTitle$ = this.store.pipe(
+    select(selectAllRooms),
+    map((categories) => categories?.[0].attributes.name)
+  );
+
+  selectRoomType$ = this.store.pipe(
+    select(selectAllRooms),
+    map((categories) => categories?.[0].type)
+  );
+
+  selectRoomBanner$ = this.store.pipe(
+    select(selectAllRooms),
+    map((categories) => categories?.[0].attributes.uber.masterArt.url)
+  );
+
+  selectRoom$ = this.store.pipe(
+    select(selectAllRooms),
+    map(
+      (categories: MusicKit.Groupings[] | MusicKit.Multiplexes) =>
+        (categories as any)[0].relationships?.children?.data ||
+        (categories as any)?.[0].relationships?.grouping?.data?.[0]
+          ?.relationships?.tabs?.data?.[0]?.relationships?.children?.data
+    )
+  );
 
   // search vm
   search(term: string) {
@@ -390,8 +424,6 @@ export class MusicAPIFacade implements OnDestroy {
   //       )
   //     )
   //   );
-
-  constructor(private readonly store: Store<MusicAPIState>) {}
 
   ngOnDestroy() {
     return this.subs.unsubscribe();

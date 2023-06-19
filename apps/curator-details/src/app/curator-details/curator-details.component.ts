@@ -11,29 +11,31 @@ import {
   ArtistTileComponent,
   BaseButtonModule,
   YearSlicePipe,
+  FormatImageURLPipe,
 } from '@nyan-inc/core';
 import { MediaTileListComponent } from '@nyan-inc/ui';
 
 @Component({
-  selector: 'curator-details-main',
-  standalone: true,
-  imports: [
-    CommonModule,
-    LetDirective,
-    MediaTileComponent,
-    VideoTileComponent,
-    FeaturedTileComponent,
-    TopSongsComponent,
-    MediaTileSmallComponent,
-    ArtistTileComponent,
-    BaseButtonModule,
-    YearSlicePipe,
-    MediaTileComponent,
-    MediaTileListComponent,
-  ],
-  templateUrl: './curator-details.component.html',
-  styleUrls: ['./curator-details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'curator-details-main',
+    standalone: true,
+    templateUrl: './curator-details.component.html',
+    styleUrls: ['./curator-details.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        LetDirective,
+        MediaTileComponent,
+        VideoTileComponent,
+        FeaturedTileComponent,
+        TopSongsComponent,
+        MediaTileSmallComponent,
+        ArtistTileComponent,
+        BaseButtonModule,
+        YearSlicePipe,
+        MediaTileComponent,
+        MediaTileListComponent,
+        FormatImageURLPipe
+    ]
 })
 export class CuratorDetailsComponent {
   constructor(

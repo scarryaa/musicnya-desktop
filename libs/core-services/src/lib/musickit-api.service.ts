@@ -6,15 +6,14 @@ import { MusickitBase } from './musickit-base.service';
   providedIn: 'root',
 })
 export class MusickitAPI {
-  constructor(private readonly musickit: MusickitBase) {
+  constructor(private readonly musickit: MusickitBase) {}
+
+  // Fetch the data from the music api
+  async requestData(url: string): Promise<any> {
+    const result = await this.instance?.api?.v3.music(url);
+    return result.data.data;
   }
 
-    // Fetch the data from the music api
-    async requestData(url: string): Promise<any> {
-      const result = await this.instance?.api?.v3.music(url);
-      return result.data.data;
-    }
-    
   /**
    * Get the instance
    */
@@ -27,11 +26,106 @@ export class MusickitAPI {
    * Get library playlists
    */
   async getLibraryPlaylists(): Promise<any[]> {
-    const response = await fetch(`http://localhost:3001/v1/me/library/playlist-folders/p.playlistsroot/children${this.getQueryString()}&art%5Burl%5D=f&include=name%2CcanDelete%2CcanEdit&l=en-US&offset=0&omit%5Bresource%5D=autos&platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls`,
-    { headers: { 'media-user-token': (this.instance as any).musicUserToken, 'authorization': `Bearer ${(this.instance as any).developerToken}`, 'origin': 'https://beta.music.apple.com', 'access-control-allow-origin': '*', 'allowed-headers': '*' }, mode: 'cors'});
+    const response = await fetch(
+      `http://localhost:3001/v1/me/library/playlist-folders/p.playlistsroot/children${this.getQueryString()}&art%5Burl%5D=f&include=name%2CcanDelete%2CcanEdit&l=en-US&offset=0&omit%5Bresource%5D=autos&platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls`,
+      {
+        headers: {
+          'media-user-token': (this.instance as any).musicUserToken,
+          authorization: `Bearer ${(this.instance as any).developerToken}`,
+          origin: 'https://beta.music.apple.com',
+          'access-control-allow-origin': '*',
+          'allowed-headers': '*',
+        },
+        mode: 'cors',
+      }
+    );
     const json = await response.json();
-      return json.data;
+    return json.data;
+  }
+
+  async getRoom(
+    id: string,
+    type: string
+  ): Promise<MusicKit.AppleCurators | MusicKit.Curators> {
+    switch (type) {
+      case 'fcId': {
+        return await fetch(
+          `https://amp-api.music.apple.com/v1/editorial/us/multirooms/${id}?platform=web&extend=editorialArtwork%2Cuber%2ClockupStyle&l=en-us`,
+          {
+            headers: {
+              'media-user-token': (this.instance as any).musicUserToken,
+              authorization: `Bearer ${(this.instance as any).developerToken}`,
+              origin: 'https://beta.music.apple.com',
+              'access-control-allow-origin': '*',
+              'allowed-headers': '*',
+            },
+            mode: 'cors',
+          }
+        ).then(async (response) => {
+          const curator = await response.json();
+          return curator.data[0];
+        });
+      }
+      case 'pp':
+      case 'id': {
+        const response = await fetch(
+          `https://amp-api.music.apple.com/v1/editorial/us/multiplex/${id}?art%5Burl%5D=f&format%5Bresources%5D=map&platform=web`,
+          {
+            headers: {
+              'media-user-token': (this.instance as any).musicUserToken,
+              authorization: `Bearer ${(this.instance as any).developerToken}`,
+              origin: 'https://beta.music.apple.com',
+              'access-control-allow-origin': '*',
+              'allowed-headers': '*',
+            },
+            mode: 'cors',
+          }
+        ).then(async (response) => {
+          const json = await response.json();
+          return await fetch(
+            `https://amp-api.music.apple.com/v1/editorial/us/multirooms/${json.results.target.id}?platform=web&extend=editorialArtwork%2Cuber%2ClockupStyle&l=en-us`,
+            {
+              headers: {
+                'media-user-token': (this.instance as any).musicUserToken,
+                authorization: `Bearer ${
+                  (this.instance as any).developerToken
+                }`,
+                origin: 'https://beta.music.apple.com',
+                'access-control-allow-origin': '*',
+                'allowed-headers': '*',
+              },
+              mode: 'cors',
+            }
+          ).then(async (response) => {
+            const curator = await response.json();
+            return curator.data[0];
+          });
+        });
+        return response;
+      }
+      case 'apple-curators': {
+        return await fetch(
+          `https://amp-api.music.apple.com/v1/catalog/us/apple-curators/${id}?platform=web&include=grouping%2Cplaylists&extend=editorialArtwork&art%5Burl%5D=f&l=en-us`,
+          {
+            headers: {
+              'media-user-token': (this.instance as any).musicUserToken,
+              authorization: `Bearer ${(this.instance as any).developerToken}`,
+              origin: 'https://beta.music.apple.com',
+              'access-control-allow-origin': '*',
+              'allowed-headers': '*',
+            },
+            mode: 'cors',
+          }
+        ).then(async (response) => {
+          const curator = await response.json();
+          return curator.data[0];
+        });
+      }
+      default: {
+        return new Promise((resolve) => resolve({} as any));
+      }
     }
+  }
 
   /**
    * Get Library Albums
@@ -123,9 +217,20 @@ export class MusickitAPI {
   }
 
   async getRecommendations(): Promise<MusicKit.PersonalRecommendation[]> {
-  const response = await fetch(`http://localhost:3001/v1/me/recommendations?art%5Burl%5D=f&displayFilter%5Bkind%5D=MusicCircleCoverShelf%2CMusicCoverGrid%2CMusicCoverShelf%2CMusicNotesHeroShelf%2CMusicSocialCardShelf%2CMusicSuperHeroShelf&extend=editorialVideo%2CplainEditorialCard%2CplainEditorialNotes&extend%5Bplaylists%5D=artistNames&extend%5Bstations%5D=airTime%2CsupportsAirTimeUpdates&fields%5Bartists%5D=name%2Cartwork%2Curl&include%5Balbums%5D=artists&include%5Bpersonal-recommendation%5D=primary-content&meta%5Bstations%5D=inflectionPoints&name=listen-now&omit%5Bresource%5D=autos&platform=web&timezone=-07%3A00&types=activities%2Calbums%2Capple-curators%2Cartists%2Ccurators%2Ceditorial-items%2Clibrary-albums%2Clibrary-playlists%2Cmusic-movies%2Cplaylists%2Csocial-profiles%2Csocial-upsells%2Csongs%2Cstations%2Ctv-shows%2Cuploaded-audios%2Cuploaded-videos&with=friendsMix%2Clibrary%2Csocial`,
-  { headers: { 'media-user-token': (this.instance as any).musicUserToken, 'authorization': `Bearer ${(this.instance as any).developerToken}`, 'origin': 'https://beta.music.apple.com', 'access-control-allow-origin': '*', 'allowed-headers': '*' }, mode: 'cors'});
-  const json = await response.json();
+    const response = await fetch(
+      `http://localhost:3001/v1/me/recommendations?art%5Burl%5D=f&displayFilter%5Bkind%5D=MusicCircleCoverShelf%2CMusicCoverGrid%2CMusicCoverShelf%2CMusicNotesHeroShelf%2CMusicSocialCardShelf%2CMusicSuperHeroShelf&extend=editorialVideo%2CplainEditorialCard%2CplainEditorialNotes&extend%5Bplaylists%5D=artistNames&extend%5Bstations%5D=airTime%2CsupportsAirTimeUpdates&fields%5Bartists%5D=name%2Cartwork%2Curl&include%5Balbums%5D=artists&include%5Bpersonal-recommendation%5D=primary-content&meta%5Bstations%5D=inflectionPoints&name=listen-now&omit%5Bresource%5D=autos&platform=web&timezone=-07%3A00&types=activities%2Calbums%2Capple-curators%2Cartists%2Ccurators%2Ceditorial-items%2Clibrary-albums%2Clibrary-playlists%2Cmusic-movies%2Cplaylists%2Csocial-profiles%2Csocial-upsells%2Csongs%2Cstations%2Ctv-shows%2Cuploaded-audios%2Cuploaded-videos&with=friendsMix%2Clibrary%2Csocial`,
+      {
+        headers: {
+          'media-user-token': (this.instance as any).musicUserToken,
+          authorization: `Bearer ${(this.instance as any).developerToken}`,
+          origin: 'https://beta.music.apple.com',
+          'access-control-allow-origin': '*',
+          'allowed-headers': '*',
+        },
+        mode: 'cors',
+      }
+    );
+    const json = await response.json();
     return json.data as MusicKit.PersonalRecommendation[];
   }
 
@@ -148,15 +253,35 @@ export class MusickitAPI {
   }
 
   async getRadioCategories(): Promise<MusicKit.Groupings[]> {
-    const response = await fetch(`http://127.0.0.1:3001/v1/editorial/us/groupings?platform=web&name=radio&omit%5Bresource%3Aartists%5D=relationships&include%5Balbums%5D=artists&include%5Bsongs%5D=artists&include%5Bmusic-videos%5D=artists&extend=editorialArtwork%2CartistUrl&fields%5Bartists%5D=name%2Curl%2Cartwork%2CeditorialArtwork%2CgenreNames%2CeditorialNotes&art%5Burl%5D=f`,
-    { headers: { 'media-user-token': (this.instance as any).musicUserToken, 'authorization': `Bearer ${(this.instance as any).developerToken}`, 'origin': 'https://beta.music.apple.com', 'access-control-allow-origin': '*' }, mode: 'cors'});
+    const response = await fetch(
+      `http://127.0.0.1:3001/v1/editorial/us/groupings?platform=web&name=radio&omit%5Bresource%3Aartists%5D=relationships&include%5Balbums%5D=artists&include%5Bsongs%5D=artists&include%5Bmusic-videos%5D=artists&extend=editorialArtwork%2CartistUrl&fields%5Bartists%5D=name%2Curl%2Cartwork%2CeditorialArtwork%2CgenreNames%2CeditorialNotes&art%5Burl%5D=f`,
+      {
+        headers: {
+          'media-user-token': (this.instance as any).musicUserToken,
+          authorization: `Bearer ${(this.instance as any).developerToken}`,
+          origin: 'https://beta.music.apple.com',
+          'access-control-allow-origin': '*',
+        },
+        mode: 'cors',
+      }
+    );
     const json = await response.json();
     return json.data as MusicKit.Groupings[];
   }
 
   async getBrowseCategories(): Promise<MusicKit.Groupings[]> {
-    const response = await fetch(`http://127.0.0.1:3001/v1/editorial/us/groupings?art[url]=f&extend=artistUrl,editorialArtwork,plainEditorialNotes&extend[station-events]=editorialVideo&fields[albums]=artistName,artistUrl,artwork,contentRating,editorialArtwork,plainEditorialNotes,name,playParams,releaseDate,url,trackCount&fields[artists]=name,url,artwork&include[albums]=artists&include[music-videos]=artists&include[songs]=artists&include[stations]=events&name=music&omit[resource:artists]=relationships&platform=web&relate[songs]=albums&tabs=subscriber`,
-    { headers: { 'media-user-token': (this.instance as any).musicUserToken, 'authorization': `Bearer ${(this.instance as any).developerToken}`, 'origin': 'https://beta.music.apple.com', 'access-control-allow-origin': '*' }, mode: 'cors'});
+    const response = await fetch(
+      `http://127.0.0.1:3001/v1/editorial/us/groupings?art[url]=f&extend=artistUrl,editorialArtwork,plainEditorialNotes&extend[station-events]=editorialVideo&fields[albums]=artistName,artistUrl,artwork,contentRating,editorialArtwork,plainEditorialNotes,name,playParams,releaseDate,url,trackCount&fields[artists]=name,url,artwork&include[albums]=artists&include[music-videos]=artists&include[songs]=artists&include[stations]=events&name=music&omit[resource:artists]=relationships&platform=web&relate[songs]=albums&tabs=subscriber`,
+      {
+        headers: {
+          'media-user-token': (this.instance as any).musicUserToken,
+          authorization: `Bearer ${(this.instance as any).developerToken}`,
+          origin: 'https://beta.music.apple.com',
+          'access-control-allow-origin': '*',
+        },
+        mode: 'cors',
+      }
+    );
     const json = await response.json();
     return json.data as MusicKit.Groupings[];
   }

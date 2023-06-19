@@ -10,7 +10,7 @@
         [title]="item.attributes?.['name'] || item.attributes?.['plainEditorialNotes']?.name"
         [artist]="item.attributes?.['artistNames'] || item.attributes?.['artistName']"
         [subtitle]="item.attributes?.['plainEditorialNotes']?.short || item.attributes?.['releaseDate']"
-        [image]="item.attributes?.['artwork']?.['url'] || item.attributes?.['editorialArtwork'].superHeroTall?.url.replace('{w}x{h}', '600x600').replace('{f}', 'webp') || ''"
+        [image]="item.attributes?.['artwork']?.['url'] || item.attributes?.['editorialArtwork'].superHeroTall?.url || ''"
         [link]="'/media/' + item.type + '/' + item.id"
         [titleLink]="item.attributes?.['link']?.url"
       ></core-glass-tile>
@@ -29,7 +29,7 @@
           (playEmitter)="handlePlayClick(item.type, item.id)"
           [title]="item.attributes?.['name'] || item.attributes?.['plainEditorialNotes']?.name"
           [subtitle]="item.attributes?.['plainEditorialNotes']?.short || item.attributes?.['releaseDate']"
-          [image]="item.attributes?.['artwork']?.['url'] || item.attributes?.['editorialArtwork'].superHeroTall?.url.replace('{w}x{h}', '600x600').replace('{f}', 'webp') || ''"
+          [image]="item.attributes?.['artwork']?.['url'] || item.attributes?.['editorialArtwork'].superHeroTall?.url || ''"
         ></core-banner-hero-tile>
       </ng-container>
       <ng-template #glassTemplate>
@@ -104,7 +104,19 @@
           ></core-media-tile>
         </ng-container>
         <ng-container *ngSwitchCase="'artists'">
-          <ng-container>artist</ng-container>
+          <ng-container>
+            <core-artist-tile
+            class="artist-tile"
+            [image]="item.attributes?.['artwork']?.url || ''"
+            [tileSize]="10"
+            [name]="item?.attributes?.['name'] || ''"
+            [id]="item?.id"
+            [type]="item?.type!"
+            [artistLink]="'/media/artists/' + item?.id"
+            [stationId]="item?.relationships?.station?.data?.[0]?.id"
+            (playEmitter)="playEmitter.emit({type: $event.type, id: $event.id})"
+          ></core-artist-tile>
+          </ng-container>
         </ng-container>
         <ng-container *ngSwitchCase="'songs'">
           <core-media-tile-small

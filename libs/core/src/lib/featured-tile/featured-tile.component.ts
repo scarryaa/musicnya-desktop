@@ -9,22 +9,17 @@ import { CommonModule } from '@angular/common';
 import { BaseButtonModule } from '../base-button/base-button.component';
 import { RouterModule } from '@angular/router';
 import { FallbackImageDirective } from '../fallback-image.directive';
+import { FormatImageURLPipe } from "../formatImageURL/format-image-url.pipe";
 
 @Component({
-  selector: 'core-featured-tile',
-  standalone: true,
-  imports: [
-    CommonModule,
-    BaseButtonModule,
-    RouterModule,
-    FallbackImageDirective,
-  ],
-  template: ` <div class="media-tile-wrapper">
+    selector: 'core-featured-tile',
+    standalone: true,
+    template: ` <div class="media-tile-wrapper">
     <div class="media-tile">
       <div class="media-tile__image-wrapper">
         <img
           class="media-tile__image-wrapper__image"
-          [src]="source"
+          [src]="(source || '') | formatImageURL: 1200"
           [style.minWidth.rem]="mediaImageSize"
         />
         <div class="media-tile__image-overlay" [routerLink]="albumLink">
@@ -87,8 +82,15 @@ import { FallbackImageDirective } from '../fallback-image.directive';
       </div>
     </div>
   </div>`,
-  styleUrls: ['./featured-tile.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['./featured-tile.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        BaseButtonModule,
+        RouterModule,
+        FallbackImageDirective,
+        FormatImageURLPipe
+    ]
 })
 export class FeaturedTileComponent {
   @Input() superheading!: string;

@@ -17,7 +17,7 @@ module.exports = {
     'radio',
     'library',
     'curator-details',
-  ],
+    'room',],
   plugins: [
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(process.env),

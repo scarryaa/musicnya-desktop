@@ -16,7 +16,8 @@ export class ColorService {
   }
 
   async getAverageColor(image: string): Promise<FastAverageColorResult | void> {
-    return await this.fac.getColorAsync(image, {
+    let regex1 = /(%[0-9A-Fa-f][0-9A-Fa-f]([A-Za-z]%[0-9A-Fa-f][0-9A-Fa-f])+)/i;
+    return await this.fac.getColorAsync(image?.replace(regex1, '50x50').replace('{w}x{h}', '50x50').replace('{f}', 'webp'), {
       mode: 'speed',
       algorithm: 'dominant',
       ignoredColor: [

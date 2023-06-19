@@ -14,10 +14,14 @@ import {
   HeadingComponent,
   LinkTileSetComponent,
   MediaTileSmallComponent,
+  RegexSplitPipe,
+  RoomType,
+  RoomTypePipe,
   TileSelectorComponent,
   VideoTileComponent,
 } from '@nyan-inc/core';
 import { MediaTileListComponent } from '@nyan-inc/ui';
+import { map, skipWhile, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'browse-entry',
@@ -33,6 +37,8 @@ import { MediaTileListComponent } from '@nyan-inc/ui';
     BannerTileComponent,
     BannerHeroTileComponent,
     TileSelectorComponent,
+    RegexSplitPipe,
+    RoomTypePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './browse.component.html',
@@ -55,6 +61,36 @@ export class BrowseComponent {
 
   handleCurator(id: string) {
     this.vm.getCurator(id);
+  }
+
+  handleRoom(id: string, type: string | undefined, url?: string) {
+    if (!id) return;
+
+    switch (type) {
+      case 'fcId': {
+        this.vm.getRoom(id, 'fcId');
+        break;
+      }
+      case 'pp': {
+        this.vm.getRoom(id, 'pp');
+        break;
+      }
+      case 'id': {
+        this.vm.getRoom(id, 'id');
+        break;
+      }
+      case 'apple-curators': {
+        this.vm.getRoom(id, 'apple-curators');
+        break;
+      }
+      case 'link': {
+        window.open(url, '_blank');
+        break;
+      }
+      default: {
+        break;
+      }
+    }
   }
 
   handleLinkClick(type: string, id: string) {

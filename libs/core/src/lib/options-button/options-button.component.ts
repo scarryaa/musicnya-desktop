@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
         viewBox="0 0 24 24"
         fill="white"
         stroke="white"
+        width="1.5rem"
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"

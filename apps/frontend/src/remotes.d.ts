@@ -15,3 +15,6 @@ declare module 'radio/Routes';
 declare module 'library/Routes';
 
 declare module 'curator-details/Routes';
+
+declare module 'rooms/Routes';
+declare module 'room/Routes';

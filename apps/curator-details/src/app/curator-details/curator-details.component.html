@@ -17,11 +17,11 @@
     >
       <div class="curator-details__info__image-wrapper">
         <picture>
-          <source [srcset]="vm.curatorBanner$ | async" />
+          <source [srcset]="vm.curatorBanner$ | async | formatImageURL: 400" />
           <img
             class="curator-details__info__image-wrapper__image"
             [src]="
-              (vm.curatorBanner$ | async) || 'assets/images/music_note.webp'
+              ((vm.curatorBanner$ | async) | formatImageURL: 400 || 'assets/images/music_note.webp') | formatImageURL: 1200
             "
           />
         </picture>

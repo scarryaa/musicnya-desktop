@@ -7,17 +7,17 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormatImageURLPipe } from "../formatImageURL/format-image-url.pipe";
 
 @Component({
-  selector: 'core-media-tile-small',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  template: `<div class="media-tile-small-wrapper">
+    selector: 'core-media-tile-small',
+    standalone: true,
+    template: `<div class="media-tile-small-wrapper">
     <div class="media-tile-small">
       <div class="media-tile-small__wrapper">
         <img
           class="media-tile-small__wrapper__image"
-          [src]="mediaImage"
+          [src]="(mediaImage || '') | formatImageURL: 70"
           [style.minHeight.rem]="mediaImageSize"
         />
         <div
@@ -59,8 +59,9 @@ import { RouterModule } from '@angular/router';
       </div>
     </div>
   </div>`,
-  styleUrls: ['./media-tile-small.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: ['./media-tile-small.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [CommonModule, RouterModule, FormatImageURLPipe]
 })
 export class MediaTileSmallComponent {
   @Input() mediaTitle: string | undefined = undefined;

@@ -1,0 +1,39 @@
+{
+  "name": "room-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/room-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/room-e2e/cypress.config.ts",
+        "devServerTarget": "room:serve:development",
+        "testingType": "e2e"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "room:serve:production"
+        },
+        "ci": {
+          "devServerTarget": "room:serve-static"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "apps/room-e2e/**/*.{js,ts}"
+        ]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": [
+    "room"
+  ]
+}

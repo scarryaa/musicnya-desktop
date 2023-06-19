@@ -8,8 +8,8 @@ import { SpinnerState } from '../reducers/spinner.reducer';
   providedIn: 'root',
 })
 export class SpinnerFacade {
+  constructor(private store: Store<SpinnerState>) {}
+
   state$ = this.store.pipe(select(fromSpinner.getSpinnerState));
   show$ = this.state$.pipe(map((state) => state.show));
-
-  constructor(private store: Store<SpinnerState>) {}
 }

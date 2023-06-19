@@ -10,15 +10,15 @@ import {
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PlayButtonComponent } from '../play-button/play-button.component';
+import { FormatImageURLPipe } from "../formatImageURL/format-image-url.pipe";
 
 @Component({
-  selector: 'core-artist-tile',
-  standalone: true,
-  imports: [CommonModule, RouterModule, PlayButtonComponent],
-  template: `<div class="artist-tile-wrapper">
+    selector: 'core-artist-tile',
+    standalone: true,
+    template: `<div class="artist-tile-wrapper">
     <div class="artist-tile">
       <div class="artist-tile__image-wrapper">
-        <img [src]="image" class="artist-tile-wrapper__image-wrapper__image" />
+        <img [src]="(image || '') | formatImageURL: 250" class="artist-tile-wrapper__image-wrapper__image" />
         <div
           class="artist-tile-wrapper__image-overlay"
           [routerLink]="artistLink"
@@ -29,8 +29,8 @@ import { PlayButtonComponent } from '../play-button/play-button.component';
       <p [routerLink]="artistLink">{{ name }}</p>
     </div>
   </div>`,
-  styles: [
-    `
+    styles: [
+        `
       :host {
         display: block;
         position: relative;
@@ -101,8 +101,9 @@ import { PlayButtonComponent } from '../play-button/play-button.component';
         }
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [CommonModule, RouterModule, PlayButtonComponent, FormatImageURLPipe]
 })
 export class ArtistTileComponent {
   @Input() name = '';

@@ -15,6 +15,7 @@ import { BaseComponent } from '../base-component';
 import { DisableChildTabIndexDirective } from '../disable-child-tabindex.directive';
 import { FallbackImageDirective } from '../fallback-image.directive';
 import { JoinPipeModule } from '../join.pipe';
+import { FormatImageURLPipe } from "../formatImageURL/format-image-url.pipe";
 
 @Component({
   selector: 'ui-album-tile',
@@ -28,7 +29,7 @@ import { JoinPipeModule } from '../join.pipe';
         alt="{{ type }} art"
         [style.min-width.rem]="sizeX"
         [style.max-width.rem]="maxSizeX || undefined"
-        [src]="source"
+        [src]="(source || '') | formatImageURL: imageSize || 400"
         [ngClass]="{ 'hover-underline': hoverUnderline }"
         [routerLink]="artworkRouterLink"
         [tabIndex]="-1"
@@ -86,6 +87,7 @@ export class AlbumTileComponent extends BaseComponent {
   @Input() artworkRouterLink!: string;
   @Input() routerLink!: string;
   @Input() ngClass!: { [klass: string]: any } | string | string[] | Set<string>;
+  @Input() imageSize?: number;
 
   @ViewChildren('button', { read: ElementRef })
   buttonElements!: QueryList<ElementRef>;
@@ -113,15 +115,16 @@ export class AlbumTileComponent extends BaseComponent {
 }
 
 @NgModule({
-  imports: [
-    RouterModule,
-    CommonModule,
-    JoinPipeModule,
-    BaseButtonModule,
-    DisableChildTabIndexDirective,
-    FallbackImageDirective,
-  ],
-  exports: [AlbumTileComponent],
-  declarations: [AlbumTileComponent],
+    exports: [AlbumTileComponent],
+    declarations: [AlbumTileComponent],
+    imports: [
+        RouterModule,
+        CommonModule,
+        JoinPipeModule,
+        BaseButtonModule,
+        DisableChildTabIndexDirective,
+        FallbackImageDirective,
+        FormatImageURLPipe
+    ]
 })
 export class AlbumTileModule {}

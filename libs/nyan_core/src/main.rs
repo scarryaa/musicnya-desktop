@@ -62,11 +62,6 @@ async fn library_albums(client: web::Data<Client>, req: HttpRequest, path: web::
                 ];
 
                 let mut result = String::from(res.text().await.unwrap());
-
-                for (pattern, replacement) in replacements.iter() {
-                    let re = Regex::new(pattern).unwrap();
-                    result = re.replace_all(&result, *replacement).to_string();
-                }
                 
                 HttpResponse::Ok().body(result)
             }

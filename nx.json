@@ -7,21 +7,39 @@
     "default": {
       "runner": "nx-cloud",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e", "server"],
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e",
+          "server"
+        ],
         "accessToken": "YjJkOTgyY2YtNTRhMy00Yjk1LWFlZGUtNDJlMjRmMGE3NzI5fHJlYWQtd3JpdGU="
       }
     }
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "production",
+        "^production"
+      ]
     },
     "test": {
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/jest.preset.js"
+      ]
     },
     "e2e": {
-      "inputs": ["default", "^production"]
+      "inputs": [
+        "default",
+        "^production"
+      ]
     },
     "lint": {
       "inputs": [
@@ -32,7 +50,10 @@
     }
   },
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
@@ -57,5 +78,5 @@
       "style": "scss"
     }
   },
-  "defaultProject": "src-tauri"
+  "defaultProject": "electron"
 }

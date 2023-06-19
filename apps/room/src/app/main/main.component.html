@@ -1,0 +1,234 @@
+<ng-container *ngrxLet="vm">
+  <ng-container *ngIf="vm">
+    <ng-container [ngSwitch]="vm.selectRoomType$ | async">
+      <ng-container *ngSwitchCase="'apple-curators'">
+        <core-heading size="large" class="main__heading">
+          {{ vm.selectRoomTitle$ | async }}</core-heading
+        >
+        <ng-container
+          *ngFor="
+            let item of vm.selectRoom$ | async;
+            let i = index;
+            trackBy: trackBy
+          "
+        >
+          <ng-container [ngSwitch]="item.attributes?.editorialElementKind">
+            <ng-container *ngSwitchDefault>
+              <core-tile-selector
+                (playEmitter)="play($event.type, $event.id)"
+                (needCuratorEmitter)="handleCurator($event)"
+                [data]="item.relationships?.['contents']?.data"
+                [title]="item.attributes?.['name'] || 'Unknown Category'"
+              ></core-tile-selector>
+            </ng-container>
+            <div *ngSwitchCase="'316'">
+              <div class="hero-banner-tiles">
+                <ng-container
+                  *ngFor="let item of item.relationships?.children?.data"
+                >
+                  <core-banner-hero-tile
+                    [id]="item.relationships?.contents?.data?.[0]?.id || ''"
+                    [type]="item.relationships?.contents?.data?.[0]?.type || ''"
+                    (playEmitter)="play($event.type, $event.id)"
+                    [badge]="item.attributes?.designBadge || ''"
+                    [title]="item.attributes?.designTag || item.relationships?.contents?.data?.[0]?.attributes?.['name'] || ''"
+                    [subtitle]="item.relationships?.contents?.data?.[0]?.attributes?.['curatorName'] || item.relationships?.contents?.data?.[0]?.attributes?.['artistName'] || ''"
+                    [description]="item.relationships?.contents?.data?.[0]?.attributes?.['plainEditorialNotes']?.short || ''"
+                    [image]="item.attributes?.artwork?.url || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork']?.subscriptionHero.url || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork']?.subscriptionCover.url ||''"
+                    >{{ item.attributes?.designTag }}</core-banner-hero-tile
+                  >
+                </ng-container>
+              </div>
+            </div>
+            <div *ngSwitchCase="'385'">
+              <core-heading
+                class="banner-tiles__heading"
+                size="medium"
+                >{{item.attributes?.['name']}}</core-heading
+              >
+              <div class="banner-tiles">
+                <ng-container
+                  *ngFor="let item of item.relationships?.children?.data"
+                >
+                  <core-banner-tile
+                    (playEmitter)="play($event.type, $event.id)"
+                    (clickEmitter)="handleRoom($event.id, $event.type)"
+                    [hasRoom]="item.attributes?.link?.url"
+                    [id]="
+                      item.attributes?.link?.url
+                        ?.split('&')
+                        ?.pop()
+                        ?.split('=')
+                        ?.pop() || ''
+                    "
+                    [type]="item.relationships?.contents?.data?.[0]?.type || item.type || ''"
+                    [image]="item.attributes?.artwork?.url || '' || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork'].subscriptionHero?.url || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork'].subscriptionCover?.url"
+                    >{{ item.relationships?.contents?.data?.[0]?.attributes?.['name'] || item.attributes?.designTag }}</core-banner-tile
+                  >
+                </ng-container>
+              </div>
+            </div>
+            <div *ngSwitchCase="'323'">
+              <ng-container
+                *ngFor="let item of item.relationships?.children?.data"
+              >
+                <ng-container
+                  [ngSwitch]="item.attributes?.editorialElementKind"
+                >
+                  <div *ngSwitchCase="'336'">
+                    <core-tile-selector
+                      [parentId]="item.id"
+                      (playEmitter)="play($event.type, $event.id)"
+                      (needCuratorEmitter)="handleCurator($event)"
+                      [data]="item.relationships?.['contents']?.data"
+                      [title]="item.attributes?.['name'] || 'Unknown Category'"
+                    ></core-tile-selector>
+                  </div>
+                  <div *ngSwitchCase="'339'">
+                    <div class="spacer-3"></div>
+                    <core-tile-selector
+                      (playEmitter)="play($event.type, $event.id)"
+                      (needCuratorEmitter)="handleCurator($event)"
+                      [data]="item.relationships?.['contents']?.data"
+                      [title]="item.attributes?.['name'] || 'Unknown Category'"
+                    ></core-tile-selector>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+            <div
+              class="link-tiles"
+              *ngSwitchCase="
+                ['322', '391'].includes(
+                  item.attributes?.editorialElementKind || ''
+                )
+                  ? item.attributes?.editorialElementKind
+                  : ''
+              "
+            >
+              <core-link-tile-set [links]="item.attributes?.links">
+              </core-link-tile-set>
+            </div>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="'multirooms'">
+        <div class="banner">
+          <img [src]="vm.selectRoomBanner$ | async | formatImageURL : 1200" />
+        </div>
+        <ng-container
+          *ngFor="
+            let item of vm.selectRoom$ | async;
+            let i = index;
+            trackBy: trackBy
+          "
+        >
+          <div class="description" *ngIf="i === 0">
+            {{ item.attributes?.description }}
+          </div>
+          <ng-container *ngIf="i > 0">
+            <ng-container [ngSwitch]="item.attributes?.editorialElementKind">
+              <ng-container *ngSwitchCase="'404'"></ng-container>
+              <ng-container *ngSwitchDefault>
+                <core-tile-selector
+                  (playEmitter)="play($event.type, $event.id)"
+                  (needCuratorEmitter)="handleCurator($event)"
+                  [data]="item.relationships?.['contents']?.data"
+                  [title]="item.attributes?.['title']"
+                ></core-tile-selector>
+              </ng-container>
+              <div *ngSwitchCase="'316'">
+                <div class="hero-banner-tiles">
+                  <ng-container
+                    *ngFor="let item of item.relationships?.children?.data"
+                  >
+                    <core-banner-hero-tile
+                      [id]="item.relationships?.contents?.data?.[0]?.id || ''"
+                      [type]="item.relationships?.contents?.data?.[0]?.type || ''"
+                      (playEmitter)="play($event.type, $event.id)"
+                      [badge]="item.attributes?.designBadge || ''"
+                      [title]="item.attributes?.designTag || item.relationships?.contents?.data?.[0]?.attributes?.['name'] || ''"
+                      [subtitle]="item.relationships?.contents?.data?.[0]?.attributes?.['curatorName'] || item.relationships?.contents?.data?.[0]?.attributes?.['artistName'] || ''"
+                      [description]="item.relationships?.contents?.data?.[0]?.attributes?.['plainEditorialNotes']?.short || ''"
+                      [image]="item.attributes?.artwork?.url || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork']?.subscriptionHero.url || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork']?.subscriptionCover.url ||''"
+                      >{{ item.attributes?.designTag }}</core-banner-hero-tile
+                    >
+                  </ng-container>
+                </div>
+              </div>
+              <div *ngSwitchCase="'385'">
+                <core-heading
+                  class="banner-tiles__heading"
+                  size="medium"
+                  >{{item.attributes?.['name']}}</core-heading
+                >
+                <div class="banner-tiles">
+                  <ng-container
+                    *ngFor="let item of item.relationships?.children?.data"
+                  >
+                    <core-banner-tile
+                      (playEmitter)="play($event.type, $event.id)"
+                      (clickEmitter)="handleRoom($event.id, $event.type)"
+                      [hasRoom]="item.attributes?.link?.url"
+                      [roomType]="item.attributes?.link?.url || '' | roomType"
+                      [id]="
+                        (item.attributes?.link?.url | regexSplit : 'id=') ||
+                        (item.attributes?.link?.url | regexSplit : 'fcId=') ||
+                        (item.attributes?.link?.url | regexSplit : 'pp=') ||
+                        ''
+                      "
+                      [type]="item.relationships?.contents?.data?.[0]?.type || item.type || ''"
+                      [image]="item.attributes?.artwork?.url || '' || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork'].subscriptionHero?.url || item.relationships?.contents?.data?.[0]?.attributes?.['editorialArtwork'].subscriptionCover?.url"
+                      >{{ item.relationships?.contents?.data?.[0]?.attributes?.['name'] || item.attributes?.designTag }}</core-banner-tile
+                    >
+                  </ng-container>
+                </div>
+              </div>
+              <div *ngSwitchCase="'323'">
+                <ng-container
+                  *ngFor="let item of item.relationships?.children?.data"
+                >
+                  <ng-container
+                    [ngSwitch]="item.attributes?.editorialElementKind"
+                  >
+                    <div *ngSwitchCase="'336'">
+                      <core-tile-selector
+                        [parentId]="item.id"
+                        (playEmitter)="play($event.type, $event.id)"
+                        (needCuratorEmitter)="handleCurator($event)"
+                        [data]="item.relationships?.['contents']?.data"
+                        [title]="item.attributes?.['name'] || 'Unknown Category'"
+                      ></core-tile-selector>
+                    </div>
+                    <div *ngSwitchCase="'339'">
+                      <div class="spacer-3"></div>
+                      <core-tile-selector
+                        (playEmitter)="play($event.type, $event.id)"
+                        (needCuratorEmitter)="handleCurator($event)"
+                        [data]="item.relationships?.['contents']?.data"
+                        [title]="item.attributes?.['name'] || 'Unknown Category'"
+                      ></core-tile-selector>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </div>
+              <div
+                class="link-tiles"
+                *ngSwitchCase="
+                  ['322', '391', '405'].includes(
+                    item.attributes?.editorialElementKind || ''
+                  )
+                    ? item.attributes?.editorialElementKind
+                    : ''
+                "
+              >
+                <core-link-tile-set [links]="item.attributes?.links">
+                </core-link-tile-set>
+              </div>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ng-container>

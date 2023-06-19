@@ -1,11 +1,6 @@
 // helper functions
 // determine type of media item
-export const processMediaType = (
-  type: Readonly<string>,
-  id: ReadonlyArray<string> | Readonly<string>
-) => {
-  if (id instanceof Array<string>) return 'songs';
-
+export const processMediaType = (type: Readonly<string>, id: string) => {
   switch (type) {
     case 'albums': {
       return 'album';

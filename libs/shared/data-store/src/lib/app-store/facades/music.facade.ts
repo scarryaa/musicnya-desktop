@@ -11,6 +11,8 @@ import { MusicState } from '../reducers/music.reducer';
   providedIn: 'root',
 })
 export class MusicFacade implements OnDestroy {
+  constructor(private readonly store: Store<MusicState>) {}
+
   readonly subs = new Subscription();
   readonly state$ = this.store.pipe(select(fromMusic.getMusicState));
   readonly currentItem$ = this.state$.pipe(
@@ -44,8 +46,6 @@ export class MusicFacade implements OnDestroy {
   readonly currentArtist$ = this.state$.pipe(
     map((state) => state.musicPlayer.currentArtist)
   );
-
-  constructor(private readonly store: Store<MusicState>) {}
 
   ngOnDestroy() {
     this.subs.unsubscribe();
