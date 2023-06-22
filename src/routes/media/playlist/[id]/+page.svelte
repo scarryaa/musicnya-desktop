@@ -1,44 +1,38 @@
 <script>
-	import ButtonFilled from '../../../components/buttons/button-filled.svelte';
-	import Link from '../../../components/routing/link.svelte';
+	import { libraryPlaylists } from '../../../../store';
+	import ButtonFilled from '../../../../components/buttons/button-filled.svelte';
 
 	import Play from 'svelte-material-icons/Play.svelte';
 	import Shuffle from 'svelte-material-icons/Shuffle.svelte';
-	import ButtonIcon from '../../../components/buttons/button-icon.svelte';
+	import ButtonIcon from '../../../../components/buttons/button-icon.svelte';
 	import Download from 'svelte-material-icons/Download.svelte';
 	import DotsHorizontal from 'svelte-material-icons/DotsHorizontal.svelte';
 	import ClockTimeFiveOutline from 'svelte-material-icons/ClockTimeFiveOutline.svelte';
+	import { getLibraryPlaylist } from '../../../../utils/apple-music-api';
 
-	export let media;
-
-	const replacePlaylist = (target, playlist) => {
-		const component = new this({
-			target: target,
-			props: {
-				media: playlist
-			}
-		});
-		target.innerHTML = '';
-		return component;
-	};
+	export let data;
 </script>
 
 <div class="media-wrapper">
 	<div class="media-info">
 		<img
 			loading="eager"
-			src={media.attributes.artwork?.url.replace('{w}x{h}', '300x300').replace('{f}', 'webp') ||
-				media.relationships?.tracks?.[0]?.attributes?.artwork?.url.replace('{w}x{h}', '300x300')}
+			src={data.libraryPlaylist.attributes.artwork?.url
+				.replace('{w}x{h}', '300x300')
+				.replace('{f}', 'webp') ||
+				data.libraryPlaylist.relationships?.tracks?.[0]?.attributes?.artwork?.url
+					.replace('{w}x{h}', '300x300')
+					.replace('{f}', 'webp')}
 			alt="Media Art"
 		/>
 		<div class="media-info__title-desc">
 			<div class="media-title">
-				<span>{media.attributes.name}</span>
+				<span>{data.libraryPlaylist.attributes.name}</span>
 			</div>
-			{#if media.attributes.curatorName}
+			{#if data.libraryPlaylist.attributes.curatorName}
 				<div class="curator-year">
 					<div class="media-curator">
-						<span>{media.attributes.curatorName}</span>
+						<span>{data.libraryPlaylist.attributes.curatorName}</span>
 					</div>
 				</div>
 			{/if}
@@ -69,7 +63,7 @@
 					<!-- with class -->
 					<th class="table-number">#</th>
 					<th class="table-title">Title</th>
-					{#if media.type !== 'albums' || media.type !== 'library-albums'}
+					{#if data.libraryPlaylist.type !== 'albums' || data.libraryPlaylist.type !== 'library-albums'}
 						<th class="table-album">Album</th>
 					{/if}
 					<th class="table-duration" id="table-duration-header">
@@ -78,7 +72,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each media.relationships.tracks as track, i}
+				{#each data.libraryPlaylist.relationships.tracks as track, i}
 					<tr>
 						<td class="table-number" id="table-number">{i + 1}</td>
 						<td class="table-title" id="table-title">
@@ -88,7 +82,9 @@
 									src={track.attributes.artwork?.url
 										.replace('{w}x{h}', '50x50')
 										.replace('{f}', 'webp') ||
-										track.attributes.artwork?.url.replace('{w}x{h}', '50x50')}
+										track.attributes.artwork?.url
+											.replace('{w}x{h}', '50x50')
+											.replace('{f}', 'webp')}
 									alt="Track Art"
 								/>
 								<div class="table-title__wrapper-text">
@@ -98,14 +94,16 @@
 								</div>
 							</div>
 						</td>
-						{#if media.type !== 'albums' || media.type !== 'library-albums'}
+						{#if data.libraryPlaylist.type !== 'albums' || data.libraryPlaylist.type !== 'library-albums'}
 							<td class="table-album" id="table-album">
-								<Link
-									to={() => replacePlaylist(document.querySelector('.content-wrapper'), playlist)}
+								<a
+									href="/media/album/{track.relationships?.catalog?.data?.[0]?.relationships?.albums
+										?.data?.[0]?.id}"
+									class="table-album__link"
 									><div class="table-album__text-wrapper">
 										<span class="table-album__text-wrapper__text">{track.attributes.albumName}</span
 										>
-									</div></Link
+									</div></a
 								></td
 							>
 						{/if}
@@ -122,7 +120,7 @@
 </div>
 
 <style lang="scss">
-	@use '../../../variables.scss' as *;
+	@use '../../../../variables.scss' as *;
 
 	$table-background: #fff;
 	$table-background-hover: #f2f2f2;
@@ -134,12 +132,15 @@
 	$drop-shadow-text: rgba(0, 0, 0, 0.2) 0px 0px 1px;
 
 	.media-wrapper {
-		overflow: hidden;
+		overflow: auto;
+		overflow-x: hidden !important;
 		padding-top: 4rem;
 		padding-left: 1rem;
 		background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
 		height: calc(100% - 4rem);
 		width: calc(100% - 1rem);
+		scrollbar-gutter: stable both-edges;
+		scrollbar-track-color: transparent;
 
 		&:hover {
 			overflow-y: overlay;

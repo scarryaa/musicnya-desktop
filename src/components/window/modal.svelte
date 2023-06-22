@@ -50,7 +50,7 @@
 			height: 80%;
 			background-color: white;
 			border-radius: 0.4rem;
-			overflow-y: scroll;
+			overflow-y: overlay;
 			padding: 1.6rem;
 		}
 

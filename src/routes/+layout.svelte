@@ -2,7 +2,14 @@
 	import '../app.scss';
 	import '../variables.scss';
 
-	import { drawerOpen, firstLaunch, page } from '../store';
+	import {
+		developerToken,
+		drawerOpen,
+		firstLaunch,
+		libraryPlaylists,
+		instance as MKInstance,
+		musicUserToken
+	} from '../store';
 	import { onMount } from 'svelte';
 	import { getConfig } from '../utils/internal-api';
 	import { getLibraryPlaylists } from '../utils/apple-music-api';
@@ -15,7 +22,6 @@
 	import Titlebar from '../components/window/titlebar.svelte';
 	import DrawerButton from '../components/drawer/drawer-button.svelte';
 	import NavigationButtons from '../components/window/navigation-buttons.svelte';
-	import Link from '../components/routing/link.svelte';
 
 	import HomeVariant from 'svelte-material-icons/HomeVariant.svelte';
 	import ViewGridOutline from 'svelte-material-icons/ViewGridOutline.svelte';
@@ -29,7 +35,6 @@
 	import MediaControls from '../components/media/media-controls.svelte';
 	import Search from '../components/search.svelte';
 	import WindowButtons from '../components/window/window-buttons.svelte';
-	import { updateLink } from '../components/routing/router.svelte';
 	import Modal from '../components/window/modal.svelte';
 
 	let playlists = [];
@@ -58,8 +63,10 @@
 					build: '1.0.0'
 				}
 			}).then((instance) => {
+				musicUserToken.set(instance.musicUserToken);
+				developerToken.set(instance.developerToken);
 				getLibraryPlaylists(instance).then((data) => {
-					playlists = data;
+					libraryPlaylists.set(data);
 				});
 			})
 		);
@@ -130,7 +137,7 @@
 				class="bottom-left__scroll-wrapper"
 				style="padding-right: {$drawerOpen ? '3.2rem' : '0.6rem'}"
 			>
-				{#each playlists as playlist, i (i)}
+				{#each $libraryPlaylists as playlist, i (i)}
 					<a href={`/media/playlist/${playlist.id}`}>
 						<MediaTile
 							--showInfo={$drawerOpen ? 'block' : 'none'}
@@ -139,10 +146,9 @@
 							src={playlist.attributes.artwork?.url
 								.replace('{w}x{h}', '100x100')
 								.replace('{f}', 'webp') ||
-								playlist.relationships?.tracks?.[0]?.attributes?.artwork?.url.replace(
-									'{w}x{h}',
-									'100x100'
-								)}
+								playlist.relationships?.tracks?.[0]?.attributes?.artwork?.url
+									.replace('{w}x{h}', '100x100')
+									.replace('{f}', 'webp')}
 						/>
 					</a>
 				{/each}

@@ -46,6 +46,7 @@
 		.drawer__left {
 			position: relative;
 			width: var(--drawer-left-width);
+			height: calc(100% + 0.25rem);
 			margin: 0.5rem;
 			margin-right: 0;
 			flex-grow: 0;
