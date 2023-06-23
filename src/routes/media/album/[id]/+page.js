@@ -18,6 +18,8 @@ export async function load({ fetch, params }) {
           mode: 'cors',
         }
       );
-      const json = await response.json();
-      return { album: json.data?.[0] }
+      const json = await response.json().then((data) => {
+        return data;
+        });
+      return { album: json.data?.[0] };
 }

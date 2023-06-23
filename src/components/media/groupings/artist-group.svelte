@@ -13,22 +13,52 @@
 	export let groupTitle: string;
 	export let contentType: string;
 
-	let scrollButtons: HTMLElement;
+	let scrollButtons: HTMLElement | null;
 
 	function scroll(direction: 'left' | 'right') {
-		const scrollAmount = direction === 'left' ? -200 : 200;
-		scrollButtons.scrollBy({
+		const scrollAmount =
+			direction === 'left'
+				? -((document.defaultView?.innerWidth ?? 300) - 300)
+				: (document.defaultView?.innerWidth ?? 300) - 300;
+		document.querySelector('.artist-group__content')?.scrollBy({
 			left: scrollAmount,
 			behavior: 'smooth'
 		});
 	}
 
-	//scroll on arrow click
 	onMount(() => {
 		scrollButtons = document.querySelector('.scroll-buttons__arrows');
-		scrollButtons.addEventListener('click', (e) => {
-			if (e.target.classList.contains('scroll-buttons__arrows')) return;
-			scroll(e.target.classList.contains('ChevronLeft') ? 'left' : 'right');
+
+		scrollButtons = document.querySelector('.scroll-buttons__arrows');
+
+		// hide scroll buttons if not scrollable
+		const content = document.querySelector('.artist-group__content');
+
+		//scroll on arrow key press if focused, and key is arrowleft, arrowright, space, or enter
+		scrollButtons?.addEventListener('keydown', (e) => {
+			if (
+				e.key === 'ArrowLeft' ||
+				e.key === 'ArrowRight' ||
+				e.key === 'Space' ||
+				e.key === 'Enter'
+			) {
+				scroll(document.activeElement === scrollButtons?.children[0] ? 'left' : 'right');
+			}
+
+			// TODO hide elements as they scroll out of view
+			// if (e.key === 'ArrowLeft' && document.activeElement === scrollButtons?.children[0]) {
+
+			// find first element in view and focus it if tabbing from scroll buttons
+			if (e.key === 'Tab' && document.activeElement === scrollButtons?.children[1]) {
+				const firstElementInView = document.querySelector(
+					'.artist-group__content > *:not(.hidden)'
+				);
+				firstElementInView?.focus();
+			}
+		});
+
+		scrollButtons?.addEventListener('click', (e) => {
+			scroll(document.activeElement === scrollButtons?.children[0] ? 'left' : 'right');
 		});
 	});
 </script>
@@ -38,8 +68,14 @@
 		<h2 class="artist-group__title-wrapper__title">{groupTitle}</h2>
 		<div class="scroll-buttons">
 			<div class="scroll-buttons__arrows">
-				<ChevronLeft />
-				<ChevronRight />
+				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+				<div tabindex="0" class="scroll-button-arrows__icon">
+					<ChevronLeft />
+				</div>
+				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+				<div tabindex="0" class="scroll-button-arrows__icon">
+					<ChevronRight />
+				</div>
 			</div>
 		</div>
 	</div>
@@ -60,6 +96,8 @@
 			{#if contentType === 'album'}
 				<div class="artist-group__content__tile">
 					<AlbumTile
+						subtitle="year"
+						id={media.id}
 						title={media.attributes.name}
 						artist={media.attributes.artistName}
 						year={media.attributes.releaseDate.slice(0, 4)}
@@ -99,6 +137,8 @@
 			}
 
 			.scroll-buttons__arrows {
+				margin-top: 0.5rem;
+				outline-offset: 0.2rem;
 				display: flex;
 				flex-direction: row;
 				justify-content: center;
@@ -107,12 +147,13 @@
 				height: 2.5rem;
 				border-radius: $border-radius-half;
 				background-color: $background;
-				margin-inline: 1rem;
-				cursor: pointer;
+				margin-inline: 0.2rem;
 				transition: background-color 0.2s ease-in-out;
 				font-size: 2rem;
 
-				> .scroll-button-arrows__icon {
+				.scroll-button-arrows__icon {
+					align-items: center;
+					display: flex;
 					font-size: 1.6rem;
 					font-weight: 500;
 					color: $text;
@@ -121,10 +162,11 @@
 		}
 
 		&__content {
+			content-visibility: auto;
 			margin-top: 0.5rem;
 			padding-inline: 1rem;
 			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+			grid-template-columns: repeat(auto-fit, minmax(1fr, 1fr));
 			grid-template-rows: repeat(auto-fit, minmax(2rem, 1fr));
 			grid-auto-flow: column dense;
 			overflow-y: scroll;

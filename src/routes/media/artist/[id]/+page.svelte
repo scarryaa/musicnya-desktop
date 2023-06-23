@@ -14,6 +14,8 @@
 			.replace('{w}x{h}', '1200x1200')
 			.replace('{f}', 'webp')}), url({data.artist.attributes?.editorialArtwork?.bannerUber?.url
 			.replace('{w}x{h}', '600x600')
+			.replace('{f}', 'webp')}), url({data.artist.attributes?.editorialArtwork?.bannerUber?.url
+			.replace('{w}x{h}', '200x200')
 			.replace('{f}', 'webp')}),
             
             url({data.artist.attributes?.artwork?.url
@@ -29,7 +31,14 @@
 	</div>
 	<div class="page-wrapper__content">
 		<ArtistGroup groupTitle="Top Songs" viewType="top-songs" {data} contentType="song" />
-		<ArtistGroup groupTitle="Latest Release" viewType="latest-release" {data} contentType="album" />
+		{#if data.artist.views?.['latest-release'].data.length > 0}
+			<ArtistGroup
+				groupTitle="Latest Release"
+				viewType="latest-release"
+				{data}
+				contentType="album"
+			/>
+		{/if}
 	</div>
 </div>
 

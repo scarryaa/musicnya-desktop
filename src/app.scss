@@ -29,6 +29,11 @@ a {
 	text-decoration: none;
 	color: inherit;
 	display: block;
+
+	&:hover {
+		text-decoration: underline;
+		cursor: default;
+	}
 }
 
 *:focus-visible {
@@ -43,16 +48,16 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-	margin-top: 0.1rem;
+	margin-top: 0.4rem;
 	margin-bottom: 0.4rem;
 	background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-	background: #313131;
+	background: #000000;
 	border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: #555;
+	background: #e4e4e4;
 }

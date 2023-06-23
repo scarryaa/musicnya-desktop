@@ -7,8 +7,19 @@
 	import Download from 'svelte-material-icons/Download.svelte';
 	import DotsHorizontal from 'svelte-material-icons/DotsHorizontal.svelte';
 	import ClockTimeFiveOutline from 'svelte-material-icons/ClockTimeFiveOutline.svelte';
+	import { onMount } from 'svelte';
+	import { getDominantColor } from '../../../../utils/color-service';
 
 	export let data;
+
+	onMount(async () => {
+		data.album.color = await getDominantColor(
+			data.album.attributes?.artwork?.url.replace('{w}x{h}', '300x300').replace('{f}', 'webp') ||
+				data.album.relationships?.tracks?.[0]?.attributes?.artwork?.url
+					.replace('{w}x{h}', '300x300')
+					.replace('{f}', 'webp')
+		);
+	});
 </script>
 
 <div class="media-wrapper" style="background: {data.album.color?.hex || '#a0a0a0'}">
@@ -89,7 +100,10 @@
 								{/if}
 								<div class="table-title__wrapper-text">
 									<span class="table-title__wrapper-text-title">{track.attributes.name}</span>
-									<a href="/media/artist/{data.album.relationships?.artists?.data?.[0]?.id}">
+									<a
+										href="/media/artist/{data.album.relationships?.artists?.data?.[0]?.id}"
+										class="table-title__wrapper-text-artist-wrapper"
+									>
 										<span class="table-title__wrapper-text-artist"
 											>{track.attributes.artistName}</span
 										></a
@@ -296,6 +310,10 @@
 					overflow: hidden;
 					margin-right: 1rem;
 
+					.table-title__wrapper-text-artist-wrapper {
+						outline-offset: -0.2rem;
+					}
+
 					span {
 						font-size: 1rem;
 						font-weight: 400;
@@ -335,7 +353,6 @@
 				color: $text-light;
 
 				.table-album__text-wrapper {
-					margin-right: 1rem;
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;

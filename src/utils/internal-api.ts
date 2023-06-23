@@ -1,5 +1,5 @@
 export const getConfig = () => {
-    return fetch("./config.json")
+    return fetch("http://localhost:5173/config.json")
         .then((response) => response.json())
         .then(data => data)
     }

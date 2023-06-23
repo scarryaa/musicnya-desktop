@@ -1,6 +1,7 @@
 <script>
 	import { libraryPlaylists } from '../../../../store';
 	import ButtonFilled from '../../../../components/buttons/button-filled.svelte';
+	import { navigating } from '$app/stores';
 
 	import Play from 'svelte-material-icons/Play.svelte';
 	import Shuffle from 'svelte-material-icons/Shuffle.svelte';
@@ -9,11 +10,13 @@
 	import DotsHorizontal from 'svelte-material-icons/DotsHorizontal.svelte';
 	import ClockTimeFiveOutline from 'svelte-material-icons/ClockTimeFiveOutline.svelte';
 	import { getLibraryPlaylist } from '../../../../utils/apple-music-api';
+	import { onMount } from 'svelte';
+	import { getDominantColor } from '../../../../utils/color-service';
 
 	export let data;
 </script>
 
-<div class="media-wrapper">
+<div class="media-wrapper" style="background: {data.libraryPlaylist.color?.hex || '#a0a0a0'}">
 	<div class="media-info">
 		<img
 			loading="eager"
@@ -90,6 +93,7 @@
 								<div class="table-title__wrapper-text">
 									<span class="table-title__wrapper-text-title">{track.attributes.name}</span>
 									<a
+										class="table-title__wrapper-text-artist-link"
 										href="/media/artist/{track.relationships?.catalog?.data?.[0]?.relationships
 											?.artists?.data?.[0]?.id}"
 									>
@@ -103,9 +107,9 @@
 						{#if data.libraryPlaylist.type !== 'albums' || data.libraryPlaylist.type !== 'library-albums'}
 							<td class="table-album" id="table-album">
 								<a
+									class="table-album__link"
 									href="/media/album/{track.relationships?.catalog?.data?.[0]?.relationships?.albums
 										?.data?.[0]?.id}"
-									class="table-album__link"
 									><div class="table-album__text-wrapper">
 										<span class="table-album__text-wrapper__text">{track.attributes.albumName}</span
 										>
@@ -303,6 +307,10 @@
 					overflow: hidden;
 					margin-right: 1rem;
 
+					.table-title__wrapper-text-artist-link {
+						outline-offset: -0.2rem;
+					}
+
 					span {
 						font-size: 1rem;
 						font-weight: 400;
@@ -342,7 +350,6 @@
 				color: $text-light;
 
 				.table-album__text-wrapper {
-					margin-right: 1rem;
 					text-overflow: ellipsis;
 					white-space: nowrap;
 					overflow: hidden;
@@ -350,6 +357,10 @@
 
 				.table-album__text-wrapper__text {
 					width: max-content;
+
+					> * {
+						outline-offset: -0.2rem;
+					}
 
 					&:hover {
 						text-decoration: underline;
@@ -384,6 +395,11 @@
 
 			.table-album {
 				width: 40%;
+
+				.table-album__link {
+					max-width: 100%;
+					width: max-content;
+				}
 			}
 
 			#table-album {

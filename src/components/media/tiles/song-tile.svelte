@@ -6,9 +6,10 @@
 	export let year: string;
 </script>
 
-<div class="song-tile-wrapper">
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+<div class="song-tile-wrapper" tabindex="0">
 	<div class="song-tile">
-		<img {src} alt="Album Art" loading="lazy" />
+		<img {src} alt="Album Art" loading="eager" />
 		<div class="song-info">
 			<div class="song-title">{title}</div>
 			{#if subtitle === 'artist'}
@@ -25,6 +26,11 @@
 
 	.song-tile-wrapper {
 		margin: 0.5rem 0;
+
+		&:focus,
+		&:active {
+			background-color: rgba(0, 0, 0, 0.1);
+		}
 	}
 
 	.song-tile {
