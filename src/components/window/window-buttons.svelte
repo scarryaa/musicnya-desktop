@@ -1,4 +1,6 @@
 <script>
+	// @ts-nocheck
+
 	import WindowMinimize from 'svelte-material-icons/WindowMinimize.svelte';
 	import CropSquare from 'svelte-material-icons/CropSquare.svelte';
 	import Close from 'svelte-material-icons/Close.svelte';

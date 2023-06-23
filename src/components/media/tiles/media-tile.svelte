@@ -1,8 +1,9 @@
-<script>
-	export let title;
-	export let artist;
-	export let src;
-	export let href;
+<script lang="ts">
+	export let title: string;
+	export let artist: string;
+	export let src: string;
+	export let href: string;
+	export const tabindex: string = '';
 </script>
 
 <a class="album-tile" role="button" tabindex="0" on:click on:keydown {href}>

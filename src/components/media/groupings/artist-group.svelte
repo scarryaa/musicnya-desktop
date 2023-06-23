@@ -50,7 +50,7 @@
 
 			// find first element in view and focus it if tabbing from scroll buttons
 			if (e.key === 'Tab' && document.activeElement === scrollButtons?.children[1]) {
-				const firstElementInView = document.querySelector(
+				const firstElementInView: HTMLElement | null = document.querySelector(
 					'.artist-group__content > *:not(.hidden)'
 				);
 				firstElementInView?.focus();
@@ -100,6 +100,7 @@
 						id={media.id}
 						title={media.attributes.name}
 						artist={media.attributes.artistName}
+						artistId={media.attributes.artistId}
 						year={media.attributes.releaseDate.slice(0, 4)}
 						src={media.attributes.artwork?.url.replace('{w}x{h}', '400x400').replace('{f}', 'webp')}
 					/>
@@ -108,6 +109,7 @@
 
 			{#if contentType === 'video'}
 				<SongTile
+					artist={media.attributes.artistName}
 					title={media.attributes.name}
 					year={media.attributes.releaseDate.slice(0, 4)}
 					src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}

@@ -1,5 +1,5 @@
 <script>
-	import { drawerOpen } from '../../store.ts';
+	import { drawerOpen } from '../../store';
 
 	export function toggle() {
 		drawerOpen.update((b) => !b);

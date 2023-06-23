@@ -8,7 +8,9 @@
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"sourceMap": true,
-		"strict": true
+		"strict": true,
+		"baseUrl": "./",
+		"types": ["./src/lib/types/musickit/index.d.ts", "./src/lib/types/window/index.ts"]
 	}
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//

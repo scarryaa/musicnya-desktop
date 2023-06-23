@@ -4,7 +4,7 @@
 	"private": true,
 	"main": "main.cjs",
 	"scripts": {
-		"dev": "vite dev & (cd libs/nyan_core && cargo run)",
+		"dev": "vite dev & (cd libs/nyan_core && cargo run) & (cd libs/api_server && node index.ts)",
 		"electron-dev": "concurrently \"yarn run dev\" \"yarn run electron\"",
 		"electron": "wait-on http://localhost:5173 && electron .",
 		"build": "vite build",

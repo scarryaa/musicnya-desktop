@@ -19,6 +19,7 @@
 	}
 
 	.drawer-button {
+		-webkit-user-drag: none;
 		width: 2rem;
 		height: 2rem;
 		display: var(--showPlus);

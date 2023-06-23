@@ -16,118 +16,126 @@
 	export let data;
 </script>
 
-<div class="media-wrapper" style="background: {data.libraryPlaylist.color?.hex || '#a0a0a0'}">
-	<div class="media-info">
-		<img
-			loading="eager"
-			src={data.libraryPlaylist.attributes.artwork?.url
-				.replace('{w}x{h}', '300x300')
-				.replace('{f}', 'webp') ||
-				data.libraryPlaylist.relationships?.tracks?.[0]?.attributes?.artwork?.url
+{#await getDominantColor(data.libraryPlaylist.attributes?.artwork?.url
+		.replace('{w}x{h}', '300x300')
+		.replace('{f}', 'webp') || data.libraryPlaylist.relationships?.tracks?.[0]?.attributes?.artwork?.url
+			.replace('{w}x{h}', '300x300')
+			.replace('{f}', 'webp')) then color}
+	<div class="media-wrapper" style="background: {color.hex || '#a0a0a0'}">
+		<div class="media-info">
+			<img
+				loading="eager"
+				src={data.libraryPlaylist.attributes.artwork?.url
 					.replace('{w}x{h}', '300x300')
-					.replace('{f}', 'webp')}
-			alt="Media Art"
-		/>
-		<div class="media-info__title-desc">
-			<div class="media-title">
-				<span>{data.libraryPlaylist.attributes.name}</span>
-			</div>
-			{#if data.libraryPlaylist.attributes.curatorName}
-				<div class="curator-year">
-					<div class="media-curator">
-						<span>{data.libraryPlaylist.attributes.curatorName}</span>
+					.replace('{f}', 'webp') ||
+					data.libraryPlaylist.relationships?.tracks?.[0]?.attributes?.artwork?.url
+						.replace('{w}x{h}', '300x300')
+						.replace('{f}', 'webp')}
+				alt="Media Art"
+			/>
+			<div class="media-info__title-desc">
+				<div class="media-title">
+					<span>{data.libraryPlaylist.attributes.name}</span>
+				</div>
+				{#if data.libraryPlaylist.attributes.curatorName}
+					<div class="curator-year">
+						<div class="media-curator">
+							<span>{data.libraryPlaylist.attributes.curatorName}</span>
+						</div>
 					</div>
-				</div>
-			{/if}
-			<div style="display: flex; flex-direction: row; width: inherit;">
-				<div class="play-shuffle">
-					<ButtonFilled width="6rem" height="2.5rem" text="Play" icon={Play} />
-					<ButtonFilled
-						width="8rem"
-						height="2.5rem"
-						class="shuffle-button"
-						text="Shuffle"
-						icon={Shuffle}
-					/>
-				</div>
-				<div class="download-more-options">
-					<ButtonIcon icon={Download} />
-					<ButtonIcon icon={DotsHorizontal} />
+				{/if}
+				<div style="display: flex; flex-direction: row; width: inherit;">
+					<div class="play-shuffle">
+						<ButtonFilled bg="" width="6rem" height="2.5rem" text="Play" icon={Play} />
+						<ButtonFilled
+							bg=""
+							width="8rem"
+							height="2.5rem"
+							class="shuffle-button"
+							text="Shuffle"
+							icon={Shuffle}
+						/>
+					</div>
+					<div class="download-more-options">
+						<ButtonIcon bg="" width="2.5rem" height="2.5rem" icon={Download} />
+						<ButtonIcon bg="" width="2.5rem" height="2.5rem" icon={DotsHorizontal} />
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<!-- Table -->
-	<div class="media-table">
-		<table>
-			<thead>
-				<tr>
-					<!-- with class -->
-					<th class="table-number">#</th>
-					<th class="table-title">Title</th>
-					{#if data.libraryPlaylist.type !== 'albums' || data.libraryPlaylist.type !== 'library-albums'}
-						<th class="table-album">Album</th>
-					{/if}
-					<th class="table-duration" id="table-duration-header">
-						<ClockTimeFiveOutline />
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each data.libraryPlaylist.relationships.tracks as track, i}
+		<!-- Table -->
+		<div class="media-table">
+			<table>
+				<thead>
 					<tr>
-						<td class="table-number" id="table-number">{i + 1}</td>
-						<td class="table-title" id="table-title">
-							<div class="table-title__wrapper">
-								<img
-									class="table-title__wrapper-img"
-									src={track.attributes.artwork?.url
-										.replace('{w}x{h}', '50x50')
-										.replace('{f}', 'webp') ||
-										track.attributes.artwork?.url
-											.replace('{w}x{h}', '50x50')
-											.replace('{f}', 'webp')}
-									alt="Track Art"
-								/>
-								<div class="table-title__wrapper-text">
-									<span class="table-title__wrapper-text-title">{track.attributes.name}</span>
-									<a
-										class="table-title__wrapper-text-artist-link"
-										href="/media/artist/{track.relationships?.catalog?.data?.[0]?.relationships
-											?.artists?.data?.[0]?.id}"
-									>
-										<span class="table-title__wrapper-text-artist"
-											>{track.attributes.artistName}</span
-										></a
-									>
-								</div>
-							</div>
-						</td>
+						<!-- with class -->
+						<th class="table-number">#</th>
+						<th class="table-title">Title</th>
 						{#if data.libraryPlaylist.type !== 'albums' || data.libraryPlaylist.type !== 'library-albums'}
-							<td class="table-album" id="table-album">
-								<a
-									class="table-album__link"
-									href="/media/album/{track.relationships?.catalog?.data?.[0]?.relationships?.albums
-										?.data?.[0]?.id}"
-									><div class="table-album__text-wrapper">
-										<span class="table-album__text-wrapper__text">{track.attributes.albumName}</span
-										>
-									</div></a
-								></td
-							>
+							<th class="table-album">Album</th>
 						{/if}
-						<td class="table-duration" id="table-duration"
-							>{Math.floor(track.attributes.durationInMillis / 1000 / 60) +
-								':' +
-								((track.attributes.durationInMillis / 1000) % 60).toFixed(0).padStart(2, '0')}</td
-						>
+						<th class="table-duration" id="table-duration-header">
+							<ClockTimeFiveOutline />
+						</th>
 					</tr>
-				{/each}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					{#each data.libraryPlaylist.relationships.tracks as track, i}
+						<tr>
+							<td class="table-number" id="table-number">{i + 1}</td>
+							<td class="table-title" id="table-title">
+								<div class="table-title__wrapper">
+									<img
+										class="table-title__wrapper-img"
+										src={track.attributes.artwork?.url
+											.replace('{w}x{h}', '50x50')
+											.replace('{f}', 'webp') ||
+											track.attributes.artwork?.url
+												.replace('{w}x{h}', '50x50')
+												.replace('{f}', 'webp')}
+										alt="Track Art"
+									/>
+									<div class="table-title__wrapper-text">
+										<span class="table-title__wrapper-text-title">{track.attributes.name}</span>
+										<a
+											class="table-title__wrapper-text-artist-link"
+											href="/media/artist/{track.relationships?.catalog?.data?.[0]?.relationships
+												?.artists?.data?.[0]?.id}"
+										>
+											<span class="table-title__wrapper-text-artist"
+												>{track.attributes.artistName}</span
+											></a
+										>
+									</div>
+								</div>
+							</td>
+							{#if data.libraryPlaylist.type !== 'albums' || data.libraryPlaylist.type !== 'library-albums'}
+								<td class="table-album" id="table-album">
+									<a
+										class="table-album__link"
+										href="/media/album/{track.relationships?.catalog?.data?.[0]?.relationships
+											?.albums?.data?.[0]?.id}"
+										><div class="table-album__text-wrapper">
+											<span class="table-album__text-wrapper__text"
+												>{track.attributes.albumName}</span
+											>
+										</div></a
+									></td
+								>
+							{/if}
+							<td class="table-duration" id="table-duration"
+								>{Math.floor(track.attributes.durationInMillis / 1000 / 60) +
+									':' +
+									((track.attributes.durationInMillis / 1000) % 60).toFixed(0).padStart(2, '0')}</td
+							>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
 	</div>
-</div>
+{/await}
 
 <style lang="scss">
 	@use '../../../../variables.scss' as *;
@@ -210,7 +218,7 @@
 		img {
 			max-width: 220px;
 			border-radius: $border-radius-half;
-			filter: drop-shadow(rgba(0, 0, 0, 0.4) 0px 0px 10px);
+			filter: drop-shadow(rgba(0, 0, 0, 0.8) 0px 0px 10px);
 		}
 
 		.media-table {
@@ -295,7 +303,7 @@
 					width: 40px;
 					margin-right: 0.2rem;
 					border-radius: $border-radius-half;
-					filter: drop-shadow($drop-shadow);
+					filter: drop-shadow(rgba(0, 0, 0, 0.8) 0px 0px 2px);
 				}
 
 				.table-title__wrapper-text {
@@ -308,6 +316,7 @@
 					margin-right: 1rem;
 
 					.table-title__wrapper-text-artist-link {
+						max-width: max-content;
 						outline-offset: -0.2rem;
 					}
 

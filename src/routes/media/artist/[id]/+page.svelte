@@ -10,19 +10,20 @@
 <div class="page-wrapper">
 	<div
 		class="page-wrapper__background"
-		style="background-image: url({data.artist.attributes?.editorialArtwork?.bannerUber?.url
+		style="background-image: url({(
+			data.artist.attributes?.editorialArtwork?.bannerUber?.url ||
+			data.artist.attributes?.artwork?.url
+		)
 			.replace('{w}x{h}', '1200x1200')
-			.replace('{f}', 'webp')}), url({data.artist.attributes?.editorialArtwork?.bannerUber?.url
+			.replace('{f}', 'webp')}), url({(
+			data.artist.attributes?.editorialArtwork?.bannerUber?.url ||
+			data.artist.attributes?.artwork?.url
+		)
 			.replace('{w}x{h}', '600x600')
-			.replace('{f}', 'webp')}), url({data.artist.attributes?.editorialArtwork?.bannerUber?.url
-			.replace('{w}x{h}', '200x200')
-			.replace('{f}', 'webp')}),
-            
-            url({data.artist.attributes?.artwork?.url
-			.replace('{w}x{h}', '1200x1200')
-			.replace('{f}', 'webp')}), url({data.artist.attributes?.artwork?.url
-			.replace('{w}x{h}', '600x600')
-			.replace('{f}', 'webp')}), url({data.artist.attributes?.artwork?.url
+			.replace('{f}', 'webp')}), url({(
+			data.artist.attributes?.editorialArtwork?.bannerUber?.url ||
+			data.artist.attributes?.artwork?.url
+		)
 			.replace('{w}x{h}', '200x200')
 			.replace('{f}', 'webp')})"
 	>

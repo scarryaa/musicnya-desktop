@@ -9,6 +9,7 @@
 	import ClockTimeFiveOutline from 'svelte-material-icons/ClockTimeFiveOutline.svelte';
 	import { onMount } from 'svelte';
 	import { getDominantColor } from '../../../../utils/color-service';
+	import { play } from '../../../../utils/playback-service';
 
 	export let data;
 
@@ -35,20 +36,29 @@
 			alt="Media Art"
 		/>
 		<div class="media-info__title-desc">
-			<div class="media-title">
-				<span>{data.album.attributes?.name}</span>
-			</div>
-			{#if data.album.attributes?.curatorName}
-				<div class="curator-year">
-					<div class="media-curator">
-						<span>{data.album.attributes?.curatorName}</span>
-					</div>
+			<div>
+				<div class="media-title">
+					<span>{data.album.attributes?.name}</span>
 				</div>
-			{/if}
+				{#if data.album.attributes?.curatorName || data.album.attributes?.artistName}
+					<span class="media-desc">
+						<a
+							href="/media/artist/{data.album?.relationships?.artists?.data?.[0]?.id}"
+							id="artist"
+							style="display:inline"
+							>{data.album.attributes?.curatorName || data.album.attributes?.artistName}</a
+						>
+						<span class="dot media-desc" style="display: inline;">•</span>
+						<span>{data.album.attributes?.releaseDate?.split('-')[0]}</span>
+					</span>
+					<span class="media-desc" />
+				{/if}
+			</div>
 			<div style="display: flex; flex-direction: row; width: inherit;">
 				<div class="play-shuffle">
-					<ButtonFilled width="6rem" height="2.5rem" text="Play" icon={Play} />
+					<ButtonFilled bg="" width="6rem" height="2.5rem" text="Play" icon={Play} />
 					<ButtonFilled
+						bg=""
 						width="8rem"
 						height="2.5rem"
 						class="shuffle-button"
@@ -57,8 +67,8 @@
 					/>
 				</div>
 				<div class="download-more-options">
-					<ButtonIcon icon={Download} />
-					<ButtonIcon icon={DotsHorizontal} />
+					<ButtonIcon bg="" width="2.5rem" height="2.5rem" icon={Download} />
+					<ButtonIcon bg="" width="2.5rem" height="2.5rem" icon={DotsHorizontal} />
 				</div>
 			</div>
 		</div>
@@ -69,7 +79,6 @@
 		<table>
 			<thead>
 				<tr>
-					<!-- with class -->
 					<th class="table-number">#</th>
 					<th class="table-title">Title</th>
 					{#if data.album.type !== 'albums' && data.album.type !== 'library-albums'}
@@ -82,7 +91,7 @@
 			</thead>
 			<tbody>
 				{#each data.album.relationships?.tracks?.data as track, i}
-					<tr>
+					<tr class="table-row" id="table-row" on:dblclick={() => play(track.id)}>
 						<td class="table-number" id="table-number">{i + 1}</td>
 						<td class="table-title" id="table-title">
 							<div class="table-title__wrapper">
@@ -184,11 +193,22 @@
 					-webkit-box-orient: vertical;
 				}
 
-				.curator-year {
-					display: flex;
-					flex-direction: row;
-					font-size: 1.2rem;
-					color: $text;
+				.media-desc {
+					position: relative;
+					font-size: 1.4rem;
+					font-weight: 500;
+					margin-top: 0.4rem;
+					color: $text-inverse-dark;
+					line-clamp: 1;
+					overflow: hidden;
+					filter: drop-shadow($drop-shadow) drop-shadow($drop-shadow) drop-shadow($drop-shadow);
+					display: -webkit-box;
+					-webkit-line-clamp: 2;
+					-webkit-box-orient: vertical;
+
+					#artist:hover {
+						text-decoration: underline;
+					}
 				}
 			}
 		}
@@ -213,7 +233,7 @@
 		img {
 			max-width: 220px;
 			border-radius: $border-radius-half;
-			filter: drop-shadow(rgba(0, 0, 0, 0.4) 0px 0px 10px);
+			filter: drop-shadow(rgba(0, 0, 0, 0.8) 0px 0px 10px);
 		}
 
 		.media-table {
@@ -298,7 +318,7 @@
 					width: 40px;
 					margin-right: 0.2rem;
 					border-radius: $border-radius-half;
-					filter: drop-shadow($drop-shadow);
+					filter: drop-shadow(rgba(0, 0, 0, 0.8) 0px 0px 2px);
 				}
 
 				.table-title__wrapper-text {
@@ -311,6 +331,7 @@
 					margin-right: 1rem;
 
 					.table-title__wrapper-text-artist-wrapper {
+						max-width: max-content;
 						outline-offset: -0.2rem;
 					}
 

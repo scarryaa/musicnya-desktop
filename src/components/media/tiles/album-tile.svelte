@@ -2,7 +2,6 @@
 	export let id: string;
 	export let artistId: string;
 	export let src: string;
-	export let href: string;
 	export let title: string;
 	export let artist: string;
 	export let year: string;

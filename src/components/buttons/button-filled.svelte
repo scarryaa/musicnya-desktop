@@ -1,5 +1,9 @@
-<script>
-	export let icon, text, bg, width, height;
+<script lang="ts">
+	export let icon: ConstructorOfATypedSvelteComponent;
+	export let text: string;
+	export let bg: string;
+	export let width: string;
+	export let height: String;
 </script>
 
 <button

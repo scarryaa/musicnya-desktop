@@ -1,5 +1,5 @@
 <script>
-	import { drawerOpen } from '../../store.ts';
+	import { drawerOpen } from '../../store';
 </script>
 
 <button

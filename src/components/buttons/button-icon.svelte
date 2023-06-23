@@ -1,5 +1,8 @@
-<script>
-	export let icon, bg, width, height;
+<script lang="ts">
+	export let icon: ConstructorOfATypedSvelteComponent;
+	export let bg: string;
+	export let width: string;
+	export let height: string;
 </script>
 
 <button class="button-icon" style="background-color: {bg}; width: {width}; height: {height}">
@@ -11,7 +14,7 @@
 <style lang="scss">
 	@use '../../variables.scss' as *;
 
-	$default-color: #cfcbcb;
+	$default-color: #fff;
 	$drop-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
 	.button-icon {
@@ -23,19 +26,21 @@
 		align-items: center;
 		border-radius: $border-radius-half;
 		padding-inline: 1rem;
-		color: $default-color;
+		color: $text;
 		padding-block: 1rem;
+		background-color: $default-color;
+		border-radius: 50%;
 
 		&:hover {
-			color: $text-light;
+			filter: brightness(1.1);
 		}
 
 		&:focus-visible {
-			color: $text-light;
+			filter: brightness(1.1);
 		}
 
 		&:active {
-			color: $text-very-light;
+			filter: brightness(0.9);
 		}
 
 		> .button-icon__icon {
@@ -43,8 +48,9 @@
 			flex-direction: row;
 			justify-content: center;
 			align-items: center;
-			font-size: 1.6rem;
+			font-size: 1.4rem;
 			font-weight: 500;
+			background-blend-mode: color;
 		}
 	}
 </style>

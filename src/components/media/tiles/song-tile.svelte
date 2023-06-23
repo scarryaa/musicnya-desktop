@@ -27,8 +27,7 @@
 	.song-tile-wrapper {
 		margin: 0.5rem 0;
 
-		&:focus,
-		&:active {
+		&:focus-visible {
 			background-color: rgba(0, 0, 0, 0.1);
 		}
 	}

@@ -1,7 +1,5 @@
-import { getAlbum } from '../../../../utils/apple-music-api';
-import { albums, developerToken, musicUserToken } from '../../../../store';
+import { developerToken, musicUserToken } from '../../../../store';
 import { get } from 'svelte/store';
-import { getDominantColor } from '../../../../utils/color-service';
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {

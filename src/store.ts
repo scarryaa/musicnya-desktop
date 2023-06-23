@@ -1,4 +1,5 @@
-import { writable } from 'svelte/store';
+import { writable, type Writable } from 'svelte/store';
+import type { MusicKit } from './lib/types/musickit';
 
 // drawer
 export const drawerOpen = writable(false);
@@ -8,8 +9,8 @@ export const history = writable([]);
 export const historyIndex = writable(0);
 
 export const firstLaunch = writable(true);
-export const libraryPlaylists = writable([]);
-export const albums = writable([]);
+export const libraryPlaylists = writable([] as MusicKit.Playlists[]);
+export const albums = writable([] as MusicKit.Albums[]);
 export const instance = writable({});
 export const developerToken = writable('');
 export const musicUserToken = writable('');

@@ -36,6 +36,7 @@
 	import Search from '../components/search.svelte';
 	import WindowButtons from '../components/window/window-buttons.svelte';
 	import Modal from '../components/window/modal.svelte';
+	import type { MusicKit } from 'src/lib/types/musickit';
 
 	let playlists = [];
 	let drawer;
@@ -56,6 +57,7 @@
 
 		// fetch data
 		getConfig().then((data) =>
+			// @ts-ignore
 			MusicKit.configure({
 				developerToken: data.DEV_TOKEN,
 				app: {
@@ -65,7 +67,7 @@
 			}).then((instance) => {
 				musicUserToken.set(instance.musicUserToken);
 				developerToken.set(instance.developerToken);
-				getLibraryPlaylists(instance).then((data) => {
+				getLibraryPlaylists().then((data) => {
 					libraryPlaylists.set(data);
 				});
 			})
@@ -142,14 +144,15 @@
 						href={`/media/playlist/${playlist.id}`}
 						tabindex="-1"
 						--showInfo={$drawerOpen ? 'block' : 'none'}
-						title={playlist.attributes.name}
-						artist={playlist.attributes.curatorName || 'Me'}
-						src={playlist.attributes.artwork?.url
+						title={playlist.attributes?.name || 'Untitled'}
+						artist={playlist.attributes?.curatorName || 'Me'}
+						src={playlist.attributes?.artwork?.url
 							.replace('{w}x{h}', '100x100')
 							.replace('{f}', 'webp') ||
 							playlist.relationships?.tracks?.[0]?.attributes?.artwork?.url
 								.replace('{w}x{h}', '100x100')
-								.replace('{f}', 'webp')}
+								.replace('{f}', 'webp') ||
+							''}
 					/>
 				{/each}
 			</div>

@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
 	import Close from 'svelte-material-icons/Close.svelte';
 
-	export let component;
+	export let component: ConstructorOfATypedSvelteComponent;
 
 	export const show = () => {
 		const modal = document.createElement('div');
@@ -10,7 +10,7 @@
 	};
 
 	export const hide = () => {
-		document.querySelector('.modal').remove();
+		document.querySelector('.modal')?.remove();
 	};
 </script>
 
@@ -18,7 +18,7 @@
 	<div class="modal__content">
 		<button
 			class="modal__buttons__button"
-			on:click={() => document.querySelector('.modal').remove()}
+			on:click={() => document.querySelector('.modal')?.remove()}
 		>
 			<Close />
 		</button>
