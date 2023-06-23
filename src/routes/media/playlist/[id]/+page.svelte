@@ -89,7 +89,13 @@
 								/>
 								<div class="table-title__wrapper-text">
 									<span class="table-title__wrapper-text-title">{track.attributes.name}</span>
-									<span class="table-title__wrapper-text-artist">{track.attributes.artistName}</span
+									<a
+										href="/media/artist/{track.relationships?.catalog?.data?.[0]?.relationships
+											?.artists?.data?.[0]?.id}"
+									>
+										<span class="table-title__wrapper-text-artist"
+											>{track.attributes.artistName}</span
+										></a
 									>
 								</div>
 							</div>

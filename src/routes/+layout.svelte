@@ -79,19 +79,19 @@
 	</Titlebar>
 	<Drawer bind:this={drawer}>
 		<div slot="top-left">
-			<a href="/">
+			<a href="/" tabindex="-1">
 				<DrawerButton>
 					<HomeVariant slot="icon" />
 					<span>Home</span>
 				</DrawerButton>
 			</a>
-			<a href="/browse">
+			<a href="/browse" tabindex="-1">
 				<DrawerButton>
 					<ViewGridOutline slot="icon" />
 					<span>Browse</span>
 				</DrawerButton>
 			</a>
-			<a href="/radio">
+			<a href="/radio" tabindex="-1">
 				<DrawerButton>
 					<Broadcast slot="icon" />
 					<span>Radio</span>
@@ -109,22 +109,22 @@
 				</DrawerButton>
 			</div>
 			<div class="bottom-left-container__chips" style="display: {$drawerOpen ? 'flex' : 'none'}">
-				<a href="/library/songs">
+				<a href="/library/songs" tabindex="-1">
 					<DrawerChip>
 						<MusicNote />
 					</DrawerChip>
 				</a>
-				<a href="/library/playlists">
+				<a href="/library/playlists" tabindex="-1">
 					<DrawerChip>
 						<PlaylistMusic />
 					</DrawerChip>
 				</a>
-				<a href="/library/albums">
+				<a href="/library/albums" tabindex="-1">
 					<DrawerChip>
 						<Album />
 					</DrawerChip>
 				</a>
-				<a href="/library/artists">
+				<a href="/library/artists" tabindex="-1">
 					<DrawerChip>
 						<AccountGroup />
 					</DrawerChip>
@@ -138,19 +138,19 @@
 				style="padding-right: {$drawerOpen ? '3.2rem' : '0.6rem'}"
 			>
 				{#each $libraryPlaylists as playlist, i (i)}
-					<a href={`/media/playlist/${playlist.id}`}>
-						<MediaTile
-							--showInfo={$drawerOpen ? 'block' : 'none'}
-							title={playlist.attributes.name}
-							artist={playlist.attributes.curatorName || 'Me'}
-							src={playlist.attributes.artwork?.url
+					<MediaTile
+						href={`/media/playlist/${playlist.id}`}
+						tabindex="-1"
+						--showInfo={$drawerOpen ? 'block' : 'none'}
+						title={playlist.attributes.name}
+						artist={playlist.attributes.curatorName || 'Me'}
+						src={playlist.attributes.artwork?.url
+							.replace('{w}x{h}', '100x100')
+							.replace('{f}', 'webp') ||
+							playlist.relationships?.tracks?.[0]?.attributes?.artwork?.url
 								.replace('{w}x{h}', '100x100')
-								.replace('{f}', 'webp') ||
-								playlist.relationships?.tracks?.[0]?.attributes?.artwork?.url
-									.replace('{w}x{h}', '100x100')
-									.replace('{f}', 'webp')}
-						/>
-					</a>
+								.replace('{f}', 'webp')}
+					/>
 				{/each}
 			</div>
 		</div>
@@ -198,6 +198,7 @@
 
 	.content-wrapper {
 		height: inherit;
+		overflow-y: overlay;
 	}
 
 	.bottom-left__container {

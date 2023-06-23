@@ -2,15 +2,16 @@
 	export let title;
 	export let artist;
 	export let src;
+	export let href;
 </script>
 
-<div class="album-tile" role="button" tabindex="0" on:click on:keydown>
+<a class="album-tile" role="button" tabindex="0" on:click on:keydown {href}>
 	<img {src} alt="Album Art" />
 	<div class="album-info">
 		<div class="album-title">{title}</div>
 		<div class="album-artist">{artist}</div>
 	</div>
-</div>
+</a>
 
 <style lang="scss">
 	@use '../../../variables.scss' as *;
