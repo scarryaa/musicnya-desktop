@@ -27,7 +27,7 @@
 			.replace('{w}x{h}', '200x200')
 			.replace('{f}', 'webp')})"
 	>
-		<h1 class="page-wrapper__artist-name">{data.artist.attributes.name}</h1>
+		<h1 class="page-wrapper__artist-name">{data.artist.attributes?.name}</h1>
 		<div class="play-button" />
 	</div>
 	<div class="page-wrapper__content">

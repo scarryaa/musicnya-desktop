@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import AlbumTile from './tiles/album-tile.svelte';
 	import SongTile from './tiles/song-tile.svelte';
 
@@ -8,7 +9,9 @@
 	export let data: {
 		media: any[];
 	};
+	export let scrollable = true;
 
+	$: scrollable = content?.scrollWidth > content?.clientWidth;
 	$: handleScroll(scrollEvent);
 
 	function handleScroll(event: { direction: 'left' | 'right'; shouldScroll: boolean }) {
@@ -33,6 +36,7 @@
 				<SongTile
 					title={media.attributes.name}
 					subtitle="artist"
+					year={media.attributes.releaseDate}
 					artist={media.attributes.artistName || media.attributes?.curatorName}
 					src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
 				/>
@@ -46,7 +50,8 @@
 					id={media.id}
 					title={media.attributes.name}
 					artist={media.attributes.artistName || media.attributes?.curatorName}
-					artistId={media.attributes.artistId}
+					artistId={media.relationships?.artists?.data?.[0]?.id}
+					year={media.attributes.releaseDate}
 					src={media.attributes.artwork?.url.replace('{w}x{h}', '400x400').replace('{f}', 'webp')}
 				/>
 			</div>
@@ -56,6 +61,7 @@
 			<SongTile
 				artist={media.attributes.artistName || media.attributes?.curatorName}
 				title={media.attributes.name}
+				year={media.attributes.releaseDate}
 				src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
 			/>
 		{/if}
@@ -64,14 +70,12 @@
 
 <style lang="scss">
 	.tile-group__content {
+		justify-content: start;
 		gap: 1rem;
 		content-visibility: auto;
 		margin-top: 0.5rem;
 		padding-inline: 1rem;
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(1fr, 1fr));
-		grid-template-rows: repeat(auto-fit, minmax(2rem, 1fr));
-		grid-auto-flow: column dense;
+		display: flex;
 		overflow-y: scroll;
 
 		&::-webkit-scrollbar {

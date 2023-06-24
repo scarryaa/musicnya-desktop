@@ -48,9 +48,8 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-	margin-top: 0.4rem;
-	margin-bottom: 0.4rem;
-	background: transparent;
+	background: #828282;
+	border-radius: 8px
 }
 
 ::-webkit-scrollbar-thumb {

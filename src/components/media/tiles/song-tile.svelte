@@ -25,8 +25,6 @@
 	@use '../../../variables.scss' as *;
 
 	.song-tile-wrapper {
-		margin: 0.5rem 0;
-
 		&:focus-visible {
 			background-color: rgba(0, 0, 0, 0.1);
 		}

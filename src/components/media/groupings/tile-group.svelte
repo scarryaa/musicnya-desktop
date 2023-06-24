@@ -7,31 +7,24 @@
 	import AlbumTile from '../tiles/album-tile.svelte';
 	import TileSelector from '../tile-selector.svelte';
 
+	let component: HTMLElement;
+	let scrollable: boolean = true;
 	export let data: {
 		media: any;
 	};
-	let scrollEvent = {
+	let scrollEvent: { direction: 'left' | 'right'; shouldScroll: boolean } = {
 		direction: 'left',
 		shouldScroll: false
 	};
 	export let groupTitle: string;
 	export let contentType: 'album' | 'song' | 'video' = 'album';
 
-	let scrollButtons: HTMLElement | null;
-
-	const eventDispatcher = createEventDispatcher();
-
-	function handleScroll(event: CustomEvent) {
-		const scrollAmount =
-			event.detail.direction === 'left'
-				? -((document.defaultView?.innerWidth ?? 300) - 300)
-				: (document.defaultView?.innerWidth ?? 300) - 300;
-		console.log(scrollAmount);
-	}
+	$: scrollable
+		? component?.classList.add('scrollable')
+		: component?.classList.remove('scrollable');
 
 	const setupScrolling = (node: HTMLElement) => {
 		//scroll on arrow key press if focused, and key is arrowleft, arrowright, space, or enter
-		const group = node.querySelector('.tile-group__content');
 		node?.addEventListener('keydown', (e) => {
 			if (
 				e.key === 'ArrowLeft' ||
@@ -57,7 +50,7 @@
 <div class="tile-group">
 	<div class="tile-group__title-wrapper">
 		<h2 class="tile-group__title-wrapper__title">{groupTitle}</h2>
-		<div class="scroll-buttons">
+		<div class="scroll-buttons" bind:this={component}>
 			<div class="scroll-buttons__arrows" use:setupScrolling>
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<div tabindex="0" class="scroll-button-arrows__icon">
@@ -70,7 +63,7 @@
 			</div>
 		</div>
 	</div>
-	<TileSelector {data} type={contentType} {scrollEvent} />
+	<TileSelector {data} type={contentType} {scrollEvent} bind:scrollable />
 </div>
 
 <style lang="scss">

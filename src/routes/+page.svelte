@@ -17,6 +17,6 @@
 <style lang="scss">
 	.page-wrapper {
 		padding-block: 1rem;
-		padding-top: 3rem;
+		padding-top: 2rem;
 	}
 </style>
