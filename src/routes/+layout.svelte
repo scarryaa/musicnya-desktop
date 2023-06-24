@@ -7,7 +7,6 @@
 		drawerOpen,
 		firstLaunch,
 		libraryPlaylists,
-		instance as MKInstance,
 		musicUserToken
 	} from '../store';
 	import { onMount } from 'svelte';

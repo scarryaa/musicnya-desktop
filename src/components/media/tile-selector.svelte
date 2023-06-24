@@ -46,6 +46,7 @@
 		{#if type === 'album'}
 			<div class="tile-group__content__tile">
 				<AlbumTile
+					type={media.type}
 					subtitle="artist"
 					id={media.id}
 					title={media.attributes.name}

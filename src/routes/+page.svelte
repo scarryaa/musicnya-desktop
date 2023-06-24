@@ -1,7 +1,9 @@
 <script lang="ts">
 	import TileGroup from '../components/media/groupings/tile-group.svelte';
 
-	export let data;
+	export let data: {
+		data: any[];
+	};
 </script>
 
 <div class="page-wrapper">

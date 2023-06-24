@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { play } from '../../..//lib/services/playback-service';
 	import ButtonOptions from '../../../components/buttons/button-options.svelte';
 	import ButtonPlay from '../../../components/buttons/button-play.svelte';
 
@@ -8,19 +9,24 @@
 	export let title: string;
 	export let artist: string;
 	export let year: string;
+	export let type: string;
 	export let subtitle: 'artist' | 'year' = 'artist';
 </script>
 
 <div class="album-tile">
 	<div class="album-overlay-container">
 		<div class="album-overlay">
-			<ButtonPlay />
+			<ButtonPlay color="white" on:click={() => play(type.slice(0, -1), id)} />
 			<ButtonOptions />
 		</div>
 		<img {src} alt="" />
 	</div>
 	<div class="album-info">
-		<a href="/media/album/{id}" class="album-title">{title}</a>
+		{#if type === 'stations'}
+			<span class="station-title">{title}</span>
+		{:else}
+			<a href="/media/{type.slice(0, -1)}/{id}" class="album-title">{title}</a>
+		{/if}
 		{#if subtitle === 'artist'}
 			<a href="/media/artist/{artistId}" class="album-artist">{artist}</a>
 		{:else if subtitle === 'year'}
@@ -60,6 +66,7 @@
 			transition: all 0.2s ease-in-out;
 
 			&:hover .album-overlay,
+			&:focus-visible .album-overlay,
 			&:focus-within .album-overlay {
 				background-color: rgba(0, 0, 0, 0.4);
 				opacity: 1;

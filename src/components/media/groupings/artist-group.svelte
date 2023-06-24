@@ -96,6 +96,7 @@
 			{#if contentType === 'album'}
 				<div class="artist-group__content__tile">
 					<AlbumTile
+						type="albums"
 						subtitle="year"
 						id={media.id}
 						title={media.attributes.name}
