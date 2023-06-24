@@ -8,8 +8,8 @@
 	import DotsHorizontal from 'svelte-material-icons/DotsHorizontal.svelte';
 	import ClockTimeFiveOutline from 'svelte-material-icons/ClockTimeFiveOutline.svelte';
 	import { onMount } from 'svelte';
-	import { getDominantColor } from '../../../../utils/color-service';
-	import { play } from '../../../../utils/playback-service';
+	import { getDominantColor } from '../../../../lib/services/color-service';
+	import { play } from '../../../../lib/services/playback-service';
 
 	export let data;
 
@@ -67,8 +67,8 @@
 					/>
 				</div>
 				<div class="download-more-options">
-					<ButtonIcon bg="" width="2.5rem" height="2.5rem" icon={Download} />
-					<ButtonIcon bg="" width="2.5rem" height="2.5rem" icon={DotsHorizontal} />
+					<ButtonIcon bg="" width="1rem" height="1rem" icon={Download} />
+					<ButtonIcon bg="" width="1rem" height="1rem" icon={DotsHorizontal} />
 				</div>
 			</div>
 		</div>
@@ -151,7 +151,7 @@
 	$table-text: #000000;
 	$table-text-hover: #494949;
 	$table-text-active: #a0a0a0;
-	$drop-shadow: rgba(0, 0, 0, 0.2) 0px 0px 4px;
+	$drop-shadow: rgba(0, 0, 0, 0.2) 0px 0px 2px;
 	$drop-shadow-text: rgba(0, 0, 0, 0.2) 0px 0px 1px;
 
 	.media-wrapper {
@@ -222,6 +222,7 @@
 		}
 
 		.download-more-options {
+			margin-top: 0.2rem;
 			display: flex;
 			flex-direction: row;
 			gap: 1rem;

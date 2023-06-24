@@ -1,7 +1,5 @@
 <script>
-	import { libraryPlaylists } from '../../../../store';
 	import ButtonFilled from '../../../../components/buttons/button-filled.svelte';
-	import { navigating } from '$app/stores';
 
 	import Play from 'svelte-material-icons/Play.svelte';
 	import Shuffle from 'svelte-material-icons/Shuffle.svelte';
@@ -9,9 +7,7 @@
 	import Download from 'svelte-material-icons/Download.svelte';
 	import DotsHorizontal from 'svelte-material-icons/DotsHorizontal.svelte';
 	import ClockTimeFiveOutline from 'svelte-material-icons/ClockTimeFiveOutline.svelte';
-	import { getLibraryPlaylist } from '../../../../utils/apple-music-api';
-	import { onMount } from 'svelte';
-	import { getDominantColor } from '../../../../utils/color-service';
+	import { getDominantColor } from '../../../../lib/services/color-service';
 
 	export let data;
 </script>
@@ -57,8 +53,7 @@
 						/>
 					</div>
 					<div class="download-more-options">
-						<ButtonIcon bg="" width="2.5rem" height="2.5rem" icon={Download} />
-						<ButtonIcon bg="" width="2.5rem" height="2.5rem" icon={DotsHorizontal} />
+						<ButtonIcon bg="" width="1rem" height="1rem" icon={DotsHorizontal} />
 					</div>
 				</div>
 			</div>
@@ -207,6 +202,7 @@
 		}
 
 		.download-more-options {
+			margin-top: 0.2rem;
 			display: flex;
 			flex-direction: row;
 			gap: 1rem;

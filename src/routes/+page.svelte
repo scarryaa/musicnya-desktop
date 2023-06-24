@@ -1,6 +1,22 @@
+<script lang="ts">
+	import TileGroup from '../components/media/groupings/tile-group.svelte';
+
+	export let data;
+</script>
+
 <div class="page-wrapper">
-	<h1>Recently Played</h1>
+	{#each data.data as item}
+		<TileGroup
+			groupTitle={item.attributes?.title?.stringForDisplay || ''}
+			contentType={'album'}
+			data={{ media: item.relationships?.contents.data }}
+		/>
+	{/each}
 </div>
 
 <style lang="scss">
+	.page-wrapper {
+		padding-block: 1rem;
+		padding-top: 3rem;
+	}
 </style>

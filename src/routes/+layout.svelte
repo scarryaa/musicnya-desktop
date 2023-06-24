@@ -11,8 +11,8 @@
 		musicUserToken
 	} from '../store';
 	import { onMount } from 'svelte';
-	import { getConfig } from '../utils/internal-api';
-	import { getLibraryPlaylists } from '../utils/apple-music-api';
+	import { getConfig } from '../lib/api/internal-api';
+	import { getLibraryPlaylists } from '../lib/api/apple-music-api';
 
 	import Drawer from '../components/drawer/drawer.svelte';
 	import Footer from '../components/footer.svelte';

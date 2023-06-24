@@ -48,7 +48,7 @@
 			flex-direction: row;
 			justify-content: center;
 			align-items: center;
-			font-size: 1.4rem;
+			font-size: 1.2rem;
 			font-weight: 500;
 			background-blend-mode: color;
 		}

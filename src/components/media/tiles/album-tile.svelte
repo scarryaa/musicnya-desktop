@@ -24,7 +24,7 @@
 	@use '../../../variables.scss' as *;
 
 	.album-tile {
-		margin-top: 1rem;
+		margin-top: 0.2rem;
 		align-items: center;
 		border-radius: $border-radius-half;
 
@@ -32,15 +32,18 @@
 			border-radius: $border-radius-half;
 			filter: drop-shadow($drop-shadow);
 			min-width: 10rem;
-			max-width: 10rem;
+			max-width: 12rem;
 		}
 
 		.album-info {
+			min-width: 10rem;
+			max-width: 12rem;
 			display: flex;
 			flex-direction: column;
 			margin-top: 0.5rem;
 
 			.album-title {
+				max-width: 100%;
 				align-self: flex-start;
 				font-size: 1rem;
 				font-weight: 400;
@@ -55,6 +58,7 @@
 
 			.album-artist,
 			.album-year {
+				max-width: 100%;
 				align-self: flex-start;
 				font-size: 1rem;
 				font-weight: 400;

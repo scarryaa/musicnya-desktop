@@ -11,7 +11,7 @@
 	};
 	export let viewType: string;
 	export let groupTitle: string;
-	export let contentType: string;
+	export let contentType: 'album' | 'song' | 'video' = 'album';
 
 	let scrollButtons: HTMLElement | null;
 
