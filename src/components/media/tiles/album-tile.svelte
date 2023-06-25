@@ -15,10 +15,10 @@
 
 <div class="album-tile">
 	<div class="album-overlay-container">
-		<div class="album-overlay">
+		<a class="album-overlay" href="/media/{type.slice(0, -1)}/{id}">
 			<ButtonPlay color="white" on:click={() => play(type.slice(0, -1), id)} />
 			<ButtonOptions />
-		</div>
+		</a>
 		<img {src} alt="" />
 	</div>
 	<div class="album-info">
@@ -28,7 +28,9 @@
 			<a href="/media/{type.slice(0, -1)}/{id}" class="album-title">{title}</a>
 		{/if}
 		{#if subtitle === 'artist'}
-			<a href="/media/artist/{artistId}" class="album-artist">{artist}</a>
+			<a tabindex={artist ? 0 : -1} href="/media/artist/{artistId}" class="album-artist"
+				>{artist || ''}</a
+			>
 		{:else if subtitle === 'year'}
 			<div class="album-year">{year}</div>
 		{/if}

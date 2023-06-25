@@ -75,7 +75,7 @@
 		justify-content: start;
 		gap: 1rem;
 		content-visibility: auto;
-		margin-top: 0.5rem;
+		padding-top: 0.5rem;
 		padding-inline: 1rem;
 		display: flex;
 		overflow-x: scroll;

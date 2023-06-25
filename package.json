@@ -3,10 +3,16 @@
 	"version": "0.0.1",
 	"private": true,
 	"main": "main.cjs",
+	"build": {
+		"electronDownload": {
+			"mirror": "https://github.com/castlabs/electron-releases/releases/download/v"
+		}
+	},
+	"afterPack": "./resources/afterPack.js",
 	"scripts": {
 		"dev": "vite dev & (cd libs/nyan_core && cargo run) & (cd libs/api_server && node index.ts)",
 		"electron-dev": "concurrently \"yarn run dev\" \"yarn run electron\"",
-		"electron": "wait-on http://localhost:5173 && electron .",
+		"electron": "wait-on http://localhost:5173 && electron --no-sandbox .",
 		"build": "vite build",
 		"preview": "vite preview",
 		"test": "playwright test",
@@ -23,7 +29,7 @@
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
 		"concurrently": "^8.2.0",
-		"electron": "^25.2.0",
+		"electron": "https://github.com/castlabs/electron-releases#25",
 		"electron-builder": "^24.4.0",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",

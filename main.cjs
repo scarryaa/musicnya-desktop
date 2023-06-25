@@ -1,11 +1,26 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, components} = require("electron");
 const path = require("path");
 const serve = require("electron-serve");
 const ipcMain = require("electron").ipcMain;
 const loadURL = serve({ directory: "public" });
 
 let mainWindow;
+
+if (process.platform === "linux") {
+  app.commandLine.appendSwitch("disable-features", "MediaSessionService");
+  app.commandLine.appendSwitch("enable-accelerated-mjpeg-decode");
+  app.commandLine.appendSwitch("enable-accelerated-video");
+  app.commandLine.appendSwitch("disable-gpu-driver-bug-workarounds");
+  app.commandLine.appendSwitch("ignore-gpu-blacklist");
+  app.commandLine.appendSwitch("enable-native-gpu-memory-buffers");
+  app.commandLine.appendSwitch("enable-accelerated-video-decode");
+  app.commandLine.appendSwitch("enable-gpu-rasterization");
+  app.commandLine.appendSwitch("enable-native-gpu-memory-buffers");
+  app.commandLine.appendSwitch("enable-oop-rasterization");
+  app.commandLine.appendSwitch("in-process-gpu");
+  app.commandLine.appendSwitch("enable-features", "Vulkan");
+}
 
 function isDev() {
   return !app.isPackaged;
@@ -44,7 +59,6 @@ function createWindow() {
 
   // Open the DevTools and also disable Electron Security Warning.
   process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = true;
-  mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on("closed", function () {
@@ -56,7 +70,10 @@ function createWindow() {
   });
 }
 
-app.on("ready", createWindow);
+app.on("ready", async () => {
+  await components.whenReady();
+  createWindow();
+});
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function () {

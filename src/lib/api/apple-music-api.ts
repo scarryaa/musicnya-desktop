@@ -14,12 +14,19 @@ export const getLibraryPlaylists = async () => {
         },
         mode: 'cors',
       }
-    );
+    ).catch((e) => {
+      console.log(e);
+      Promise.reject(e);
+    });
+
+    if (!response) {
+      return Promise.reject('No response');
+    }
     const json = await response.json();
 
     // map over the playlists and get the tracks for each one
     const playlists = await Promise.all(
-        json.data.map(async (playlist) => {
+        json.data?.map(async (playlist) => {
             const tracks = await fetch(
               // include catalog relationship
               `http://localhost:3001/v1/me/library/playlists/${playlist.id}/tracks?art[url]=f&extend[tracks]=name&extend[albums]=name&extend[catalog]=id&fields[curators]=name,url&fields[songs]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls&format[resources]=flat&include=catalog&include[songs]=artists,albums&l=en-US&limit[tracks]=50`,

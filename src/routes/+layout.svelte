@@ -10,7 +10,6 @@
 		musicUserToken
 	} from '../store';
 	import { onMount } from 'svelte';
-	import { getConfig } from '../lib/api/internal-api';
 	import { getLibraryPlaylists } from '../lib/api/apple-music-api';
 
 	import Drawer from '../components/drawer/drawer.svelte';
@@ -40,7 +39,6 @@
 	let playlists = [];
 	let drawer;
 	let modal;
-	let mediaTile = Array.from({ length: 10 }, (_, i) => i);
 
 	onMount(async () => {
 		// initializer
@@ -53,24 +51,26 @@
 		// 		}
 		// 	});
 		// }
-
-		// fetch data
-		getConfig().then((data) =>
-			// @ts-ignore
-			MusicKit.configure({
-				developerToken: data.DEV_TOKEN,
-				app: {
-					name: 'Music',
-					build: '1.0.0'
-				}
-			}).then((instance) => {
-				musicUserToken.set(instance.musicUserToken);
-				developerToken.set(instance.developerToken);
-				getLibraryPlaylists().then((data) => {
-					libraryPlaylists.set(data);
-				});
-			})
-		);
+		return fetch('http://localhost:5173/config.json')
+			.then((response) => response.json())
+			.then((data) => data)
+			.then((data) =>
+				// @ts-ignore
+				MusicKit.configure({
+					developerToken: data.DEV_TOKEN,
+					app: {
+						name: 'Music',
+						build: '1.0.0'
+					},
+					sourceType: 24
+				}).then((instance) => {
+					musicUserToken.set(instance.musicUserToken);
+					developerToken.set(instance.developerToken);
+					getLibraryPlaylists().then((data) => {
+						libraryPlaylists.set(data);
+					});
+				})
+			);
 	});
 </script>
 
@@ -148,7 +148,7 @@
 						src={playlist.attributes?.artwork?.url
 							.replace('{w}x{h}', '100x100')
 							.replace('{f}', 'webp') ||
-							playlist.relationships?.tracks?.[0]?.attributes?.artwork?.url
+							playlist?.relationships?.tracks?.[0]?.attributes?.artwork?.url
 								.replace('{w}x{h}', '100x100')
 								.replace('{f}', 'webp') ||
 							''}

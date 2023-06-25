@@ -79,15 +79,6 @@
 					e.key === 'ArrowLeft' ? scroll('left') : scroll('right');
 				}
 			}
-
-			// find first element in view and focus it if tabbing from scroll buttons
-			if (e.key === 'Tab' && document.activeElement === scrollButtons?.children[1]) {
-				e.preventDefault();
-				const firstElementInView: HTMLElement | null = document.querySelector(
-					'.artist-group__content > *:not(.hidden) > * > *'
-				);
-				firstElementInView?.focus();
-			}
 		});
 
 		scrollButtons?.addEventListener('click', (e) => {

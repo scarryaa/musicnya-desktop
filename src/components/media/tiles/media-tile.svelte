@@ -63,7 +63,6 @@
 		}
 
 		&:active {
-			background-color: $media-tile-background-active;
 		}
 
 		.album-info {
