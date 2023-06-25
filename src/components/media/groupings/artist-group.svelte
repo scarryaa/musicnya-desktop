@@ -84,6 +84,7 @@
 			{#if contentType === 'song'}
 				<div class="artist-group__content__song">
 					<SongTile
+						id={media.id}
 						title={media.attributes.name}
 						subtitle="year"
 						artist={media.attributes.artistName}

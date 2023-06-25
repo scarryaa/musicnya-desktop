@@ -6,23 +6,23 @@ import { get } from 'svelte/store';
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
   if (params.type === 'playlist') {
-    return {
-      media: get(libraryPlaylists).find(playlist => playlist.id === params.id) || getLibraryPlaylist(params.id).then(playlist => {
-          libraryPlaylists.update(playlists => {
-              playlists.push(playlist);
-              return playlists;
-          }
-          );
-      }).then((playlist: any) => {
-          getDominantColor(playlist.attributes.artwork.url).then(color => {
-              playlist.color = color;
-          }
-          );
-          return { media: playlist };
-      })
-  };
+    const playlist = get(libraryPlaylists).find((playlist) => playlist.id === params.id);
+    if (playlist) {
+      playlist.color = await getDominantColor((playlist.attributes?.artwork?.url || playlist.relationships.tracks?.[0].attributes.artwork.url || '').replace('{w}x{h}', '100x100').replace('{f}', 'png'));
+      return { media: playlist };
+    } else {
+      const playlist = await getLibraryPlaylist(params.id);
+      libraryPlaylists.update((playlists) => {
+        playlists.push(playlist);
+        return playlists;
+      });
+
+      playlist.color = await getDominantColor((playlist.attributes?.artwork?.url || playlist.relationships.tracks?.[0].attributes.artwork.url || '').replace('{w}x{h}', '100x100').replace('{f}', 'png'));
+
+      return { media: playlist };
+    }
   } else if (params.type === 'album') {
-    return fetch(
+    const response = await fetch(
       `http://localhost:3001/v1/catalog/us/albums/${params.id}?l=en-US&platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls`,
       {
         headers: {
@@ -34,10 +34,13 @@ export async function load({ fetch, params }) {
         },
         mode: 'cors',
       }
-    ).then((response) => {
-      return response.json();
-    }).then(async (data) => {
-      return { media: data.data?.[0] };
-    });
+    );
+    const data = await response.json();
+    const album = data.data?.[0];
+
+    if (album) {
+      album.color = await getDominantColor(album.attributes.artwork.url.replace('{w}x{h}', '100x100').replace('{f}', 'png'));
+      return { media: album };
+    }
   }
 }

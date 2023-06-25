@@ -13,13 +13,6 @@
 	import ClockTimeFiveOutline from 'svelte-material-icons/ClockTimeFiveOutline.svelte';
 
 	export let data;
-
-	data.media.color = getDominantColor(
-		data.media.attributes?.artwork?.url.replace('{w}x{h}', '300x300').replace('{f}', 'webp') ||
-			data.media.relationships?.tracks?.[0]?.attributes?.artwork?.url
-				.replace('{w}x{h}', '300x300')
-				.replace('{f}', 'webp')
-	);
 </script>
 
 <div class="media-wrapper" style="background: {data.media.color?.hex || '#a0a0a0'}">
@@ -174,7 +167,7 @@
 					position: relative;
 					font-size: 2.6rem;
 					font-weight: 600;
-					margin-top: 2rem;
+					margin-top: 0rem;
 					color: $text-inverse;
 					line-clamp: 2;
 					overflow: hidden;
@@ -213,7 +206,7 @@
 		}
 
 		.download-more-options {
-			margin-top: 0.2rem;
+			margin-top: 0.3rem;
 			display: flex;
 			flex-direction: row;
 			gap: 1rem;

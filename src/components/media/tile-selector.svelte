@@ -34,6 +34,7 @@
 		{#if type === 'song'}
 			<div class="tile-group__content__song">
 				<SongTile
+					id={media.id}
 					title={media.attributes.name}
 					subtitle="artist"
 					year={media.attributes.releaseDate}
