@@ -27,7 +27,8 @@
 					<ButtonPlay
 						color="black"
 						size="1.8rem"
-						on:click={() => play(type.slice(0, -1).replace('library-', ''), playlistId || albumId)}
+						on:click={() =>
+							play(type.slice(0, -1).replace('library-', ''), playlistId || albumId, number)}
 					/>
 				</div>
 			</div>

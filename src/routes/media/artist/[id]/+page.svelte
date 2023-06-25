@@ -51,6 +51,37 @@
 				contentType="album"
 			/>
 		{/if}
+		{#if data.artist.views?.['full-albums']?.data.length > 0}
+			<ArtistGroup groupTitle="Albums" viewType="full-albums" {data} contentType="album" />
+		{/if}
+		{#if data.artist.views?.['top-music-videos']?.data?.length > 0}
+			<ArtistGroup groupTitle="Top Videos" viewType="top-music-videos" {data} contentType="album" />
+		{/if}
+		{#if data.artist.views?.['playlists']?.data?.length > 0}
+			<ArtistGroup groupTitle="Artist Playlists" viewType="playlists" {data} contentType="album" />
+		{/if}
+		{#if data.artist.views?.['singles']?.data?.length > 0}
+			<ArtistGroup groupTitle="Singles" viewType="singles" {data} contentType="album" />
+		{/if}
+		{#if data.artist.views?.['live-albums']?.data?.length > 0}
+			<ArtistGroup groupTitle="Live Albums" viewType="live-albums" {data} contentType="album" />
+		{/if}
+		{#if data.artist.views?.['compilation-albums']?.data?.length > 0}
+			<ArtistGroup
+				groupTitle="Compilations"
+				viewType="compilation-albums"
+				{data}
+				contentType="album"
+			/>
+		{/if}
+		{#if data.artist.views?.['similar-artists']?.data?.length > 0}
+			<ArtistGroup
+				groupTitle="Similar Artists"
+				viewType="similar-artists"
+				{data}
+				contentType="artist"
+			/>
+		{/if}
 	</div>
 </div>
 
@@ -123,7 +154,6 @@
 			background-color: white;
 			border-radius: $border-radius-half;
 			margin-top: -1rem;
-			padding-bottom: 2rem;
 		}
 	}
 </style>

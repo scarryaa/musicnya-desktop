@@ -11,6 +11,11 @@
 	export let year: string;
 	export let type: string;
 	export let subtitle: 'artist' | 'year' = 'artist';
+
+	const playAlbum = (e: MouseEvent) => {
+		e.preventDefault();
+		play(type.slice(0, -1).replace('library-', ''), id);
+	};
 </script>
 
 <div class="album-tile">
@@ -21,10 +26,7 @@
 				? `/media/${type.slice(0, -1).replace('library-', '')}/${id}`
 				: null}
 		>
-			<ButtonPlay
-				color="white"
-				on:click={() => play(type.slice(0, -1).replace('library-', ''), id)}
-			/>
+			<ButtonPlay color="white" on:click={playAlbum} />
 			<ButtonOptions />
 		</a>
 		<img {src} alt="" />

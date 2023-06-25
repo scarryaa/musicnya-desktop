@@ -4,6 +4,7 @@
 
 	import { drawerOpen, firstLaunch } from '../stores/app.store';
 	import { developerToken, libraryPlaylists, musicUserToken } from '../stores/musickit.store';
+	import { initMusicKit } from '../lib/api/music.api';
 	import { onMount } from 'svelte';
 	import { getLibraryPlaylists } from '../lib/api/musickit.api';
 
@@ -26,6 +27,7 @@
 	import Plus from 'svelte-material-icons/Plus.svelte';
 	import PlaylistMusic from 'svelte-material-icons/PlaylistMusic.svelte';
 	import MediaControls from '../components/media/media-controls.svelte';
+	import Magnify from 'svelte-material-icons/Magnify.svelte';
 	import Search from '../components/search.svelte';
 	import WindowButtons from '../components/window/window-buttons.svelte';
 	import Modal from '../components/window/modal.svelte';
@@ -59,14 +61,22 @@
 						build: '1.0.0'
 					},
 					sourceType: 24
-				}).then((instance) => {
-					musicUserToken.set(instance.musicUserToken);
-					developerToken.set(instance.developerToken);
-					addEventHandlers(instance);
-					getLibraryPlaylists().then((data) => {
-						libraryPlaylists.set(data);
-					});
 				})
+					.then((instance) => {
+						musicUserToken.set(instance.musicUserToken);
+						developerToken.set(instance.developerToken);
+						return instance;
+					})
+					.then((instance) => {
+						initMusicKit(instance);
+						addEventHandlers(instance);
+						getLibraryPlaylists().then((data) => {
+							libraryPlaylists.set(data);
+						});
+					})
+					.catch((err) => {
+						console.error(err);
+					})
 			);
 	});
 </script>
@@ -77,6 +87,12 @@
 	</Titlebar>
 	<Drawer bind:this={drawer}>
 		<div slot="top-left">
+			<a href="/search" tabindex="-1">
+				<DrawerButton>
+					<Magnify slot="icon" />
+					<span>Search</span>
+				</DrawerButton>
+			</a>
 			<a href="/" tabindex="-1">
 				<DrawerButton>
 					<HomeVariant slot="icon" />

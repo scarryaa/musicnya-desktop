@@ -3,15 +3,13 @@
 
 	export let data: {
 		streamed: {
-			data: any;
+			data: any[];
 		};
 	};
 </script>
 
-{#await data}
-	<p>Loading...</p>
-{:then data}
-	<div class="page-wrapper">
+<div class="page-wrapper">
+	{#if data?.data?.length > 0}
 		{#each data?.data as item}
 			<TileGroup
 				groupTitle={item?.attributes?.title?.stringForDisplay || ''}
@@ -19,13 +17,13 @@
 				data={{ media: item?.relationships?.contents?.data }}
 			/>
 		{/each}
-	</div>
+	{/if}
+</div>
 
-	<style lang="scss">
-		.page-wrapper {
-			padding-block: 1rem;
-			padding-top: 2rem;
-			overflow-x: hidden;
-		}
-	</style>
-{/await}
+<style lang="scss">
+	.page-wrapper {
+		padding-block: 1rem;
+		padding-top: 2rem;
+		overflow-x: hidden;
+	}
+</style>

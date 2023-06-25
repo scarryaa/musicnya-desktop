@@ -34,7 +34,7 @@
 	$drawer-text-color: #000000;
 	$drawer-text-color-hover: #494949;
 	$drawer-text-color-active: #a0a0a0;
-	$drawer-bottom-left-height: calc(100% - $footer-height - 4.4rem);
+	$drawer-bottom-left-height: calc(100% - $footer-height - 7.1rem);
 
 	.drawer {
 		width: 100vw;

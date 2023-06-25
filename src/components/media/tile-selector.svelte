@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import AlbumTile from './tiles/album-tile.svelte';
 	import SongTile from './tiles/song-tile.svelte';
+	import ArtistTile from './tiles/artist-tile.svelte';
 
 	let content: HTMLElement;
 	export let scrollEvent: { direction: 'left' | 'right'; shouldScroll: boolean };
@@ -59,6 +60,13 @@
 			</div>
 		{/if}
 
+		{#if type === 'artist'}
+			<ArtistTile
+				id={media.id}
+				name={media.attributes.name}
+				src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
+			/>
+		{/if}
 		{#if type === 'video'}
 			<SongTile
 				artist={media.attributes.artistName || media.attributes?.curatorName}

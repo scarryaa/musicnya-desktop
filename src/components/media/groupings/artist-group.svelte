@@ -5,13 +5,14 @@
 	import ChevronLeft from 'svelte-material-icons/ChevronLeft.svelte';
 	import ChevronRight from 'svelte-material-icons/ChevronRight.svelte';
 	import AlbumTile from '../tiles/album-tile.svelte';
+	import ArtistTile from '../tiles/artist-tile.svelte';
 
 	export let data: {
 		artist: any;
 	};
 	export let viewType: string;
 	export let groupTitle: string;
-	export let contentType: 'album' | 'song' | 'video' = 'album';
+	export let contentType: 'album' | 'song' | 'video' | 'artist' = 'album';
 
 	let scrollButtons: HTMLElement | null;
 
@@ -112,7 +113,7 @@
 						title={media.attributes.name}
 						subtitle="year"
 						artist={media.attributes.artistName}
-						year={media.attributes.releaseDate.slice(0, 4)}
+						year={media.attributes.releaseDate?.slice(0, 4)}
 						src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
 					/>
 				</div>
@@ -127,8 +128,18 @@
 						title={media.attributes.name}
 						artist={media.attributes.artistName}
 						artistId={media.attributes.artistId}
-						year={media.attributes.releaseDate.slice(0, 4)}
+						year={media.attributes.releaseDate?.slice(0, 4)}
 						src={media.attributes.artwork?.url.replace('{w}x{h}', '400x400').replace('{f}', 'webp')}
+					/>
+				</div>
+			{/if}
+
+			{#if contentType === 'artist'}
+				<div class="artist-group__content__artist">
+					<ArtistTile
+						id={media.id}
+						title={media.attributes.name}
+						src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
 					/>
 				</div>
 			{/if}
@@ -199,6 +210,8 @@
 			grid-template-rows: repeat(auto-fit, minmax(2rem, 1fr));
 			grid-auto-flow: column dense;
 			overflow-y: scroll;
+			gap: 1rem;
+			justify-content: flex-start;
 
 			&::-webkit-scrollbar {
 				display: none;

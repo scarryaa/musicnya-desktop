@@ -1,6 +1,10 @@
 import { repeatMode, shuffleMode } from '../../stores/musickit.store';
 import type { MusicKit } from '../types/musickit';
 
+export const initMusicKit = (instance) => {
+	instance.volume = 0.2;
+};
+
 export const setVolume = (volume: number) => {
 	MusicKit.getInstance().volume = volume;
 };
