@@ -34,6 +34,38 @@
 		// hide scroll buttons if not scrollable
 		const content = document.querySelector('.artist-group__content');
 
+		// hide elements as they scroll out of view
+		content?.addEventListener('scroll', () => {
+			const firstElementInView: HTMLElement | null = document.querySelector(
+				'.artist-group__content > *:not(.hidden)'
+			);
+			const lastElementInView: HTMLElement | null = document.querySelector(
+				'.artist-group__content > *:not(.hidden):last-child'
+			);
+
+			const firstElementInViewRect = firstElementInView?.getBoundingClientRect();
+			const lastElementInViewRect = lastElementInView?.getBoundingClientRect();
+
+			const firstElementInViewLeft = firstElementInViewRect?.left ?? 0;
+			const lastElementInViewRight = lastElementInViewRect?.right ?? 0;
+
+			const contentRect = content?.getBoundingClientRect();
+			const contentLeft = contentRect?.left ?? 0;
+			const contentRight = contentRect?.right ?? 0;
+
+			if (firstElementInViewLeft < contentLeft) {
+				firstElementInView?.classList.add('hidden');
+			} else {
+				firstElementInView?.classList.remove('hidden');
+			}
+
+			if (lastElementInViewRight > contentRight) {
+				lastElementInView?.classList.add('hidden');
+			} else {
+				lastElementInView?.classList.remove('hidden');
+			}
+		});
+
 		//scroll on arrow key press if focused, and key is arrowleft, arrowright, space, or enter
 		scrollButtons?.addEventListener('keydown', (e) => {
 			if (
@@ -42,7 +74,22 @@
 				e.key === 'Space' ||
 				e.key === 'Enter'
 			) {
-				scroll(document.activeElement === scrollButtons?.children[0] ? 'left' : 'right');
+				if (e.key === 'Space' || e.key === 'Enter') {
+					e.preventDefault();
+					scroll(document.activeElement === scrollButtons?.children[0] ? 'left' : 'right');
+				} else {
+					e.key === 'ArrowLeft' ? scroll('left') : scroll('right');
+				}
+			} else if (
+				e.key === 'Tab' &&
+				e.shiftKey === false &&
+				document.activeElement === scrollButtons?.children[1]
+			) {
+				const firstElementInView: HTMLElement | null = document.querySelector(
+					'.artist-group__content > *:not(.hidden)'
+				);
+				console.log(firstElementInView);
+				firstElementInView?.focus({ preventScroll: false });
 			}
 
 			// TODO hide elements as they scroll out of view
@@ -50,8 +97,9 @@
 
 			// find first element in view and focus it if tabbing from scroll buttons
 			if (e.key === 'Tab' && document.activeElement === scrollButtons?.children[1]) {
+				e.preventDefault();
 				const firstElementInView: HTMLElement | null = document.querySelector(
-					'.artist-group__content > *:not(.hidden)'
+					'.artist-group__content > *:not(.hidden) > * > *'
 				);
 				firstElementInView?.focus();
 			}
