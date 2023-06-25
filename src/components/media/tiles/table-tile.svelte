@@ -91,7 +91,8 @@
 			}
 		}
 
-		&:hover {
+		&:hover,
+		&:focus-within {
 			background-color: $table-background-hover;
 
 			.table-number__wrapper-number {
@@ -121,7 +122,8 @@
 			}
 		}
 
-		&:hover .table-number__wrapper-icons {
+		&:hover .table-number__wrapper-icons,
+		&:focus-within .table-number__wrapper-icons {
 			opacity: 1;
 		}
 	}

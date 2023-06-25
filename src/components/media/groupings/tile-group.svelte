@@ -41,16 +41,6 @@
 				}
 				scrollEvent.shouldScroll = true;
 			}
-
-			// if tab, jump to the first visible element
-			if (e.key === 'Tab' && e.shiftKey == false && document.activeElement === node?.children[1]) {
-				e.preventDefault();
-				const firstElementInView: HTMLElement | null = document.querySelector(
-					'.tile-group__content > *:not(.hidden) .album-overlay > *'
-				);
-				console.log(firstElementInView);
-				firstElementInView?.focus();
-			}
 		});
 
 		// hide elements as they scroll out of view
@@ -115,6 +105,8 @@
 	@use '../../../variables.scss' as *;
 
 	.tile-group {
+		overflow: visible;
+
 		.tile-group__title-wrapper {
 			display: flex;
 			flex-direction: row;
@@ -122,8 +114,8 @@
 
 			&__title {
 				margin-inline: 1rem;
-				font-size: 1.2rem;
-				font-weight: 700;
+				font-size: 2rem;
+				font-weight: 400;
 				color: $text;
 				margin-bottom: 0;
 				max-width: max-content;
@@ -131,7 +123,7 @@
 			}
 
 			.scroll-buttons__arrows {
-				margin-top: 0.5rem;
+				margin-top: 1.6rem;
 				outline-offset: 0.2rem;
 				display: flex;
 				flex-direction: row;

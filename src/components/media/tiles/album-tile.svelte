@@ -37,7 +37,8 @@
 
 <style lang="scss">
 	@use '../../../variables.scss' as *;
-	$drop-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+
+	$drop-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 
 	.album-tile {
 		margin-top: 0.2rem;
@@ -49,8 +50,8 @@
 		flex-direction: column;
 		aspect-ratio: 1;
 		align-items: flex-start;
-		filter: drop-shadow($drop-shadow);
 		overflow: visible;
+		filter: drop-shadow($drop-shadow);
 
 		.album-overlay-container {
 			z-index: 99;

@@ -7,6 +7,7 @@
 </script>
 
 <button
+	on:click
 	class="button-filled {$$restProps.class ?? ''}"
 	style="background-color: {bg}; width: {width}; height: {height}"
 >

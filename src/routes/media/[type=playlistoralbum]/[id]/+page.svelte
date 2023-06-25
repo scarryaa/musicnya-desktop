@@ -11,6 +11,7 @@
 	import Download from 'svelte-material-icons/Download.svelte';
 	import DotsHorizontal from 'svelte-material-icons/DotsHorizontal.svelte';
 	import ClockTimeFiveOutline from 'svelte-material-icons/ClockTimeFiveOutline.svelte';
+	import { play, shuffle } from '../../../../lib/services/playback-service';
 
 	export let data;
 </script>
@@ -48,7 +49,14 @@
 			</div>
 			<div style="display: flex; flex-direction: row; width: inherit;">
 				<div class="play-shuffle">
-					<ButtonFilled bg="" width="6rem" height="2.5rem" text="Play" icon={Play} />
+					<ButtonFilled
+						bg=""
+						width="6rem"
+						height="2.5rem"
+						text="Play"
+						icon={Play}
+						on:click={() => play(data.media.type.replace('library-', ''), [data.media.id])}
+					/>
 					<ButtonFilled
 						bg=""
 						width="8rem"
@@ -56,6 +64,7 @@
 						class="shuffle-button"
 						text="Shuffle"
 						icon={Shuffle}
+						on:click={() => shuffle(data.media.type.replace('library-', ''), [data.media.id], true)}
 					/>
 				</div>
 				<div class="download-more-options">

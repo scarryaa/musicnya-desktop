@@ -15,7 +15,7 @@
 	@use '../../variables.scss' as *;
 
 	$default-color: #fff;
-	$drop-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	$drop-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
 
 	.button-icon {
 		width: 2.5rem;

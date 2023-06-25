@@ -78,7 +78,8 @@
 		margin-top: 0.5rem;
 		padding-inline: 1rem;
 		display: flex;
-		overflow-y: scroll;
+		overflow-x: scroll;
+		overflow-y: visible;
 
 		&::-webkit-scrollbar {
 			display: none;
