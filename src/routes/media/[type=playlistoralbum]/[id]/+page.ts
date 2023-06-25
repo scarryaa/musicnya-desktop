@@ -28,106 +28,96 @@ const getMediaColor = async (media: MusicKit.MediaItem | undefined) => {
 	return media;
 };
 
-export async function load({ fetch, params }) {
-	if (params.type === 'playlist') {
-		let playlistFromLibrary = get(libraryPlaylists).find((playlist) => playlist.id === params.id);
-		if (playlistFromLibrary) {
-			playlistFromLibrary = {
-				...playlistFromLibrary,
-				...{
-					attributes: {
-						...playlistFromLibrary.attributes,
-						inLibrary: true
-					}
-				}
-			};
-		}
-		if (!playlistFromLibrary) {
-			let playlistData;
-			let libraryData;
-			try {
-				const [playlistResponse, libraryResponse] = await Promise.all([
-					fetch(
-						`http://localhost:3001/v1/catalog/us/playlists/${params.id}?platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls&include[songs]=artists`,
-						{ headers, mode: 'cors' }
-					),
-					fetch(
-						`http://localhost:3001/v1/catalog/us/playlists/${params.id}?fields%5Bplaylists%5D=inLibrary&fields%5Balbums%5D=inLibrary&relate=library`,
-						{
-							headers,
-							mode: 'cors'
-						}
-					)
-				]);
+const loadMediaItem = async ({ fetch, params, mediaType, libraryType }) => {
+	const itemFromLibrary = get(libraryPlaylists).find((item) => item.id === params.id);
 
-				[playlistData, libraryData] = await Promise.all([
-					playlistResponse.json(),
-					libraryResponse.json()
-				]);
-			} catch (error) {
-				console.error('An error occurred while fetching the data: ', error);
+	if (itemFromLibrary) {
+		console.log(itemFromLibrary);
+		return await getMediaColor({
+			...itemFromLibrary,
+			attributes: {
+				...itemFromLibrary.attributes,
+				inLibrary: true
 			}
-
-			const playlist = playlistData?.data?.[0];
-			const library = libraryData?.data?.[0];
-			const merged = {
-				...playlist,
-				...{
-					attributes: {
-						...playlist.attributes,
-						inLibrary: library.attributes.inLibrary
-					},
-					libraryId: library.id
-				}
-			};
-
-			console.log(merged);
-
-			return { media: await getMediaColor(merged) };
-		}
-
-		return { media: await getMediaColor(playlistFromLibrary) };
+		});
 	}
 
-	if (params.type === 'album') {
-		let album;
-		let library;
-		try {
-			const [albumResponse, libraryResponse] = await Promise.all([
-				fetch(
-					`http://localhost:3001/v1/catalog/us/albums/${params.id}?l=en-US&platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls`,
-					{ headers, mode: 'cors' }
-				),
-				fetch(
-					`http://localhost:3001/v1/catalog/us/albums/${params.id}?fields%5Bplaylists%5D=inLibrary&fields%5Balbums%5D=inLibrary&relate=library`,
-					{
-						headers,
-						mode: 'cors'
-					}
-				)
-			]);
-
-			[album, library] = await Promise.all([albumResponse.json(), libraryResponse.json()]);
-		} catch (error) {
-			console.error('An error occurred while fetching the data: ', error);
+	const fetchMediaItem = fetch(
+		`http://localhost:3001/v1/${libraryType}/${mediaType}s/${params.id}?fields[${mediaType}]=inLibrary&l=en-US&platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls&include[songs]=artists`,
+		{
+			headers,
+			mode: 'cors'
 		}
+	);
 
-		// merge attributes from album and library
-		const merged = {
-			...album.data?.[0],
-			...{
-				attributes: {
-					...album.data?.[0].attributes,
-					...library.data?.[0].attributes
-				},
-				relationships: {
-					...album.data?.[0].relationships,
-					...library.data?.[0].relationships
-				}
-			}
-		};
-		console.log(merged);
+	const fetchInLibrary = fetch(
+		`http://localhost:3001/v1/catalog/us/${mediaType}s/${params.id}?fields%5Bplaylists%5D=inLibrary&fields%5Balbums%5D=inLibrary&relate=library`,
+		{
+			headers,
+			mode: 'cors'
+		}
+	);
 
-		return { media: await getMediaColor(merged) };
+	// Running both fetch operations in parallel
+	const [responseMediaItem, responseInLibrary] = await Promise.all([
+		fetchMediaItem,
+		fetchInLibrary
+	]);
+
+	const jsonMediaItem = await responseMediaItem.json();
+	const item = jsonMediaItem.data?.[0];
+	console.log(item);
+
+	if (!item) {
+		return { status: 404 };
 	}
+
+	if (item?.type.includes('library')) {
+		item.attributes.inLibrary = true;
+		return await getMediaColor(item);
+	}
+
+	const jsonInLibrary = await responseInLibrary.json();
+	if (!jsonInLibrary.data) {
+		return await getMediaColor(item);
+	} else if (!jsonInLibrary.data[0]) {
+		return await getMediaColor(item);
+	}
+
+	const merged = {
+		...item,
+		...{
+			attributes: {
+				...item.attributes,
+				...jsonInLibrary.data[0].attributes
+			}
+		}
+	};
+
+	return await getMediaColor(merged);
+};
+
+export async function load(context) {
+	const { params } = context;
+
+	const mediaTypes = {
+		playlist: 'catalog/us',
+		'library-playlist': 'me/library',
+		album: 'catalog/us',
+		'library-album': 'me/library'
+	};
+
+	const libraryType = mediaTypes[params.type];
+	const mediaType =
+		params.type === 'library-playlist'
+			? 'playlist'
+			: params.type === 'library-album'
+			? 'album'
+			: params.type.split('-')[0];
+
+	if (!libraryType) {
+		return { status: 404 };
+	}
+
+	return { media: loadMediaItem({ ...context, mediaType, libraryType }) };
 }

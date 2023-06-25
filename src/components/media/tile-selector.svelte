@@ -51,11 +51,11 @@
 					type={media.type}
 					subtitle="artist"
 					id={media.id}
-					title={media.attributes.name}
-					artist={media.attributes.artistName || media.attributes?.curatorName}
+					title={media.attributes?.name}
+					artist={media.attributes?.artistName || media.attributes?.curatorName}
 					artistId={media.relationships?.artists?.data?.[0]?.id}
-					year={media.attributes.releaseDate}
-					src={media.attributes.artwork?.url.replace('{w}x{h}', '400x400').replace('{f}', 'webp')}
+					year={media.attributes?.releaseDate}
+					src={media.attributes?.artwork?.url.replace('{w}x{h}', '400x400').replace('{f}', 'webp')}
 				/>
 			</div>
 		{/if}

@@ -22,9 +22,7 @@
 	<div class="album-overlay-container">
 		<a
 			class="album-overlay"
-			href={type !== 'stations'
-				? `/media/${type.slice(0, -1).replace('library-', '')}/${id}`
-				: null}
+			href={type !== 'stations' ? `/media/${type.slice(0, -1)}/${id}` : null}
 		>
 			<ButtonPlay color="white" on:click={playAlbum} />
 			<ButtonOptions />
@@ -35,9 +33,7 @@
 		{#if type === 'stations'}
 			<span class="station-title">{title}</span>
 		{:else}
-			<a href="/media/{type.slice(0, -1).replace('library-', '')}/{id}" class="album-title"
-				>{title}</a
-			>
+			<a href="/media/{type.slice(0, -1)}/{id}" class="album-title">{title}</a>
 		{/if}
 		{#if subtitle === 'artist'}
 			<a tabindex={artist ? 0 : -1} href="/media/artist/{artistId}" class="album-artist"

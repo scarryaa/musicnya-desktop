@@ -4,6 +4,7 @@
 	import ButtonIcon from '../../../../components/buttons/button-icon.svelte';
 	import { play, shuffle } from '../../../../lib/services/playback-service';
 	import { addToLibrary, removeFromLibrary } from '../../../../lib/api/musickit.api';
+	import { replaceUrlPlaceholders } from '../../../../utils/utils';
 
 	import Play from 'svelte-material-icons/Play.svelte';
 	import Shuffle from 'svelte-material-icons/Shuffle.svelte';
@@ -19,7 +20,7 @@
 	const _removeFromLibrary = async () => {
 		await removeFromLibrary(
 			data.media.relationships?.library?.data?.[0]?.id || data.media?.id,
-			data.media?.type.replace('library-', '') || ''
+			getTypeWithoutPrefix(data.media?.type)
 		).then(() => {
 			inLibrary = false;
 		});
@@ -28,10 +29,22 @@
 	const _addToLibrary = async () => {
 		await addToLibrary(
 			data.media.relationships?.library?.data?.[0]?.id || data.media?.id,
-			data.media?.type.replace('library-', '') || ''
+			getTypeWithoutPrefix(data.media?.type)
 		).then(() => {
 			inLibrary = true;
 		});
+	};
+
+	const getTypeWithoutPrefix = (type) => {
+		return type?.replace('library-', '') || '';
+	};
+
+	const getUrlWithSize = (url) => {
+		return replaceUrlPlaceholders(url, '300x300');
+	};
+
+	const playShuffle = (type, id) => {
+		return type === 'library' ? shuffle(type, [id || '']) : play(type, [id || '']);
 	};
 </script>
 

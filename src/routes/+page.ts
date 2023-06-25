@@ -20,6 +20,7 @@ export async function load({ fetch, params }) {
 		)
 			.then((response) => {
 				return response.json().then((json) => {
+					console.log(json);
 					return json.data;
 				});
 			})
