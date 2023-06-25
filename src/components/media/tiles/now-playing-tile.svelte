@@ -4,7 +4,7 @@
 
 <div class="now-playing-tile">
 	<img
-		style="display: {$nowPlayingItem ? 'block' : 'none'}"
+		style="visibility: {$nowPlayingItem ? 'visible' : 'hidden'}"
 		src={($nowPlayingItem?.attributes?.artwork?.url)
 			.replace('{w}x{h}', '60x60')
 			.replace('{f}', 'webp')}
@@ -28,7 +28,10 @@
 		flex-grow: 0.2;
 
 		img {
+			display: block;
 			border: 1px solid $border;
+			min-width: 60px;
+			min-height: 60px;
 			max-width: 60px;
 			object-fit: cover;
 			border-radius: $border-radius-half;
@@ -40,17 +43,25 @@
 			flex-direction: column;
 			margin-left: 0.8rem;
 			margin-top: 0.5rem;
+			flex-grow: 0;
+			max-width: 12vw;
+			min-width: 12vw;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 
 			.song-title {
 				align-self: flex-start;
 				font-size: 1rem;
 				font-weight: 400;
 				white-space: nowrap;
+				max-width: 100%;
 				overflow: hidden;
 				text-overflow: ellipsis;
 			}
 
 			.song-artist {
+				max-width: 100%;
 				align-self: flex-start;
 				font-size: 1rem;
 				font-weight: 400;

@@ -1,5 +1,12 @@
+<script lang="ts">
+	export let value: number = 0;
+	export let min: number = 0;
+	export let max: number = 100;
+	export let step: number = 1;
+</script>
+
 <div class="slider">
-	<input type="range" min="0" max="100" value="0" class="input" />
+	<input bind:value {step} type="range" {min} {max} class="input" on:input on:change />
 </div>
 
 <style lang="scss">

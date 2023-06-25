@@ -1,4 +1,4 @@
-import type { MusicKit } from 'src/lib/types/musickit';
+import type { MusicKit } from '../lib/types/musickit';
 import { writable, type Writable } from 'svelte/store';
 
 const enum playbackStates {
@@ -23,5 +23,9 @@ export const musicUserToken = writable('');
 export const nowPlayingItem: Writable<MusicKit.MediaItem | undefined> = writable(undefined);
 export const nowPlayingItemIndex = writable(0);
 export const nowPlayingItemDuration = writable(0);
-export const nowPlayingItemProgress = writable(0);
+export const nowPlayingItemProgress = writable(0.0);
+export const nowPlayingItemTime = writable(0);
 export const playbackState = writable(playbackStates.none);
+export const playing = writable(false);
+export const repeatMode = writable(0);
+export const shuffleMode = writable(false);

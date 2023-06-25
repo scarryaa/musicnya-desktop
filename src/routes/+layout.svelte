@@ -5,7 +5,7 @@
 	import { drawerOpen, firstLaunch } from '../stores/app.store';
 	import { developerToken, libraryPlaylists, musicUserToken } from '../stores/musickit.store';
 	import { onMount } from 'svelte';
-	import { getLibraryPlaylists } from '../lib/api/apple-music-api';
+	import { getLibraryPlaylists } from '../lib/api/musickit.api';
 
 	import Drawer from '../components/drawer/drawer.svelte';
 	import Footer from '../components/footer.svelte';
@@ -29,7 +29,8 @@
 	import Search from '../components/search.svelte';
 	import WindowButtons from '../components/window/window-buttons.svelte';
 	import Modal from '../components/window/modal.svelte';
-	import type { MusicKit } from 'src/lib/types/musickit';
+	import type { MusicKit } from '../lib/types/musickit';
+	import { addEventHandlers } from '../lib/event-handlers/apple-music-events';
 
 	let playlists = [];
 	let drawer;
@@ -61,6 +62,7 @@
 				}).then((instance) => {
 					musicUserToken.set(instance.musicUserToken);
 					developerToken.set(instance.developerToken);
+					addEventHandlers(instance);
 					getLibraryPlaylists().then((data) => {
 						libraryPlaylists.set(data);
 					});

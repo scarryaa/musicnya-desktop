@@ -1,45 +1,85 @@
-<script>
+<script lang="ts">
 	import SkipPrevious from 'svelte-material-icons/SkipPrevious.svelte';
 	import PauseCircle from 'svelte-material-icons/PauseCircle.svelte';
 	import PlayCircle from 'svelte-material-icons/PlayCircle.svelte';
 	import SkipNext from 'svelte-material-icons/SkipNext.svelte';
 	import Shuffle from 'svelte-material-icons/Shuffle.svelte';
 	import VolumeHigh from 'svelte-material-icons/VolumeHigh.svelte';
+	import VolumeMedium from 'svelte-material-icons/VolumeMedium.svelte';
+	import VolumeMute from 'svelte-material-icons/VolumeMute.svelte';
 	import FormatQuoteClose from 'svelte-material-icons/FormatQuoteClose.svelte';
 	import Repeat from 'svelte-material-icons/Repeat.svelte';
+	import RepeatOnce from 'svelte-material-icons/RepeatOnce.svelte';
 	import ViewList from 'svelte-material-icons/ViewList.svelte';
 
-	import Slider from './slider.svelte';
 	import DrawerButton from '../drawer/drawer-button.svelte';
+	import {
+		seekToTime,
+		setVolume,
+		skipToNextItem,
+		skipToPreviousItem,
+		togglePlayPause,
+		toggleRepeatMode,
+		toggleShuffleMode
+	} from '../../lib/api/music.api';
+	import Slider from './slider.svelte';
+	import {
+		nowPlayingItemDuration,
+		nowPlayingItemTime,
+		playing,
+		repeatMode,
+		shuffleMode
+	} from '../../stores/musickit.store';
+
+	let currentTime = '';
+	$: currentTime = new Date($nowPlayingItemTime * 1000).toISOString().substr(14, 5);
+
+	let duration = '';
+	$: duration = new Date($nowPlayingItemDuration * 1000).toISOString().substr(14, 5);
+	export let volumeValue: number = 0.2;
+
+	let progress = 0;
+	$: progress = ($nowPlayingItemTime / $nowPlayingItemDuration) * $nowPlayingItemDuration;
 </script>
 
 <div class="media-controls">
 	<div style="display: flex; flex-grow: 1; margin-left: 4rem;">
 		<div class="playback-buttons">
 			<div class="repeat-shuffle-wrapper">
-				<DrawerButton on:click={() => console.log('shuffle')}>
-					<Shuffle />
+				<DrawerButton on:click={() => toggleShuffleMode()}>
+					<svelte:component
+						this={$shuffleMode ? Shuffle : Shuffle}
+						color={$shuffleMode ? 'red' : ''}
+					/>
 				</DrawerButton>
-				<DrawerButton>
-					<svelte:component this={Repeat} />
+				<DrawerButton on:click={() => toggleRepeatMode()}>
+					<svelte:component
+						this={$repeatMode === 1 ? RepeatOnce : $repeatMode === 2 ? Repeat : Repeat}
+						color={$repeatMode ? 'red' : ''}
+					/>
 				</DrawerButton>
 			</div>
-			<DrawerButton>
+			<DrawerButton on:click={() => skipToPreviousItem()}>
 				<SkipPrevious />
 			</DrawerButton>
 			<div class="play-pause-wrapper">
-				<DrawerButton>
-					<PauseCircle />
+				<DrawerButton on:click={() => togglePlayPause()}>
+					<svelte:component this={$playing ? PauseCircle : PlayCircle} />
 				</DrawerButton>
 			</div>
-			<DrawerButton>
+			<DrawerButton on:click={() => skipToNextItem()}>
 				<SkipNext />
 			</DrawerButton>
 		</div>
 		<div class="playback-slider-wrapper">
-			<p class="playback-time">0:00</p>
-			<Slider />
-			<p class="playback-time" id="total-playback-time">0:00</p>
+			<p class="playback-time">{currentTime}</p>
+			<Slider
+				bind:value={progress}
+				min={0}
+				max={$nowPlayingItemDuration}
+				on:change={(e) => seekToTime(e.target?.value)}
+			/>
+			<p class="playback-time" id="total-playback-time">{duration}</p>
 		</div>
 	</div>
 	<div class="misc-buttons">
@@ -50,10 +90,18 @@
 			<FormatQuoteClose />
 		</DrawerButton>
 		<DrawerButton>
-			<svelte:component this={VolumeHigh} />
+			<svelte:component
+				this={volumeValue === 0 ? VolumeMute : volumeValue <= 0.5 ? VolumeMedium : VolumeHigh}
+			/>
 		</DrawerButton>
 		<div class="volume-slider-wrapper">
-			<Slider />
+			<Slider
+				step={0.01}
+				bind:value={volumeValue}
+				min={0}
+				max={1}
+				on:input={(e) => setVolume(e.target.value || 0)}
+			/>
 		</div>
 	</div>
 </div>
