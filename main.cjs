@@ -28,7 +28,7 @@ function isDev() {
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 900,
+    width: 950,
     height: 650,
     webPreferences: {
       nodeIntegration: true,
@@ -40,7 +40,7 @@ function createWindow() {
     frame: false,
     show: false,
     minHeight: 400,
-    minWidth: 900,
+    minWidth: 950,
     acceptFirstMouse: true,
     center: true,
     roundedCorners: true,

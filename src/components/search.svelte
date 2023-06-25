@@ -8,15 +8,15 @@
 	@use '../variables.scss' as *;
 
 	.search {
-		position: fixed;
-		top: 2.3rem;
-		left: 14rem;
+		position: absolute;
+		top: 0.5rem;
+		left: 8rem;
 		z-index: 99;
 
 		input {
 			width: 100%;
 			height: 100%;
-			padding: 0.5rem 1rem;
+			padding: 0.6rem 0.5rem;
 			border-radius: $border-radius;
 			border: none;
 			font-size: 1rem;

@@ -13,11 +13,11 @@
 			<div
 				class="search-tile"
 				style="background-image: url('{item.attributes?.editorialArtwork?.bannerUber?.url
-					.replace('{w}x{h}', '500x500')
+					.replace('{w}x{h}', '700x700')
 					.replace('{c}', '')
 					.replace('{f}', 'webp') ||
 					item.attributes?.editorialArtwork?.subscriptionHero?.url
-						.replace('{w}x{h}', '500x500')
+						.replace('{w}x{h}', '700x700')
 						.replace('{c}', '')
 						.replace('{f}', 'webp')}')"
 			>
@@ -26,6 +26,7 @@
 						{item.attributes?.editorialNotes?.name || item.attributes?.name}
 					</h2>
 				</div>
+				<div class="search-tile__overlay" />
 			</div>
 		{/each}
 	</div>
@@ -43,7 +44,7 @@
 
 		&__content {
 			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); // 2 items per column by default
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 		}
 
 		.search-tile {
@@ -53,74 +54,48 @@
 			margin-right: 0.5rem;
 			margin-bottom: 0.5rem;
 			border-radius: $border-radius-half;
-			position: relative; // This is the new line
+			position: relative;
+			filter: drop-shadow($drop-shadow);
+
+			&:hover {
+				.search-tile__overlay {
+					opacity: 1;
+				}
+			}
+		}
+
+		.search-tile__overlay {
+			transition: opacity 0.2s ease-in-out;
+			background-color: rgba(0, 0, 0, 0.2);
+			opacity: 0;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			border-radius: $border-radius-half;
 		}
 
 		.search-tile__info__title {
 			color: $white;
-			position: absolute; // Change this line
-			bottom: 0.6rem; // Change this line
-			left: 0.6rem; // Change this line
+			position: absolute;
+			bottom: 0.6rem;
+			left: 0.6rem;
 			font-size: 1.4rem;
 			font-weight: 600;
+			margin-block: 0;
 		}
 	}
 
-	@media (max-width: 1200px) {
-		.page-wrapper {
-			&__content {
-				grid-template-columns: repeat(
-					auto-fit,
-					minmax(400px, 1fr)
-				); // 2 items per column by default
-			}
+	@media (min-width: 1470px) {
+		.page-wrapper__content {
+			grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
 		}
 	}
 
-	@media (min-width: 1201px) and (max-width: 1600px) {
-		.page-wrapper {
-			&__content {
-				grid-template-columns: repeat(
-					auto-fit,
-					minmax(400px, 1fr)
-				); // 2 items per column by default
-			}
-		}
-	}
-
-	@media (min-width: 1601px) and (max-width: 1800px) {
-		.page-wrapper {
-			&__content {
-				grid-template-columns: repeat(
-					auto-fit,
-					minmax(500px, 1fr)
-				); // 2 items per column by default
-				grid-auto-rows: minmax(250px, auto); // Minimum 2 rows
-			}
-		}
-	}
-
-	@media (min-width: 1801px) and (max-width: 2200px) {
-		.page-wrapper {
-			&__content {
-				grid-template-columns: repeat(
-					auto-fit,
-					minmax(600px, 1fr)
-				); // 2 items per column by default
-				grid-auto-rows: minmax(300px, auto); // Minimum 2 rows
-			}
-		}
-	}
-
-	@media (min-width: 2201px) {
-		.page-wrapper {
-			&__content {
-				grid-template-columns: repeat(
-					auto-fit,
-					minmax(700px, 1fr)
-				); // 2 items per column by default
-				grid-auto-rows: minmax(350px, auto); // Minimum 2 rows
-			}
+	@media (max-width: 1469px) {
+		.page-wrapper__content {
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 		}
 	}
 </style>
