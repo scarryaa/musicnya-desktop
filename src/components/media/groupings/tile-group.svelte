@@ -32,13 +32,58 @@
 				e.key === 'Space' ||
 				e.key === 'Enter'
 			) {
-				scrollEvent.direction = document.activeElement === node?.children[0] ? 'left' : 'right';
+				if (e.key === 'ArrowLeft') {
+					scrollEvent.direction = 'left';
+				} else if (e.key === 'ArrowRight') {
+					scrollEvent.direction = 'right';
+				} else {
+					scrollEvent.direction = document.activeElement === node?.children[0] ? 'left' : 'right';
+				}
 				scrollEvent.shouldScroll = true;
+			}
+
+			// if tab, jump to the first visible element
+			if (e.key === 'Tab' && e.shiftKey == false && document.activeElement === node?.children[1]) {
+				e.preventDefault();
+				const firstElementInView: HTMLElement | null = document.querySelector(
+					'.tile-group__content > *:not(.hidden) .album-overlay > *'
+				);
+				console.log(firstElementInView);
+				firstElementInView?.focus();
 			}
 		});
 
-		// TODO hide elements as they scroll out of view
-		// TODO find first element in view and focus it if tabbing from scroll buttons
+		// hide elements as they scroll out of view
+		node?.addEventListener('scroll', () => {
+			const firstElementInView: HTMLElement | null = document.querySelector(
+				'.tile-group__content > *:not(.hidden)'
+			);
+			const lastElementInView: HTMLElement | null = document.querySelector(
+				'.tile-group__content > *:not(.hidden):last-child'
+			);
+
+			const firstElementInViewRect = firstElementInView?.getBoundingClientRect();
+			const lastElementInViewRect = lastElementInView?.getBoundingClientRect();
+
+			const firstElementInViewLeft = firstElementInViewRect?.left ?? 0;
+			const lastElementInViewRight = lastElementInViewRect?.right ?? 0;
+
+			const contentRect = node?.getBoundingClientRect();
+			const contentLeft = contentRect?.left ?? 0;
+			const contentRight = contentRect?.right ?? 0;
+
+			if (firstElementInViewLeft < contentLeft) {
+				firstElementInView?.classList.add('hidden');
+			} else {
+				firstElementInView?.classList.remove('hidden');
+			}
+
+			if (lastElementInViewRight > contentRight) {
+				lastElementInView?.classList.add('hidden');
+			} else {
+				lastElementInView?.classList.remove('hidden');
+			}
+		});
 
 		node?.addEventListener('click', () => {
 			scrollEvent.direction = document.activeElement === node?.children[0] ? 'left' : 'right';

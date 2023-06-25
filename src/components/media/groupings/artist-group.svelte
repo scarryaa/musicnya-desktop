@@ -29,8 +29,6 @@
 	onMount(() => {
 		scrollButtons = document.querySelector('.scroll-buttons__arrows');
 
-		scrollButtons = document.querySelector('.scroll-buttons__arrows');
-
 		// hide scroll buttons if not scrollable
 		const content = document.querySelector('.artist-group__content');
 
@@ -80,20 +78,7 @@
 				} else {
 					e.key === 'ArrowLeft' ? scroll('left') : scroll('right');
 				}
-			} else if (
-				e.key === 'Tab' &&
-				e.shiftKey === false &&
-				document.activeElement === scrollButtons?.children[1]
-			) {
-				const firstElementInView: HTMLElement | null = document.querySelector(
-					'.artist-group__content > *:not(.hidden)'
-				);
-				console.log(firstElementInView);
-				firstElementInView?.focus({ preventScroll: false });
 			}
-
-			// TODO hide elements as they scroll out of view
-			// if (e.key === 'ArrowLeft' && document.activeElement === scrollButtons?.children[0]) {
 
 			// find first element in view and focus it if tabbing from scroll buttons
 			if (e.key === 'Tab' && document.activeElement === scrollButtons?.children[1]) {
