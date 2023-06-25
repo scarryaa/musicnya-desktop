@@ -15,6 +15,7 @@
 	export let albumId: string;
 	export let albumName: string;
 	export let durationInMillis: number;
+	export let playlistId: string | null;
 </script>
 
 <tr class="table-row" id="table-row" on:dblclick={() => play('song', id)}>
@@ -23,7 +24,11 @@
 			<span class="table-number__wrapper-number">{number + 1}</span>
 			<div class="table-number__wrapper-icons">
 				<div class="table-number__wrapper-icons__play">
-					<ButtonPlay color="black" size="1.8rem" on:click={() => play('song', id)} />
+					<ButtonPlay
+						color="black"
+						size="1.8rem"
+						on:click={() => play(type.slice(0, -1).replace('library-', ''), playlistId || albumId)}
+					/>
 				</div>
 			</div>
 		</div></td

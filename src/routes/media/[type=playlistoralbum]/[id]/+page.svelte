@@ -107,6 +107,7 @@
 								?.id || track.relationships?.artists?.data?.[0]?.id}
 							albumId={track.relationships?.catalog?.data?.[0]?.relationships?.albums?.data?.[0]
 								?.id || track.attributes?.url.split('/').pop().split('?')[0]}
+							playlistId={data.media.id}
 							albumName={track.relationships?.catalog?.data?.[0]?.attributes?.albumName ||
 								track.attributes?.albumName}
 							durationInMillis={track.attributes?.durationInMillis}
@@ -127,6 +128,7 @@
 							artistId={data.media.relationships?.artists?.data?.[0]?.id ||
 								track.relationships?.artists?.data?.[0]?.id}
 							albumId={data.media.id}
+							playlistId={null}
 							albumName={track.attributes?.albumName || data.media.attributes?.name}
 							durationInMillis={track.attributes?.durationInMillis}
 						/>
