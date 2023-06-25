@@ -3,10 +3,15 @@
 	export let bg: string;
 	export let width: string;
 	export let height: string;
+	export let size: string = '2rem';
+	export let fill = '#fff';
 </script>
 
-<button class="button-icon" style="background-color: {bg}; width: {width}; height: {height}">
-	<div class="button-icon__icon">
+<button
+	class="button-icon"
+	style="background-color: {bg}; width: {width}; height: {height}; color: {fill}"
+>
+	<div class="button-icon__icon" style="font-size: {size};">
 		<svelte:component this={icon} />
 	</div>
 </button>

@@ -1,3 +1,4 @@
+import type { MusicKit } from 'src/lib/types/musickit';
 import { getDominantColor } from '../../../../lib/services/color-service';
 import {
 	developerToken,
@@ -6,69 +7,101 @@ import {
 } from '../../../../stores/musickit.store';
 import { get } from 'svelte/store';
 
-/** @type {import('./$types').PageLoad} */
+const headers = {
+	'media-user-token': get(musicUserToken),
+	authorization: `Bearer ${get(developerToken)}`,
+	origin: 'https://beta.music.apple.com',
+	'access-control-allow-origin': '*',
+	'allowed-headers': '*'
+};
+
+const resolveArtworkURL = (url: string) => url.replace('{w}x{h}', '100x100').replace('{f}', 'png');
+
+const getMediaColor = async (media: MusicKit.MediaItem | undefined) => {
+	const url =
+		media?.attributes?.artwork?.url ||
+		media?.relationships?.tracks?.data?.[0]?.attributes?.artwork?.url ||
+		'';
+	if (media) {
+		media.color = await getDominantColor(resolveArtworkURL(url));
+	}
+	return media;
+};
+
 export async function load({ fetch, params }) {
 	if (params.type === 'playlist') {
-		const playlist = get(libraryPlaylists).find((playlist) => playlist.id === params.id);
-		if (playlist) {
-			playlist.color = await getDominantColor(
-				(
-					playlist.attributes?.artwork?.url ||
-					playlist.relationships.tracks.data?.[0].attributes?.artwork.url ||
-					''
-				)
-					.replace('{w}x{h}', '100x100')
-					.replace('{f}', 'png')
-			);
-			return { media: playlist };
-		} else {
-			const response = await fetch(
-				`http://localhost:3001/v1/catalog/us/playlists/${params.id}?l=en-US&platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls&include[songs]=artists`,
-				{
-					headers: {
-						'media-user-token': get(musicUserToken),
-						authorization: `Bearer ${get(developerToken)}`,
-						origin: 'https://beta.music.apple.com',
-						'access-control-allow-origin': '*',
-						'allowed-headers': '*'
-					},
-					mode: 'cors'
+		let playlistFromLibrary = get(libraryPlaylists).find((playlist) => playlist.id === params.id);
+		if (playlistFromLibrary) {
+			playlistFromLibrary = {
+				...playlistFromLibrary,
+				...{
+					attributes: {
+						...playlistFromLibrary.attributes,
+						inLibrary: true
+					}
 				}
-			);
-			const json = await response.json();
-			console.log(json.data?.[0]);
+			};
+		}
+		if (!playlistFromLibrary) {
+			let playlistData;
+			let libraryData;
+			try {
+				const [playlistResponse, libraryResponse] = await Promise.all([
+					fetch(
+						`http://localhost:3001/v1/catalog/us/playlists/${params.id}?platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls&include[songs]=artists`,
+						{ headers, mode: 'cors' }
+					),
+					fetch(
+						`http://localhost:3001/v1/catalog/us/playlists/${params.id}?fields%5Bplaylists%5D=inLibrary&fields%5Balbums%5D=inLibrary&relate=library`,
+						{
+							headers,
+							mode: 'cors'
+						}
+					)
+				]);
 
-			if (json.data) {
-				json.data[0].color = await getDominantColor(
-					json.data?.[0].attributes.artwork.url.replace('{w}x{h}', '100x100').replace('{f}', 'png')
-				);
-				return { media: json.data?.[0] };
+				[playlistData, libraryData] = await Promise.all([
+					playlistResponse.json(),
+					libraryResponse.json()
+				]);
+			} catch (error) {
+				console.error('An error occurred while fetching the data: ', error);
 			}
 
-			return { media: json.data?.[0] };
-		}
-	} else if (params.type === 'album') {
-		const response = await fetch(
-			`http://localhost:3001/v1/catalog/us/albums/${params.id}?l=en-US&platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls`,
-			{
-				headers: {
-					'media-user-token': get(musicUserToken),
-					authorization: `Bearer ${get(developerToken)}`,
-					origin: 'https://beta.music.apple.com',
-					'access-control-allow-origin': '*',
-					'allowed-headers': '*'
-				},
-				mode: 'cors'
-			}
-		);
-		const data = await response.json();
-		const album = data.data?.[0];
+			const playlist = playlistData?.data?.[0];
+			playlist.attributes.inLibrary = libraryData.data[0].attributes.inLibrary;
 
-		if (album) {
-			album.color = await getDominantColor(
-				album.attributes.artwork.url.replace('{w}x{h}', '100x100').replace('{f}', 'png')
-			);
-			return { media: album };
+			return { media: await getMediaColor(playlist) };
 		}
+
+		return { media: await getMediaColor(playlistFromLibrary) };
+	}
+
+	if (params.type === 'album') {
+		let album;
+		let library;
+		try {
+			const [albumResponse, libraryResponse] = await Promise.all([
+				fetch(
+					`http://localhost:3001/v1/catalog/us/albums/${params.id}?l=en-US&platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls`,
+					{ headers, mode: 'cors' }
+				),
+				fetch(
+					`http://localhost:3001/v1/catalog/us/albums/${params.id}?fields%5Bplaylists%5D=inLibrary&fields%5Balbums%5D=inLibrary&relate=library`,
+					{
+						headers,
+						mode: 'cors'
+					}
+				)
+			]);
+
+			[album, library] = await Promise.all([albumResponse.json(), libraryResponse.json()]);
+		} catch (error) {
+			console.error('An error occurred while fetching the data: ', error);
+		}
+		console.log(library);
+		album.data[0].attributes.inLibrary = library.data[0].attributes.inLibrary;
+
+		return { media: await getMediaColor(album.data?.[0]) };
 	}
 }

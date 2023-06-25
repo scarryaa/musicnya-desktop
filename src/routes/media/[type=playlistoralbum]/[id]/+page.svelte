@@ -8,8 +8,9 @@
 
 	import Play from 'svelte-material-icons/Play.svelte';
 	import Shuffle from 'svelte-material-icons/Shuffle.svelte';
-	import Download from 'svelte-material-icons/Download.svelte';
-	import DotsHorizontal from 'svelte-material-icons/DotsHorizontal.svelte';
+	import DownloadCircle from 'svelte-material-icons/DownloadCircle.svelte';
+	import CheckCircle from 'svelte-material-icons/CheckCircle.svelte';
+	import DotsHorizontalCircle from 'svelte-material-icons/DotsHorizontalCircle.svelte';
 	import ClockTimeFiveOutline from 'svelte-material-icons/ClockTimeFiveOutline.svelte';
 	import { play, shuffle } from '../../../../lib/services/playback-service';
 
@@ -41,8 +42,10 @@
 							style="display:inline"
 							>{data.media?.attributes?.curatorName || data.media?.attributes?.artistName}</a
 						>
-						<span class="dot media-desc" style="display: inline;">•</span>
-						<span>{data.media?.attributes?.releaseDate?.split('-')[0]}</span>
+						{#if data.media?.attributes?.releaseDate}
+							<span class="dot media-desc" style="display: inline;">•</span>
+							<span>{data.media?.attributes?.releaseDate?.split('-')[0]}</span>
+						{/if}
 					</span>
 					<span class="media-desc" />
 				{/if}
@@ -55,7 +58,8 @@
 						height="2.5rem"
 						text="Play"
 						icon={Play}
-						on:click={() => play(data.media.type.replace('library-', ''), [data.media.id])}
+						on:click={() =>
+							play(data.media?.type.replace('library-', '') || '', [data.media?.id || ''])}
 					/>
 					<ButtonFilled
 						bg=""
@@ -64,12 +68,18 @@
 						class="shuffle-button"
 						text="Shuffle"
 						icon={Shuffle}
-						on:click={() => shuffle(data.media.type.replace('library-', ''), [data.media.id], true)}
+						on:click={() =>
+							shuffle(data.media?.type.replace('library-', '') || '', [data.media?.id || ''])}
 					/>
 				</div>
 				<div class="download-more-options">
-					<ButtonIcon bg="" width="1rem" height="1rem" icon={Download} />
-					<ButtonIcon bg="" width="1rem" height="1rem" icon={DotsHorizontal} />
+					<ButtonIcon
+						bg="transparent"
+						width="2rem"
+						height="2rem"
+						icon={data.media?.attributes?.inLibrary ? CheckCircle : DownloadCircle}
+					/>
+					<ButtonIcon bg="transparent" width="2rem" height="2rem" icon={DotsHorizontalCircle} />
 				</div>
 			</div>
 		</div>
@@ -148,7 +158,8 @@
 	$table-text: #000000;
 	$table-text-hover: #494949;
 	$table-text-active: #a0a0a0;
-	$drop-shadow: rgba(0, 0, 0, 0.2) 0px 0px 2px;
+	$drop-shadow: rgba(0, 0, 0, 0.2) 0px 0px 3px;
+	$drop-shadow-light: rgba(0, 0, 0, 0.7) 0px 0px 2px;
 	$drop-shadow-text: rgba(0, 0, 0, 0.2) 0px 0px 1px;
 
 	.media-wrapper {
@@ -184,7 +195,7 @@
 					color: $text-inverse;
 					line-clamp: 2;
 					overflow: hidden;
-					filter: drop-shadow($drop-shadow) drop-shadow($drop-shadow) drop-shadow($drop-shadow);
+					filter: drop-shadow($drop-shadow) drop-shadow($drop-shadow);
 					display: -webkit-box;
 					-webkit-line-clamp: 2;
 					-webkit-box-orient: vertical;
@@ -198,7 +209,7 @@
 					color: $text-inverse-dark;
 					line-clamp: 1;
 					overflow: hidden;
-					filter: drop-shadow($drop-shadow) drop-shadow($drop-shadow) drop-shadow($drop-shadow);
+					filter: drop-shadow($drop-shadow-light);
 					display: -webkit-box;
 					-webkit-line-clamp: 2;
 					-webkit-box-orient: vertical;
@@ -219,13 +230,14 @@
 		}
 
 		.download-more-options {
-			margin-top: 0.3rem;
+			margin-top: 0.35rem;
 			display: flex;
 			flex-direction: row;
 			gap: 1rem;
 			filter: drop-shadow($drop-shadow);
 			position: relative;
 			margin-left: auto;
+			opacity: 0.8;
 		}
 
 		img {
