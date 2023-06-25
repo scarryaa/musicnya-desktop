@@ -1,10 +1,9 @@
-<script>
-	import { onMount } from 'svelte';
-
+<script lang="ts">
 	import ButtonFilled from '../../../../components/buttons/button-filled.svelte';
 	import TableTile from '../../../../components/media/tiles/table-tile.svelte';
-	import { getDominantColor } from '../../../../lib/services/color-service';
 	import ButtonIcon from '../../../../components/buttons/button-icon.svelte';
+	import { play, shuffle } from '../../../../lib/services/playback-service';
+	import { addToLibrary, removeFromLibrary } from '../../../../lib/api/musickit.api';
 
 	import Play from 'svelte-material-icons/Play.svelte';
 	import Shuffle from 'svelte-material-icons/Shuffle.svelte';
@@ -12,9 +11,28 @@
 	import CheckCircle from 'svelte-material-icons/CheckCircle.svelte';
 	import DotsHorizontalCircle from 'svelte-material-icons/DotsHorizontalCircle.svelte';
 	import ClockTimeFiveOutline from 'svelte-material-icons/ClockTimeFiveOutline.svelte';
-	import { play, shuffle } from '../../../../lib/services/playback-service';
 
 	export let data;
+
+	$: inLibrary = data.media?.attributes?.inLibrary;
+
+	const _removeFromLibrary = async () => {
+		await removeFromLibrary(
+			data.media.relationships?.library?.data?.[0]?.id || data.media?.id,
+			data.media?.type.replace('library-', '') || ''
+		).then(() => {
+			inLibrary = false;
+		});
+	};
+
+	const _addToLibrary = async () => {
+		await addToLibrary(
+			data.media.relationships?.library?.data?.[0]?.id || data.media?.id,
+			data.media?.type.replace('library-', '') || ''
+		).then(() => {
+			inLibrary = true;
+		});
+	};
 </script>
 
 <div class="media-wrapper" style="background: {data.media.color?.hex || '#a0a0a0'}">
@@ -77,9 +95,16 @@
 						bg="transparent"
 						width="2rem"
 						height="2rem"
-						icon={data.media?.attributes?.inLibrary ? CheckCircle : DownloadCircle}
+						icon={inLibrary ? CheckCircle : DownloadCircle}
+						on:click={() => (inLibrary ? _removeFromLibrary(data) : _addToLibrary(data))}
 					/>
-					<ButtonIcon bg="transparent" width="2rem" height="2rem" icon={DotsHorizontalCircle} />
+					<ButtonIcon
+						bg="transparent"
+						width="2rem"
+						height="2rem"
+						icon={DotsHorizontalCircle}
+						on:click={() => console.log('more')}
+					/>
 				</div>
 			</div>
 		</div>

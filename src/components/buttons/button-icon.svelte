@@ -9,6 +9,7 @@
 
 <button
 	class="button-icon"
+	on:click
 	style="background-color: {bg}; width: {width}; height: {height}; color: {fill}"
 >
 	<div class="button-icon__icon" style="font-size: {size};">

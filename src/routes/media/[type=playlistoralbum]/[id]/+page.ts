@@ -69,9 +69,21 @@ export async function load({ fetch, params }) {
 			}
 
 			const playlist = playlistData?.data?.[0];
-			playlist.attributes.inLibrary = libraryData.data[0].attributes.inLibrary;
+			const library = libraryData?.data?.[0];
+			const merged = {
+				...playlist,
+				...{
+					attributes: {
+						...playlist.attributes,
+						inLibrary: library.attributes.inLibrary
+					},
+					libraryId: library.id
+				}
+			};
 
-			return { media: await getMediaColor(playlist) };
+			console.log(merged);
+
+			return { media: await getMediaColor(merged) };
 		}
 
 		return { media: await getMediaColor(playlistFromLibrary) };
@@ -99,9 +111,23 @@ export async function load({ fetch, params }) {
 		} catch (error) {
 			console.error('An error occurred while fetching the data: ', error);
 		}
-		console.log(library);
-		album.data[0].attributes.inLibrary = library.data[0].attributes.inLibrary;
 
-		return { media: await getMediaColor(album.data?.[0]) };
+		// merge attributes from album and library
+		const merged = {
+			...album.data?.[0],
+			...{
+				attributes: {
+					...album.data?.[0].attributes,
+					...library.data?.[0].attributes
+				},
+				relationships: {
+					...album.data?.[0].relationships,
+					...library.data?.[0].relationships
+				}
+			}
+		};
+		console.log(merged);
+
+		return { media: await getMediaColor(merged) };
 	}
 }
