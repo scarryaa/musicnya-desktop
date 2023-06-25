@@ -25,6 +25,7 @@
 		.page-wrapper {
 			padding-block: 1rem;
 			padding-top: 2rem;
+			overflow-x: hidden;
 		}
 	</style>
 {/await}

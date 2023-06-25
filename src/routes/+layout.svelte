@@ -136,7 +136,7 @@
 			</div>
 			<div
 				class="bottom-left__scroll-wrapper"
-				style="padding-right: {$drawerOpen ? '3.2rem' : '0.6rem'}"
+				style="width: {$drawerOpen ? '95%' : '70%'}; padding-right: {$drawerOpen ? '0' : '0.8rem'}"
 			>
 				{#each $libraryPlaylists as playlist, i (i)}
 					<MediaTile
@@ -251,7 +251,7 @@
 	}
 
 	.bottom-left__scroll-wrapper {
-		width: 70.5%;
+		width: 95%;
 		display: block;
 		position: relative;
 		height: inherit;

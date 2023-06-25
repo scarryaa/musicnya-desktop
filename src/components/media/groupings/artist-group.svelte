@@ -191,7 +191,7 @@
 
 		&__content {
 			content-visibility: auto;
-			margin-top: 0.5rem;
+			padding-top: 0.5rem;
 			padding-inline: 1rem;
 			display: grid;
 			grid-template-columns: repeat(auto-fit, minmax(1fr, 1fr));

@@ -26,6 +26,12 @@ export async function load({ fetch, params }) {
       );
       const json = await response.json();
       console.log(json.data?.[0])
+
+      if (json.data) {
+        json.data[0].color = await getDominantColor(json.data?.[0].attributes.artwork.url.replace('{w}x{h}', '100x100').replace('{f}', 'png'));
+        return { media: json.data?.[0] };
+      }
+
       return {media: json.data?.[0] }
     }
   } else if (params.type === 'album') {

@@ -82,7 +82,7 @@
 				<tr>
 					<th class="table-number">#</th>
 					<th class="table-title">Title</th>
-					{#if data.media.type !== 'albums' && data.media.type !== 'library-albums'}
+					{#if data.media?.type !== 'albums' && data.media?.type !== 'library-albums'}
 						<th class="table-album">Album</th>
 					{/if}
 					<th class="table-duration" id="table-duration-header">
@@ -92,7 +92,7 @@
 			</thead>
 			<tbody>
 				<div style="height: 1rem;" />
-				{#if data.media.type === 'playlists' || data.media.type === 'library-playlists'}
+				{#if data.media?.type === 'playlists' || data.media?.type === 'library-playlists'}
 					{#each data.media.relationships?.tracks.data as track, i}
 						<TableTile
 							title={track.attributes?.name}
@@ -113,7 +113,7 @@
 						/>
 					{/each}
 				{/if}
-				{#if data.media.type === 'albums' || data.media.type === 'library-albums'}
+				{#if data.media?.type === 'albums' || data.media?.type === 'library-albums'}
 					{#each data.media.relationships?.tracks.data as track, i}
 						<TableTile
 							title={track.attributes?.name}
