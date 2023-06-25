@@ -1,7 +1,8 @@
-import type { MusicKit } from "../types/musickit";
+import { nowPlayingItem } from 'src/stores/musickit.store';
+import type { MusicKit } from '../types/musickit';
 
 export const addEventHandlers = (player: MusicKit.MusicKitInstance) => {
-    player.addEventListener('playbackStateDidChange', (event) => {
-        console.log('playbackStateDidChange', event);
-    });
-}
+	player.addEventListener('playbackStateDidChange', (event) => {
+		nowPlayingItem.set(player.nowPlayingItem);
+	});
+};

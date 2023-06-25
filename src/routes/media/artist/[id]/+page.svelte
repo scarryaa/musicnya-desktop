@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { play } from '../../../../lib/services/playback-service';
+	import ButtonPlay from '../../../../components/buttons/button-play.svelte';
 	import ArtistGroup from '../../../../components/media/groupings/artist-group.svelte';
 	import SongTile from '../../../../components/media/tiles/song-tile.svelte';
 
@@ -27,8 +29,17 @@
 			.replace('{w}x{h}', '200x200')
 			.replace('{f}', 'webp')})"
 	>
-		<h1 class="page-wrapper__artist-name">{data.artist.attributes?.name}</h1>
-		<div class="play-button" />
+		<div class="page-wrapper__artist-info">
+			<h1 class="page-wrapper__artist-info__title">{data.artist.attributes?.name}</h1>
+			<div class="page-wrapper__artist-info__buttons">
+				<ButtonPlay
+					color="white"
+					size="2.2rem"
+					background={true}
+					on:click={() => play('artist', data.artist.id)}
+				/>
+			</div>
+		</div>
 	</div>
 	<div class="page-wrapper__content">
 		<ArtistGroup groupTitle="Top Songs" viewType="top-songs" {data} contentType="song" />
@@ -71,14 +82,39 @@
 			border-bottom: 3px solid $accent;
 		}
 
-		&__artist-name {
-			position: absolute;
-			bottom: -1rem;
-			left: 1rem;
-			color: white;
-			font-size: 2.6rem;
-			font-weight: 700;
-			text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+		&__artist-info {
+			display: flex;
+			flex-direction: row;
+			align-items: flex-end;
+			justify-content: flex-end;
+			width: 100%;
+			height: 100%;
+			padding: 1rem;
+
+			& > * {
+				margin-bottom: 0.5rem;
+			}
+
+			&__title {
+				position: absolute;
+				bottom: 0.2rem;
+				left: 4rem;
+				font-size: 2rem;
+				font-weight: 700;
+				color: white;
+				text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+				width: 100%;
+			}
+
+			&__buttons {
+				position: absolute;
+				width: 100%;
+				left: 1rem;
+				bottom: 0.4rem;
+				display: flex;
+				align-items: flex-end;
+				justify-content: flex-start;
+			}
 		}
 
 		&__content {

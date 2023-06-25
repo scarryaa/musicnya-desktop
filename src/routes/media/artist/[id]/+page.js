@@ -1,4 +1,4 @@
-import { developerToken, musicUserToken } from '../../../../store';
+import { developerToken, musicUserToken } from '../../../../stores/musickit.store';
 import { get } from 'svelte/store';
 
 /** @type {import('./$types').PageLoad} */

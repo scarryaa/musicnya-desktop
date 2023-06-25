@@ -2,13 +2,8 @@
 	import '../app.scss';
 	import '../variables.scss';
 
-	import {
-		developerToken,
-		drawerOpen,
-		firstLaunch,
-		libraryPlaylists,
-		musicUserToken
-	} from '../store';
+	import { drawerOpen, firstLaunch } from '../stores/app.store';
+	import { developerToken, libraryPlaylists, musicUserToken } from '../stores/musickit.store';
 	import { onMount } from 'svelte';
 	import { getLibraryPlaylists } from '../lib/api/apple-music-api';
 

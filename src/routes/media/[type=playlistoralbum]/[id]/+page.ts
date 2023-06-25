@@ -1,6 +1,5 @@
-import { getLibraryPlaylist } from '../../../../lib/api/apple-music-api';
 import { getDominantColor } from '../../../../lib/services/color-service';
-import { developerToken, libraryPlaylists, musicUserToken } from '../../../../store';
+import { developerToken, libraryPlaylists, musicUserToken } from '../../../../stores/musickit.store';
 import { get } from 'svelte/store';
 
 /** @type {import('./$types').PageLoad} */

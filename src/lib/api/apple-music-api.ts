@@ -1,5 +1,5 @@
 import { get } from 'svelte/store';
-import { developerToken, instance, musicUserToken } from '../../store';
+import { developerToken, musicUserToken } from '../../stores/musickit.store';
 
 export const getLibraryPlaylists = async () => {
     const response = await fetch(

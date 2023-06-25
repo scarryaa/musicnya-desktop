@@ -1,8 +1,18 @@
+<script>
+	import { nowPlayingItem } from '../../../stores/musickit.store';
+</script>
+
 <div class="now-playing-tile">
-	<img src="https://via.placeholder.com/60" alt="Album Art" />
+	<img
+		style="display: {$nowPlayingItem ? 'block' : 'none'}"
+		src={($nowPlayingItem?.attributes?.artwork?.url)
+			.replace('{w}x{h}', '60x60')
+			.replace('{f}', 'webp')}
+		alt="Album Artwork"
+	/>
 	<div class="song-info">
-		<div class="song-title">Song Title</div>
-		<div class="song-artist">Song Artist</div>
+		<div class="song-title">{$nowPlayingItem?.attributes?.name || ''}</div>
+		<div class="song-artist">{$nowPlayingItem?.artistName || ''}</div>
 	</div>
 </div>
 
@@ -18,6 +28,8 @@
 		flex-grow: 0.2;
 
 		img {
+			border: 1px solid $border;
+			max-width: 60px;
 			object-fit: cover;
 			border-radius: $border-radius-half;
 			filter: drop-shadow($drop-shadow);
