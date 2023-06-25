@@ -15,7 +15,10 @@
 
 <div class="album-tile">
 	<div class="album-overlay-container">
-		<a class="album-overlay" href="/media/{type.slice(0, -1)}/{id}">
+		<a
+			class="album-overlay"
+			href={type !== 'stations' ? `/media/${type.slice(0, -1)}/${id}` : null}
+		>
 			<ButtonPlay color="white" on:click={() => play(type.slice(0, -1), id)} />
 			<ButtonOptions />
 		</a>

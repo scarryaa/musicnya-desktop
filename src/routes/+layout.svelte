@@ -148,7 +148,7 @@
 						src={playlist.attributes?.artwork?.url
 							.replace('{w}x{h}', '100x100')
 							.replace('{f}', 'webp') ||
-							playlist?.relationships?.tracks?.[0]?.attributes?.artwork?.url
+							playlist?.relationships?.tracks?.data?.[0]?.attributes?.artwork?.url
 								.replace('{w}x{h}', '100x100')
 								.replace('{f}', 'webp') ||
 							''}

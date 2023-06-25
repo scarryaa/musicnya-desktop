@@ -23,7 +23,7 @@
 			src={data.media?.attributes?.artwork?.url
 				.replace('{w}x{h}', '300x300')
 				.replace('{f}', 'webp') ||
-				data.media.relationships?.tracks?.[0]?.attributes?.artwork?.url
+				data.media.relationships?.tracks?.data?.[0]?.attributes?.artwork?.url
 					.replace('{w}x{h}', '300x300')
 					.replace('{f}', 'webp')}
 			alt="Media Art"
@@ -93,7 +93,7 @@
 			<tbody>
 				<div style="height: 1rem;" />
 				{#if data.media.type === 'playlists' || data.media.type === 'library-playlists'}
-					{#each data.media.relationships?.tracks as track, i}
+					{#each data.media.relationships?.tracks.data as track, i}
 						<TableTile
 							title={track.attributes?.name}
 							artist={track.attributes?.artistName}
@@ -104,10 +104,11 @@
 							number={i}
 							type={data.media.type}
 							artistId={track.relationships?.catalog?.data?.[0]?.relationships?.artists?.data?.[0]
-								?.id}
+								?.id || track.relationships?.artists?.data?.[0]?.id}
 							albumId={track.relationships?.catalog?.data?.[0]?.relationships?.albums?.data?.[0]
-								?.id}
-							albumName={track.relationships?.catalog?.data?.[0]?.attributes?.albumName}
+								?.id || track.attributes?.url.split('/').pop().split('?')[0]}
+							albumName={track.relationships?.catalog?.data?.[0]?.attributes?.albumName ||
+								track.attributes?.albumName}
 							durationInMillis={track.attributes?.durationInMillis}
 						/>
 					{/each}
@@ -123,9 +124,10 @@
 							id={track.id}
 							number={i}
 							type={data.media.type}
-							artistId={data.media.relationships?.artists?.data?.[0]?.id}
+							artistId={data.media.relationships?.artists?.data?.[0]?.id ||
+								track.relationships?.artists?.data?.[0]?.id}
 							albumId={data.media.id}
-							albumName={data.media.attributes?.name}
+							albumName={track.attributes?.albumName || data.media.attributes?.name}
 							durationInMillis={track.attributes?.durationInMillis}
 						/>
 					{/each}

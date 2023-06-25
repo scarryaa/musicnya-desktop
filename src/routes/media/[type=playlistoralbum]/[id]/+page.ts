@@ -8,18 +8,25 @@ export async function load({ fetch, params }) {
   if (params.type === 'playlist') {
     const playlist = get(libraryPlaylists).find((playlist) => playlist.id === params.id);
     if (playlist) {
-      playlist.color = await getDominantColor((playlist.attributes?.artwork?.url || playlist.relationships.tracks?.[0].attributes.artwork.url || '').replace('{w}x{h}', '100x100').replace('{f}', 'png'));
+      playlist.color = await getDominantColor((playlist.attributes?.artwork?.url || playlist.relationships.tracks.data?.[0].attributes?.artwork.url || '').replace('{w}x{h}', '100x100').replace('{f}', 'png'));
       return { media: playlist };
     } else {
-      const playlist = await getLibraryPlaylist(params.id);
-      libraryPlaylists.update((playlists) => {
-        playlists.push(playlist);
-        return playlists;
-      });
-
-      playlist.color = await getDominantColor((playlist.attributes?.artwork?.url || playlist.relationships.tracks?.[0].attributes.artwork.url || '').replace('{w}x{h}', '100x100').replace('{f}', 'png'));
-
-      return { media: playlist };
+      const response = await fetch(
+        `http://localhost:3001/v1/catalog/us/playlists/${params.id}?l=en-US&platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls&include[songs]=artists`,
+        {
+          headers: {
+            'media-user-token': get(musicUserToken),
+            authorization: `Bearer ${get(developerToken)}`,
+            origin: 'https://beta.music.apple.com',
+            'access-control-allow-origin': '*',
+            'allowed-headers': '*',
+          },
+          mode: 'cors',
+        }
+      );
+      const json = await response.json();
+      console.log(json.data?.[0])
+      return {media: json.data?.[0] }
     }
   } else if (params.type === 'album') {
     const response = await fetch(

@@ -10,8 +10,16 @@
 
 {#await data}
 	<p>Loading...</p>
-{:then { data }}
-	<div class="page-wrapper" />
+{:then data}
+	<div class="page-wrapper">
+		{#each data?.data as item}
+			<TileGroup
+				groupTitle={item?.attributes?.title?.stringForDisplay || ''}
+				contentType={'album'}
+				data={{ media: item?.relationships?.contents?.data }}
+			/>
+		{/each}
+	</div>
 
 	<style lang="scss">
 		.page-wrapper {

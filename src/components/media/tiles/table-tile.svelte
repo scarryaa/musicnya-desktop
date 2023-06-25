@@ -236,6 +236,7 @@
 
 	.table-album {
 		width: 40%;
+		max-width: 200px;
 	}
 
 	#table-album {

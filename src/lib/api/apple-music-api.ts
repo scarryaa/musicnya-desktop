@@ -46,7 +46,7 @@ export const getLibraryPlaylists = async () => {
             return {
                 ...playlist,
                 relationships: {
-                    tracks: tracksJson.data,
+                    tracks: tracksJson,
                 }
             };
 
