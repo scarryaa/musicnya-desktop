@@ -1,9 +1,6 @@
 <script lang="ts">
-	import ButtonIcon from '../../../components/buttons/button-icon.svelte';
 	import ButtonPlay from '../../../components/buttons/button-play.svelte';
 	import { play } from '../../../lib/services/playback-service';
-
-	import DotsHorizontal from 'svelte-material-icons/DotsHorizontal.svelte';
 
 	export let title: string;
 	export let artist: string;
@@ -180,11 +177,12 @@
 
 			.table-title__wrapper-text-artist {
 				font-size: 0.95rem;
+				display: block;
 				color: $text-light;
 				max-width: max-content;
-				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;
+				overflow: hidden;
 				width: 100%;
 
 				&:hover {

@@ -3,7 +3,7 @@ import { developerToken, musicUserToken } from '../../stores/musickit.store';
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
-	fetch(
+	return fetch(
 		`http://localhost:3001/v1/recommendations/us?name=search-landing&platform=web&extend=editorialArtwork&art[url]=f,c&types=editorial-items,apple-curators,activities`,
 		{
 			headers: {
