@@ -55,36 +55,6 @@
 		localStorage.getItem('listenLater') === null
 			? localStorage.setItem('listenLater', JSON.stringify([]))
 			: listenLater.set(JSON.parse(localStorage.getItem('listenLater')));
-
-		return fetch('http://localhost:5173/config.json')
-			.then((response) => response.json())
-			.then((data) => data)
-			.then((data) =>
-				// @ts-ignore
-				MusicKit.configure({
-					developerToken: data.DEV_TOKEN,
-					app: {
-						name: 'Music',
-						build: '1.0.0'
-					},
-					sourceType: 24
-				})
-					.then((instance) => {
-						musicUserToken.set(instance.musicUserToken);
-						developerToken.set(instance.developerToken);
-						return instance;
-					})
-					.then((instance) => {
-						initMusicKit(instance);
-						addEventHandlers(instance);
-						getLibraryPlaylists().then((data) => {
-							libraryPlaylists.set(data);
-						});
-					})
-					.catch((err) => {
-						console.error(err);
-					})
-			);
 	});
 </script>
 
