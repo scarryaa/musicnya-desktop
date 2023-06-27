@@ -1,4 +1,4 @@
-<button class="button-options" on:click>
+<button class="button-options" on:click title="More Options">
 	<div class="button-options__icon">
 		<svg viewBox="0 0 24 24">
 			<path

@@ -9,7 +9,7 @@
 	on:click
 	style="width: {size}; height: {size}; background-color: {background ? 'auto' : 'transparent'}"
 >
-	<div class="button-play__icon" style="width: {size}; height: {size};">
+	<div class="button-play__icon" style="width: {size}; height: {size};" title="Play">
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 			<path d="M8 5v14l11-7z" fill={color} rx="4" ry="4" />
 		</svg>

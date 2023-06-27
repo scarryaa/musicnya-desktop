@@ -57,16 +57,19 @@
 	</div>
 	<div class="album-info">
 		{#if type === 'stations'}
-			<span class="station-title">{title}</span>
+			<span class="station-title" {title}>{title}</span>
 		{:else}
-			<a href="/media/{type.slice(0, -1)}/{id}" class="album-title">{title}</a>
+			<a href="/media/{type.slice(0, -1)}/{id}" class="album-title" {title}>{title}</a>
 		{/if}
 		{#if subtitle === 'artist'}
-			<a tabindex={artist ? 0 : -1} href="/media/artist/{artistId}" class="album-artist"
-				>{artist || ''}</a
+			<a
+				tabindex={artist ? 0 : -1}
+				href="/media/artist/{artistId}"
+				class="album-artist"
+				title={artist}>{artist || ''}</a
 			>
 		{:else if subtitle === 'year'}
-			<div class="album-year">{year}</div>
+			<div class="album-year" title={year}>{year}</div>
 		{/if}
 	</div>
 </div>
@@ -94,6 +97,8 @@
 			position: relative;
 			width: 100%;
 			height: 100%;
+			min-width: 100%;
+			min-height: 100%;
 			border-radius: $border-radius-half;
 			overflow: hidden;
 			display: flex;

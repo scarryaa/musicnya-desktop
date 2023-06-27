@@ -222,6 +222,7 @@
 	.content-wrapper {
 		height: inherit;
 		overflow-y: overlay;
+		overflow-x: hidden;
 	}
 
 	.bottom-left__container {
