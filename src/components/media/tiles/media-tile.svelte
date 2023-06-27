@@ -7,7 +7,7 @@
 </script>
 
 <a class="album-tile" role="button" tabindex="0" on:click on:keydown {href}>
-	<img {src} alt="Album Art" />
+	<img {src} alt="Album Art" loading="lazy" />
 	<div class="album-info">
 		<div class="album-title">{title}</div>
 		<div class="album-artist">{artist}</div>

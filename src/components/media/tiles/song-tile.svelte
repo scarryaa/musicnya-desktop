@@ -17,7 +17,7 @@
 		tabindex="0"
 		on:keydown={(e) => (e.key === ('Enter' || 'Space') ? play('song', id) : null)}
 	>
-		<img {src} alt="Album Art" loading="eager" />
+		<img {src} alt="Album Art" loading="lazy" />
 		<div class="song-tile__overlay">
 			<div class="song-tile__overlay__icons">
 				<ButtonPlay color="white" size="2rem" on:click={() => play('song', id)} />

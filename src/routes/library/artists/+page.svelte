@@ -12,11 +12,12 @@
 			{#each data.media as item}
 				<ArtistTile
 					id={item.id}
+					href={`/media/artist/${item.relationships?.catalog?.data?.[0]?.id}`}
 					src={item.attributes?.artwork?.url
 						.replace('{w}', '300')
 						.replace('{h}', '300')
 						.replace('{f}', 'webp') ||
-						item.relationships?.tracks?.data?.[0]?.attributes?.artwork?.url
+						item.relationships?.catalog?.data?.[0]?.attributes?.artwork?.url
 							.replace('{w}', '300')
 							.replace('{h}', '300')
 							.replace('{f}', 'webp')}
@@ -39,7 +40,7 @@
 			display: flex;
 			flex-direction: row;
 			flex-wrap: wrap;
-			gap: 0.5rem;
+			gap: 1rem;
 			row-gap: 1rem;
 		}
 	}

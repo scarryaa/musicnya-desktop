@@ -21,11 +21,6 @@
 			data.artist.attributes?.editorialArtwork?.bannerUber?.url ||
 			data.artist.attributes?.artwork?.url
 		)
-			.replace('{w}x{h}', '600x600')
-			.replace('{f}', 'webp')}), url({(
-			data.artist.attributes?.editorialArtwork?.bannerUber?.url ||
-			data.artist.attributes?.artwork?.url
-		)
 			.replace('{w}x{h}', '200x200')
 			.replace('{f}', 'webp')})"
 	>

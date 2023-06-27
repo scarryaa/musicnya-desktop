@@ -4,6 +4,7 @@ import { writable } from 'svelte/store';
 export const drawerOpen = writable(false);
 export const firstLaunch = writable(true);
 export const listenLater = writable([]);
-export const scrollPosition = {
-	home: writable(0)
-};
+export const scrollPosition: {
+	[n: number]: typeof writable;
+} = writable({});
+export const scrollPositionY = writable(0);

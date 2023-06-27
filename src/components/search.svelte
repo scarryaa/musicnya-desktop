@@ -62,7 +62,11 @@
 							<div class="search__results__result__image__overlay__play">
 								<ButtonPlay size="2rem" on:click={() => play('song', song.id)} />
 							</div>
-							<img src={song.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')} alt="" />
+							<img
+								loading="lazy"
+								src={song.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
+								alt=""
+							/>
 						</div>
 						<div class="search__results__result__info">
 							<h3>{song.attributes?.name}</h3>
@@ -79,7 +83,11 @@
 							<div class="search__results__result__image__overlay__play">
 								<ButtonPlay size="2rem" />
 							</div>
-							<img src={album.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')} alt="" />
+							<img
+								loading="lazy"
+								src={album.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
+								alt=""
+							/>
 						</div>
 						<div class="search__results__result__info">
 							<h3>{album.attributes?.name}</h3>
@@ -97,6 +105,7 @@
 								<ButtonPlay size="2rem" />
 							</div>
 							<img
+								loading="lazy"
 								src={artist.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
 								alt=""
 								class="search__results__result__image__artist"

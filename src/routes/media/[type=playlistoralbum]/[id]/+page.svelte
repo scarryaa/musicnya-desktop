@@ -51,7 +51,7 @@
 <div class="media-wrapper" style="background: {data.media.color?.hex || '#a0a0a0'}">
 	<div class="media-info">
 		<img
-			loading="eager"
+			loading="lazy"
 			src={data.media?.attributes?.artwork?.url
 				.replace('{w}x{h}', '300x300')
 				.replace('{f}', 'webp') ||

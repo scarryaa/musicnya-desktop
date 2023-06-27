@@ -34,7 +34,7 @@
 	<td class="table-title" id="table-title">
 		<div class="table-title__wrapper">
 			{#if type !== 'albums' && type !== 'library-albums'}
-				<img class="table-title__wrapper-img" {src} alt="Track Art" />
+				<img loading="lazy" class="table-title__wrapper-img" {src} alt="Track Art" />
 			{/if}
 			<div class="table-title__wrapper-text">
 				<span class="table-title__wrapper-text-title">{title}</span>
@@ -199,6 +199,7 @@
 		color: $text-light;
 
 		.table-album__text-wrapper {
+			padding-right: 2rem;
 			padding-left: 1rem;
 			text-overflow: ellipsis;
 			white-space: nowrap;

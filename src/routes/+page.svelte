@@ -4,6 +4,8 @@
 	import ButtonIcon from '../components/buttons/button-icon.svelte';
 	import BookmarkMusic from 'svelte-material-icons/BookmarkMusic.svelte';
 	import { scrollPosition } from '../stores/app.store';
+	import { get } from 'svelte/store';
+	import { navigating } from '$app/stores';
 
 	export let data: {
 		streamed: {

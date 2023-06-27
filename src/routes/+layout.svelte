@@ -2,7 +2,13 @@
 	import '../app.scss';
 	import '../variables.scss';
 
-	import { drawerOpen, firstLaunch, listenLater, scrollPosition } from '../stores/app.store';
+	import {
+		drawerOpen,
+		firstLaunch,
+		listenLater,
+		scrollPosition,
+		scrollPositionY
+	} from '../stores/app.store';
 	import { developerToken, libraryPlaylists, musicUserToken } from '../stores/musickit.store';
 	import { initMusicKit } from '../lib/api/music.api';
 	import { onMount } from 'svelte';
@@ -58,14 +64,11 @@
 		//read in listen later
 		localStorage.getItem('listenLater') === null
 			? localStorage.setItem('listenLater', JSON.stringify([]))
-			: listenLater.set(JSON.parse(localStorage.getItem('listenLater')));
-
-		// track scroll position
-		document.querySelector('.content-wrapper')?.addEventListener('scroll', (e) => {
-			scrollPosition.home.set(document.querySelector('.content-wrapper')?.scrollTop || 0);
-		});
+			: listenLater.set(JSON.parse(localStorage.getItem('listenLater') || ''));
 	});
 </script>
+
+<svelte:window bind:scrollY={$scrollPositionY} />
 
 <main>
 	<Titlebar>

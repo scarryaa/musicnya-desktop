@@ -53,7 +53,7 @@
 				/>
 			</div>
 		</a>
-		<img {src} alt="" />
+		<img {src} alt="" loading="lazy" />
 	</div>
 	<div class="album-info">
 		{#if type === 'stations'}

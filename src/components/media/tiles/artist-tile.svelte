@@ -1,20 +1,19 @@
 <script lang="ts">
 	import ButtonPlay from '../../../components/buttons/button-play.svelte';
-	import Play from 'svelte-material-icons/Play.svelte';
-	import Plus from 'svelte-material-icons/Plus.svelte';
 
 	export let src: string;
 	export let title: string;
 	export let id: string;
+	export let href: string;
 </script>
 
 <div class="artist-tile">
-	<div class="artist-tile__overlay">
-		<div class="artist-tile__overlay__icons">
+	<div class="artist-tile__overlay-wrapper">
+		<a class="artist-tile__overlay-wrapper__overlay" {href}>
 			<ButtonPlay color="white" size="3rem" />
-		</div>
+		</a>
+		<img {src} alt="Album Art" loading="lazy" />
 	</div>
-	<img {src} alt="Album Art" loading="eager" />
 	<div class="artist-info">
 		<div class="artist-title">{title}</div>
 	</div>
@@ -26,33 +25,51 @@
 	.artist-tile {
 		display: flex;
 		flex-direction: column;
-
-		&:hover .artist-tile__overlay {
-			opacity: 1;
-		}
+		max-width: 8.5rem;
+		overflow: hidden;
 
 		img {
 			aspect-ratio: 1;
 			border-radius: 50%;
-			min-height: 8.5rem;
+			max-height: 8.5rem;
+			max-width: 8.5rem;
 			min-width: 8.5rem;
+			min-height: 8.5rem;
 		}
 
-		.artist-tile__overlay {
-			background-color: rgba(0, 0, 0, 0.5);
+		.artist-tile__overlay-wrapper {
+			position: relative;
 			width: 100%;
 			height: 100%;
-			transition: background-color 0.2s ease-in-out 0.1s, opacity 0.2s ease-in-out;
-			opacity: 0;
+			aspect-ratio: 1;
 
-			.artist-tile__overlay__icons {
+			&:hover .artist-tile__overlay-wrapper__overlay {
+				opacity: 1;
+			}
+
+			&:hover .artist-tile__overlay-wrapper__overlay,
+			&:focus-visible .artist-tile__overlay-wrapper__overlay,
+			&:focus-within .artist-tile__overlay-wrapper__overlay {
+				background-color: rgba(0, 0, 0, 0.4);
+				opacity: 1;
+			}
+
+			.artist-tile__overlay-wrapper__overlay {
+				display: flex;
+				justify-content: center;
+				align-items: center;
 				position: absolute;
-				top: 50%;
-				transform: translate(95%, -85%);
-				filter: drop-shadow($drop-shadow);
+				width: 100%;
+				height: 100%;
+				max-height: 8.5rem;
+				max-width: 8.5rem;
+				min-width: 8.5rem;
+				min-height: 8.5rem;
+				border-radius: 50%;
+				transition: all 0.2s ease-in-out;
+				opacity: 0;
 			}
 		}
-
 		.artist-info {
 			display: flex;
 			flex-direction: column;
@@ -61,6 +78,8 @@
 			margin-top: 0.5rem;
 			margin-bottom: 0.5rem;
 			text-align: center;
+			max-width: 100%;
+			overflow: hidden;
 		}
 	}
 </style>

@@ -45,6 +45,7 @@
 		padding-bottom: 1rem;
 
 		.songs {
+			display: table;
 			width: 100%;
 		}
 	}

@@ -4,6 +4,7 @@
 
 <div class="now-playing-tile">
 	<img
+		loading="lazy"
 		style="visibility: {$nowPlayingItem ? 'visible' : 'hidden'}"
 		src={($nowPlayingItem?.attributes?.artwork?.url)
 			.replace('{w}x{h}', '60x60')
