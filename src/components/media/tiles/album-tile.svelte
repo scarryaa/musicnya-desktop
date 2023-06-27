@@ -1,7 +1,13 @@
 <script lang="ts">
+	import ButtonFavorite from '../../../components/buttons/button-favorite.svelte';
 	import { play } from '../../..//lib/services/playback-service';
 	import ButtonOptions from '../../../components/buttons/button-options.svelte';
 	import ButtonPlay from '../../../components/buttons/button-play.svelte';
+	import {
+		addToListenLater,
+		inListenLater,
+		removeFromListenLater
+	} from '../../../lib/services/favorites.service';
 
 	export let id: string;
 	export let artistId: string;
@@ -16,6 +22,13 @@
 		e.preventDefault();
 		play(type.slice(0, -1).replace('library-', ''), id);
 	};
+
+	const favorite = (e: MouseEvent) => {
+		e.preventDefault();
+		inListenLater(type.slice(0, -1), id)
+			? removeFromListenLater(type.slice(0, -1), id)
+			: addToListenLater(type.slice(0, -1), id);
+	};
 </script>
 
 <div class="album-tile">
@@ -26,6 +39,7 @@
 		>
 			<ButtonPlay color="white" on:click={playAlbum} />
 			<ButtonOptions />
+			<ButtonFavorite on:click={favorite} />
 		</a>
 		<img {src} alt="" />
 	</div>

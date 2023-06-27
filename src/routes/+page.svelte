@@ -1,5 +1,8 @@
 <script lang="ts">
 	import TileGroup from '../components/media/groupings/tile-group.svelte';
+	import ButtonFilled from '../components/buttons/button-filled.svelte';
+	import ButtonIcon from '../components/buttons/button-icon.svelte';
+	import BookmarkMusic from 'svelte-material-icons/BookmarkMusic.svelte';
 
 	export let data: {
 		streamed: {
@@ -22,8 +25,7 @@
 
 <style lang="scss">
 	.page-wrapper {
-		padding-block: 1rem;
-		padding-top: 2rem;
 		overflow-x: hidden;
+		margin-top: 1rem;
 	}
 </style>

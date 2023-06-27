@@ -30,6 +30,9 @@
 		repeatMode,
 		shuffleMode
 	} from '../../stores/musickit.store';
+	import Tooltip from '../_tooltip.svelte';
+	import { onMount } from 'svelte';
+	import { tooltip } from '../../lib/event-handlers/tooltip';
 
 	let currentTime = '';
 	$: currentTime = new Date($nowPlayingItemTime * 1000).toISOString().substr(14, 5);
@@ -40,6 +43,10 @@
 
 	let progress = 0;
 	$: progress = ($nowPlayingItemTime / $nowPlayingItemDuration) * $nowPlayingItemDuration;
+
+	onMount(() => {
+		setVolume(volumeValue);
+	});
 </script>
 
 <div class="media-controls">
@@ -62,7 +69,10 @@
 			<DrawerButton on:click={() => skipToPreviousItem()}>
 				<SkipPrevious />
 			</DrawerButton>
-			<div class="play-pause-wrapper">
+			<div
+				class="play-pause-wrapper"
+				use:tooltip={{ text: $playing ? 'Pause' : 'Play', position: 'bottom', delay: 500 }}
+			>
 				<DrawerButton on:click={() => togglePlayPause()}>
 					<svelte:component this={$playing ? PauseCircle : PlayCircle} />
 				</DrawerButton>

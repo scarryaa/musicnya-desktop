@@ -2,7 +2,7 @@
 	import '../app.scss';
 	import '../variables.scss';
 
-	import { drawerOpen, firstLaunch } from '../stores/app.store';
+	import { drawerOpen, firstLaunch, listenLater } from '../stores/app.store';
 	import { developerToken, libraryPlaylists, musicUserToken } from '../stores/musickit.store';
 	import { initMusicKit } from '../lib/api/music.api';
 	import { onMount } from 'svelte';
@@ -17,6 +17,7 @@
 	import DrawerButton from '../components/drawer/drawer-button.svelte';
 	import NavigationButtons from '../components/window/navigation-buttons.svelte';
 
+	import BookmarkMusic from 'svelte-material-icons/BookmarkMusic.svelte';
 	import HomeVariant from 'svelte-material-icons/HomeVariant.svelte';
 	import ViewGridOutline from 'svelte-material-icons/ViewGridOutline.svelte';
 	import Broadcast from 'svelte-material-icons/Broadcast.svelte';
@@ -49,6 +50,12 @@
 		// 		}
 		// 	});
 		// }
+
+		//read in listen later
+		localStorage.getItem('listenLater') === null
+			? localStorage.setItem('listenLater', JSON.stringify([]))
+			: listenLater.set(JSON.parse(localStorage.getItem('listenLater')));
+
 		return fetch('http://localhost:5173/config.json')
 			.then((response) => response.json())
 			.then((data) => data)
@@ -85,6 +92,7 @@
 	<Titlebar>
 		<WindowButtons />
 	</Titlebar>
+
 	<Drawer bind:this={drawer}>
 		<div slot="top-left">
 			<a href="/search" tabindex="-1">

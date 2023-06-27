@@ -115,3 +115,22 @@ export const addToLibrary = async (id: string, type: string) => {
 		mode: 'cors'
 	});
 };
+
+export const search = async (term: string) => {
+	const response = await fetch(
+		`http://localhost:3001/v1/catalog/us/search?term=${term}&types=artists,albums,playlists,songs&limit=5&l=en-US&platform=web&include=playParams`,
+		{
+			headers: {
+				'media-user-token': get(musicUserToken),
+				authorization: `Bearer ${get(developerToken)}`,
+				origin: 'https://beta.music.apple.com',
+				'access-control-allow-origin': '*',
+				'allowed-headers': '*'
+			},
+			mode: 'cors'
+		}
+	);
+	const json = await response.json();
+	console.log(json);
+	return json;
+};
