@@ -277,7 +277,6 @@
 	.tile-group__content {
 		justify-content: start;
 		gap: 1rem;
-		content-visibility: auto;
 		padding-top: 0.5rem;
 		padding-bottom: 0.5rem;
 		padding-inline: 1rem;

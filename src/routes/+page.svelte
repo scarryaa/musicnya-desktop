@@ -3,6 +3,7 @@
 	import ButtonFilled from '../components/buttons/button-filled.svelte';
 	import ButtonIcon from '../components/buttons/button-icon.svelte';
 	import BookmarkMusic from 'svelte-material-icons/BookmarkMusic.svelte';
+	import { scrollPosition } from '../stores/app.store';
 
 	export let data: {
 		streamed: {

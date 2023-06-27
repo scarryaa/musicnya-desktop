@@ -2,7 +2,7 @@
 	import '../app.scss';
 	import '../variables.scss';
 
-	import { drawerOpen, firstLaunch, listenLater } from '../stores/app.store';
+	import { drawerOpen, firstLaunch, listenLater, scrollPosition } from '../stores/app.store';
 	import { developerToken, libraryPlaylists, musicUserToken } from '../stores/musickit.store';
 	import { initMusicKit } from '../lib/api/music.api';
 	import { onMount } from 'svelte';
@@ -34,6 +34,9 @@
 	import Modal from '../components/window/modal.svelte';
 	import type { MusicKit } from '../lib/types/musickit';
 	import { addEventHandlers } from '../lib/event-handlers/apple-music-events';
+	import { get } from 'svelte/store';
+	import { navigating } from '$app/stores';
+	import LoadingSpinner from '../components/loading-spinner.svelte';
 
 	let playlists = [];
 	let drawer;
@@ -50,11 +53,17 @@
 		// 		}
 		// 	});
 		// }
+		// get scroll position
 
 		//read in listen later
 		localStorage.getItem('listenLater') === null
 			? localStorage.setItem('listenLater', JSON.stringify([]))
 			: listenLater.set(JSON.parse(localStorage.getItem('listenLater')));
+
+		// track scroll position
+		document.querySelector('.content-wrapper')?.addEventListener('scroll', (e) => {
+			scrollPosition.home.set(document.querySelector('.content-wrapper')?.scrollTop || 0);
+		});
 	});
 </script>
 
@@ -154,7 +163,11 @@
 					<!-- <Search /> -->
 				</div>
 				<div class="content-wrapper">
-					<slot />
+					{#if $navigating}
+						<svelte:component this={LoadingSpinner} />
+					{:else}
+						<slot />
+					{/if}
 				</div>
 			</div>
 		</div>

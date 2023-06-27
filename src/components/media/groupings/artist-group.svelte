@@ -206,7 +206,6 @@
 		}
 
 		&__content {
-			content-visibility: auto;
 			padding-top: 0.5rem;
 			padding-bottom: 0.5rem;
 			padding-inline: 1rem;
