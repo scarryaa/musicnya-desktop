@@ -6,13 +6,14 @@
 	import ChevronRight from 'svelte-material-icons/ChevronRight.svelte';
 	import AlbumTile from '../tiles/album-tile.svelte';
 	import ArtistTile from '../tiles/artist-tile.svelte';
+	import VideoTile from '../tiles/video-tile.svelte';
 
 	export let data: {
 		artist: any;
 	};
 	export let viewType: string;
 	export let groupTitle: string;
-	export let contentType: 'album' | 'song' | 'video' | 'artist' = 'album';
+	export let contentType: 'albums' | 'songs' | 'videos' | 'artists' = 'album';
 
 	let scrollButtons: HTMLElement | null;
 
@@ -106,7 +107,7 @@
 	</div>
 	<div class="artist-group__content">
 		{#each data.artist.views?.[viewType]?.data as media}
-			{#if contentType === 'song'}
+			{#if contentType === 'songs'}
 				<div class="artist-group__content__song">
 					<SongTile
 						id={media.id}
@@ -119,7 +120,7 @@
 				</div>
 			{/if}
 
-			{#if contentType === 'album'}
+			{#if contentType === 'albums'}
 				<div class="artist-group__content__tile">
 					<AlbumTile
 						type="albums"
@@ -134,7 +135,7 @@
 				</div>
 			{/if}
 
-			{#if contentType === 'artist'}
+			{#if contentType === 'artists'}
 				<div class="artist-group__content__artist">
 					<ArtistTile
 						id={media.id}
@@ -144,12 +145,16 @@
 				</div>
 			{/if}
 
-			{#if contentType === 'video'}
-				<SongTile
-					artist={media.attributes.artistName}
+			{#if contentType === 'videos'}
+				<VideoTile
+					type="videos"
+					subtitle="year"
+					id={media.id}
 					title={media.attributes.name}
-					year={media.attributes.releaseDate.slice(0, 4)}
-					src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
+					artist={media.attributes.artistName}
+					artistId={media.attributes.artistId}
+					year={media.attributes.releaseDate?.slice(0, 4)}
+					src={media.attributes.artwork?.url.replace('{w}x{h}', '400x400').replace('{f}', 'webp')}
 				/>
 			{/if}
 		{/each}

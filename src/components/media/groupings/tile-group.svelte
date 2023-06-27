@@ -17,7 +17,7 @@
 		shouldScroll: false
 	};
 	export let groupTitle: string;
-	export let contentType: 'album' | 'song' | 'video' = 'album';
+	export let contentType: 'albums' | 'songs' | 'videos' | 'editorial-elements' = 'albums';
 
 	$: scrollable
 		? component?.classList.add('scrollable')

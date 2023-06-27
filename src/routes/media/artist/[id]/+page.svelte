@@ -42,36 +42,41 @@
 		</div>
 	</div>
 	<div class="page-wrapper__content">
-		<ArtistGroup groupTitle="Top Songs" viewType="top-songs" {data} contentType="song" />
+		<ArtistGroup groupTitle="Top Songs" viewType="top-songs" {data} contentType="songs" />
 		{#if data.artist.views?.['latest-release'].data.length > 0}
 			<ArtistGroup
 				groupTitle="Latest Release"
 				viewType="latest-release"
 				{data}
-				contentType="album"
+				contentType="albums"
 			/>
 		{/if}
 		{#if data.artist.views?.['full-albums']?.data.length > 0}
-			<ArtistGroup groupTitle="Albums" viewType="full-albums" {data} contentType="album" />
+			<ArtistGroup groupTitle="Albums" viewType="full-albums" {data} contentType="albums" />
 		{/if}
 		{#if data.artist.views?.['top-music-videos']?.data?.length > 0}
-			<ArtistGroup groupTitle="Top Videos" viewType="top-music-videos" {data} contentType="album" />
+			<ArtistGroup
+				groupTitle="Top Videos"
+				viewType="top-music-videos"
+				{data}
+				contentType="videos"
+			/>
 		{/if}
 		{#if data.artist.views?.['playlists']?.data?.length > 0}
-			<ArtistGroup groupTitle="Artist Playlists" viewType="playlists" {data} contentType="album" />
+			<ArtistGroup groupTitle="Artist Playlists" viewType="playlists" {data} contentType="albums" />
 		{/if}
 		{#if data.artist.views?.['singles']?.data?.length > 0}
-			<ArtistGroup groupTitle="Singles" viewType="singles" {data} contentType="album" />
+			<ArtistGroup groupTitle="Singles" viewType="singles" {data} contentType="albums" />
 		{/if}
 		{#if data.artist.views?.['live-albums']?.data?.length > 0}
-			<ArtistGroup groupTitle="Live Albums" viewType="live-albums" {data} contentType="album" />
+			<ArtistGroup groupTitle="Live Albums" viewType="live-albums" {data} contentType="albums" />
 		{/if}
 		{#if data.artist.views?.['compilation-albums']?.data?.length > 0}
 			<ArtistGroup
 				groupTitle="Compilations"
 				viewType="compilation-albums"
 				{data}
-				contentType="album"
+				contentType="albums"
 			/>
 		{/if}
 		{#if data.artist.views?.['similar-artists']?.data?.length > 0}
@@ -79,7 +84,7 @@
 				groupTitle="Similar Artists"
 				viewType="similar-artists"
 				{data}
-				contentType="artist"
+				contentType="artists"
 			/>
 		{/if}
 	</div>

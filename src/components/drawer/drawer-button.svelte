@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { drawerOpen } from '../../stores/app.store';
-	import { tooltip } from '../../lib/event-handlers/tooltip';
 
-	export let action = () => {};
-	export let actionParams: any;
+	export let title;
 </script>
 
-<div class="drawer-button" on:click on:keydown use:action={actionParams}>
+<div class="drawer-button" on:click on:keydown {title}>
 	<button class="drawer-button__button" style="--shown:{$drawerOpen ? 'block' : 'none'}">
 		<slot name="icon" />
 		<slot class="text" />

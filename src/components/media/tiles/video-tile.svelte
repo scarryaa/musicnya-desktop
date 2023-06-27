@@ -80,8 +80,8 @@
 		margin-top: 0.2rem;
 		align-items: center;
 		border-radius: $border-radius-half;
-		max-width: 12rem;
-		max-height: 12rem;
+		max-width: 14rem;
+		max-height: 14rem;
 		display: flex;
 		flex-direction: column;
 		aspect-ratio: 1;
@@ -93,12 +93,13 @@
 			z-index: 99;
 			position: relative;
 			width: 100%;
-			height: 100%;
+			height: 50%;
 			border-radius: $border-radius-half;
 			overflow: hidden;
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			overflow: hidden;
 			transition: all 0.2s ease-in-out;
 
 			&:hover .album-overlay,

@@ -1,11 +1,31 @@
 import { repeatMode, shuffleMode } from '../../stores/musickit.store';
 import type { MusicKit } from '../types/musickit';
 
+const checkForMusicKit = () => {
+	if (!MusicKit.getInstance()) {
+		return;
+	}
+};
+
+export const waitForMusicKit = () => {
+	return new Promise((resolve) => {
+		const interval = setInterval(() => {
+			if (MusicKit.getInstance()) {
+				clearInterval(interval);
+				resolve(true);
+			}
+		}, 100);
+	});
+};
+
 export const initMusicKit = (instance) => {
-	// instance.volume = 0.2;
+	checkForMusicKit();
+	MusicKit.getInstance().volume = 0.2;
 };
 
 export const setVolume = (volume: number) => {
+	checkForMusicKit();
+	// TODO: Fix this
 	// MusicKit.getInstance().volume = volume;
 };
 

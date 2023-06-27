@@ -16,7 +16,7 @@
 		{#each data?.data as item}
 			<TileGroup
 				groupTitle={item?.attributes?.title?.stringForDisplay || ''}
-				contentType={'album'}
+				contentType={item?.type || ''}
 				data={{ media: item?.relationships?.contents?.data }}
 			/>
 		{/each}

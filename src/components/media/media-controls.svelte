@@ -30,9 +30,7 @@
 		repeatMode,
 		shuffleMode
 	} from '../../stores/musickit.store';
-	import Tooltip from '../tooltip.svelte';
 	import { onMount } from 'svelte';
-	import { tooltip } from '../../lib/event-handlers/tooltip';
 
 	let currentTime = '';
 	$: currentTime = new Date($nowPlayingItemTime * 1000).toISOString().substr(14, 5);
@@ -53,16 +51,7 @@
 	<div style="display: flex; flex-grow: 1; margin-left: 4rem;">
 		<div class="playback-buttons">
 			<div class="repeat-shuffle-wrapper">
-				<DrawerButton
-					on:click={() => toggleShuffleMode()}
-					action={tooltip}
-					actionParams={{
-						text: $shuffleMode ? 'Shuffle Off' : 'Shuffle On',
-						position: 'bottom',
-						delay: 500
-					}}
-					tooltip={{ text: $playing ? 'Pause' : 'Play', position: 'bottom', delay: 500 }}
-				>
+				<DrawerButton on:click={() => toggleShuffleMode()} title={$playing ? 'Pause' : 'Play'}>
 					<svelte:component
 						this={$shuffleMode ? Shuffle : Shuffle}
 						color={$shuffleMode ? 'red' : ''}
@@ -70,13 +59,7 @@
 				</DrawerButton>
 				<DrawerButton
 					on:click={() => toggleRepeatMode()}
-					action={tooltip}
-					actionParams={{
-						text:
-							$repeatMode === 1 ? 'Repeat All' : $repeatMode === 2 ? 'Repeat Off' : 'Repeat One',
-						position: 'bottom',
-						delay: 500
-					}}
+					title={$repeatMode === 1 ? 'Repeat All' : $repeatMode === 2 ? 'Repeat Off' : 'Repeat One'}
 				>
 					<svelte:component
 						this={$repeatMode === 1 ? RepeatOnce : $repeatMode === 2 ? Repeat : Repeat}
@@ -84,18 +67,15 @@
 					/>
 				</DrawerButton>
 			</div>
-			<DrawerButton on:click={() => skipToPreviousItem()}>
+			<DrawerButton on:click={() => skipToPreviousItem()} title="Previous">
 				<SkipPrevious />
 			</DrawerButton>
-			<div
-				class="play-pause-wrapper"
-				use:tooltip={{ text: $playing ? 'Pause' : 'Play', position: 'bottom', delay: 500 }}
-			>
+			<div class="play-pause-wrapper" title={$playing ? 'Pause' : 'Play'}>
 				<DrawerButton on:click={() => togglePlayPause()}>
 					<svelte:component this={$playing ? PauseCircle : PlayCircle} />
 				</DrawerButton>
 			</div>
-			<DrawerButton on:click={() => skipToNextItem()}>
+			<DrawerButton on:click={() => skipToNextItem()} title="Next">
 				<SkipNext />
 			</DrawerButton>
 		</div>
@@ -111,13 +91,16 @@
 		</div>
 	</div>
 	<div class="misc-buttons">
-		<DrawerButton>
+		<DrawerButton title="Queue">
 			<ViewList />
 		</DrawerButton>
-		<DrawerButton>
+		<DrawerButton title="Lyrics">
 			<FormatQuoteClose />
 		</DrawerButton>
-		<DrawerButton>
+		<DrawerButton
+			on:click={() => setVolume(volumeValue === 0 ? 0.2 : 0)}
+			title={volumeValue === 0 ? 'Unmute' : 'Mute'}
+		>
 			<svelte:component
 				this={volumeValue === 0 ? VolumeMute : volumeValue <= 0.5 ? VolumeMedium : VolumeHigh}
 			/>
