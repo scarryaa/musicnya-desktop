@@ -30,7 +30,7 @@
 		repeatMode,
 		shuffleMode
 	} from '../../stores/musickit.store';
-	import Tooltip from '../_tooltip.svelte';
+	import Tooltip from '../tooltip.svelte';
 	import { onMount } from 'svelte';
 	import { tooltip } from '../../lib/event-handlers/tooltip';
 
@@ -53,13 +53,31 @@
 	<div style="display: flex; flex-grow: 1; margin-left: 4rem;">
 		<div class="playback-buttons">
 			<div class="repeat-shuffle-wrapper">
-				<DrawerButton on:click={() => toggleShuffleMode()}>
+				<DrawerButton
+					on:click={() => toggleShuffleMode()}
+					action={tooltip}
+					actionParams={{
+						text: $shuffleMode ? 'Shuffle Off' : 'Shuffle On',
+						position: 'bottom',
+						delay: 500
+					}}
+					tooltip={{ text: $playing ? 'Pause' : 'Play', position: 'bottom', delay: 500 }}
+				>
 					<svelte:component
 						this={$shuffleMode ? Shuffle : Shuffle}
 						color={$shuffleMode ? 'red' : ''}
 					/>
 				</DrawerButton>
-				<DrawerButton on:click={() => toggleRepeatMode()}>
+				<DrawerButton
+					on:click={() => toggleRepeatMode()}
+					action={tooltip}
+					actionParams={{
+						text:
+							$repeatMode === 1 ? 'Repeat All' : $repeatMode === 2 ? 'Repeat Off' : 'Repeat One',
+						position: 'bottom',
+						delay: 500
+					}}
+				>
 					<svelte:component
 						this={$repeatMode === 1 ? RepeatOnce : $repeatMode === 2 ? Repeat : Repeat}
 						color={$repeatMode ? 'red' : ''}

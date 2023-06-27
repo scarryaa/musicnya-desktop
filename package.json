@@ -51,7 +51,6 @@
 	"dependencies": {
 		"electron-serve": "^1.1.0",
 		"fast-average-color": "^9.3.0",
-		"jquery": "^3.7.0",
 		"lodash": "^4.17.21",
 		"svelte-material-icons": "^3.0.4"
 	}

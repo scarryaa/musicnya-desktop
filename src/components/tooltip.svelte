@@ -27,7 +27,9 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			width: 100%;
+			text-align: center;
+			width: calc(100% + 4rem);
+			left: -2rem;
 			height: 100%;
 			pointer-events: none;
 
@@ -42,7 +44,7 @@
 
 				.tooltip__content__text {
 					color: white;
-					font-size: 1rem !important;
+					font-size: 0.8rem !important;
 					font-weight: 500;
 				}
 			}
