@@ -1,13 +1,17 @@
 <script>
-	import { drawerOpen } from '../../stores/app.store';
+	import { drawerOpen, drawerRightOpen } from '../../stores/app.store';
 
 	export function toggle() {
 		drawerOpen.update((b) => !b);
 	}
+
+	export function toggleRight() {
+		drawerRightOpen.update((b) => !b);
+	}
 </script>
 
 <div class="drawer">
-	<div class="drawer__left" style="--drawer-left-width: {`${$drawerOpen ? 14 : 5}rem`}">
+	<div class="drawer__left" style="--drawer-left-width: {`${$drawerOpen ? 14 : 5}rem`};">
 		<div class="top-left">
 			<slot name="top-left" />
 		</div>
@@ -18,7 +22,7 @@
 	<div class="drawer__main">
 		<slot name="main" />
 	</div>
-	<div class="drawer__right">
+	<div class="drawer__right" style="--drawer-right-width: {`${$drawerRightOpen ? 14 : 0}rem`}">
 		<slot name="right" />
 	</div>
 </div>
@@ -98,6 +102,33 @@
 				:global(> * > *) {
 					margin-block: 0.75rem;
 				}
+			}
+		}
+
+		.drawer__right {
+			position: relative;
+			width: var(--drawer-right-width);
+			height: 100%;
+			margin: 0;
+			margin-left: 0;
+			flex-grow: 0;
+			flex-shrink: 0;
+			background-color: $drawer-background-dark;
+			border-radius: $border-radius;
+
+			:global(> *) {
+				display: flex;
+				flex-direction: column;
+				font-size: 2rem;
+				justify-content: flex-start;
+				align-items: flex-start;
+				width: 100%;
+				height: calc(100% + 0.8rem);
+				margin-left: $item-margin;
+			}
+
+			:global(> * > *) {
+				margin-block: 0.75rem;
 			}
 		}
 

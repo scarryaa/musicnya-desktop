@@ -30,7 +30,7 @@
 		e.preventDefault();
 		inListenLater(type.slice(0, -1), id)
 			? removeFromListenLater(type.slice(0, -1), id)
-			: addToListenLater(type.slice(0, -1), id);
+			: addToListenLater(type, id, title, src, artist, artistId);
 	};
 </script>
 

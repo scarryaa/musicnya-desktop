@@ -115,7 +115,7 @@
 						subtitle="year"
 						artist={media.attributes.artistName}
 						year={media.attributes.releaseDate?.slice(0, 4)}
-						src={media.attributes.artwork?.url.replace('{w}x{h}', '50x50').replace('{f}', 'webp')}
+						src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
 					/>
 				</div>
 			{/if}
@@ -130,7 +130,7 @@
 						artist={media.attributes.artistName}
 						artistId={media.attributes.artistId}
 						year={media.attributes.releaseDate?.slice(0, 4)}
-						src={media.attributes.artwork?.url.replace('{w}x{h}', '200x200').replace('{f}', 'webp')}
+						src={media.attributes.artwork?.url.replace('{w}x{h}', '400x400').replace('{f}', 'webp')}
 					/>
 				</div>
 			{/if}
@@ -140,7 +140,7 @@
 					<ArtistTile
 						id={media.id}
 						title={media.attributes.name}
-						src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
+						src={media.attributes.artwork?.url.replace('{w}x{h}', '300x300').replace('{f}', 'webp')}
 					/>
 				</div>
 			{/if}
@@ -154,7 +154,7 @@
 					artist={media.attributes.artistName}
 					artistId={media.attributes.artistId}
 					year={media.attributes.releaseDate?.slice(0, 4)}
-					src={media.attributes.artwork?.url.replace('{w}x{h}', '200x200').replace('{f}', 'webp')}
+					src={media.attributes.artwork?.url.replace('{w}x{h}', '400x400').replace('{f}', 'webp')}
 				/>
 			{/if}
 		{/each}

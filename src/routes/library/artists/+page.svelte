@@ -14,12 +14,12 @@
 					id={item.id}
 					href={`/media/artist/${item.relationships?.catalog?.data?.[0]?.id}`}
 					src={item.attributes?.artwork?.url
-						.replace('{w}', '300')
-						.replace('{h}', '300')
+						.replace('{w}', '500')
+						.replace('{h}', '500')
 						.replace('{f}', 'webp') ||
 						item.relationships?.catalog?.data?.[0]?.attributes?.artwork?.url
-							.replace('{w}', '300')
-							.replace('{h}', '300')
+							.replace('{w}', '500')
+							.replace('{h}', '500')
 							.replace('{f}', 'webp')}
 					title={item.attributes.name}
 				/>

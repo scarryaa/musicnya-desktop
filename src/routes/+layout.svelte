@@ -77,6 +77,12 @@
 
 	<Drawer bind:this={drawer}>
 		<div slot="top-left">
+			<a href="/media/listen-later" tabindex="-1">
+				<DrawerButton>
+					<BookmarkMusic slot="icon" />
+					<span>Listen Later</span>
+				</DrawerButton>
+			</a>
 			<a href="/search" tabindex="-1">
 				<DrawerButton>
 					<Magnify slot="icon" />
@@ -178,7 +184,10 @@
 	<Footer>
 		<div class="footer-wrapper">
 			<NowPlayingTile />
-			<MediaControls />
+			<MediaControls
+				onLyricsClick={() => drawer.toggleRight()}
+				onQueueClick={() => drawer.toggleRight()}
+			/>
 		</div>
 	</Footer>
 </main>

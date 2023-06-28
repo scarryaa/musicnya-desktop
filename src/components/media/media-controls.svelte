@@ -38,6 +38,8 @@
 	let duration = '';
 	$: duration = new Date($nowPlayingItemDuration * 1000).toISOString().substr(14, 5);
 	export let volumeValue: number = 0.2;
+	export let onLyricsClick: () => void;
+	export let onQueueClick: () => void;
 
 	let progress = 0;
 	$: progress = ($nowPlayingItemTime / $nowPlayingItemDuration) * $nowPlayingItemDuration;
@@ -91,10 +93,10 @@
 		</div>
 	</div>
 	<div class="misc-buttons">
-		<DrawerButton title="Queue">
+		<DrawerButton title="Queue" on:click={onQueueClick}>
 			<ViewList />
 		</DrawerButton>
-		<DrawerButton title="Lyrics">
+		<DrawerButton title="Lyrics" on:click={onLyricsClick}>
 			<FormatQuoteClose />
 		</DrawerButton>
 		<DrawerButton

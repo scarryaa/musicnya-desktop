@@ -1,9 +1,17 @@
 import { get } from 'svelte/store';
 import { listenLater } from '../../stores/app.store';
+import type { MusicKit } from '../types/musickit';
 
-export const addToListenLater = (type: string, id: string | string[]) => {
+export const addToListenLater = (
+	type: string,
+	id: string | string[],
+	name: string,
+	artwork: string,
+	artistName?: string,
+	artistId?: string
+) => {
 	listenLater.update((list) => {
-		return [...list, { type, id }];
+		return [...list, { type, id, name, artwork, artistName, artistId }];
 	});
 
 	// write to disk
