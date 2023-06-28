@@ -25,7 +25,7 @@
 
 	// debounce search input
 	const _search = debounce(async (query: string) => {
-		if (query.length > 2) {
+		if (query.length > 0) {
 			const response = await search(query);
 			results = response.results;
 		}
@@ -60,17 +60,17 @@
 					>
 						<div class="search__results__result__image__overlay">
 							<div class="search__results__result__image__overlay__play">
-								<ButtonPlay size="2rem" on:click={() => play('song', song.id)} />
+								<ButtonPlay size="2rem" on:click={() => play('song', song.id)} color="white" />
 							</div>
 							<img
-								loading="lazy"
+								loading="eager"
 								src={song.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
 								alt=""
 							/>
 						</div>
 						<div class="search__results__result__info">
-							<h3>{song.attributes?.name}</h3>
-							<p>{song.attributes?.artistName}</p>
+							<div>{song.attributes?.name}</div>
+							<div>{song.attributes?.artistName}</div>
 						</div>
 						<div class="search__results__result__type">
 							<span>Song</span>
@@ -81,17 +81,17 @@
 					<a class="search__results__result" href={`/media/album/${album.id}`}>
 						<div class="search__results__result__image__overlay">
 							<div class="search__results__result__image__overlay__play">
-								<ButtonPlay size="2rem" />
+								<ButtonPlay size="2rem" color="white" />
 							</div>
 							<img
-								loading="lazy"
+								loading="eager"
 								src={album.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
 								alt=""
 							/>
 						</div>
 						<div class="search__results__result__info">
-							<h3>{album.attributes?.name}</h3>
-							<p>{album.attributes?.artistName}</p>
+							<div>{album.attributes?.name}</div>
+							<div>{album.attributes?.artistName}</div>
 						</div>
 						<div class="search__results__result__type">
 							<span>Album</span>
@@ -99,20 +99,20 @@
 					</a>
 				{/each}
 				{#each results?.artists?.data as artist}
-					<a class="search__results__result" href={`/media/artist/${artist.id}`}>
+					<a class="search__results__result artist-result" href={`/media/artist/${artist.id}`}>
 						<div class="search__results__result__image__overlay">
 							<div class="search__results__result__image__overlay__play">
-								<ButtonPlay size="2rem" />
+								<ButtonPlay size="2rem" color="white" />
 							</div>
 							<img
-								loading="lazy"
+								loading="eager"
 								src={artist.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
 								alt=""
 								class="search__results__result__image__artist"
 							/>
 						</div>
 						<div class="search__results__result__info">
-							<h3>{artist.attributes?.name}</h3>
+							<div>{artist.attributes?.name}</div>
 						</div>
 						<div class="search__results__result__type">
 							<span>Artist</span>
@@ -130,7 +130,7 @@
 	.search {
 		position: absolute;
 		top: 0.5rem;
-		left: 8rem;
+		left: 8.5rem;
 		z-index: 99;
 
 		input {
@@ -160,6 +160,38 @@
 			}
 		}
 
+		.search__results__result__info {
+			margin-block: auto;
+			margin-left: 0.2rem;
+			max-width: 120px;
+			overflow: hidden;
+
+			> * {
+				-webkit-line-clamp: 2;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+
+				&:nth-child(2) {
+					color: $text-light;
+				}
+			}
+		}
+
+		.artist-result {
+			.search__results__result__image__overlay {
+				border-radius: 50%;
+			}
+		}
+
+		.search__results {
+			background-color: $white;
+			overflow-y: scroll;
+			max-height: 60vh;
+			width: 17.5rem;
+			margin-left: 0.5rem;
+		}
+
 		.icon {
 			position: absolute;
 			top: 0.4rem;
@@ -169,15 +201,66 @@
 			fill: $accent;
 		}
 
-		.search__results {
-			background-color: $white;
-			overflow-y: scroll;
-			max-height: 60vh;
-			width: 115%;
-		}
-
 		.search__results__result {
+			height: 65px;
 			display: flex;
+			flex-direction: row;
+
+			.search__results__result__type {
+				margin-left: auto;
+				margin-block: auto;
+				margin-right: 0.5rem;
+				color: $text-light;
+			}
+
+			&:hover {
+				background-color: rgba(0, 0, 0, 0.1);
+
+				.search__results__result__image__overlay__play {
+					opacity: 1;
+				}
+			}
+
+			.search__results__result__image__overlay__play {
+				opacity: 0;
+				background-color: rgba(0, 0, 0, 0.5);
+				width: 100%;
+				height: 100%;
+			}
+
+			&__image__overlay {
+				position: relative;
+				height: 50px;
+				min-width: 50px;
+				margin: 0.5rem;
+				border-radius: $border-radius;
+				overflow: hidden;
+
+				&__play {
+					position: absolute;
+					padding-left: 0.55rem;
+					padding-top: 0.55rem;
+				}
+
+				img {
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+				}
+			}
+
+			img {
+				aspect-ratio: 1;
+				max-width: 50px;
+				max-height: 50px;
+				width: 50px;
+				height: 50px;
+				border-radius: $border-radius-half;
+
+				&.search__results__result__image__artist {
+					border-radius: 50%;
+				}
+			}
 		}
 	}
 </style>

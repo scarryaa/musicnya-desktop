@@ -1,14 +1,14 @@
-<script>
+<script lang="ts">
 	import DrawerButton from './drawer/drawer-button.svelte';
-
 	import AllInclusive from 'svelte-material-icons/AllInclusive.svelte';
 </script>
 
 <div class="queue">
-	<div>Queue</div>
+	<h2>Queue</h2>
 	<DrawerButton title="Autoplay">
 		<svelte:component this={AllInclusive} />
 	</DrawerButton>
+	<div class="content" />
 </div>
 
 <style lang="scss">
@@ -16,6 +16,13 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		gap: 50%;
+		gap: 75%;
+
+		h2 {
+			font-size: 1.5rem;
+			font-weight: 500;
+			padding-left: 0;
+			margin: 0;
+		}
 	}
 </style>

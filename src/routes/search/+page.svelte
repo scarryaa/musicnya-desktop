@@ -5,7 +5,7 @@
 	console.log(data);
 </script>
 
-<div class="page-wrapper">
+<div class="page-wrapper px-1">
 	<h1 class="page-wrapper__title">Search</h1>
 	<Search />
 	<div class="page-wrapper__content">
@@ -35,18 +35,21 @@
 <style lang="scss">
 	@import '../../variables.scss';
 
+	h1 {
+		padding: 0;
+	}
+
 	.page-wrapper {
 		&__content {
 			display: grid;
 			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			gap: 0.5rem;
 		}
 
 		.search-tile {
 			aspect-ratio: 3/1;
 			background-size: cover;
 			background-position: center;
-			margin-right: 0.5rem;
-			margin-bottom: 0.5rem;
 			border-radius: $border-radius-half;
 			position: relative;
 			filter: drop-shadow($drop-shadow);

@@ -1,3 +1,5 @@
+@use './utility-classes.scss';
+
 html, body {
 	position: relative;
 	width: 100%;
@@ -8,14 +10,6 @@ html, body {
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 	user-select: none;
 	background-color: #e9e9e9;
-}
-
-.px-1 {
-	padding-inline: 1rem;
-}
-
-.pl-1 {
-	padding-left: 1rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
