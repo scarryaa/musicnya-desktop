@@ -10,8 +10,21 @@ html, body {
 	background-color: #e9e9e9;
 }
 
+.px-1 {
+	padding-inline: 1rem;
+}
+
+.pl-1 {
+	padding-left: 1rem;
+}
+
 h1, h2, h3, h4, h5, h6 {
 	font-weight: 400;
+	padding-left: 1rem;
+}
+
+.editorial-tiles, .tile-group__content {
+	padding-left: 1rem;
 }
 
 button {

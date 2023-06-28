@@ -5,7 +5,7 @@
 	console.log(data.media);
 </script>
 
-<div class="page-wrapper">
+<div class="page-wrapper pl-1">
 	<h1>Albums</h1>
 	<div class="albums">
 		{#if data?.media.length > 0}
@@ -33,6 +33,10 @@
 </div>
 
 <style lang="scss">
+	h1 {
+		padding: 0;
+	}
+
 	.page-wrapper {
 		display: flex;
 		flex-direction: column;

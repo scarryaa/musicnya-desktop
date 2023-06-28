@@ -274,9 +274,8 @@
 		overflow-x: hidden;
 
 		:global(> *) {
-			padding-block: 1rem;
-			padding-left: 1rem;
 			padding-top: 2rem;
+			padding-bottom: 1rem;
 			overflow-y: overlay;
 			overflow-x: hidden;
 		}

@@ -25,6 +25,3 @@
 		{/each}
 	{/if}
 </div>
-
-<style lang="scss">
-</style>
