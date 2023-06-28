@@ -33,10 +33,6 @@
 </div>
 
 <style lang="scss">
-	.page-wrapper {
-		overflow-x: hidden;
-	}
-
 	.title {
 		padding-left: 1rem;
 	}

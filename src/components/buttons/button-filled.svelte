@@ -31,9 +31,8 @@
 		justify-content: center;
 		align-items: center;
 		border-radius: $border-radius-half;
-		padding-inline: 3.5rem;
-		padding-block: 1.4rem;
 		background-color: $default-color;
+		transition: background-color 0.2s ease-in-out;
 
 		&:hover {
 			filter: brightness(1.1);
@@ -52,13 +51,13 @@
 			flex-direction: row;
 			justify-content: center;
 			align-items: center;
-			font-size: 1.6rem;
+			font-size: 1.4rem;
 			font-weight: 500;
 			color: $text;
 
 			:global(.text) {
 				margin-left: 0.8rem;
-				font-size: 1.2rem;
+				font-size: 1rem;
 				display: var(--shown);
 				align-self: center;
 				margin-top: 0.1rem;

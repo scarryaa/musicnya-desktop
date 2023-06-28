@@ -30,11 +30,8 @@
 
 <style lang="scss">
 	.page-wrapper {
-		padding-top: 2rem;
-		padding-left: 1rem;
 		display: flex;
 		flex-direction: column;
-		padding-bottom: 1rem;
 
 		.artists {
 			display: flex;

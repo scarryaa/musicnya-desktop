@@ -109,7 +109,6 @@
 			margin-top: 1rem;
 
 			&__title {
-				margin-inline: 1rem;
 				font-size: 2rem;
 				font-weight: 400;
 				color: $text;

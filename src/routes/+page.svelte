@@ -27,8 +27,4 @@
 </div>
 
 <style lang="scss">
-	.page-wrapper {
-		overflow-x: hidden;
-		margin-top: 1rem;
-	}
 </style>

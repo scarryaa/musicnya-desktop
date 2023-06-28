@@ -36,12 +36,6 @@
 	@import '../../variables.scss';
 
 	.page-wrapper {
-		overflow-x: hidden;
-		padding-block: 1rem;
-		padding-top: 2rem;
-		padding-left: 1rem;
-		overflow-x: hidden;
-
 		&__content {
 			display: grid;
 			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

@@ -24,13 +24,7 @@
 </div>
 
 <style lang="scss">
-	.page-wrapper {
-		padding-top: 4rem;
-		padding-left: 1rem;
-	}
-
 	h1 {
-		margin: 0;
 		margin-bottom: 1rem;
 	}
 

@@ -153,14 +153,6 @@
 
 <style lang="scss">
 	.page-wrapper {
-		overflow-x: hidden;
-		margin-top: 2rem;
-
-		h1 {
-			margin-bottom: 0;
-			padding-left: 1rem;
-		}
-
 		.scroll-buttons {
 			display: flex;
 			flex-direction: row;
@@ -178,7 +170,6 @@
 			overflow-y: hidden;
 			gap: 1rem;
 			padding-right: 0.5rem;
-			padding-left: 1rem;
 			margin-bottom: 2rem;
 
 			&::-webkit-scrollbar {

@@ -8,9 +8,9 @@
 
 	import Play from 'svelte-material-icons/Play.svelte';
 	import Shuffle from 'svelte-material-icons/Shuffle.svelte';
-	import DownloadCircle from 'svelte-material-icons/DownloadCircle.svelte';
-	import CheckCircle from 'svelte-material-icons/CheckCircle.svelte';
-	import DotsHorizontalCircle from 'svelte-material-icons/DotsHorizontalCircle.svelte';
+	import Download from 'svelte-material-icons/Download.svelte';
+	import Check from 'svelte-material-icons/Check.svelte';
+	import DotsHorizontal from 'svelte-material-icons/DotsHorizontal.svelte';
 	import ClockTimeFiveOutline from 'svelte-material-icons/ClockTimeFiveOutline.svelte';
 
 	export let data;
@@ -94,7 +94,7 @@
 					/>
 					<ButtonFilled
 						bg=""
-						width="8rem"
+						width="7rem"
 						height="2.5rem"
 						class="shuffle-button"
 						text="Shuffle"
@@ -108,14 +108,14 @@
 						bg="transparent"
 						width="2rem"
 						height="2rem"
-						icon={inLibrary ? CheckCircle : DownloadCircle}
+						icon={inLibrary ? Check : Download}
 						on:click={() => (inLibrary ? _removeFromLibrary(data) : _addToLibrary(data))}
 					/>
 					<ButtonIcon
 						bg="transparent"
 						width="2rem"
 						height="2rem"
-						icon={DotsHorizontalCircle}
+						icon={DotsHorizontal}
 						on:click={() => console.log('more')}
 					/>
 				</div>
@@ -196,17 +196,17 @@
 	$table-text: #000000;
 	$table-text-hover: #494949;
 	$table-text-active: #a0a0a0;
-	$drop-shadow: rgba(0, 0, 0, 0.2) 0px 0px 3px;
-	$drop-shadow-light: rgba(0, 0, 0, 0.7) 0px 0px 2px;
+	$drop-shadow: rgba(0, 0, 0, 0.2) 0px 0px 2px;
+	$drop-shadow-light: rgba(0, 0, 0, 0.5) 0px 0px 1px;
 	$drop-shadow-text: rgba(0, 0, 0, 0.2) 0px 0px 1px;
 
 	.media-wrapper {
 		overflow: auto;
 		overflow-x: hidden !important;
 		padding-top: 4rem;
-		padding-left: 1rem;
 		height: calc(100% - 4rem);
 		width: calc(100% - 1rem);
+		padding-bottom: 0;
 		scrollbar-gutter: stable both-edges;
 		scrollbar-track-color: transparent;
 
@@ -227,7 +227,7 @@
 
 				.media-title {
 					position: relative;
-					font-size: 2.6rem;
+					font-size: 2.4rem;
 					font-weight: 600;
 					margin-top: 0rem;
 					color: $text-inverse;
@@ -268,7 +268,7 @@
 		}
 
 		.download-more-options {
-			margin-top: 0.35rem;
+			margin-top: 0.3rem;
 			display: flex;
 			flex-direction: row;
 			gap: 1rem;
@@ -279,9 +279,10 @@
 		}
 
 		img {
+			margin-left: -0.35rem;
 			max-width: 220px;
 			border-radius: $border-radius-half;
-			filter: drop-shadow(rgba(0, 0, 0, 0.8) 0px 0px 10px);
+			filter: drop-shadow(rgba(0, 0, 0, 0.6) 0px 0px 6px);
 		}
 
 		.media-table {

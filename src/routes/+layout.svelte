@@ -4,8 +4,11 @@
 
 	import {
 		drawerOpen,
+		drawerRightOpen,
 		firstLaunch,
 		listenLater,
+		lyricsOpen,
+		queueOpen,
 		scrollPosition,
 		scrollPositionY
 	} from '../stores/app.store';
@@ -15,6 +18,7 @@
 	import { getLibraryPlaylists } from '../lib/api/musickit.api';
 
 	import Drawer from '../components/drawer/drawer.svelte';
+	import { toasts } from '../stores/toasts.store';
 	import Footer from '../components/footer.svelte';
 	import NowPlayingTile from '../components/media/tiles/now-playing-tile.svelte';
 	import DrawerChip from '../components/drawer/drawer-chip.svelte';
@@ -43,10 +47,28 @@
 	import { get } from 'svelte/store';
 	import { navigating } from '$app/stores';
 	import LoadingSpinner from '../components/loading-spinner.svelte';
+	import Lyrics from '../components/lyrics.svelte';
+	import Queue from '../components/queue.svelte';
 
 	let playlists = [];
 	let drawer;
 	let modal;
+
+	const setQueueOpen = () => {
+		queueOpen.set(!$queueOpen);
+		lyricsOpen.set(false);
+
+		if (!$queueOpen) drawerRightOpen.set(false);
+		else drawerRightOpen.set(true);
+	};
+
+	const setLyricsOpen = () => {
+		lyricsOpen.set(!$lyricsOpen);
+		queueOpen.set(false);
+
+		if (!$lyricsOpen) drawerRightOpen.set(false);
+		else drawerRightOpen.set(true);
+	};
 
 	onMount(async () => {
 		// initializer
@@ -59,12 +81,38 @@
 		// 		}
 		// 	});
 		// }
-		// get scroll position
 
 		//read in listen later
 		localStorage.getItem('listenLater') === null
 			? localStorage.setItem('listenLater', JSON.stringify([]))
 			: listenLater.set(JSON.parse(localStorage.getItem('listenLater') || ''));
+
+		const report_error = (msg: string = 'unknown error') => {
+			$toasts.push({
+				message: `Unhandled error: ${msg}`,
+				type: 'error'
+			});
+
+			console.error(msg);
+		};
+
+		const handle_rejection = (e: PromiseRejectionEvent) => {
+			e.preventDefault();
+			report_error(e?.reason);
+		};
+
+		const handle_error = (e: ErrorEvent) => {
+			e.preventDefault();
+			report_error(e?.message);
+		};
+
+		window.addEventListener('unhandledrejection', handle_rejection);
+		window.addEventListener('error', handle_error);
+
+		return () => {
+			window.removeEventListener('unhandledrejection', handle_rejection);
+			window.removeEventListener('error', handle_error);
+		};
 	});
 </script>
 
@@ -78,31 +126,31 @@
 	<Drawer bind:this={drawer}>
 		<div slot="top-left">
 			<a href="/media/listen-later" tabindex="-1">
-				<DrawerButton>
+				<DrawerButton title="Listen Later">
 					<BookmarkMusic slot="icon" />
 					<span>Listen Later</span>
 				</DrawerButton>
 			</a>
 			<a href="/search" tabindex="-1">
-				<DrawerButton>
+				<DrawerButton title="Search">
 					<Magnify slot="icon" />
 					<span>Search</span>
 				</DrawerButton>
 			</a>
 			<a href="/" tabindex="-1">
-				<DrawerButton>
+				<DrawerButton title="Home">
 					<HomeVariant slot="icon" />
 					<span>Home</span>
 				</DrawerButton>
 			</a>
 			<a href="/browse" tabindex="-1">
-				<DrawerButton>
+				<DrawerButton title="Browse">
 					<ViewGridOutline slot="icon" />
 					<span>Browse</span>
 				</DrawerButton>
 			</a>
 			<a href="/radio" tabindex="-1">
-				<DrawerButton>
+				<DrawerButton title="Radio">
 					<Broadcast slot="icon" />
 					<span>Radio</span>
 				</DrawerButton>
@@ -110,11 +158,15 @@
 		</div>
 		<div slot="bottom-left">
 			<div class="bottom-left__container">
-				<DrawerButton on:click={drawer.toggle}>
+				<DrawerButton title="Your Library" on:click={drawer.toggle}>
 					<MusicBoxMultiple slot="icon" />
 					<span>Library</span>
 				</DrawerButton>
-				<DrawerButton --showPlus={$drawerOpen ? 'block' : 'none'} --margin-left="2.7rem">
+				<DrawerButton
+					title="New Playlist"
+					--showPlus={$drawerOpen ? 'block' : 'none'}
+					--margin-left="2.7rem"
+				>
 					<Plus slot="icon" />
 				</DrawerButton>
 			</div>
@@ -165,6 +217,13 @@
 				{/each}
 			</div>
 		</div>
+		<div slot="right">
+			{#if $lyricsOpen}
+				<svelte:component this={Lyrics} />
+			{:else if $queueOpen}
+				<svelte:component this={Queue} />
+			{/if}
+		</div>
 		<div slot="main">
 			<div class="content">
 				<div class="nav-buttons-wrapper">
@@ -184,10 +243,7 @@
 	<Footer>
 		<div class="footer-wrapper">
 			<NowPlayingTile />
-			<MediaControls
-				onLyricsClick={() => drawer.toggleRight()}
-				onQueueClick={() => drawer.toggleRight()}
-			/>
+			<MediaControls onLyricsClick={() => setLyricsOpen()} onQueueClick={() => setQueueOpen()} />
 		</div>
 	</Footer>
 </main>
@@ -196,7 +252,6 @@
 	@use '../variables.scss' as *;
 
 	main {
-		padding: 1em;
 		padding: 0;
 		margin: 0;
 		width: 100%;
@@ -216,8 +271,15 @@
 
 	.content-wrapper {
 		height: inherit;
-		overflow-y: overlay;
 		overflow-x: hidden;
+
+		:global(> *) {
+			padding-block: 1rem;
+			padding-left: 1rem;
+			padding-top: 2rem;
+			overflow-y: overlay;
+			overflow-x: hidden;
+		}
 	}
 
 	.bottom-left__container {

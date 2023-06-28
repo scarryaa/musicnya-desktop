@@ -22,7 +22,12 @@
 	<div class="drawer__main">
 		<slot name="main" />
 	</div>
-	<div class="drawer__right" style="--drawer-right-width: {`${$drawerRightOpen ? 14 : 0}rem`}">
+	<div
+		class="drawer__right"
+		style="--drawer-right-width: {`${
+			$drawerRightOpen ? 14 : 0
+		}rem`}; margin-right: {$drawerRightOpen ? '0.5rem' : '0'};"
+	>
 		<slot name="right" />
 	</div>
 </div>
@@ -38,7 +43,7 @@
 	$drawer-text-color: #000000;
 	$drawer-text-color-hover: #494949;
 	$drawer-text-color-active: #a0a0a0;
-	$drawer-bottom-left-height: calc(100% - $footer-height - 7.1rem);
+	$drawer-bottom-left-height: calc(100% - $footer-height - 9.7rem);
 
 	.drawer {
 		width: 100vw;
@@ -106,10 +111,10 @@
 		}
 
 		.drawer__right {
+			margin-top: 0.5rem;
 			position: relative;
 			width: var(--drawer-right-width);
 			height: 100%;
-			margin: 0;
 			margin-left: 0;
 			flex-grow: 0;
 			flex-shrink: 0;
@@ -123,7 +128,7 @@
 				justify-content: flex-start;
 				align-items: flex-start;
 				width: 100%;
-				height: calc(100% + 0.8rem);
+				height: calc(100%);
 				margin-left: $item-margin;
 			}
 
