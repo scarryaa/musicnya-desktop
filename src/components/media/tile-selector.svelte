@@ -13,6 +13,8 @@
 		| 'videos'
 		| 'editorial-elements'
 		| 'artists'
+		| 'music-videos'
+		| 'uploaded-videos'
 		| 'personal-recommendation' = 'albums';
 	export let data: {
 		media: any[];
@@ -23,7 +25,7 @@
 	$: handleScroll(scrollEvent);
 
 	function handleScroll(event: { direction: 'left' | 'right'; shouldScroll: boolean }) {
-		if (event.shouldScroll) {
+		if (event?.shouldScroll) {
 			const scrollAmount =
 				event.direction === 'left'
 					? -((document.defaultView?.innerWidth ?? 300) - 300)
@@ -89,7 +91,7 @@
 				src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
 			/>
 		{/if}
-		{#if type === 'videos'}
+		{#if type === 'videos' || type === 'uploaded-videos' || type === 'music-videos'}
 			<VideoTile
 				type="videos"
 				subtitle="year"
@@ -103,94 +105,6 @@
 		{/if}
 
 		{#if type === 'editorial-elements'}
-			{#if media.type === 'editorial-elements'}
-				{#each media.relationships.children.data as child}
-					{#if child.type === 'albums'}
-						<div class="tile-group__content__tile">
-							<AlbumTile
-								type={child.type}
-								subtitle="artist"
-								id={child.id}
-								title={child.attributes?.name}
-								artist={child.attributes?.artistName || child.attributes?.curatorName}
-								artistId={child.relationships?.artists?.data?.[0]?.id}
-								year={child.attributes?.releaseDate}
-								src={child.attributes?.artwork?.url
-									.replace('{w}x{h}', '400x400')
-									.replace('{f}', 'webp')}
-							/>
-						</div>
-					{/if}
-
-					{#if child.type === 'playlists'}
-						<div class="tile-group__content__tile">
-							<AlbumTile
-								type={child.type}
-								subtitle="artist"
-								id={child.id}
-								title={child.attributes?.name}
-								artist={child.attributes?.artistName || child.attributes?.curatorName}
-								artistId={child.relationships?.artists?.data?.[0]?.id}
-								year={child.attributes?.releaseDate}
-								src={child.attributes?.artwork?.url
-									.replace('{w}x{h}', '400x400')
-									.replace('{f}', 'webp')}
-							/>
-						</div>
-					{/if}
-
-					{#if child.type === 'videos' || child.type === 'uploaded-videos'}
-						<div class="tile-group__content__tile">
-							<!-- TODO implement video tile -->
-							<VideoTile
-								type="videos"
-								subtitle="year"
-								id={media.id}
-								title={media.attributes.name}
-								artist={media.attributes.artistName}
-								artistId={media.attributes.artistId}
-								year={media.attributes.releaseDate?.slice(0, 4)}
-								src={media.attributes.artwork?.url
-									.replace('{w}x{h}', '400x400')
-									.replace('{f}', 'webp')}
-							/>
-						</div>
-					{/if}
-
-					{#if child.type === 'stations'}
-						<div class="tile-group__content__tile">
-							<AlbumTile
-								type={child.type}
-								subtitle="artist"
-								id={child.id}
-								title={child.attributes?.name}
-								artist={child.attributes?.artistName || child.attributes?.curatorName}
-								artistId={child.relationships?.artists?.data?.[0]?.id}
-								year={child.attributes?.releaseDate}
-								src={child.attributes?.artwork?.url
-									.replace('{w}x{h}', '400x400')
-									.replace('{f}', 'webp')}
-							/>
-						</div>
-					{/if}
-
-					{#if child.type === 'songs'}
-						<div class="tile-group__content__song">
-							<SongTile
-								id={child.id}
-								title={child.attributes.name}
-								subtitle="artist"
-								year={child.attributes.releaseDate}
-								artist={child.attributes.artistName || child.attributes?.curatorName}
-								src={child.attributes.artwork?.url
-									.replace('{w}x{h}', '100x100')
-									.replace('{f}', 'webp')}
-							/>
-						</div>
-					{/if}
-				{/each}
-			{/if}
-
 			{#if media.type === 'albums'}
 				<div class="tile-group__content__tile">
 					<AlbumTile
@@ -225,7 +139,7 @@
 				</div>
 			{/if}
 
-			{#if media.type === 'videos' || media.type === 'uploaded-videos'}
+			{#if media.type === 'videos' || media.type === 'uploaded-videos' || media.type === 'music-videos'}
 				<div class="tile-group__content__tile">
 					<VideoTile
 						type="videos"
@@ -268,6 +182,15 @@
 						src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
 					/>
 				</div>
+			{/if}
+
+			{#if media.type === 'artists'}
+				<ArtistTile
+					id={media.id}
+					title={media.attributes.name}
+					href={media.attributes.url}
+					src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
+				/>
 			{/if}
 		{/if}
 	{/each}

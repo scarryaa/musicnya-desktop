@@ -1,10 +1,6 @@
 <script lang="ts">
-	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
-	import SongTile from '../tiles/song-tile.svelte';
-
 	import ChevronLeft from 'svelte-material-icons/ChevronLeft.svelte';
 	import ChevronRight from 'svelte-material-icons/ChevronRight.svelte';
-	import AlbumTile from '../tiles/album-tile.svelte';
 	import TileSelector from '../tile-selector.svelte';
 
 	let component: HTMLElement;

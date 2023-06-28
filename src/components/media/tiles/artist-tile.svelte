@@ -26,7 +26,6 @@
 		display: flex;
 		flex-direction: column;
 		max-width: 8.5rem;
-		overflow: hidden;
 
 		img {
 			aspect-ratio: 1;

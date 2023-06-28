@@ -25,7 +25,7 @@
 	}
 
 	.album-tile {
-		width: 100%;
+		width: 112%;
 		height: 3.5rem;
 		display: flex;
 		flex-direction: row;
