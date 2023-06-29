@@ -24,9 +24,11 @@
 		<div class="editorial-tile__content__title">
 			<div>{title}</div>
 		</div>
-		<div class="editorial-tile__content__subtitle">
-			<div>{subtitle}</div>
-		</div>
+		{#if subtitle}
+			<div class="editorial-tile__content__subtitle">
+				<div>{subtitle}</div>
+			</div>
+		{/if}
 	</div>
 	<div class="editorial-tile__overlay-wrapper">
 		<a class="editorial-tile__overlay" {href}>
@@ -46,6 +48,9 @@
 	@use '../../../variables.scss' as *;
 
 	.editorial-tile {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 		transition: background-color 0.2s ease-in-out 0.1s, opacity 0.2s ease-in-out;
 
 		&:focus-visible .editorial-tile__overlay,

@@ -87,7 +87,13 @@
 				{/if}
 				<div class="link-tiles pl-1">
 					{#each item.attributes.links as link}
-						<LinkTile href={link.url} label={link.label} />
+						<LinkTile
+							href={link.url.includes('viewGrouping')
+								? `/media/editorial-elements/${link.url?.split('/').pop().split('=')[2]}`
+								: link.url}
+							target={link.url.includes('viewGrouping') ? '_self' : '_blank'}
+							label={link.label}
+						/>
 					{/each}
 				</div>
 			{:else if item.relationships?.children?.data.length > 0}
@@ -106,7 +112,7 @@
 				{#if item.attributes.name}
 					<div class="editorial-tiles__title">
 						<h2>
-							{item?.attributes?.name || ''}
+							{item?.attributes?.name}
 						</h2>
 					</div>
 				{/if}

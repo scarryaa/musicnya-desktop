@@ -25,8 +25,7 @@ export const initMusicKit = (instance) => {
 
 export const setVolume = (volume: number) => {
 	checkForMusicKit();
-	// TODO: Fix this
-	// MusicKit.getInstance().volume = volume;
+	MusicKit.getInstance().volume = volume;
 };
 
 export const seekToTime = (time: number) => {

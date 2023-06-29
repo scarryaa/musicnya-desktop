@@ -43,6 +43,13 @@
 
 	let progress = 0;
 	$: progress = ($nowPlayingItemTime / $nowPlayingItemDuration) * $nowPlayingItemDuration;
+	let volumeValueOld = 0;
+
+	const _setVolume = (value: number) => {
+		volumeValueOld = volumeValue;
+		setVolume(value);
+		volumeValue = value;
+	};
 
 	onMount(() => {
 		setVolume(volumeValue);
@@ -100,7 +107,8 @@
 			<FormatQuoteClose />
 		</DrawerButton>
 		<DrawerButton
-			on:click={() => setVolume(volumeValue === 0 ? 0.2 : 0)}
+			on:click={() =>
+				_setVolume(volumeValue === 0 ? (volumeValueOld === 0 ? 0.2 : volumeValueOld) : 0)}
 			title={volumeValue === 0 ? 'Unmute' : 'Mute'}
 		>
 			<svelte:component

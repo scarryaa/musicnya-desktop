@@ -47,7 +47,7 @@
 			<div class="search__results">
 				<div class="search__results__result">
 					<div class="search__results__result__info">
-						<h3>No results found</h3>
+						<div>No results found</div>
 					</div>
 				</div>
 			</div>

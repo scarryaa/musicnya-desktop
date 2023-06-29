@@ -3,9 +3,10 @@
 
 	export let href: string;
 	export let label: string;
+	export let target: string;
 </script>
 
-<a class="link-tile" {href}>
+<a class="link-tile" {href} {target}>
 	<div class="link-tile__content">{label}</div>
 	<ChevronRight size="2rem" />
 </a>
