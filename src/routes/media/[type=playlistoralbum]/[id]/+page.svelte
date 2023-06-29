@@ -201,6 +201,7 @@
 	$drop-shadow-text: rgba(0, 0, 0, 0.2) 0px 0px 1px;
 
 	.media-wrapper {
+		padding-left: 1rem;
 		overflow: auto;
 		overflow-x: hidden !important;
 		padding-top: 4rem;

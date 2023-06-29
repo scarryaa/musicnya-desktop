@@ -95,6 +95,7 @@
 		overflow-x: hidden;
 		height: 100%;
 		width: 100%;
+		padding: 0;
 		backdrop-filter: blur(10px);
 
 		&__background {

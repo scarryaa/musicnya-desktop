@@ -3,6 +3,7 @@
 	import TileGroup from '../../components/media/groupings/tile-group.svelte';
 	import ChevronLeft from 'svelte-material-icons/ChevronLeft.svelte';
 	import ChevronRight from 'svelte-material-icons/ChevronRight.svelte';
+	import LinkTile from '../../components/media/tiles/link-tile.svelte';
 
 	export let data;
 	console.log(data?.data?.[0]?.relationships?.tabs?.data?.[0]?.relationships?.children?.data);
@@ -76,7 +77,20 @@
 	<h1>Browse</h1>
 	{#if data?.data?.[0]?.relationships?.tabs?.data?.[0]?.relationships?.children?.data.length > 0}
 		{#each data?.data?.[0]?.relationships?.tabs?.data?.[0]?.relationships?.children?.data as item}
-			{#if item.relationships?.children?.data.length > 0}
+			{#if item.attributes?.editorialElementKind === '391'}
+				{#if item.attributes.name}
+					<div class="editorial-tiles__title mb-1">
+						<h2 class="tile-group__title-wrapper__title">
+							{item?.attributes?.name || ''}
+						</h2>
+					</div>
+				{/if}
+				<div class="link-tiles pl-1">
+					{#each item.attributes.links as link}
+						<LinkTile href={link.url} label={link.label} />
+					{/each}
+				</div>
+			{:else if item.relationships?.children?.data.length > 0}
 				<div class="scroll-buttons" bind:this={component}>
 					<div class="scroll-buttons__arrows" use:setupScrolling>
 						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -163,6 +177,20 @@
 			}
 		}
 
+		.link-tiles {
+			display: flex;
+			flex-direction: row;
+			overflow-x: scroll;
+			overflow-y: hidden;
+			gap: 1rem;
+			padding-right: 0.5rem;
+			margin-bottom: 2rem;
+
+			&::-webkit-scrollbar {
+				display: none;
+			}
+		}
+
 		.editorial-tiles {
 			display: flex;
 			flex-direction: row;
@@ -182,6 +210,7 @@
 
 			> h2 {
 				margin-block: 0;
+				padding: 0;
 			}
 		}
 	}
