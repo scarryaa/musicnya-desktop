@@ -178,13 +178,11 @@
 		}
 
 		.link-tiles {
-			display: flex;
-			flex-direction: row;
-			overflow-x: scroll;
-			overflow-y: hidden;
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 			gap: 1rem;
+			row-gap: 1rem;
 			padding-right: 0.5rem;
-			margin-bottom: 2rem;
 
 			&::-webkit-scrollbar {
 				display: none;
