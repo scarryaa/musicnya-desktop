@@ -6,25 +6,7 @@
 	export let albumId: string;
 	export let artistId: string;
 
-	const lookupArtist = () => {
-		fetch(
-			`https://amp-api.music.apple.com/v1/catalog/us/search?term=${$nowPlayingItem?.artistName}&limit=1&types=artists`,
-			{
-				headers: {
-					'media-user-token': get(musicUserToken),
-					authorization: `Bearer ${get(developerToken)}`,
-					origin: 'https://beta.music.apple.com',
-					'access-control-allow-origin': '*',
-					'allowed-headers': '*'
-				},
-				mode: 'cors'
-			}
-		).then((res) => {
-			res.json().then((data) => {
-				goto(`/media/artist/${data.results.artists.data[0].id}`, { replaceState: true });
-			});
-		});
-	};
+	$: console.log($nowPlayingItem);
 </script>
 
 <div class="now-playing-tile">
@@ -37,16 +19,20 @@
 		alt="Album Artwork"
 	/>
 	<div class="song-info">
+		<!-- /media/{$nowPlayingItem?._container?.type?.slice(0, -1)}/{$nowPlayingItem?._container
+				?.id -->
 		<a
 			class="song-title"
 			title={$nowPlayingItem?.attributes?.name || ''}
-			href="media/{$nowPlayingItem?._container?.type?.slice(0, -1)}/{$nowPlayingItem?._container
-				?.id || $nowPlayingItem?.href?.split('/')[3]}">{$nowPlayingItem?.attributes?.name || ''}</a
+			href="/media/album/{$nowPlayingItem?.assets?.[0]?.metadata?.playlistId ||
+				$nowPlayingItem?.href?.split('/')[3]}">{$nowPlayingItem?.attributes?.name || ''}</a
 		>
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<!-- svelte-ignore a11y-missing-attribute -->
-		<a class="song-artist" on:click={lookupArtist} title={$nowPlayingItem?.artistName || ''}
-			>{$nowPlayingItem?.artistName || ''}</a
+		<a
+			class="song-artist"
+			href={`/media/artist/${$nowPlayingItem?.assets?.[0]?.metadata?.artistId}`}
+			title={$nowPlayingItem?.artistName || ''}>{$nowPlayingItem?.artistName || ''}</a
 		>
 	</div>
 </div>

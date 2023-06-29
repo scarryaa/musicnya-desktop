@@ -29,6 +29,7 @@
 	}
 
 	.content {
+		padding-left: 1rem;
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: flex-start;

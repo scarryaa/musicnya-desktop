@@ -49,7 +49,8 @@
 					subtitle="artist"
 					year={media.attributes.releaseDate}
 					artist={media.attributes.artistName || media.attributes?.curatorName}
-					src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
+					src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp') ||
+						'/images/music_note.png'}
 				/>
 			</div>
 		{/if}
@@ -64,7 +65,9 @@
 					artist={media.attributes?.artistName || media.attributes?.curatorName}
 					artistId={media.relationships?.artists?.data?.[0]?.id}
 					year={media.attributes?.releaseDate}
-					src={media.attributes?.artwork?.url.replace('{w}x{h}', '400x400').replace('{f}', 'webp')}
+					src={media.attributes?.artwork?.url
+						.replace('{w}x{h}', '400x400')
+						.replace('{f}', 'webp') || '/images/music_note.png'}
 				/>
 			</div>
 		{/if}
@@ -79,7 +82,9 @@
 					artist={media.attributes?.artistName || media.attributes?.curatorName}
 					artistId={media.relationships?.artists?.data?.[0]?.id}
 					year={media.attributes?.releaseDate}
-					src={media.attributes?.artwork?.url.replace('{w}x{h}', '400x400').replace('{f}', 'webp')}
+					src={media.attributes?.artwork?.url
+						.replace('{w}x{h}', '400x400')
+						.replace('{f}', 'webp') || '/images/music_note.png'}
 				/>
 			</div>
 		{/if}

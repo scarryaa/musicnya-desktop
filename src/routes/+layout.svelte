@@ -212,7 +212,7 @@
 							playlist?.relationships?.tracks?.data?.[0]?.attributes?.artwork?.url
 								.replace('{w}x{h}', '100x100')
 								.replace('{f}', 'webp') ||
-							''}
+							'/images/music_note.png'}
 					/>
 				{/each}
 			</div>
