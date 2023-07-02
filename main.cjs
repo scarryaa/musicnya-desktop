@@ -71,7 +71,6 @@ function createWindow() {
 }
 
 app.on("ready", async () => {
-  await components.whenReady();
   createWindow();
 });
 

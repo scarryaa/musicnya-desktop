@@ -12,7 +12,7 @@
 	"scripts": {
 		"dev": "vite dev & (cd libs/nyan_core && cargo run) & (cd libs/api_server && node index.ts)",
 		"electron-dev": "concurrently \"yarn run dev\" \"yarn run electron\"",
-		"electron": "wait-on http://localhost:5173 && electron --no-sandbox .",
+		"electron": "wait-on http://localhost:5173 && ${IN_NIX_SHELL:+steam-run} electron --no-sandbox .",
 		"build": "vite build",
 		"preview": "vite preview",
 		"test": "playwright test",
