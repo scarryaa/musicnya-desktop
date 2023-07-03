@@ -22,14 +22,15 @@ jobs:
         with:
           node-version: 18
 
+      - name: Write config.json
+        run: |
+          touch static/config.json
+          echo $DEV_TOKEN >> static/config.json
+          cat  static/config.json
+
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
           publish: always
-      - name: Write config.json
-        run: |
-          touch static/config.json
-          echo $DEV_TOKEN >> static/config.json
-          cat  static/config.json
