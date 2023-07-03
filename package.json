@@ -7,9 +7,15 @@
 	"build": {
 		"electronDownload": {
 			"mirror": "https://github.com/castlabs/electron-releases/releases/download/v"
+		},
+		"appId": "com.nyan-inc.musicnya",
+		"productName": "musicnya",
+		"linux": {
+			"target": [
+				"AppImage"
+			]
 		}
 	},
-	"afterPack": "./resources/afterPack.js",
 	"scripts": {
 		"dev": "vite dev & (cd libs/nyan_core && cargo run) & (cd libs/api_server && node index.ts)",
 		"electron-dev": "concurrently \"yarn run dev\" \"yarn run electron\"",
