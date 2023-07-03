@@ -12,6 +12,5 @@ target
 Cargo.lock
 config.json
 .angular
-yarn.lock
 dist
 private

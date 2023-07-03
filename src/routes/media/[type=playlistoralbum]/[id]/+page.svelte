@@ -211,10 +211,6 @@
 		scrollbar-gutter: stable both-edges;
 		scrollbar-track-color: transparent;
 
-		&:hover {
-			overflow-y: overlay;
-		}
-
 		.media-info {
 			width: inherit;
 			display: flex;
