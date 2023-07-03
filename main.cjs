@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, components} = require("electron");
 const path = require("path");

@@ -1,8 +1,9 @@
 {
 	"name": "musicnya-desktop-svelte",
-	"version": "0.0.1",
+	"version": "1.0.0-alpha",
 	"private": true,
 	"main": "main.cjs",
+	"bin": "main.cjs",
 	"build": {
 		"electronDownload": {
 			"mirror": "https://github.com/castlabs/electron-releases/releases/download/v"
