@@ -225,7 +225,7 @@
 					font-size: 2.4rem;
 					font-weight: 600;
 					margin-top: 0rem;
-					color: var(--text-inverse);
+					color: $white;
 					line-clamp: 2;
 					overflow: hidden;
 					filter: drop-shadow($drop-shadow) drop-shadow($drop-shadow);
