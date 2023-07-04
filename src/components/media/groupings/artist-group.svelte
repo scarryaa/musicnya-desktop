@@ -165,6 +165,10 @@
 	@use '../../../variables.scss' as *;
 
 	.artist-group {
+		h2 {
+			padding-left: 0 !important;
+		}
+
 		.artist-group__title-wrapper {
 			display: flex;
 			flex-direction: row;
@@ -174,7 +178,7 @@
 				margin-inline: 1rem;
 				font-size: 1.2rem;
 				font-weight: 700;
-				color: $text;
+				color: var(--text);
 				margin-bottom: 0;
 				max-width: max-content;
 				border-radius: $border-radius-half;
@@ -190,9 +194,9 @@
 				width: 2.5rem;
 				height: 2.5rem;
 				border-radius: $border-radius-half;
-				background-color: $background;
+				color: var(--text);
 				margin-inline: 0.2rem;
-				transition: background-color 0.2s ease-in-out;
+				transition: color 0.2s ease-in-out;
 				font-size: 2rem;
 
 				.scroll-button-arrows__icon {
@@ -200,7 +204,7 @@
 					display: flex;
 					font-size: 1.6rem;
 					font-weight: 500;
-					color: $text;
+					color: var(--text);
 				}
 			}
 		}

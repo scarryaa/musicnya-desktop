@@ -52,6 +52,7 @@
 		flex-direction: column;
 		justify-content: space-between;
 		transition: background-color 0.2s ease-in-out 0.1s, opacity 0.2s ease-in-out;
+		color: var(--text);
 
 		&:focus-visible .editorial-tile__overlay,
 		&:focus-within .editorial-tile__overlay {

@@ -143,6 +143,7 @@
 				overflow: hidden;
 				overflow-y: visible;
 				text-overflow: ellipsis;
+				color: var(--text);
 
 				&:hover {
 					text-decoration: underline;
@@ -158,7 +159,7 @@
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
-				color: $text-light;
+				color: var(--text-light);
 				overflow-y: visible;
 			}
 

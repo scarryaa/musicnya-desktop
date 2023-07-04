@@ -1,6 +1,6 @@
 {
 	"name": "musicnya-desktop-svelte",
-	"version": "1.0.0-alpha",
+	"version": "1.1.0-alpha",
 	"private": true,
 	"main": "main.cjs",
 	"bin": "main.cjs",

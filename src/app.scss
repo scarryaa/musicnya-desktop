@@ -1,5 +1,39 @@
 @use './utility-classes.scss';
 
+:root[data-theme="light"] {
+    --app-background: #e9e9e9;
+    --focus-color: #1f1f1f;
+    --background: #ffffff;
+    --drawer-background: #ffffff;
+    --drawer-text-color: #1f1f1f;
+    --drawer-text-color-hover: #1f1f1f;
+    --drawer-text-color-active: #1f1f1f;
+    
+    --text: #1f1f1f;
+    --text-light: #8b8b8b;
+    --text-very-light: #adadad;
+    --text-dark: #000000;
+    --text-inverse: #ffffff;
+    --text-inverse-dark: #e6e6e6;
+}
+
+:root[data-theme="dark"] {
+    --app-background: #000000;
+    --focus-color: #1f1f1f;
+    --background: #1f1f1f;
+    --drawer-background: #1f1f1f;
+    --drawer-text-color: #e7e7e7;
+    --drawer-text-color-hover: #e4e4e4;
+    --drawer-text-color-active: #c7c5df;
+
+    --text: #ffffff;
+    --text-light: #8b8b8b;
+    --text-very-light: #adadad;
+    --text-dark: #000000;
+    --text-inverse: #000;
+    --text-inverse-dark: #e6e6e6;
+}
+
 html, body {
 	position: relative;
 	width: 100%;
@@ -9,10 +43,11 @@ html, body {
 	box-sizing: border-box;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 	user-select: none;
-	background-color: #e9e9e9;
+	background-color: var(--app-background);
 }
 
 h1, h2, h3, h4, h5, h6 {
+	color: var(--text);
 	font-weight: 400;
 	padding-left: 1rem;
 }
@@ -60,7 +95,7 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-	background: #000000;
+	background: var(--text);
 	border-radius: 8px;
 }
 

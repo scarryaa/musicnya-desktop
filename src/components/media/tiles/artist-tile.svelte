@@ -3,7 +3,6 @@
 
 	export let src: string;
 	export let title: string;
-	export let id: string;
 	export let href: string;
 </script>
 
@@ -79,6 +78,7 @@
 			text-align: center;
 			max-width: 100%;
 			overflow: hidden;
+			color: var(--text);
 		}
 	}
 </style>

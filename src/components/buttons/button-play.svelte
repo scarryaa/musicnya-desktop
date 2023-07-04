@@ -21,13 +21,11 @@
 
 	.button-play {
 		filter: drop-shadow($drop-shadow);
-		background-color: var(--color-primary);
 		display: flex;
 		border-radius: 50%;
 		justify-content: center;
 		align-items: center;
 		transition: background-color 0.2s ease-in-out;
-		background-color: $accent;
 
 		&:hover {
 			transform: scale(1.1);

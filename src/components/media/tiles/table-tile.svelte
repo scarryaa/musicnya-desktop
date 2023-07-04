@@ -22,7 +22,7 @@
 			<div class="table-number__wrapper-icons">
 				<div class="table-number__wrapper-icons__play">
 					<ButtonPlay
-						color="black"
+						color="var(--text)"
 						size="1.8rem"
 						on:click={() =>
 							play(type.slice(0, -1).replace('library-', ''), playlistId || albumId, number)}
@@ -63,14 +63,22 @@
 <style lang="scss">
 	@import './../../../variables.scss';
 
-	$table-background: #fff;
-	$table-background-hover: #f2f2f2;
-	$table-background-active: #e6e6e6;
+	$table-background: var(--drawer-background);
 	$table-text: #000000;
 	$table-text-hover: #494949;
 	$table-text-active: #a0a0a0;
 	$drop-shadow: rgba(0, 0, 0, 0.2) 0px 0px 2px;
 	$drop-shadow-text: rgba(0, 0, 0, 0.2) 0px 0px 1px;
+
+	:root[data-theme='light'] {
+		--table-background-hover: #f2f2f2;
+		--table-background-active: #e6e6e6;
+	}
+
+	:root[data-theme='dark'] {
+		--table-background-hover: #2c2c2c;
+		--table-background-active: #383838;
+	}
 
 	tr {
 		height: 3rem;
@@ -80,7 +88,7 @@
 			padding: 0.4rem 0;
 			font-size: 1rem;
 			font-weight: 400;
-			color: $text;
+			color: var(--text);
 
 			// border radius
 			&:first-child {
@@ -96,7 +104,7 @@
 
 		&:hover,
 		&:focus-within {
-			background-color: $table-background-hover;
+			background-color: var(--table-background-hover);
 
 			.table-number__wrapper-number {
 				opacity: 0;
@@ -162,7 +170,7 @@
 			span {
 				font-size: 1rem;
 				font-weight: 400;
-				color: $text;
+				color: var(--text);
 				line-clamp: 1;
 				overflow: hidden;
 				text-overflow: ellipsis;
@@ -172,13 +180,13 @@
 
 			span:nth-child(2) {
 				font-size: 0.95rem;
-				color: $text-light;
+				color: var(--text-light);
 			}
 
 			.table-title__wrapper-text-artist {
 				font-size: 0.95rem;
 				display: block;
-				color: $text-light;
+				color: var(--text-light);
 				max-width: max-content;
 				text-overflow: ellipsis;
 				white-space: nowrap;
@@ -196,7 +204,7 @@
 	#table-album,
 	#table-duration {
 		filter: drop-shadow($drop-shadow-text);
-		color: $text-light;
+		color: var(--text-light);
 
 		.table-album__text-wrapper {
 			padding-right: 2rem;
@@ -227,7 +235,7 @@
 	}
 
 	#table-number {
-		color: $text-light;
+		color: var(--text-light);
 	}
 
 	.table-title {
@@ -245,7 +253,7 @@
 	}
 
 	#table-album {
-		color: $text-light;
+		color: var(--text-light);
 		width: max-content;
 		min-width: 100px;
 		overflow: hidden;
@@ -255,7 +263,7 @@
 
 	#table-duration {
 		width: 25px;
-		color: $text-light;
+		color: var(--text-light);
 		text-align: end;
 	}
 

@@ -111,14 +111,14 @@
 			&__title {
 				font-size: 2rem;
 				font-weight: 400;
-				color: $text;
+				color: var(--text);
 				margin-bottom: 0;
 				max-width: max-content;
 				border-radius: $border-radius-half;
 			}
 
 			.scroll-buttons__arrows {
-				margin-top: 1.6rem;
+				margin-top: 1.7rem;
 				outline-offset: 0.2rem;
 				display: flex;
 				flex-direction: row;
@@ -127,17 +127,18 @@
 				width: 2.5rem;
 				height: 2.5rem;
 				border-radius: $border-radius-half;
-				background-color: $background;
-				margin-inline: 0.2rem;
-				transition: background-color 0.2s ease-in-out;
+				margin-inline: 0.5rem;
+				margin-left: 1rem;
+				transition: color 0.2s ease-in-out;
 				font-size: 2rem;
+				color: var(--text);
 
 				.scroll-button-arrows__icon {
 					align-items: center;
 					display: flex;
 					font-size: 1.6rem;
 					font-weight: 500;
-					color: $text;
+					color: var(--text);
 				}
 			}
 		}

@@ -51,7 +51,7 @@
 		top: 0;
 		left: 0;
 		background-color: $navigation-chip-background;
-		color: $text-inverse;
+		color: var(--text-inverse);
 		font-size: 2rem;
 		outline-offset: 1px;
 

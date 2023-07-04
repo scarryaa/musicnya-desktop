@@ -6,13 +6,13 @@
 	@use '../../variables.scss' as *;
 
 	$titlebar-height: 20px;
-	$titlebar-background: #e9e9e9;
+	$titlebar-background: var(--app-background);
 
 	.titlebar {
 		position: relative;
 		width: 100vw;
 		height: $titlebar-height;
-		background-color: $titlebar-background;
+		background-color: var(--app-background);
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

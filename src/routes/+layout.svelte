@@ -9,13 +9,10 @@
 		listenLater,
 		lyricsOpen,
 		queueOpen,
-		scrollPosition,
 		scrollPositionY
 	} from '../stores/app.store';
-	import { developerToken, libraryPlaylists, musicUserToken } from '../stores/musickit.store';
-	import { initMusicKit } from '../lib/api/music.api';
-	import { onMount } from 'svelte';
-	import { getLibraryPlaylists } from '../lib/api/musickit.api';
+	import { libraryPlaylists } from '../stores/musickit.store';
+	import { createEventDispatcher, onMount } from 'svelte';
 
 	import Drawer from '../components/drawer/drawer.svelte';
 	import { toasts } from '../stores/toasts.store';
@@ -39,20 +36,13 @@
 	import PlaylistMusic from 'svelte-material-icons/PlaylistMusic.svelte';
 	import MediaControls from '../components/media/media-controls.svelte';
 	import Magnify from 'svelte-material-icons/Magnify.svelte';
-	import Search from '../components/search.svelte';
 	import WindowButtons from '../components/window/window-buttons.svelte';
-	import Modal from '../components/window/modal.svelte';
-	import type { MusicKit } from '../lib/types/musickit';
-	import { addEventHandlers } from '../lib/event-handlers/apple-music-events';
-	import { get } from 'svelte/store';
 	import { navigating } from '$app/stores';
 	import LoadingSpinner from '../components/loading-spinner.svelte';
 	import Lyrics from '../components/lyrics.svelte';
 	import Queue from '../components/queue.svelte';
 
-	let playlists = [];
 	let drawer;
-	let modal;
 
 	const setQueueOpen = () => {
 		queueOpen.set(!$queueOpen);
@@ -71,6 +61,16 @@
 	};
 
 	onMount(async () => {
+		const setTheme = (theme) => {
+			document.documentElement.dataset.theme = theme;
+		};
+
+		document.documentElement.dataset.theme = localStorage.getItem('theme') || 'light';
+
+		const hasSetDarkMode = document.documentElement.dataset.theme === 'dark';
+		const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark').matches;
+
+		setTheme(prefersDarkMode || hasSetDarkMode ? 'dark' : 'light');
 		// initializer
 		firstLaunch.set(false);
 		// if ($firstLaunch) {

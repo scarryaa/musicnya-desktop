@@ -37,6 +37,11 @@
 <style lang="scss">
 	@use '../../../variables.scss' as *;
 
+	h2 {
+		margin-left: 0;
+		padding-left: 0;
+	}
+
 	.song-tile-wrapper {
 		transition: background-color 0.2s ease-in-out 0.1s, opacity 0.2s ease-in-out;
 		&:focus-visible .song-tile {
@@ -111,6 +116,7 @@
 				overflow: hidden;
 				text-overflow: ellipsis;
 				max-width: 100%;
+				color: var(--text);
 				filter: drop-shadow($drop-shadow-light);
 			}
 
@@ -122,7 +128,7 @@
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
-				color: $text-light;
+				color: var(--text-light);
 				max-width: 100%;
 				justify-content: center;
 				filter: drop-shadow($drop-shadow-light);

@@ -19,12 +19,13 @@ export async function load({ fetch, params }) {
 			}
 		)
 			.then((response) => {
+				console.log(response);
 				return response.json().then((json) => {
 					console.log(json);
 					return json.data;
 				});
 			})
-			.catch((err) => {
+			.catch((err: Error | string) => {
 				console.log(err);
 			})
 	};

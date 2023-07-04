@@ -14,12 +14,14 @@
 <style lang="scss">
 	@use '../../../variables.scss' as *;
 
-	$background: #cfcfcf;
+	:root {
+		--background: #cfcfcf;
+	}
 
 	.link-tile {
 		-webkit-user-drag: none;
 		display: flex;
-		background-color: $background;
+		background-color: var(--background);
 		color: $accent;
 		cursor: default;
 		height: 3.5rem;
@@ -29,7 +31,7 @@
 		transition: background-color 0.2s ease-in-out;
 
 		&:hover {
-			background-color: lighten($background, 10%);
+			background-color: var(--background);
 		}
 
 		&__content {

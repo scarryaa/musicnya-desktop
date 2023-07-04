@@ -1,12 +1,5 @@
 <script lang="ts">
-	import { get } from 'svelte/store';
-	import { developerToken, musicUserToken, nowPlayingItem } from '../../../stores/musickit.store';
-	import { goto } from '$app/navigation';
-
-	export let albumId: string;
-	export let artistId: string;
-
-	$: console.log($nowPlayingItem);
+	import { nowPlayingItem } from '../../../stores/musickit.store';
 </script>
 
 <div class="now-playing-tile">
@@ -93,7 +86,7 @@
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
-				color: $text-light;
+				color: var(--text-light);
 
 				&:hover {
 					text-decoration: underline;

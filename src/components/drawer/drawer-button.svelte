@@ -16,7 +16,7 @@
 
 	:global(.link.active) {
 		button {
-			color: $text-very-light !important;
+			color: var(--text-very-light) !important;
 		}
 	}
 
@@ -32,7 +32,7 @@
 			font-size: 1.8rem;
 			margin: -2px;
 			padding: 2px;
-			color: $text;
+			color: var(--text);
 
 			:global(span) {
 				margin-left: 0.8rem;
@@ -44,15 +44,15 @@
 			}
 
 			&:hover {
-				color: $text-light;
+				color: var(--text-light);
 			}
 
 			&:focus-visible {
-				color: $text-light;
+				color: var(--text-light);
 			}
 
 			&:active {
-				color: $text-very-light;
+				color: var(--text-very-light);
 			}
 		}
 	}

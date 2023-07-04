@@ -88,7 +88,14 @@
 <style lang="scss">
 	@use '../../../../variables.scss' as *;
 
-	$background: #1c1c1c;
+	:root {
+		--background: #1c1c1c;
+	}
+
+	h2 {
+		padding-left: 0 !important;
+		margin-left: 0 !important;
+	}
 
 	.page-wrapper {
 		overflow: overlay;
@@ -152,7 +159,7 @@
 		&__content {
 			display: flex;
 			flex-direction: column;
-			background-color: white;
+			background-color: var(--drawer-background);
 			border-radius: $border-radius-half;
 			margin-top: -1rem;
 		}

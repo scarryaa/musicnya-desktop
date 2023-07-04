@@ -143,6 +143,7 @@
 				align-self: flex-start;
 				font-size: 1rem;
 				font-weight: 400;
+				color: var(--text);
 				white-space: nowrap;
 				overflow: hidden;
 				overflow-y: visible;
@@ -151,6 +152,10 @@
 				&:hover {
 					text-decoration: underline;
 				}
+			}
+
+			.station-title {
+				color: var(--text);
 			}
 
 			.album-artist,
@@ -162,7 +167,7 @@
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
-				color: $text-light;
+				color: var(--text-light);
 				overflow-y: visible;
 			}
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-var-requires */
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, components} = require("electron");
 const path = require("path");
@@ -72,6 +72,7 @@ function createWindow() {
 }
 
 app.on("ready", async () => {
+  await components.whenReady();
   createWindow();
 });
 

@@ -28,6 +28,25 @@
 		if (query.length > 0) {
 			const response = await search(query);
 			results = response.results;
+		} else {
+			// hide results if query is empty
+			results = {
+				songs: {
+					data: []
+				},
+
+				albums: {
+					data: []
+				},
+
+				playlists: {
+					data: []
+				},
+
+				artists: {
+					data: []
+				}
+			};
 		}
 	}, 500);
 </script>
@@ -144,7 +163,8 @@
 			font-size: 1rem;
 			font-weight: 500;
 			outline: none;
-			background-color: white;
+			background-color: var(--text-inverse);
+			color: var(--text);
 			-webkit-appearance: none;
 			-moz-appearance: none;
 			appearance: none;
@@ -154,7 +174,7 @@
 			&:focus {
 				border-bottom: 2px solid $accent;
 
-				& + .search__results {
+				~ .search__results {
 					visibility: visible !important;
 				}
 			}
@@ -173,7 +193,7 @@
 				text-overflow: ellipsis;
 
 				&:nth-child(2) {
-					color: $text-light;
+					color: var(--text-light);
 				}
 			}
 		}
@@ -185,11 +205,13 @@
 		}
 
 		.search__results {
-			background-color: $white;
+			background-color: var(--text-inverse);
+			border-radius: $border-radius;
 			overflow-y: scroll;
 			max-height: 60vh;
 			width: 17.5rem;
 			margin-left: 0.5rem;
+			visibility: hidden;
 		}
 
 		.icon {
@@ -199,18 +221,20 @@
 			width: 1.5rem;
 			height: 1.5rem;
 			fill: $accent;
+			color: $accent;
 		}
 
 		.search__results__result {
 			height: 65px;
 			display: flex;
 			flex-direction: row;
+			color: var(--text);
 
 			.search__results__result__type {
 				margin-left: auto;
 				margin-block: auto;
 				margin-right: 0.5rem;
-				color: $text-light;
+				color: var(--text-light);
 			}
 
 			&:hover {

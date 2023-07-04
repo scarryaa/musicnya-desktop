@@ -36,8 +36,6 @@
 	@use '../../variables.scss' as *;
 
 	$drawer-main-width: 100%;
-	$drawer-background: #ffffff;
-	$drawer-background-dark: #ffffff;
 	$item-margin: 1.6rem;
 	$drawer-height: calc(100% - $footer-height - 2rem);
 	$drawer-text-color: #000000;
@@ -67,7 +65,7 @@
 				font-size: 2rem;
 				justify-content: flex-start;
 				align-items: flex-start;
-				background-color: $drawer-background-dark;
+				background-color: var(--drawer-background);
 				border-radius: $border-radius;
 
 				:global(> *) {
@@ -89,7 +87,7 @@
 				flex-direction: column;
 				font-size: 2rem;
 				height: $drawer-bottom-left-height;
-				background-color: $drawer-background-dark;
+				background-color: var(--drawer-background);
 				border-radius: $border-radius;
 				width: 100%;
 
@@ -118,7 +116,7 @@
 			margin-left: 0;
 			flex-grow: 0;
 			flex-shrink: 0;
-			background-color: $drawer-background-dark;
+			background-color: var(--drawer-background-dark);
 			border-radius: $border-radius;
 
 			:global(> *) {
@@ -141,7 +139,7 @@
 			position: relative;
 			width: $drawer-main-width;
 			height: 100%;
-			background-color: $drawer-background;
+			background-color: var(--drawer-background);
 			border-radius: $border-radius;
 			margin: 0.5rem;
 			overflow: hidden;

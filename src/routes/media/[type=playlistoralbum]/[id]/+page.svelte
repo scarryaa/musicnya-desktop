@@ -19,7 +19,7 @@
 
 	const _removeFromLibrary = async () => {
 		await removeFromLibrary(
-			data.media.relationships?.library?.data?.[0]?.id || data.media?.id,
+			data.media?.relationships?.library?.data?.[0]?.id || data.media?.id,
 			getTypeWithoutPrefix(data.media?.type)
 		).then(() => {
 			inLibrary = false;
@@ -28,7 +28,7 @@
 
 	const _addToLibrary = async () => {
 		await addToLibrary(
-			data.media.relationships?.library?.data?.[0]?.id || data.media?.id,
+			data.media?.relationships?.library?.data?.[0]?.id || data.media?.id,
 			getTypeWithoutPrefix(data.media?.type)
 		).then(() => {
 			inLibrary = true;
@@ -48,14 +48,14 @@
 	};
 </script>
 
-<div class="media-wrapper" style="background: {data.media.color?.hex || '#a0a0a0'}">
+<div class="media-wrapper" style="background: {data.media?.color?.hex || '#a0a0a0'}">
 	<div class="media-info">
 		<img
 			loading="lazy"
 			src={data.media?.attributes?.artwork?.url
 				.replace('{w}x{h}', '300x300')
 				.replace('{f}', 'webp') ||
-				data.media.relationships?.tracks?.data?.[0]?.attributes?.artwork?.url
+				data.media?.relationships?.tracks?.data?.[0]?.attributes?.artwork?.url
 					.replace('{w}x{h}', '300x300')
 					.replace('{f}', 'webp')}
 			alt="Media Art"
@@ -190,9 +190,7 @@
 <style lang="scss">
 	@use '../../../../variables.scss' as *;
 
-	$table-background: #fff;
-	$table-background-hover: #f2f2f2;
-	$table-background-active: #e6e6e6;
+	$table-background: var(--drawer-background);
 	$table-text: #000000;
 	$table-text-hover: #494949;
 	$table-text-active: #a0a0a0;
@@ -227,7 +225,7 @@
 					font-size: 2.4rem;
 					font-weight: 600;
 					margin-top: 0rem;
-					color: $text-inverse;
+					color: var(--text-inverse);
 					line-clamp: 2;
 					overflow: hidden;
 					filter: drop-shadow($drop-shadow) drop-shadow($drop-shadow);
@@ -241,7 +239,7 @@
 					font-size: 1.4rem;
 					font-weight: 500;
 					margin-top: 0.4rem;
-					color: $text-inverse-dark;
+					color: var(--text-inverse-dark);
 					line-clamp: 1;
 					overflow: hidden;
 					filter: drop-shadow($drop-shadow-light);
@@ -305,7 +303,7 @@
 							padding: 1rem 1rem 0.5rem 1rem;
 							font-size: 0.98rem;
 							font-weight: 400;
-							color: $text-light;
+							color: var(--text-light);
 							border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 
 							&::before {

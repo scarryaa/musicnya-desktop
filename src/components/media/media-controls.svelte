@@ -63,7 +63,7 @@
 				<DrawerButton on:click={() => toggleShuffleMode()} title={$playing ? 'Pause' : 'Play'}>
 					<svelte:component
 						this={$shuffleMode ? Shuffle : Shuffle}
-						color={$shuffleMode ? 'red' : ''}
+						color={$shuffleMode ? 'red' : 'var(--text)'}
 					/>
 				</DrawerButton>
 				<DrawerButton
@@ -72,7 +72,7 @@
 				>
 					<svelte:component
 						this={$repeatMode === 1 ? RepeatOnce : $repeatMode === 2 ? Repeat : Repeat}
-						color={$repeatMode ? 'red' : ''}
+						color={$repeatMode ? 'red' : 'var(--text)'}
 					/>
 				</DrawerButton>
 			</div>
@@ -184,6 +184,7 @@
 			.playback-time {
 				margin-top: 1.1rem;
 				font-size: 0.85rem;
+				color: var(--text);
 			}
 
 			#total-playback-time {

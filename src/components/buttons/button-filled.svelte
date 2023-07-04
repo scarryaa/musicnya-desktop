@@ -20,7 +20,7 @@
 <style lang="scss">
 	@use '../../variables.scss' as *;
 
-	$default-color: #fff;
+	$default-color: var(--drawer-background);
 	$drop-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
 	.button-filled {
@@ -53,7 +53,7 @@
 			align-items: center;
 			font-size: 1.4rem;
 			font-weight: 500;
-			color: $text;
+			color: var(--text);
 
 			:global(.text) {
 				margin-left: 0.8rem;

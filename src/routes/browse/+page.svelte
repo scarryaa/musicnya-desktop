@@ -177,6 +177,7 @@
 			display: flex;
 			flex-direction: row;
 			margin-top: 2rem;
+			color: var(--text);
 
 			> * {
 				display: flex;

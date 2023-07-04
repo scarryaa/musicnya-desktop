@@ -32,7 +32,7 @@
 		align-items: center;
 		border-radius: $border-radius-half;
 		padding-inline: 1rem;
-		color: $text;
+		color: var(--text);
 		padding-block: 1rem;
 		background-color: $default-color;
 		border-radius: 50%;

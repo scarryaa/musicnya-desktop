@@ -16,9 +16,10 @@ jobs:
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
+        env: 
+          DEV_TOKEN: ${{ secrets.DEV_TOKEN }}
         with:
           node-version: 18
-          DEV_TOKEN : ${{ secrets.DEV_TOKEN }}
 
       - name: Write config.json
         run: |

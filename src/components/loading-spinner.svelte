@@ -21,7 +21,7 @@
 		height: 5rem;
 		border-radius: 50%;
 		border: 0.5rem solid transparent;
-		border-top-color: $text;
+		border-top-color: var(--text);
 		animation: spin 1s ease-in-out infinite;
 	}
 

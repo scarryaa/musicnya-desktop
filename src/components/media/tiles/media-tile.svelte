@@ -90,7 +90,7 @@
 				align-self: flex-start;
 				font-size: 1rem;
 				font-weight: 400;
-				color: $text-light;
+				color: var(--text-light);
 			}
 		}
 	}
