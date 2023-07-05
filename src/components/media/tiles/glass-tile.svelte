@@ -1,10 +1,4 @@
 <script lang="ts">
-	import { play } from '../../..//lib/services/playback-service';
-	import {
-		addToListenLater,
-		inListenLater,
-		removeFromListenLater
-	} from '../../../lib/services/favorites.service';
 	import AlbumTile from './album-tile.svelte';
 
 	export let id: string;
@@ -22,7 +16,11 @@
 	<div class="glass-info" style="background-image: url({src})">
 		<div class="glass-info__inner">
 			<span class="glass-title">{title}</span>
-			<span class="glass-artist">{artist}</span>
+			{#if artist}
+				<span class="glass-artist">{artist}</span>
+			{:else if year}
+				<span class="glass-artist">{year}</span>
+			{/if}
 		</div>
 	</div>
 </div>
@@ -43,6 +41,7 @@
 			display: flex;
 			flex-direction: column;
 			width: 100%;
+			min-height: 4rem;
 			background-position: bottom;
 			background-repeat: no-repeat;
 			color: $white;
@@ -50,7 +49,7 @@
 			border-bottom-right-radius: $border-radius;
 
 			.glass-title {
-				font-size: 0.9rem;
+				font-size: 0.8rem;
 				width: 100% !important;
 				text-overflow: ellipsis;
 				overflow: hidden;
@@ -59,11 +58,12 @@
 			}
 
 			.glass-artist {
-				font-size: 0.8rem;
+				font-size: 0.7rem;
 				width: 100%;
 				text-overflow: ellipsis;
 				overflow: hidden;
 				white-space: nowrap;
+				display: list-item;
 				text-align: center;
 			}
 		}
@@ -71,13 +71,14 @@
 		.glass-info__inner {
 			border-bottom-left-radius: $border-radius;
 			border-bottom-right-radius: $border-radius;
+			outline: 4px solid black;
 			overflow: hidden;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
 			align-items: center;
 			height: 100%;
-			padding-block: 1rem;
+			padding-block: 0.5rem;
 			padding-inline: 0.5rem;
 			backdrop-filter: blur(50px) saturate(180%) brightness(50%);
 		}
