@@ -77,10 +77,10 @@
 			color: $white;
 			position: absolute;
 			bottom: 0.6rem;
-			left: 0.6rem;
 			font-size: 1.4rem;
 			font-weight: 600;
 			margin-block: 0;
+			filter: drop-shadow($drop-shadow);
 		}
 	}
 

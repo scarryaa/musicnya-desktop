@@ -12,6 +12,8 @@
 			data: any[];
 		};
 	};
+
+	$: console.log(data);
 </script>
 
 <div class="page-wrapper">
@@ -20,7 +22,7 @@
 			<TileGroup
 				groupTitle={item?.attributes?.title?.stringForDisplay || ''}
 				contentType={item?.type || ''}
-				data={{ media: item?.relationships?.contents?.data }}
+				data={{ media: item }}
 			/>
 		{/each}
 	{/if}

@@ -63,7 +63,7 @@
 				<DrawerButton on:click={() => toggleShuffleMode()} title={$playing ? 'Pause' : 'Play'}>
 					<svelte:component
 						this={$shuffleMode ? Shuffle : Shuffle}
-						color={$shuffleMode ? 'red' : 'var(--text)'}
+						color={$shuffleMode ? 'var(--accent)' : 'var(--text)'}
 					/>
 				</DrawerButton>
 				<DrawerButton
@@ -72,7 +72,7 @@
 				>
 					<svelte:component
 						this={$repeatMode === 1 ? RepeatOnce : $repeatMode === 2 ? Repeat : Repeat}
-						color={$repeatMode ? 'red' : 'var(--text)'}
+						color={$repeatMode ? 'var(--accent)' : 'var(--text)'}
 					/>
 				</DrawerButton>
 			</div>
@@ -166,7 +166,7 @@
 			display: flex;
 			align-items: center;
 			gap: 0.4rem;
-			margin-top: -0.5rem;
+			margin-top: -0.7rem;
 			width: 100%;
 			min-width: 10rem;
 			max-width: 50vw;
@@ -206,7 +206,7 @@
 
 			.volume-slider-wrapper {
 				margin-left: 0.2rem;
-				margin-top: -1.15rem;
+				margin-top: -1.5rem;
 
 				:global(input) {
 					width: 100%;

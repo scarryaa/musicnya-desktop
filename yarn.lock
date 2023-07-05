@@ -246,6 +246,31 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.44.0.tgz#961a5903c74139390478bdc808bcde3fc45ab7af"
   integrity sha512-Ag+9YM4ocKQx9AarydN0KY2j0ErMHNIocPDrVo8zAE44xLTjEtz81OdR68/cydGtk6m6jDb5Za3r2useMzYmSw==
 
+"@fontsource/inter@^5.0.4":
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@fontsource/inter/-/inter-5.0.4.tgz#95e5c9f082b285ed6375b1ea08af34489d52d236"
+  integrity sha512-rUiTktdsh6B45XRZYTsZb2y4+TVkiVJhkqCSnSXfWxdUl0Rp6Cheu27IcurdjSfxJPUD+nl18wYp5RFf5P5zlA==
+
+"@fontsource/montserrat@^5.0.4":
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@fontsource/montserrat/-/montserrat-5.0.4.tgz#52ad2b73bc91ba68b2106b1008a6fa438d96c72b"
+  integrity sha512-iCXJ8pzvq9nQTZZ2O9f+Ag0ihDA9OJqDoydjboCFszhy3l4BkXYRl39aOcB4rQLQ7YYv641M/eeX4A6PNZdvUA==
+
+"@fontsource/noto-sans-jp@^5.0.4":
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@fontsource/noto-sans-jp/-/noto-sans-jp-5.0.4.tgz#f0975009406440c46c906b649a1cd361ca07243f"
+  integrity sha512-RPkXsYv8ELml8LALba6ORKqx/Wyi97yw+8J5kZLyOYPHEKAvc5pAQQC5PV6UhWr/SlSJLLGoDwczHT/y2fJBsg==
+
+"@fontsource/readex-pro@^5.0.4":
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@fontsource/readex-pro/-/readex-pro-5.0.4.tgz#3209b2f82c0434ce3faf7127895bf451a7b4fcb5"
+  integrity sha512-GWFhhnuNeitYI+NLYiE5syqdZ13owoLgm45gErTqsPAUxwGsi1d/QRemsht69/5X5+W3n/CHWMsyaXF6c4YIcw==
+
+"@fontsource/uncut-sans@^5.0.4":
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@fontsource/uncut-sans/-/uncut-sans-5.0.4.tgz#d3b060d706bb787fd51b4fe95e33f5b6ee5f0c37"
+  integrity sha512-iLuVotm4HgTqwfj5ZRTWsUm+G9xafwnbItEGHWY7Mv+FSpwM/o8RrlDuhaLzHmtMx/GWsI8I3jFujyA3uhTP8g==
+
 "@hapi/hoek@^9.0.0":
   version "9.3.0"
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.3.0.tgz#8368869dcb735be2e7f5cb7647de78e167a251fb"

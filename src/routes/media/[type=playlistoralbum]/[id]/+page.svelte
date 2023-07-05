@@ -212,6 +212,7 @@
 		.media-info {
 			width: inherit;
 			display: flex;
+			font-family: 'Inter';
 
 			.media-info__title-desc {
 				display: flex;
@@ -224,7 +225,7 @@
 					position: relative;
 					font-size: 2.4rem;
 					font-weight: 600;
-					margin-top: 0rem;
+					margin-top: 0.2rem;
 					color: $white;
 					line-clamp: 2;
 					overflow: hidden;
@@ -237,8 +238,7 @@
 				.media-desc {
 					position: relative;
 					font-size: 1.4rem;
-					font-weight: 500;
-					margin-top: 0.4rem;
+					font-weight: 600;
 					color: var(--text-inverse-dark);
 					line-clamp: 1;
 					overflow: hidden;

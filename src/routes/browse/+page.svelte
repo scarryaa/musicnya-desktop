@@ -77,7 +77,8 @@
 	<h1>Browse</h1>
 	{#if data?.data?.[0]?.relationships?.tabs?.data?.[0]?.relationships?.children?.data.length > 0}
 		{#each data?.data?.[0]?.relationships?.tabs?.data?.[0]?.relationships?.children?.data as item}
-			{#if item.attributes?.editorialElementKind === '391'}
+			<!-- svelte-ignore empty-block -->
+			{#if item.attributes?.editorialElementKind === '322'}{:else if item.attributes?.editorialElementKind === '391'}
 				{#if item.attributes.name}
 					<div class="editorial-tiles__title mb-1">
 						<h2 class="tile-group__title-wrapper__title">
@@ -97,25 +98,29 @@
 					{/each}
 				</div>
 			{:else if item.relationships?.children?.data.length > 0}
-				<div class="scroll-buttons" bind:this={component}>
-					<div class="scroll-buttons__arrows" use:setupScrolling>
-						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-						<div tabindex="0" class="scroll-button-arrows__icon">
-							<ChevronLeft />
-						</div>
-						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-						<div tabindex="0" class="scroll-button-arrows__icon">
-							<ChevronRight />
+				<div class="editorial-tiles__scroll-title">
+					<div class="editorial-tiles__title">
+						<h2>
+							{item?.attributes?.name || ''}
+						</h2>
+					</div>
+					<div
+						class="scroll-buttons"
+						bind:this={component}
+						style="margin-left: {item.attributes.name ? 0.5 : 0}rem"
+					>
+						<div class="scroll-buttons__arrows" use:setupScrolling>
+							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+							<div tabindex="0" class="scroll-button-arrows__icon">
+								<ChevronLeft />
+							</div>
+							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+							<div tabindex="0" class="scroll-button-arrows__icon">
+								<ChevronRight />
+							</div>
 						</div>
 					</div>
 				</div>
-				{#if item.attributes.name}
-					<div class="editorial-tiles__title">
-						<h2>
-							{item?.attributes?.name}
-						</h2>
-					</div>
-				{/if}
 				<div class="editorial-tiles">
 					{#each item.relationships?.children?.data as child}
 						<EditorialTile
@@ -173,11 +178,23 @@
 
 <style lang="scss">
 	.page-wrapper {
+		h1 {
+			margin-bottom: -1rem;
+		}
+
+		.editorial-tiles__scroll-title {
+			margin-top: 2rem;
+			display: flex;
+			flex-direction: row;
+		}
+
 		.scroll-buttons {
 			display: flex;
 			flex-direction: row;
-			margin-top: 2rem;
+			margin-top: 0.2rem;
+			margin-left: 1rem;
 			color: var(--text);
+			font-size: 1.6rem;
 
 			> * {
 				display: flex;

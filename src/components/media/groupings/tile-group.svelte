@@ -2,6 +2,7 @@
 	import ChevronLeft from 'svelte-material-icons/ChevronLeft.svelte';
 	import ChevronRight from 'svelte-material-icons/ChevronRight.svelte';
 	import TileSelector from '../tile-selector.svelte';
+	import GlassTile from '../tiles/glass-tile.svelte';
 
 	let component: HTMLElement;
 	let scrollable: boolean = true;
@@ -76,6 +77,8 @@
 			scrollEvent.shouldScroll = true;
 		});
 	};
+
+	$: console.log(data);
 </script>
 
 <div class="tile-group">
@@ -94,7 +97,14 @@
 			</div>
 		</div>
 	</div>
-	<TileSelector {data} type={contentType} {scrollEvent} bind:scrollable />
+	<!-- Glass Tiles -->
+	<TileSelector
+		data={{ media: data.media?.relationships?.contents?.data }}
+		glass={data.media?.attributes?.display?.kind === 'MusicNotesHeroShelf'}
+		type={contentType}
+		{scrollEvent}
+		bind:scrollable
+	/>
 </div>
 
 <style lang="scss">
@@ -118,7 +128,7 @@
 			}
 
 			.scroll-buttons__arrows {
-				margin-top: 1.7rem;
+				margin-top: 2rem;
 				outline-offset: 0.2rem;
 				display: flex;
 				flex-direction: row;

@@ -1,6 +1,6 @@
 {
 	"name": "musicnya-desktop-svelte",
-	"version": "1.1.0-alpha",
+	"version": "1.1.1-alpha",
 	"private": true,
 	"main": "main.cjs",
 	"bin": "main.cjs",
@@ -56,6 +56,11 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@fontsource/inter": "^5.0.4",
+		"@fontsource/montserrat": "^5.0.4",
+		"@fontsource/noto-sans-jp": "^5.0.4",
+		"@fontsource/readex-pro": "^5.0.4",
+		"@fontsource/uncut-sans": "^5.0.4",
 		"electron-serve": "^1.1.0",
 		"fast-average-color": "^9.3.0",
 		"lodash": "^4.17.21",

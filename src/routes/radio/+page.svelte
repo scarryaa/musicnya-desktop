@@ -77,8 +77,8 @@
 	<h1>Radio</h1>
 	{#if data?.data?.[0]?.relationships?.tabs?.data?.[0]?.relationships?.children?.data.length > 0}
 		{#each data?.data?.[0]?.relationships?.tabs?.data?.[0]?.relationships?.children?.data as item}
-			{#if item.attributes?.editorialElementKind === '488'}{/if}
-			{#if item.attributes?.editorialElementKind === '391'}
+			<!-- svelte-ignore empty-block -->
+			{#if item.attributes?.editorialElementKind === '488'}{:else if item.attributes?.editorialElementKind === '332'}{:else if item.attributes?.editorialElementKind === '391'}
 				{#if item.attributes.name}
 					<div class="editorial-tiles__title mb-1">
 						<h2 class="tile-group__title-wrapper__title">
@@ -178,6 +178,7 @@
 			display: flex;
 			flex-direction: row;
 			margin-top: 2rem;
+			color: var(--text);
 
 			> * {
 				display: flex;

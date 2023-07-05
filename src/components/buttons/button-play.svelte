@@ -25,6 +25,7 @@
 		border-radius: 50%;
 		justify-content: center;
 		align-items: center;
+		margin-bottom: -0.2rem;
 		transition: background-color 0.2s ease-in-out;
 
 		&:hover {

@@ -49,7 +49,6 @@ export const toggleShuffleMode = () => {
 	MusicKit.getInstance().shuffleMode === 1
 		? (MusicKit.getInstance().shuffleMode = 0)
 		: (MusicKit.getInstance().shuffleMode = 1);
-	console.log(MusicKit.getInstance().shuffleMode);
 	shuffleMode.set(MusicKit.getInstance().shuffleMode);
 };
 

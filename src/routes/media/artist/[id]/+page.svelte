@@ -92,11 +92,6 @@
 		--background: #1c1c1c;
 	}
 
-	h2 {
-		padding-left: 0 !important;
-		margin-left: 0 !important;
-	}
-
 	.page-wrapper {
 		overflow: overlay;
 		overflow-x: hidden;
@@ -136,8 +131,8 @@
 
 			&__title {
 				position: absolute;
-				bottom: 0.2rem;
-				left: 4rem;
+				bottom: 0rem;
+				left: 3rem;
 				font-size: 2rem;
 				font-weight: 700;
 				color: white;

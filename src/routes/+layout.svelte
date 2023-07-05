@@ -1,6 +1,11 @@
 <script lang="ts">
 	import '../app.scss';
 	import '../variables.scss';
+	import '@fontsource/inter';
+	import '@fontsource/readex-pro';
+	import '@fontsource/uncut-sans';
+	import '@fontsource/montserrat';
+	import '@fontsource/noto-sans-jp';
 
 	import {
 		drawerOpen,
@@ -128,31 +133,31 @@
 			<a href="/media/listen-later" tabindex="-1">
 				<DrawerButton title="Listen Later">
 					<BookmarkMusic slot="icon" />
-					<span>Listen Later</span>
+					<span class="drawer-text">Listen Later</span>
 				</DrawerButton>
 			</a>
 			<a href="/search" tabindex="-1">
 				<DrawerButton title="Search">
 					<Magnify slot="icon" />
-					<span>Search</span>
+					<span class="drawer-text">Search</span>
 				</DrawerButton>
 			</a>
 			<a href="/" tabindex="-1">
 				<DrawerButton title="Home">
 					<HomeVariant slot="icon" />
-					<span>Home</span>
+					<span class="drawer-text">Home</span>
 				</DrawerButton>
 			</a>
 			<a href="/browse" tabindex="-1">
 				<DrawerButton title="Browse">
 					<ViewGridOutline slot="icon" />
-					<span>Browse</span>
+					<span class="drawer-text">Browse</span>
 				</DrawerButton>
 			</a>
 			<a href="/radio" tabindex="-1">
 				<DrawerButton title="Radio">
 					<Broadcast slot="icon" />
-					<span>Radio</span>
+					<span class="drawer-text">Radio</span>
 				</DrawerButton>
 			</a>
 		</div>
@@ -160,7 +165,7 @@
 			<div class="bottom-left__container">
 				<DrawerButton title="Your Library" on:click={drawer.toggle}>
 					<MusicBoxMultiple slot="icon" />
-					<span>Library</span>
+					<span class="drawer-text">Library</span>
 				</DrawerButton>
 				<DrawerButton
 					title="New Playlist"
@@ -257,6 +262,11 @@
 		width: 100%;
 		height: 100%;
 		overflow: hidden;
+
+		.drawer-text {
+			font-size: 1.1rem !important;
+			margin-bottom: 0.1rem;
+		}
 	}
 
 	.content {

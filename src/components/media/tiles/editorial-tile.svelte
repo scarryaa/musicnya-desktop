@@ -32,11 +32,9 @@
 	</div>
 	<div class="editorial-tile__overlay-wrapper">
 		<a class="editorial-tile__overlay" {href}>
-			{#if editorialElementKind !== '320'}
-				<div class="editorial-tile__overlay__icon">
-					<ButtonPlay color="white" size="4rem" on:click={() => play(type, [id])} />
-				</div>
-			{/if}
+			<div class="editorial-tile__overlay__icon">
+				<ButtonPlay color="white" size="4rem" on:click={() => play(type, [id])} />
+			</div>
 		</a>
 		<div class="editorial-tile__image">
 			<img alt="Album Artwork" {src} />
@@ -117,7 +115,7 @@
 	}
 
 	.editorial-tile__content__badge span {
-		background-color: $primary;
+		background-color: $accent;
 		color: $white;
 		padding: 0.25rem 0.5rem;
 		border-radius: 0.25rem;
