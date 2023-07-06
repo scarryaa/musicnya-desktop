@@ -56,6 +56,7 @@
 				year={media.attributes?.releaseDate}
 				src={media.attributes?.artwork?.url.replace('{w}x{h}', '400x400').replace('{f}', 'webp') ||
 					'/images/music_note.png'}
+				badge={media.meta?.reason?.stringForDisplay}
 			/>
 		{:else}
 			{#if type === 'songs'}

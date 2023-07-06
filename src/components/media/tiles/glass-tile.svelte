@@ -9,17 +9,26 @@
 	export let year: string;
 	export let type: string;
 	export let subtitle: 'artist' | 'year' = 'artist';
+	export let badge: string;
 </script>
 
 <div class="glass-tile">
+	{#if badge}
+		<div class="badge">{badge}</div>
+	{/if}
 	<AlbumTile {id} {artistId} {src} {title} {artist} {year} {type} {subtitle} />
 	<div class="glass-info" style="background-image: url({src})">
 		<div class="glass-info__inner">
-			<span class="glass-title">{title}</span>
+			<a
+				class="glass-title"
+				href={type === 'stations' ? null : `/media/${type.slice(0, -1)}/${id}`}
+			>
+				{title}
+			</a>
 			{#if artist}
-				<span class="glass-artist">{artist}</span>
+				<a class="glass-artist" href="/media/artist/{artistId}">{artist}</a>
 			{:else if year}
-				<span class="glass-artist">{year}</span>
+				<span class="glass-year">{year}</span>
 			{/if}
 		</div>
 	</div>
@@ -35,6 +44,18 @@
 		border-radius: $border-radius-half;
 		display: flex;
 		flex-direction: column;
+
+		.badge {
+			display: -webkit-box;
+			line-clamp: 1;
+			-webkit-line-clamp: 1;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			color: var(--text-light);
+			padding: 0.2rem;
+			font-weight: 600;
+			border-radius: $border-radius-half;
+		}
 
 		.glass-info {
 			overflow: hidden;
@@ -55,6 +76,10 @@
 				overflow: hidden;
 				white-space: nowrap;
 				text-align: center;
+
+				&:hover {
+					text-decoration: underline;
+				}
 			}
 
 			.glass-artist {
@@ -65,6 +90,10 @@
 				white-space: nowrap;
 				display: list-item;
 				text-align: center;
+
+				&:hover {
+					text-decoration: underline;
+				}
 			}
 		}
 
