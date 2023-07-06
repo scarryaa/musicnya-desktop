@@ -3,14 +3,20 @@
 </script>
 
 <div class="now-playing-tile">
-	<img
-		loading="lazy"
-		style="visibility: {$nowPlayingItem ? 'visible' : 'hidden'}"
-		src={($nowPlayingItem?.attributes?.artwork?.url)
-			.replace('{w}x{h}', '60x60')
-			.replace('{f}', 'webp')}
-		alt="Album Artwork"
-	/>
+	<a
+		class="song-artwork"
+		href="/media/album/{$nowPlayingItem?.assets?.[0]?.metadata?.playlistId ||
+			$nowPlayingItem?.href?.split('/')[3]}"
+	>
+		<img
+			loading="lazy"
+			style="visibility: {$nowPlayingItem ? 'visible' : 'hidden'}"
+			src={($nowPlayingItem?.attributes?.artwork?.url)
+				.replace('{w}x{h}', '60x60')
+				.replace('{f}', 'webp')}
+			alt="Album Artwork"
+		/>
+	</a>
 	<div class="song-info">
 		<!-- /media/{$nowPlayingItem?._container?.type?.slice(0, -1)}/{$nowPlayingItem?._container
 				?.id -->
@@ -66,12 +72,13 @@
 
 			.song-title {
 				align-self: flex-start;
-				font-size: 1rem;
+				font-size: 0.9rem;
 				font-weight: 400;
 				white-space: nowrap;
 				max-width: 100%;
 				overflow: hidden;
 				text-overflow: ellipsis;
+				color: var(--text);
 
 				&:hover {
 					text-decoration: underline;
@@ -81,7 +88,7 @@
 			.song-artist {
 				max-width: 100%;
 				align-self: flex-start;
-				font-size: 1rem;
+				font-size: 0.8rem;
 				font-weight: 400;
 				white-space: nowrap;
 				overflow: hidden;

@@ -49,11 +49,43 @@
 			};
 		}
 	}, 500);
+
+	let timeout: ReturnType<typeof setTimeout>;
+
+	// show results on focus
+	const _showResults = () => {
+		clearTimeout(timeout);
+		document.querySelector('.search .search__results')?.classList.add('active');
+	};
+
+	// hide results on blur, with timeout
+	const _hideResults = () => {
+		// check if child is focused
+		timeout = setTimeout(() => {
+			if (!document.querySelector('.search .search__results *:focus')) {
+				document.querySelector('.search .search__results')?.classList.remove('active');
+			}
+		}, 100);
+	};
+
+	// hide results on tab
+	const _hideResultsTab = (e: KeyboardEvent) => {
+		if (e.key === 'Tab') {
+			document.querySelector('.search .search__results')?.classList.remove('active');
+		}
+	};
 </script>
 
 <div class="search">
 	<div class="content">
-		<input type="text" placeholder="Search" on:input={(e) => _search(e.target.value)} />
+		<input
+			type="text"
+			placeholder="Search"
+			on:input={(e) => _search(e.target.value)}
+			on:focusin={_showResults}
+			on:focusout={_hideResults}
+			on:keydown={_hideResultsTab}
+		/>
 		<div class="icon">
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 				<path
@@ -62,84 +94,74 @@
 				/>
 			</svg>
 		</div>
-		{#if results?.songs?.data.length === 0 && results?.albums?.data.length === 0 && results?.playlists?.data.length === 0 && results?.artists?.data.length === 0}
-			<div class="search__results">
-				<div class="search__results__result">
-					<div class="search__results__result__info">
-						<div>No results found</div>
+		<div class="search__results">
+			{#each results?.songs?.data as song}
+				<a
+					class="search__results__result"
+					href={`/media/album/${song.attributes?.url?.split('/').pop().split('?')[0]}`}
+				>
+					<div class="search__results__result__image__overlay">
+						<div class="search__results__result__image__overlay__play">
+							<ButtonPlay size="2rem" on:click={() => play('song', song.id)} color="white" />
+						</div>
+						<img
+							loading="eager"
+							src={song.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
+							alt=""
+						/>
 					</div>
-				</div>
-			</div>
-		{:else}
-			<div class="search__results">
-				{#each results?.songs?.data as song}
-					<a
-						class="search__results__result"
-						href={`/media/album/${song.attributes?.url?.split('/').pop().split('?')[0]}`}
-					>
-						<div class="search__results__result__image__overlay">
-							<div class="search__results__result__image__overlay__play">
-								<ButtonPlay size="2rem" on:click={() => play('song', song.id)} color="white" />
-							</div>
-							<img
-								loading="eager"
-								src={song.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
-								alt=""
-							/>
+					<div class="search__results__result__info">
+						<div>{song.attributes?.name}</div>
+						<div>{song.attributes?.artistName}</div>
+					</div>
+					<div class="search__results__result__type">
+						<span>Song</span>
+					</div></a
+				>
+			{/each}
+			{#each results?.albums?.data as album}
+				<a class="search__results__result" href={`/media/album/${album.id}`}>
+					<div class="search__results__result__image__overlay">
+						<div class="search__results__result__image__overlay__play">
+							<ButtonPlay size="2rem" color="white" />
 						</div>
-						<div class="search__results__result__info">
-							<div>{song.attributes?.name}</div>
-							<div>{song.attributes?.artistName}</div>
+						<img
+							loading="eager"
+							src={album.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
+							alt=""
+						/>
+					</div>
+					<div class="search__results__result__info">
+						<div>{album.attributes?.name}</div>
+						<div>{album.attributes?.artistName}</div>
+					</div>
+					<div class="search__results__result__type">
+						<span>Album</span>
+					</div>
+				</a>
+			{/each}
+			{#each results?.artists?.data as artist}
+				<a class="search__results__result artist-result" href={`/media/artist/${artist.id}`}>
+					<div class="search__results__result__image__overlay">
+						<div class="search__results__result__image__overlay__play">
+							<ButtonPlay size="2rem" color="white" />
 						</div>
-						<div class="search__results__result__type">
-							<span>Song</span>
-						</div></a
-					>
-				{/each}
-				{#each results?.albums?.data as album}
-					<a class="search__results__result" href={`/media/album/${album.id}`}>
-						<div class="search__results__result__image__overlay">
-							<div class="search__results__result__image__overlay__play">
-								<ButtonPlay size="2rem" color="white" />
-							</div>
-							<img
-								loading="eager"
-								src={album.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
-								alt=""
-							/>
-						</div>
-						<div class="search__results__result__info">
-							<div>{album.attributes?.name}</div>
-							<div>{album.attributes?.artistName}</div>
-						</div>
-						<div class="search__results__result__type">
-							<span>Album</span>
-						</div>
-					</a>
-				{/each}
-				{#each results?.artists?.data as artist}
-					<a class="search__results__result artist-result" href={`/media/artist/${artist.id}`}>
-						<div class="search__results__result__image__overlay">
-							<div class="search__results__result__image__overlay__play">
-								<ButtonPlay size="2rem" color="white" />
-							</div>
-							<img
-								loading="eager"
-								src={artist.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
-								alt=""
-								class="search__results__result__image__artist"
-							/>
-						</div>
-						<div class="search__results__result__info">
-							<div>{artist.attributes?.name}</div>
-						</div>
-						<div class="search__results__result__type">
-							<span>Artist</span>
-						</div>
-					</a>
-				{/each}
-			</div>
-		{/if}
+						<img
+							loading="eager"
+							src={artist.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
+							alt=""
+							class="search__results__result__image__artist"
+						/>
+					</div>
+					<div class="search__results__result__info">
+						<div>{artist.attributes?.name}</div>
+					</div>
+					<div class="search__results__result__type">
+						<span>Artist</span>
+					</div>
+				</a>
+			{/each}
+		</div>
 	</div>
 </div>
 
@@ -173,10 +195,6 @@
 
 			&:focus {
 				border-bottom: 2px solid $accent;
-
-				~ .search__results {
-					visibility: visible !important;
-				}
 			}
 		}
 
@@ -211,7 +229,10 @@
 			max-height: 60vh;
 			width: 17.5rem;
 			margin-left: 0.5rem;
-			visibility: hidden;
+
+			&:not(.active) {
+				display: none;
+			}
 		}
 
 		.icon {
