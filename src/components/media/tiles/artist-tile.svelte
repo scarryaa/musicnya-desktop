@@ -3,18 +3,18 @@
 
 	export let src: string;
 	export let title: string;
-	export let href: string;
+	export let id: string;
 </script>
 
 <div class="artist-tile">
 	<div class="artist-tile__overlay-wrapper">
-		<a class="artist-tile__overlay-wrapper__overlay" {href}>
+		<a class="artist-tile__overlay-wrapper__overlay" href={`/media/artist/${id}`}>
 			<ButtonPlay color="white" size="3rem" />
 		</a>
 		<img {src} alt="Album Art" loading="lazy" />
 	</div>
 	<div class="artist-info">
-		<div class="artist-title">{title}</div>
+		<a class="artist-title" href={`/media/artist/${id}`}>{title}</a>
 	</div>
 </div>
 
@@ -79,6 +79,12 @@
 			max-width: 100%;
 			overflow: hidden;
 			color: var(--text);
+
+			.artist-title {
+				&:hover {
+					text-decoration: underline;
+				}
+			}
 		}
 	}
 </style>
