@@ -60,6 +60,9 @@ function createWindow() {
 
   // Open the DevTools and also disable Electron Security Warning.
   process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = true;
+  if (isDev()) {
+    mainWindow.webContents.openDevTools();
+  }
 
   // Emitted when the window is closed.
   mainWindow.on("closed", function () {

@@ -14,8 +14,14 @@
 <style lang="scss">
 	@use '../../../variables.scss' as *;
 
-	:root {
+	:root[data-theme='dark'] {
+		--background: #131313;
+		--background-hover: #1a1a1a;
+	}
+
+	:root[data-theme='light'] {
 		--background: #cfcfcf;
+		--background-hover: #e0e0e0;
 	}
 
 	.link-tile {
@@ -31,7 +37,7 @@
 		transition: background-color 0.2s ease-in-out;
 
 		&:hover {
-			background-color: var(--background);
+			background-color: var(--background-hover);
 		}
 
 		&__content {

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { play } from '../../../lib/services/playback-service';
 	import ButtonPlay from '../../../components/buttons/button-play.svelte';
-	import LinkTile from './link-tile.svelte';
 
 	export let src: string;
 	export let badge: string;

@@ -30,6 +30,7 @@
 				} else {
 					scrollEvent.direction = document.activeElement === node?.children[0] ? 'left' : 'right';
 				}
+
 				scrollEvent.shouldScroll = true;
 			}
 		});
@@ -37,10 +38,10 @@
 		// hide elements as they scroll out of view
 		node?.addEventListener('scroll', () => {
 			const firstElementInView: HTMLElement | null = document.querySelector(
-				'.tile-group__content > *:not(.hidden)'
+				'.editorial-tiles > *:not(.hidden)'
 			);
 			const lastElementInView: HTMLElement | null = document.querySelector(
-				'.tile-group__content > *:not(.hidden):last-child'
+				'.editorial-tiles > *:not(.hidden):last-child'
 			);
 
 			const firstElementInViewRect = firstElementInView?.getBoundingClientRect();
@@ -69,16 +70,21 @@
 		node?.addEventListener('click', () => {
 			scrollEvent.direction = document.activeElement === node?.children[0] ? 'left' : 'right';
 			scrollEvent.shouldScroll = true;
+
+			// scroll
+			document.querySelector('.editorial-tiles')?.scrollBy({
+				left: scrollEvent.direction === 'left' ? -800 : 800,
+				behavior: 'smooth'
+			});
 		});
 	};
 </script>
 
 <div class="page-wrapper">
-	<h1>Browse</h1>
 	{#if data?.data?.[0]?.relationships?.tabs?.data?.[0]?.relationships?.children?.data.length > 0}
 		{#each data?.data?.[0]?.relationships?.tabs?.data?.[0]?.relationships?.children?.data as item}
 			<!-- svelte-ignore empty-block -->
-			{#if item.attributes?.editorialElementKind === '322'}{:else if item.attributes?.editorialElementKind === '391'}
+			{#if item.attributes?.editorialElementKind === '322'}{:else if item.attributes?.editorialElementKind === '323'}{:else if item.attributes?.editorialElementKind === '391'}
 				{#if item.attributes.name}
 					<div class="editorial-tiles__title mb-1">
 						<h2 class="tile-group__title-wrapper__title">
@@ -168,7 +174,7 @@
 			{:else}
 				<TileGroup
 					groupTitle={item?.attributes?.name || ''}
-					data={{ media: item?.relationships?.contents?.data || [] }}
+					data={{ media: item || [] }}
 					contentType={item?.type || ''}
 				/>
 			{/if}
@@ -202,6 +208,7 @@
 		}
 
 		.link-tiles {
+			margin-bottom: 1rem;
 			display: grid;
 			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 			gap: 1rem;
@@ -228,11 +235,19 @@
 		}
 
 		.editorial-tiles__title {
+			margin-top: 2rem;
 			padding-left: 1rem;
 
 			> h2 {
 				margin-block: 0;
 				padding: 0;
+			}
+		}
+
+		.scroll-buttons__arrows {
+			> * {
+				margin-top: 1.5rem;
+				align-self: end;
 			}
 		}
 	}

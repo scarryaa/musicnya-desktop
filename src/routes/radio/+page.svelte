@@ -30,17 +30,16 @@
 				} else {
 					scrollEvent.direction = document.activeElement === node?.children[0] ? 'left' : 'right';
 				}
-				scrollEvent.shouldScroll = true;
 			}
 		});
 
 		// hide elements as they scroll out of view
 		node?.addEventListener('scroll', () => {
 			const firstElementInView: HTMLElement | null = document.querySelector(
-				'.tile-group__content > *:not(.hidden)'
+				'.editorial-tiles > *:not(.hidden)'
 			);
 			const lastElementInView: HTMLElement | null = document.querySelector(
-				'.tile-group__content > *:not(.hidden):last-child'
+				'.editorial-tiles > *:not(.hidden):last-child'
 			);
 
 			const firstElementInViewRect = firstElementInView?.getBoundingClientRect();
@@ -69,12 +68,17 @@
 		node?.addEventListener('click', () => {
 			scrollEvent.direction = document.activeElement === node?.children[0] ? 'left' : 'right';
 			scrollEvent.shouldScroll = true;
+
+			// scroll
+			document.querySelector('.editorial-tiles')?.scrollBy({
+				left: scrollEvent.direction === 'left' ? -800 : 800,
+				behavior: 'smooth'
+			});
 		});
 	};
 </script>
 
 <div class="page-wrapper">
-	<h1>Radio</h1>
 	{#if data?.data?.[0]?.relationships?.tabs?.data?.[0]?.relationships?.children?.data.length > 0}
 		{#each data?.data?.[0]?.relationships?.tabs?.data?.[0]?.relationships?.children?.data as item}
 			<!-- svelte-ignore empty-block -->
@@ -98,15 +102,26 @@
 					{/each}
 				</div>
 			{:else if item.relationships?.children?.data.length > 0}
-				<div class="scroll-buttons" bind:this={component}>
-					<div class="scroll-buttons__arrows" use:setupScrolling>
-						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-						<div tabindex="0" class="scroll-button-arrows__icon">
-							<ChevronLeft />
-						</div>
-						<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
-						<div tabindex="0" class="scroll-button-arrows__icon">
-							<ChevronRight />
+				<div class="editorial-tiles__scroll-title">
+					<div class="editorial-tiles__title">
+						<h2>
+							{item?.attributes?.name || ''}
+						</h2>
+					</div>
+					<div
+						class="scroll-buttons"
+						bind:this={component}
+						style="margin-left: {item.attributes.name ? 0.5 : 0}rem"
+					>
+						<div class="scroll-buttons__arrows" use:setupScrolling>
+							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+							<div tabindex="0" class="scroll-button-arrows__icon">
+								<ChevronLeft />
+							</div>
+							<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+							<div tabindex="0" class="scroll-button-arrows__icon">
+								<ChevronRight />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -164,7 +179,7 @@
 			{:else}
 				<TileGroup
 					groupTitle={item?.attributes?.name || ''}
-					data={{ media: item?.relationships?.contents?.data || [] }}
+					data={{ media: item || [] }}
 					contentType={item?.type || ''}
 				/>
 			{/if}
@@ -174,11 +189,19 @@
 
 <style lang="scss">
 	.page-wrapper {
+		.editorial-tiles__scroll-title {
+			margin-top: 2rem;
+			display: flex;
+			flex-direction: row;
+		}
+
 		.scroll-buttons {
 			display: flex;
 			flex-direction: row;
-			margin-top: 2rem;
+			margin-top: 0.2rem;
+			margin-left: 1rem;
 			color: var(--text);
+			font-size: 1.6rem;
 
 			> * {
 				display: flex;
