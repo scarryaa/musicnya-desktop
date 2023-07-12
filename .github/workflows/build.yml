@@ -12,12 +12,10 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
-        env: 
-          DEV_TOKEN: ${{ secrets.DEV_TOKEN }}
+        uses: actions/setup-node@v2
         with:
           node-version: 18
 
@@ -25,10 +23,25 @@ jobs:
         run: |
           touch static/config.json
           echo $DEV_TOKEN >> static/config.json
-          cat  static/config.json
+          cat static/config.json
 
-      - name: Build/release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
+      - name: Build Electron app
+        run: |
+          # Replace this with the actual build command for your Electron app
+          npm run build
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
         with:
-          github_token: ${{ secrets.github_token }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          name: electron-app
+          path: dist
+
+      - name: Release Electron app
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Release of the Electron app
+          draft: false
+          prerelease: false
