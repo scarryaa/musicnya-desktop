@@ -1,15 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-// Modules to control application life and create native browser window
 const { app, BrowserWindow, components} = require("electron");
 const path = require("path");
-const serve = require("electron-serve");
 const ipcMain = require("electron").ipcMain;
-const loadURL = serve({ directory: "public" });
 
 let mainWindow;
 
 if (process.platform === "linux") {
-  app.commandLine.appendSwitch("disable-features", "MediaSessionService");
   app.commandLine.appendSwitch("enable-accelerated-mjpeg-decode");
   app.commandLine.appendSwitch("enable-accelerated-video");
   app.commandLine.appendSwitch("disable-gpu-driver-bug-workarounds");
@@ -47,24 +43,13 @@ function createWindow() {
     roundedCorners: true,
   });
 
-  // This block of code is intended for development purpose only.
-  // Delete this entire block of code when you are ready to package the application.
-  if (isDev()) {
-    mainWindow.loadURL("http://localhost:5173/");
-  } else {
-    loadURL(mainWindow);
-  }
+  mainWindow.loadURL("http://localhost:5173/");
 
-  // Uncomment the following line of code when app is ready to be packaged.
-  // loadURL(mainWindow);
-
-  // Open the DevTools and also disable Electron Security Warning.
   process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = true;
   if (isDev()) {
     mainWindow.webContents.openDevTools();
   }
 
-  // Emitted when the window is closed.
   mainWindow.on("closed", function () {
     mainWindow = null;
   });
@@ -79,7 +64,7 @@ app.on("ready", async () => {
   createWindow();
 });
 
-// Quit when all windows are closed.
+
 app.on("window-all-closed", function () {
   if (process.platform !== "darwin") app.quit();
 });
