@@ -17,11 +17,18 @@
 <style lang="scss">
 	@use '../../../variables.scss' as *;
 
-	$media-tile-background-hover: rgba(0, 0, 0, 0.05);
-	$media-tile-background-active: rgba(0, 0, 0, 0.15);
+	:root[data-theme='dark'] {
+		--media-tile-background-hover: rgba(255, 255, 255, 0.05);
+		--media-tile-background-active: rgba(255, 255, 255, 0.15);
+	}
+
+	:root[data-theme='light'] {
+		--media-tile-background-hover: rgba(0, 0, 0, 0.05);
+		--media-tile-background-active: rgba(0, 0, 0, 0.15);
+	}
 
 	:global(button.link.active .album-tile) {
-		background-color: $media-tile-background-active !important;
+		background-color: var(--media-tile-background-active) !important;
 	}
 
 	.album-tile {
@@ -43,7 +50,7 @@
 		}
 
 		&:hover {
-			background-color: $media-tile-background-hover;
+			background-color: var(--media-tile-background-hover);
 
 			img {
 				filter: brightness(1.1);
@@ -53,7 +60,7 @@
 		}
 
 		&:focus-visible {
-			background-color: $media-tile-background-hover;
+			background-color: var(--media-tile-background-hover);
 
 			img {
 				filter: brightness(1.1);
@@ -63,7 +70,7 @@
 		}
 
 		&:active {
-			background-color: $media-tile-background-active;
+			background-color: var(--media-tile-background-active);
 		}
 
 		.album-info {
@@ -84,6 +91,7 @@
 				overflow: hidden;
 				white-space: nowrap;
 				text-overflow: ellipsis;
+				color: var(--text);
 			}
 
 			.album-artist {

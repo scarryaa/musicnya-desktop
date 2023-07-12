@@ -14,6 +14,7 @@
 	export let viewType: string;
 	export let groupTitle: string;
 	export let contentType: 'albums' | 'songs' | 'videos' | 'artists' = 'album';
+	export let scrollable = true;
 
 	let scrollButtons: HTMLElement | null;
 
@@ -29,10 +30,11 @@
 	}
 
 	onMount(() => {
-		scrollButtons = document.querySelector('.scroll-buttons__arrows');
-
-		// hide scroll buttons if not scrollable
+		// check if scrollable
 		const content = document.querySelector('.artist-group__content');
+		scrollable = content?.scrollWidth! > content?.clientWidth!;
+
+		scrollButtons = document.querySelector('.scroll-buttons__arrows');
 
 		// hide elements as they scroll out of view
 		content?.addEventListener('scroll', () => {
@@ -92,7 +94,7 @@
 <div class="artist-group">
 	<div class="artist-group__title-wrapper">
 		<h2 class="artist-group__title-wrapper__title">{groupTitle}</h2>
-		<div class="scroll-buttons">
+		<div class="scroll-buttons" style="display: {scrollable ? 'block' : 'none'};">
 			<div class="scroll-buttons__arrows">
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<div tabindex="0" class="scroll-button-arrows__icon">

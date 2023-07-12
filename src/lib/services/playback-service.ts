@@ -9,7 +9,8 @@ export const play = (type: string, id: string | string[], position = 0) => {
 			startPlaying: true,
 			startPosition: position
 		})
-		.then(() => {
+		.finally(() => {
+			MusicKit.getInstance().play();
 			MusicKit.getInstance().shuffleMode = oldShuffleMode;
 		});
 };

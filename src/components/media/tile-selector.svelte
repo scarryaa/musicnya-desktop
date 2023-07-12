@@ -5,6 +5,8 @@
 	import ArtistTile from './tiles/artist-tile.svelte';
 	import VideoTile from './tiles/video-tile.svelte';
 	import GlassTile from './tiles/glass-tile.svelte';
+	import EditorialTile from './tiles/editorial-tile.svelte';
+	import SuperheroTile from './tiles/superhero-tile.svelte';
 
 	let content: HTMLElement;
 	export let scrollEvent: { direction: 'left' | 'right'; shouldScroll: boolean };
@@ -22,6 +24,7 @@
 	};
 	export let scrollable = true;
 	export let glass = false;
+	export let superhero = false;
 
 	$: scrollable = content?.scrollWidth > content?.clientWidth;
 	$: handleScroll(scrollEvent);
@@ -58,6 +61,20 @@
 					'/images/music_note.png'}
 				badge={media.meta?.reason?.stringForDisplay}
 			/>
+		{:else if superhero}
+			<div class="tile-group__content__tile" style="width: 100%;">
+				<SuperheroTile
+					type={media.type}
+					badge={media.meta?.reason?.stringForDisplay}
+					showBadge={media.meta?.reason?.stringForDisplay !== undefined}
+					id={media.id}
+					title={media.attributes?.name}
+					href={`/media/${media.type.slice(0, -1)}/${media.id}`}
+					src={media.attributes?.artwork?.url
+						.replace('{w}x{h}', '800x800')
+						.replace('{f}', 'webp') || '/images/music_note.png'}
+				/>
+			</div>
 		{:else}
 			{#if type === 'songs'}
 				<div class="tile-group__content__song">

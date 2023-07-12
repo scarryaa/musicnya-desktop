@@ -284,10 +284,11 @@
 			min-height: 100%;
 			height: auto;
 			margin-top: 2rem;
-			margin-left: -1rem;
+			margin-left: -2rem;
 			padding: 0.5rem;
 			padding-top: 0;
 			padding-inline: 1rem;
+			padding-left: 1.5rem;
 			background-color: $table-background;
 			border-radius: $border-radius-half;
 			overflow: visible;

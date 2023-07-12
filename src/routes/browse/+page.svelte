@@ -72,7 +72,8 @@
 			scrollEvent.shouldScroll = true;
 
 			// scroll
-			document.querySelector('.editorial-tiles')?.scrollBy({
+			// TODO kinda hacky, fix this
+			(node.parentElement?.parentElement?.nextSibling?.nextSibling as HTMLElement).scrollBy({
 				left: scrollEvent.direction === 'left' ? -800 : 800,
 				behavior: 'smooth'
 			});
@@ -184,9 +185,7 @@
 
 <style lang="scss">
 	.page-wrapper {
-		h1 {
-			margin-bottom: -1rem;
-		}
+		margin-top: -2rem;
 
 		.editorial-tiles__scroll-title {
 			margin-top: 2rem;
@@ -246,7 +245,7 @@
 
 		.scroll-buttons__arrows {
 			> * {
-				margin-top: 1.5rem;
+				margin-top: 1.9rem;
 				align-self: end;
 			}
 		}

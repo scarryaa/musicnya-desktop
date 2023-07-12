@@ -2,7 +2,6 @@
 	import ChevronLeft from 'svelte-material-icons/ChevronLeft.svelte';
 	import ChevronRight from 'svelte-material-icons/ChevronRight.svelte';
 	import TileSelector from '../tile-selector.svelte';
-	import GlassTile from '../tiles/glass-tile.svelte';
 
 	let component: HTMLElement;
 	let scrollable: boolean = true;
@@ -84,7 +83,11 @@
 <div class="tile-group">
 	<div class="tile-group__title-wrapper">
 		<h2 class="tile-group__title-wrapper__title">{groupTitle}</h2>
-		<div class="scroll-buttons" bind:this={component}>
+		<div
+			class="scroll-buttons"
+			bind:this={component}
+			style="display: {scrollable ? 'block' : 'none'};"
+		>
 			<div class="scroll-buttons__arrows" use:setupScrolling>
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<div tabindex="0" class="scroll-button-arrows__icon">
@@ -97,10 +100,10 @@
 			</div>
 		</div>
 	</div>
-	<!-- Glass Tiles -->
 	<TileSelector
 		data={{ media: data.media?.relationships?.contents?.data }}
 		glass={data.media?.attributes?.display?.kind === 'MusicNotesHeroShelf'}
+		superhero={data.media?.attributes?.display?.kind === 'MusicSuperHeroShelf'}
 		type={contentType}
 		{scrollEvent}
 		bind:scrollable
