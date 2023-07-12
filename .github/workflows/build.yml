@@ -39,4 +39,6 @@ jobs:
         with:
           name: electron-app
           path: |
-            ./dist/__appImage-x64
+            ./dist/musicnya-1.1.1-alpha.AppImage
+            ./dist/musicnya-1.1.1-alpha.dmg
+            ./dist/musicnya Setup 1.1.1-alpha.exe
