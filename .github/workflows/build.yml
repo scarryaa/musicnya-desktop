@@ -32,7 +32,7 @@ jobs:
           cat static/config.json
 
       - name: Build Electron app
-        run: npm run build
+        run: npm run dist
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
