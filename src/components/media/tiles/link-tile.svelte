@@ -15,19 +15,19 @@
 	@use '../../../variables.scss' as *;
 
 	:root[data-theme='dark'] {
-		--background: #131313;
-		--background-hover: #1a1a1a;
+		--tile-background: #0f0f0f;
+		--tile-background-hover: #161616;
 	}
 
 	:root[data-theme='light'] {
-		--background: #cfcfcf;
-		--background-hover: #e0e0e0;
+		--tile-background: #cfcfcf;
+		--tile-background-hover: #e0e0e0;
 	}
 
 	.link-tile {
 		-webkit-user-drag: none;
 		display: flex;
-		background-color: var(--background);
+		background-color: var(--tile-background);
 		color: $accent;
 		cursor: default;
 		height: 3.5rem;
@@ -35,15 +35,16 @@
 		align-items: center;
 		border-radius: $border-radius;
 		transition: background-color 0.2s ease-in-out;
+		padding-right: 0.2rem;
 
 		&:hover {
-			background-color: var(--background-hover);
+			background-color: var(--tile-background-hover);
 		}
 
 		&__content {
 			margin-left: 1rem;
 			color: $accent !important;
-			margin-right: 0.2rem;
+			margin-right: auto;
 		}
 	}
 </style>

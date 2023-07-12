@@ -209,7 +209,7 @@
 		.link-tiles {
 			margin-bottom: 1rem;
 			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+			grid-template-columns: 1fr 1fr 1fr;
 			gap: 1rem;
 			row-gap: 1rem;
 			padding-right: 0.5rem;

@@ -87,7 +87,6 @@
 		aspect-ratio: 1;
 		align-items: flex-start;
 		overflow: visible;
-		filter: drop-shadow($drop-shadow);
 
 		.album-overlay-container {
 			z-index: 99;
@@ -101,6 +100,7 @@
 			align-items: center;
 			overflow: hidden;
 			transition: all 0.2s ease-in-out;
+			box-shadow: $drop-shadow;
 
 			&:hover .album-overlay,
 			&:focus-visible .album-overlay,
@@ -113,6 +113,7 @@
 				display: flex;
 				justify-content: center;
 				align-items: center;
+				position: absolute;
 				width: 100%;
 				height: 100%;
 				transition: all 0.2s ease-in-out;

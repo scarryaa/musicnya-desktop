@@ -247,6 +247,7 @@
 					position: relative;
 					font-size: 1.4rem;
 					font-weight: 600;
+					margin-top: 0.2rem;
 					color: var(--text-inverse-dark);
 					line-clamp: 1;
 					overflow: hidden;

@@ -37,6 +37,22 @@
 <style lang="scss">
 	@use '../../../variables.scss' as *;
 
+	:root[data-theme='dark'] {
+		.song-tile {
+			.song-tile__overlay {
+				background-color: rgba(255, 255, 255, 0.1);
+			}
+		}
+	}
+
+	:root[data-theme='light'] {
+		.song-tile {
+			.song-tile__overlay {
+				background-color: rgba(0, 0, 0, 0.1);
+			}
+		}
+	}
+
 	h2 {
 		margin-left: 0;
 		padding-left: 0;
@@ -70,6 +86,7 @@
 		height: 100%;
 		transition: background-color 0.2s ease-in-out 0.1s, opacity 0.2s ease-in-out;
 		opacity: 0;
+		border-radius: $border-radius-half;
 
 		.song-tile__overlay__icons {
 			position: absolute;

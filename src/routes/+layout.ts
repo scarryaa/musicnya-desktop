@@ -30,9 +30,13 @@ export async function load({ page, session, fetch }) {
 					.then((instance) => {
 						initMusicKit(instance);
 						addEventHandlers(instance);
-						getLibraryPlaylists().then((data) => {
-							libraryPlaylists.set(data);
-						});
+						getLibraryPlaylists()
+							.then((data) => {
+								libraryPlaylists.set(data);
+							})
+							.catch((err) => {
+								console.error(err);
+							});
 					})
 					.catch((err) => {
 						console.error(err);

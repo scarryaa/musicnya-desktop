@@ -95,6 +95,8 @@
 		height: 16rem;
 		max-height: 12rem;
 		max-width: 24rem;
+		overflow: visible;
+		padding-bottom: 0.05rem;
 
 		img {
 			border-radius: $border-radius;
@@ -102,6 +104,7 @@
 			height: 100%;
 			image-rendering: optimizespeed;
 			object-fit: cover;
+			box-shadow: $drop-shadow;
 		}
 	}
 

@@ -52,7 +52,7 @@
 				/>
 			</div>
 		</a>
-		<img {src} alt="" loading="lazy" />
+		<img src={src || '/images/music_note.png'} alt="" loading="lazy" />
 	</div>
 	<div class="album-info">
 		{#if type === 'stations'}
@@ -90,7 +90,6 @@
 		aspect-ratio: 1;
 		align-items: flex-start;
 		overflow: visible;
-		filter: drop-shadow($drop-shadow);
 
 		.album-overlay-container {
 			z-index: 99;
@@ -105,12 +104,13 @@
 			justify-content: center;
 			align-items: center;
 			transition: all 0.2s ease-in-out;
+			box-shadow: $drop-shadow;
 
 			&:hover .album-overlay,
 			&:focus-visible .album-overlay,
 			&:focus-within .album-overlay {
 				background-color: rgba(0, 0, 0, 0.4);
-				display: flex;
+				opacity: 1;
 			}
 
 			.album-overlay {
@@ -121,7 +121,7 @@
 				width: 100%;
 				height: 100%;
 				transition: all 0.2s ease-in-out;
-				display: none;
+				opacity: 0;
 			}
 		}
 

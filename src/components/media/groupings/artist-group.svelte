@@ -29,11 +29,10 @@
 		});
 	}
 
-	onMount(() => {
-		// check if scrollable
-		const content = document.querySelector('.artist-group__content');
-		scrollable = content?.scrollWidth! > content?.clientWidth!;
+	const content = document.querySelector('.artist-group__content');
+	$: scrollable = content?.scrollWidth! > content?.clientWidth!;
 
+	onMount(() => {
 		scrollButtons = document.querySelector('.scroll-buttons__arrows');
 
 		// hide elements as they scroll out of view
@@ -94,7 +93,7 @@
 <div class="artist-group">
 	<div class="artist-group__title-wrapper">
 		<h2 class="artist-group__title-wrapper__title">{groupTitle}</h2>
-		<div class="scroll-buttons" style="display: {scrollable ? 'block' : 'none'};">
+		<div class="scroll-buttons">
 			<div class="scroll-buttons__arrows">
 				<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 				<div tabindex="0" class="scroll-button-arrows__icon">

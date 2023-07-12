@@ -38,7 +38,9 @@
 		</div>
 	</div>
 	<div class="page-wrapper__content">
-		<ArtistGroup groupTitle="Top Songs" viewType="top-songs" {data} contentType="songs" />
+		<div class="top-songs">
+			<ArtistGroup groupTitle="Top Songs" viewType="top-songs" {data} contentType="songs" />
+		</div>
 		{#if data.artist.views?.['latest-release'].data.length > 0}
 			<ArtistGroup
 				groupTitle="Latest Release"
@@ -158,6 +160,16 @@
 			background-color: var(--drawer-background);
 			border-radius: $border-radius-half;
 			margin-top: -1rem;
+		}
+
+		.top-songs {
+			:global(.artist-group__content) {
+				display: grid;
+				flex-direction: column;
+				margin-bottom: 1rem;
+				grid-template-rows: 1fr 1fr;
+				grid-auto-flow: column dense;
+			}
 		}
 	}
 </style>

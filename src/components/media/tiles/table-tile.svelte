@@ -129,7 +129,7 @@
 				cursor: pointer;
 				position: absolute;
 				margin-right: 1.9rem;
-				margin-top: 1.9rem;
+				margin-top: 2.5rem;
 			}
 		}
 
@@ -150,7 +150,7 @@
 			width: 40px;
 			margin-right: 0.2rem;
 			border-radius: $border-radius-half;
-			filter: drop-shadow(rgba(0, 0, 0, 0.8) 0px 0px 2px);
+			box-shadow: $drop-shadow;
 		}
 
 		.table-title__wrapper-text {
