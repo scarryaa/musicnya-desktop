@@ -21,7 +21,7 @@
 		"electron-dev": "concurrently \"yarn run dev\" \"yarn run electron\"",
 		"electron": "wait-on http://localhost:5173 && ${IN_NIX_SHELL:+steam-run} electron --no-sandbox .",
 		"build": "vite build",
-		"dist": "npm run build && electron-builder --linux --x64",
+		"dist": "npm run build && electron-builder --publish never",
 		"preview": "vite preview",
 		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
