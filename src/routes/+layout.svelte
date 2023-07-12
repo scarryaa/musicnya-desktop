@@ -46,7 +46,6 @@
 	import LoadingSpinner from '../components/loading-spinner.svelte';
 	import Lyrics from '../components/lyrics.svelte';
 	import Queue from '../components/queue.svelte';
-	import { redirect } from '@sveltejs/kit';
 
 	let drawer;
 
