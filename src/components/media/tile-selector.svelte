@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import AlbumTile from './tiles/album-tile.svelte';
 	import SongTile from './tiles/song-tile.svelte';
 	import ArtistTile from './tiles/artist-tile.svelte';
 	import VideoTile from './tiles/video-tile.svelte';
 	import GlassTile from './tiles/glass-tile.svelte';
-	import EditorialTile from './tiles/editorial-tile.svelte';
+
 	import SuperheroTile from './tiles/superhero-tile.svelte';
 
 	let content: HTMLElement;
@@ -19,9 +18,11 @@
 		| 'music-videos'
 		| 'uploaded-videos'
 		| 'personal-recommendation' = 'albums';
+
 	export let data: {
 		media: any[];
 	};
+
 	export let scrollable = true;
 	export let glass = false;
 	export let superhero = false;
@@ -43,8 +44,6 @@
 			event.shouldScroll = false;
 		}
 	}
-
-	$: console.log(data);
 </script>
 
 <div class="tile-group__content" bind:this={content} style="flex-wrap: {wrap ? 'wrap' : 'nowrap'}">
@@ -129,7 +128,7 @@
 			{#if type === 'artists'}
 				<ArtistTile
 					id={media.id}
-					name={media.attributes.name}
+					title={media.attributes.name}
 					src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
 				/>
 			{/if}

@@ -36,10 +36,10 @@
 		// hide elements as they scroll out of view
 		node?.addEventListener('scroll', () => {
 			const firstElementInView: HTMLElement | null = document.querySelector(
-				'.editorial-tiles > *:not(.hidden)'
+				'div.editorial-tiles > *:not(.hidden)'
 			);
 			const lastElementInView: HTMLElement | null = document.querySelector(
-				'.editorial-tiles > *:not(.hidden):last-child'
+				'div.editorial-tiles > *:not(.hidden):last-child'
 			);
 
 			const firstElementInViewRect = firstElementInView?.getBoundingClientRect();
@@ -70,7 +70,7 @@
 			scrollEvent.shouldScroll = true;
 
 			// scroll
-			document.querySelector('.editorial-tiles')?.scrollBy({
+			document.querySelector('div.editorial-tiles')?.scrollBy({
 				left: scrollEvent.direction === 'left' ? -800 : 800,
 				behavior: 'smooth'
 			});

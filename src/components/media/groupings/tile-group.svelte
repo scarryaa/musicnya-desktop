@@ -16,10 +16,6 @@
 	export let contentType: 'albums' | 'songs' | 'videos' | 'editorial-elements' = 'albums';
 	export let wrap = false;
 
-	$: scrollable
-		? component?.classList.add('scrollable')
-		: component?.classList.remove('scrollable');
-
 	const setupScrolling = (node: HTMLElement) => {
 		//scroll on arrow key press if focused, and key is arrowleft, arrowright, space, or enter
 		node?.addEventListener('keydown', (e) => {
@@ -43,10 +39,10 @@
 		// hide elements as they scroll out of view
 		node?.addEventListener('scroll', () => {
 			const firstElementInView: HTMLElement | null = document.querySelector(
-				'.tile-group__content > *:not(.hidden)'
+				'div.tile-group__content > *:not(.hidden)'
 			);
 			const lastElementInView: HTMLElement | null = document.querySelector(
-				'.tile-group__content > *:not(.hidden):last-child'
+				'div.tile-group__content > *:not(.hidden):last-child'
 			);
 
 			const firstElementInViewRect = firstElementInView?.getBoundingClientRect();
@@ -77,8 +73,6 @@
 			scrollEvent.shouldScroll = true;
 		});
 	};
-
-	$: console.log(data);
 </script>
 
 <div class="tile-group">

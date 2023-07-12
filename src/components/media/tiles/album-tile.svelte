@@ -110,7 +110,7 @@
 			&:focus-visible .album-overlay,
 			&:focus-within .album-overlay {
 				background-color: rgba(0, 0, 0, 0.4);
-				opacity: 1;
+				display: flex;
 			}
 
 			.album-overlay {
@@ -121,7 +121,7 @@
 				width: 100%;
 				height: 100%;
 				transition: all 0.2s ease-in-out;
-				opacity: 0;
+				display: none;
 			}
 		}
 
