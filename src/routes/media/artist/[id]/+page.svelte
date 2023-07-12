@@ -12,7 +12,7 @@
 <div class="page-wrapper">
 	<div
 		class="page-wrapper__background"
-		style="background-image: url({(
+		style="background: url({(
 			data.artist.attributes?.editorialArtwork?.bannerUber?.url ||
 			data.artist.attributes?.artwork?.url
 		)
@@ -22,7 +22,8 @@
 			data.artist.attributes?.artwork?.url
 		)
 			.replace('{w}x{h}', '200x200')
-			.replace('{f}', 'webp')})"
+			.replace('{f}', 'webp')}), linear-gradient({data.artist.attributes?.editorialArtwork
+			?.bannerUber?.bgColor || '#000'}, rgba(0, 0, 0))"
 	>
 		<div class="page-wrapper__artist-info">
 			<h1 class="page-wrapper__artist-info__title">{data.artist.attributes?.name}</h1>
@@ -108,9 +109,9 @@
 			display: flex;
 			align-items: flex-end;
 			justify-content: flex-end;
-			background-size: cover;
-			background-position: center;
-			background-repeat: no-repeat;
+			background-size: unset;
+			background-position: center !important;
+			background-repeat: no-repeat !important;
 			border-radius: $border-radius;
 			box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 			border-bottom: 3px solid $accent;
