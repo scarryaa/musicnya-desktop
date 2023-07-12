@@ -25,6 +25,7 @@
 	export let scrollable = true;
 	export let glass = false;
 	export let superhero = false;
+	export let wrap = false;
 
 	$: scrollable = content?.scrollWidth > content?.clientWidth;
 	$: handleScroll(scrollEvent);
@@ -46,7 +47,7 @@
 	$: console.log(data);
 </script>
 
-<div class="tile-group__content" bind:this={content}>
+<div class="tile-group__content" bind:this={content} style="flex-wrap: {wrap ? 'wrap' : 'nowrap'}">
 	{#each data.media as media}
 		{#if glass}
 			<GlassTile
@@ -215,7 +216,7 @@
 				{/if}
 
 				{#if media.type === 'songs'}
-					<div class="tile-group__content__song">
+					<div class="tile-group__content__song" style={wrap ? 'width: 190px;' : ''}>
 						<SongTile
 							id={media.id}
 							title={media.attributes.name}

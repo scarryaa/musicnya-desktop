@@ -26,7 +26,11 @@
 				{title}
 			</a>
 			{#if artist}
-				<a class="glass-artist" href="/media/artist/{artistId}">{artist}</a>
+				<a
+					class="glass-artist"
+					href={artistId ? '/media/artist/' + artistId : null}
+					style={!artistId ? 'text-decoration: none; cursor: default;' : ''}>{artist}</a
+				>
 			{:else if year}
 				<span class="glass-year">{year}</span>
 			{/if}

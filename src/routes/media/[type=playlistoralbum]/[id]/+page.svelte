@@ -68,9 +68,17 @@
 				{#if data.media?.attributes?.curatorName || data.media?.attributes?.artistName}
 					<span class="media-desc">
 						<a
-							href="/media/artist/{data.media?.relationships?.artists?.data?.[0]?.id}"
+							href={data.media?.relationships?.artists?.data?.[0]?.id
+								? '/media/artist/' + data.media?.relationships?.artists?.data?.[0]?.id
+								: data.media?.relationships?.curator?.data?.[0]?.id
+								? '/media/apple-curator/' + data.media?.relationships?.curator?.data?.[0]?.id
+								: null}
 							id="artist"
-							style="display:inline"
+							style="display:inline;
+							{data.media?.relationships?.artists?.data?.[0]?.id ||
+							data.media?.relationships?.curator?.data?.[0]?.id
+								? 'hover: text-decoration: underline;'
+								: 'text-decoration: none;'}"
 							>{data.media?.attributes?.curatorName || data.media?.attributes?.artistName}</a
 						>
 						{#if data.media?.attributes?.releaseDate}

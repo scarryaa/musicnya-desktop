@@ -18,13 +18,19 @@
 		<h1 class="title">{data.media?.attributes?.title}</h1>
 		{#each data.media?.relationships?.children?.data as item}
 			{#if item.attributes?.editorialElementKind === '404'}
+				{#if item.attributes?.title}
+					<h2 class="title">
+						{item.attributes?.title}
+					</h2>
+				{/if}
 				<p class="description">
-					{item.attributes?.description}
+					{@html item.attributes?.description}
 				</p>
 			{:else if item.attributes?.editorialElementKind === '345'}
 				<TileGroup
-					data={{ media: item.relationships?.contents.data }}
-					groupTitle={item.attributes?.title}
+					wrap={true}
+					data={{ media: item }}
+					groupTitle={item.attributes?.title || ''}
 					contentType={item.type}
 				/>
 			{/if}
@@ -33,12 +39,19 @@
 </div>
 
 <style lang="scss">
+	.page-wrapper {
+		margin-top: -2rem;
+		max-width: 1800px;
+		margin-inline: auto;
+	}
+
 	.title {
 		padding-left: 1rem;
 	}
 
 	.description {
 		padding-left: 1rem;
+		color: var(--text);
 	}
 
 	img {

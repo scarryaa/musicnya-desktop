@@ -14,6 +14,7 @@
 	};
 	export let groupTitle: string;
 	export let contentType: 'albums' | 'songs' | 'videos' | 'editorial-elements' = 'albums';
+	export let wrap = false;
 
 	$: scrollable
 		? component?.classList.add('scrollable')
@@ -107,6 +108,7 @@
 		type={contentType}
 		{scrollEvent}
 		bind:scrollable
+		{wrap}
 	/>
 </div>
 

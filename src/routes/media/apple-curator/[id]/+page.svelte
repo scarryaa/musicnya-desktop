@@ -2,7 +2,6 @@
 	import { play } from '../../../../lib/services/playback-service';
 	import ButtonPlay from '../../../../components/buttons/button-play.svelte';
 	import ArtistGroup from '../../../../components/media/groupings/artist-group.svelte';
-	import SongTile from '../../../../components/media/tiles/song-tile.svelte';
 
 	export let data: {
 		artist: any;

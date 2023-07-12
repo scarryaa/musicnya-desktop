@@ -1,5 +1,4 @@
 <script lang="ts">
-	import ButtonFavorite from '../../../components/buttons/button-favorite.svelte';
 	import { play } from '../../..//lib/services/playback-service';
 	import ButtonOptions from '../../../components/buttons/button-options.svelte';
 	import ButtonPlay from '../../../components/buttons/button-play.svelte';
@@ -64,8 +63,9 @@
 		{#if subtitle === 'artist'}
 			<a
 				tabindex={artist ? 0 : -1}
-				href="/media/artist/{artistId}"
+				href={artistId ? '/media/artist/' + artistId : null}
 				class="album-artist"
+				style={!artistId ? 'text-decoration: none; cursor: default;' : ''}
 				title={artist}>{artist || ''}</a
 			>
 		{:else if subtitle === 'year'}
