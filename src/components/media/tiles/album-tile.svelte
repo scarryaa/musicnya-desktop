@@ -52,7 +52,9 @@
 				/>
 			</div>
 		</a>
-		<img src={src || '/images/music_note.png'} alt="" loading="lazy" />
+		<div class="album-image">
+			<img src={src || '/images/music_note.png'} alt="" loading="lazy" />
+		</div>
 	</div>
 	<div class="album-info">
 		{#if type === 'stations'}
@@ -125,10 +127,15 @@
 			}
 		}
 
-		img {
-			border-radius: $border-radius-half;
+		.album-image {
 			min-width: 10rem;
 			max-width: 12rem;
+			max-height: 12rem;
+			img {
+				min-width: 10rem;
+				max-width: 12rem;
+				border-radius: $border-radius-half;
+			}
 		}
 
 		.album-info {

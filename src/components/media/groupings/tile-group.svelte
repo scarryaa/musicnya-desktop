@@ -73,6 +73,8 @@
 			scrollEvent.shouldScroll = true;
 		});
 	};
+
+	console.log(data);
 </script>
 
 <div class="tile-group">
@@ -96,7 +98,7 @@
 		</div>
 	</div>
 	<TileSelector
-		data={{ media: data.media?.relationships?.contents?.data }}
+		data={{ media: data.media?.relationships?.contents?.data || [] }}
 		glass={data.media?.attributes?.display?.kind === 'MusicNotesHeroShelf'}
 		superhero={data.media?.attributes?.display?.kind === 'MusicSuperHeroShelf'}
 		type={contentType}

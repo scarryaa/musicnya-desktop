@@ -71,7 +71,10 @@
 
 			// scroll
 			document.querySelector('div.editorial-tiles')?.scrollBy({
-				left: scrollEvent.direction === 'left' ? -800 : 800,
+				left:
+					scrollEvent.direction === 'left'
+						? -(document.defaultView?.innerWidth || -800) + 250
+						: (document.defaultView?.innerWidth || 800) - 250,
 				behavior: 'smooth'
 			});
 		});
@@ -209,8 +212,8 @@
 		}
 
 		.link-tiles {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+			display: flex;
+			flex-wrap: wrap;
 			gap: 1rem;
 			row-gap: 1rem;
 			padding-right: 0.5rem;

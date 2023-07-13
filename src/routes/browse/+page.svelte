@@ -74,7 +74,10 @@
 			// scroll
 			// TODO kinda hacky, fix this
 			(node.parentElement?.parentElement?.nextSibling?.nextSibling as HTMLElement).scrollBy({
-				left: scrollEvent.direction === 'left' ? -800 : 800,
+				left:
+					scrollEvent.direction === 'left'
+						? -(document.defaultView?.innerWidth || -800) + 250
+						: (document.defaultView?.innerWidth || 800) - 250,
 				behavior: 'smooth'
 			});
 		});
@@ -166,6 +169,10 @@
 								child.attributes?.designTag}
 							badge={child.attributes?.designBadge}
 							showBadge={child.attributes?.designBadge !== undefined}
+							showPlayButton={child.attributes?.editorialElementKind !== '320' &&
+								child.type !== 'apple-curators' &&
+								child.relationships?.contents?.data?.[0]?.type !== 'apple-curators' &&
+								child.attributes?.editorialElementKind !== '394'}
 							subtitle={child.relationships?.contents?.data?.[0]?.attributes?.artistName ||
 								child.relationships?.contents?.data?.[0]?.attributes?.curatorName ||
 								''}
@@ -208,8 +215,8 @@
 
 		.link-tiles {
 			margin-bottom: 1rem;
-			display: grid;
-			grid-template-columns: 1fr 1fr 1fr;
+			display: flex;
+			flex-wrap: wrap;
 			gap: 1rem;
 			row-gap: 1rem;
 			padding-right: 0.5rem;

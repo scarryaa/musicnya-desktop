@@ -4,7 +4,7 @@
 
 	onMount(async () => {
 		window.onunhandledrejection = (e) => {
-			window.location.href = '/';
+			// window.location.href = '/';
 		};
 	});
 

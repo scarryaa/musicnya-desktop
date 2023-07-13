@@ -19,5 +19,5 @@ export async function load({ fetch, params }) {
 	)
 		.then((res) => res.json())
 		.catch((err) => console.log(err));
-	return { artist: response.resources || [] };
+	return { media: response || [] };
 }

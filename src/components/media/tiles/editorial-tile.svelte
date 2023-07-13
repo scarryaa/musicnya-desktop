@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { play } from '../../../lib/services/playback-service';
 	import ButtonPlay from '../../../components/buttons/button-play.svelte';
+	import LinkVariant from 'svelte-material-icons/LinkVariant.svelte';
 
 	export let src: string;
 	export let badge: string;
 	export let showBadge = false;
+	export let showPlayButton = true;
 	export let title: string;
 	export let subtitle: string;
 	export let type: string;
@@ -31,9 +33,15 @@
 	</div>
 	<div class="editorial-tile__overlay-wrapper">
 		<a class="editorial-tile__overlay" href={type !== 'stations' ? href : null}>
-			<div class="editorial-tile__overlay__icon">
-				<ButtonPlay color="white" size="4rem" on:click={() => play(type, [id])} />
-			</div>
+			{#if showPlayButton}
+				<div class="editorial-tile__overlay__icon">
+					<ButtonPlay color="white" size="4rem" on:click={() => play(type, [id])} />
+				</div>
+			{:else}
+				<div class="editorial-tile__overlay__icon">
+					<LinkVariant size="2.5rem" />
+				</div>
+			{/if}
 		</a>
 		<div class="editorial-tile__image">
 			<img alt="Album Artwork" {src} />

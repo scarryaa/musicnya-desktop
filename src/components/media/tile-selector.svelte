@@ -93,19 +93,15 @@
 				</div>
 			{/if}
 
-			{#if type === 'apple-curators'}
+			{#if media.type === 'apple-curators'}
 				<div class="tile-group__content__tile">
-					<AlbumTile
+					<CuratorTile
 						type={media.type}
-						subtitle="artist"
 						id={media.id}
 						title={media.attributes?.name}
-						artist={media.attributes?.artistName || media.attributes?.curatorName}
-						artistId={media.relationships?.artists?.data?.[0]?.id}
-						year={media.attributes?.releaseDate}
 						src={media.attributes?.artwork?.url
 							.replace('{w}x{h}', '400x400')
-							.replace('{f}', 'webp') || '/images/music_note.png'}
+							.replace('{f}', 'webp')}
 					/>
 				</div>
 			{/if}
@@ -254,18 +250,6 @@
 						title={media.attributes.name}
 						href={media.attributes.url}
 						src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
-					/>
-				{/if}
-
-				{#if media.type === 'apple-curators'}
-					{#if media.attributes.requiresSubscription}<div>sssss</div>{/if}
-					<CuratorTile
-						type={media.type}
-						id={media.id}
-						title={media.attributes?.name}
-						src={media.attributes?.artwork?.url
-							.replace('{w}x{h}', '400x400')
-							.replace('{f}', 'webp')}
 					/>
 				{/if}
 			{/if}

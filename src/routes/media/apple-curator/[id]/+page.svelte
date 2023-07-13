@@ -2,162 +2,120 @@
 	import { play } from '../../../../lib/services/playback-service';
 	import ButtonPlay from '../../../../components/buttons/button-play.svelte';
 	import ArtistGroup from '../../../../components/media/groupings/artist-group.svelte';
+	import TileGroup from '../../../../components/media/groupings/tile-group.svelte';
+	import AlbumTile from '../../../../components/media/tiles/album-tile.svelte';
+	import TileSelector from '../../../../components/media/tile-selector.svelte';
 
 	export let data: {
-		artist: any;
+		media: any;
 	};
 
 	console.log(data);
+
+	const transformedData = Object.entries(data.media.resources['editorial-elements']).map(
+		(element: any) => {
+			// get the ids and types of the resources
+			const ids = element[1].relationships?.contents?.data.map((resource: any) => resource.id);
+			const types = element[1].relationships?.contents?.data.map((resource: any) => resource.type);
+
+			// get the resources from the data
+			const resources = types?.map((type: any, index: number) => {
+				return data.media.resources[type][ids[index]];
+			});
+
+			// return the resources
+			console.log(element[1].attributes?.name, resources);
+			return {
+				name: element[1].attributes?.name,
+				resources: resources
+			};
+		}
+	);
+
+	console.log(transformedData);
 </script>
 
 <div class="page-wrapper">
-	<div
-		class="page-wrapper__background"
-		style="background-image: url({(
-			data.artist.attributes?.editorialArtwork?.bannerUber?.url ||
-			data.artist.attributes?.artwork?.url
-		)
-			.replace('{w}x{h}', '1200x1200')
-			.replace('{f}', 'webp')}), url({(
-			data.artist.attributes?.editorialArtwork?.bannerUber?.url ||
-			data.artist.attributes?.artwork?.url
-		)
-			.replace('{w}x{h}', '200x200')
-			.replace('{f}', 'webp')})"
-	>
-		<div class="page-wrapper__artist-info">
-			<h1 class="page-wrapper__artist-info__title">{data.artist.attributes?.name}</h1>
-			<div class="page-wrapper__artist-info__buttons">
-				<ButtonPlay
-					color="white"
-					size="2.2rem"
-					background={true}
-					on:click={() => play('artist', data.artist.id)}
-				/>
+	<img
+		src={data.media.resources['apple-curators'][
+			data.media?.data?.[0]?.id
+		].attributes?.editorialArtwork?.bannerUber?.url
+			.replace('{w}x{h}', '1920x1080')
+			.replace('{c}', '')
+			.replace('{f}', 'webp')}
+		alt={data.media?.attributes?.name}
+	/>
+	<div class="page-content">
+		<h1 class="title">
+			{data.media.resources['apple-curators'][data.media?.data?.[0]?.id].attributes?.name}
+		</h1>
+		<p class="description">
+			{@html data.media.resources['apple-curators'][data.media?.data?.[0]?.id].attributes
+				?.plainEditorialNotes?.standard || ''}
+		</p>
+		{#each transformedData as item}
+			<div class="item">
+				{#if item.resources}
+					<h1 class="title">{item.name}</h1>
+					<div class="resources">
+						{#each item.resources as resource}
+							<AlbumTile
+								type={resource.type}
+								title={resource.attributes?.name}
+								artist={resource.attributes?.artistName}
+								artistId={resource.attributes?.artistId}
+								id={resource.id}
+								src={resource.attributes?.artwork?.url
+									.replace('{w}x{h}', '300x300')
+									.replace('{c}', 'cc')
+									.replace('{f}', 'webp')}
+								year={resource.attributes?.releaseDate?.substring(0, 4)}
+								subtitle={resource.attributes?.genreNames?.[0]}
+							/>
+						{/each}
+					</div>
+				{/if}
 			</div>
-		</div>
-	</div>
-	<div class="page-wrapper__content">
-		<ArtistGroup groupTitle="Top Songs" viewType="top-songs" {data} contentType="songs" />
-		{#if data.artist.views?.['latest-release'].data.length > 0}
-			<ArtistGroup
-				groupTitle="Latest Release"
-				viewType="latest-release"
-				{data}
-				contentType="albums"
-			/>
-		{/if}
-		{#if data.artist.views?.['full-albums']?.data.length > 0}
-			<ArtistGroup groupTitle="Albums" viewType="full-albums" {data} contentType="albums" />
-		{/if}
-		{#if data.artist.views?.['top-music-videos']?.data?.length > 0}
-			<ArtistGroup
-				groupTitle="Top Videos"
-				viewType="top-music-videos"
-				{data}
-				contentType="videos"
-			/>
-		{/if}
-		{#if data.artist.views?.['playlists']?.data?.length > 0}
-			<ArtistGroup groupTitle="Artist Playlists" viewType="playlists" {data} contentType="albums" />
-		{/if}
-		{#if data.artist.views?.['singles']?.data?.length > 0}
-			<ArtistGroup groupTitle="Singles" viewType="singles" {data} contentType="albums" />
-		{/if}
-		{#if data.artist.views?.['live-albums']?.data?.length > 0}
-			<ArtistGroup groupTitle="Live Albums" viewType="live-albums" {data} contentType="albums" />
-		{/if}
-		{#if data.artist.views?.['compilation-albums']?.data?.length > 0}
-			<ArtistGroup
-				groupTitle="Compilations"
-				viewType="compilation-albums"
-				{data}
-				contentType="albums"
-			/>
-		{/if}
-		{#if data.artist.views?.['similar-artists']?.data?.length > 0}
-			<ArtistGroup
-				groupTitle="Similar Artists"
-				viewType="similar-artists"
-				{data}
-				contentType="artists"
-			/>
-		{/if}
+		{/each}
 	</div>
 </div>
 
 <style lang="scss">
-	@use '../../../../variables.scss' as *;
-
-	:root {
-		--background: #1c1c1c;
+	.page-wrapper {
+		margin-top: -2rem;
+		max-width: 1800px;
+		margin-inline: auto;
 	}
 
-	.page-wrapper {
-		overflow: overlay;
-		overflow-x: hidden;
-		height: 100%;
+	.title {
+		padding-left: 1rem;
+	}
+
+	.description {
+		padding-left: 1rem;
+		color: var(--text);
+	}
+
+	img {
 		width: 100%;
-		padding: 0;
-		backdrop-filter: blur(10px);
+		height: auto;
+		max-height: 30vh;
+		object-fit: cover;
+	}
 
-		&__background {
-			position: relative;
-			width: 100%;
-			height: 40vh;
-			overflow: hidden;
+	.item {
+		padding-top: 2rem;
+
+		.resources {
+			padding-inline: 1rem;
 			display: flex;
-			align-items: flex-end;
-			justify-content: flex-end;
-			background-size: cover;
-			background-position: center;
-			background-repeat: no-repeat;
-			border-radius: $border-radius;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-			border-bottom: 3px solid $accent;
-		}
+			gap: 0.5rem;
+			overflow-y: visible;
+			overflow-x: auto;
 
-		&__artist-info {
-			display: flex;
-			flex-direction: row;
-			align-items: flex-end;
-			justify-content: flex-end;
-			width: 100%;
-			height: 100%;
-			padding: 1rem;
-
-			& > * {
-				margin-bottom: 0.5rem;
+			&::-webkit-scrollbar {
+				display: none;
 			}
-
-			&__title {
-				position: absolute;
-				bottom: 0rem;
-				left: 3rem;
-				font-size: 2rem;
-				font-weight: 700;
-				color: white;
-				text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-				width: 100%;
-			}
-
-			&__buttons {
-				position: absolute;
-				width: 100%;
-				left: 1rem;
-				bottom: 0.4rem;
-				display: flex;
-				align-items: flex-end;
-				justify-content: flex-start;
-			}
-		}
-
-		&__content {
-			display: flex;
-			flex-direction: column;
-			background-color: var(--drawer-background);
-			border-radius: $border-radius-half;
-			margin-top: -1rem;
 		}
 	}
 </style>
