@@ -6,6 +6,8 @@
 	export let data: {
 		artist: any;
 	};
+
+	console.log(data);
 </script>
 
 <div class="page-wrapper">

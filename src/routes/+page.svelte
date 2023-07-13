@@ -1,5 +1,12 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import TileGroup from '../components/media/groupings/tile-group.svelte';
+
+	onMount(async () => {
+		window.onunhandledrejection = (e) => {
+			window.location.href = '/';
+		};
+	});
 
 	export let data: {
 		streamed: {

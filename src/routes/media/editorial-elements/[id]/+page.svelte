@@ -15,20 +15,20 @@
 		alt={data.media?.attributes?.name}
 	/>
 	<div class="page-content">
-		<h1 class="title">{data.media?.attributes?.title}</h1>
+		<h1 class="title">{data.media?.attributes?.title || ''}</h1>
 		{#each data.media?.relationships?.children?.data as item}
 			{#if item.attributes?.editorialElementKind === '404'}
 				{#if item.attributes?.title}
 					<h2 class="title">
-						{item.attributes?.title}
+						{item.attributes?.title || ''}
 					</h2>
 				{/if}
 				<p class="description">
-					{@html item.attributes?.description}
+					{@html item.attributes?.description || ''}
 				</p>
 			{:else if item.attributes?.editorialElementKind === '345'}
 				<TileGroup
-					wrap={true}
+					wrap={false}
 					data={{ media: item }}
 					groupTitle={item.attributes?.title || ''}
 					contentType={item.type}
