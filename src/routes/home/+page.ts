@@ -1,5 +1,5 @@
 import type { MusicKit } from 'src/lib/types/musickit';
-import { developerToken, musicUserToken } from '../stores/musickit.store';
+import { developerToken, musicUserToken } from '../../stores/musickit.store';
 import { get } from 'svelte/store';
 
 /** @type {import('./$types').PageLoad} */

@@ -89,6 +89,11 @@
 					component: Login
 				}
 			});
+		} else {
+			// redirect to home if user is logged in
+			if (window.location.pathname === '/') {
+				window.location.href = '/home';
+			}
 		}
 
 		//read in listen later
@@ -146,7 +151,7 @@
 					<span class="drawer-text">Search</span>
 				</DrawerButton>
 			</a>
-			<a href="/" tabindex="-1">
+			<a href="/home" tabindex="-1">
 				<DrawerButton title="Home">
 					<HomeVariant slot="icon" />
 					<span class="drawer-text">Home</span>

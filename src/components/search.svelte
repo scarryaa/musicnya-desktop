@@ -6,6 +6,10 @@
 	import { play } from '../lib/services/playback-service';
 
 	let results: MusicKit.SearchResult<MusicKit.MediaItem> = {
+		artists: {
+			data: []
+		},
+
 		songs: {
 			data: []
 		},
@@ -15,10 +19,6 @@
 		},
 
 		playlists: {
-			data: []
-		},
-
-		artists: {
 			data: []
 		}
 	};
@@ -31,6 +31,9 @@
 		} else {
 			// hide results if query is empty
 			results = {
+				artists: {
+					data: []
+				},
 				songs: {
 					data: []
 				},
@@ -40,10 +43,6 @@
 				},
 
 				playlists: {
-					data: []
-				},
-
-				artists: {
 					data: []
 				}
 			};
@@ -95,6 +94,48 @@
 			</svg>
 		</div>
 		<div class="search__results">
+			{#each results?.artists?.data as artist}
+				<a class="search__results__result artist-result" href={`/media/artist/${artist.id}`}>
+					<div class="search__results__result__image__overlay">
+						<div class="search__results__result__image__overlay__play">
+							<ButtonPlay size="2rem" color="white" />
+						</div>
+						<img
+							loading="eager"
+							src={artist.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
+							alt=""
+							class="search__results__result__image__artist"
+						/>
+					</div>
+					<div class="search__results__result__info">
+						<div>{artist.attributes?.name}</div>
+					</div>
+					<div class="search__results__result__type">
+						<span>Artist</span>
+					</div>
+				</a>
+			{/each}
+			{#each results?.albums?.data as album}
+				<a class="search__results__result" href={`/media/album/${album.id}`}>
+					<div class="search__results__result__image__overlay">
+						<div class="search__results__result__image__overlay__play">
+							<ButtonPlay size="2rem" color="white" />
+						</div>
+						<img
+							loading="eager"
+							src={album.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
+							alt=""
+						/>
+					</div>
+					<div class="search__results__result__info">
+						<div>{album.attributes?.name}</div>
+						<div>{album.attributes?.artistName}</div>
+					</div>
+					<div class="search__results__result__type">
+						<span>Album</span>
+					</div>
+				</a>
+			{/each}
 			{#each results?.songs?.data as song}
 				<a
 					class="search__results__result"
@@ -118,48 +159,6 @@
 						<span>Song</span>
 					</div></a
 				>
-			{/each}
-			{#each results?.albums?.data as album}
-				<a class="search__results__result" href={`/media/album/${album.id}`}>
-					<div class="search__results__result__image__overlay">
-						<div class="search__results__result__image__overlay__play">
-							<ButtonPlay size="2rem" color="white" />
-						</div>
-						<img
-							loading="eager"
-							src={album.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
-							alt=""
-						/>
-					</div>
-					<div class="search__results__result__info">
-						<div>{album.attributes?.name}</div>
-						<div>{album.attributes?.artistName}</div>
-					</div>
-					<div class="search__results__result__type">
-						<span>Album</span>
-					</div>
-				</a>
-			{/each}
-			{#each results?.artists?.data as artist}
-				<a class="search__results__result artist-result" href={`/media/artist/${artist.id}`}>
-					<div class="search__results__result__image__overlay">
-						<div class="search__results__result__image__overlay__play">
-							<ButtonPlay size="2rem" color="white" />
-						</div>
-						<img
-							loading="eager"
-							src={artist.attributes?.artwork?.url?.replace('{w}x{h}', '100x100')}
-							alt=""
-							class="search__results__result__image__artist"
-						/>
-					</div>
-					<div class="search__results__result__info">
-						<div>{artist.attributes?.name}</div>
-					</div>
-					<div class="search__results__result__type">
-						<span>Artist</span>
-					</div>
-				</a>
 			{/each}
 		</div>
 	</div>
