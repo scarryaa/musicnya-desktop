@@ -26,7 +26,7 @@
 						{item.attributes?.editorialNotes?.name || item.attributes?.name}
 					</h2>
 				</div>
-				<div class="search-tile__overlay" />
+				<a class="search-tile__overlay" href={`/media/${item.type.slice(0, -1)}/${item.id}`} />
 			</div>
 		{/each}
 	</div>

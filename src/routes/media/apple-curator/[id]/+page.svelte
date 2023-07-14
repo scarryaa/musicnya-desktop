@@ -24,7 +24,6 @@
 			});
 
 			// return the resources
-			console.log(element[1].attributes?.name, resources);
 			return {
 				name: element[1].attributes?.name,
 				resources: resources
@@ -36,15 +35,19 @@
 </script>
 
 <div class="page-wrapper">
-	<img
-		src={data.media.resources['apple-curators'][
-			data.media?.data?.[0]?.id
-		].attributes?.editorialArtwork?.bannerUber?.url
-			.replace('{w}x{h}', '1920x1080')
-			.replace('{c}', '')
-			.replace('{f}', 'webp')}
-		alt={data.media?.attributes?.name}
-	/>
+	{#if data.media.resources['apple-curators'][data.media?.data?.[0]?.id].attributes?.editorialArtwork?.bannerUber?.url}
+		<div class="image-wrapper">
+			<img
+				src={data.media.resources['apple-curators'][
+					data.media?.data?.[0]?.id
+				].attributes?.editorialArtwork?.bannerUber?.url
+					.replace('{w}x{h}', '1920x1080')
+					.replace('{c}', '')
+					.replace('{f}', 'webp')}
+				alt={data.media?.attributes?.name}
+			/>
+		</div>
+	{/if}
 	<div class="page-content">
 		<h1 class="title">
 			{data.media.resources['apple-curators'][data.media?.data?.[0]?.id].attributes?.name}
@@ -54,8 +57,8 @@
 				?.plainEditorialNotes?.standard || ''}
 		</p>
 		{#each transformedData as item}
-			<div class="item">
-				{#if item.resources}
+			{#if item.resources && item.name}
+				<div class="item">
 					<h1 class="title">{item.name}</h1>
 					<div class="resources">
 						{#each item.resources as resource}
@@ -74,15 +77,14 @@
 							/>
 						{/each}
 					</div>
-				{/if}
-			</div>
+				</div>
+			{/if}
 		{/each}
 	</div>
 </div>
 
 <style lang="scss">
 	.page-wrapper {
-		margin-top: -2rem;
 		max-width: 1800px;
 		margin-inline: auto;
 	}
@@ -96,11 +98,18 @@
 		color: var(--text);
 	}
 
-	img {
+	.image-wrapper {
 		width: 100%;
-		height: auto;
-		max-height: 30vh;
-		object-fit: cover;
+		height: 30vh;
+		overflow: hidden;
+		margin-top: -2rem;
+
+		img {
+			width: 100%;
+			height: auto;
+			max-height: 30vh;
+			object-fit: cover;
+		}
 	}
 
 	.item {
@@ -110,7 +119,7 @@
 			padding-inline: 1rem;
 			display: flex;
 			gap: 0.5rem;
-			overflow-y: visible;
+			overflow-y: hidden;
 			overflow-x: auto;
 
 			&::-webkit-scrollbar {

@@ -10,7 +10,11 @@
 	import ButtonPlus from '../../../components/buttons/button-plus.svelte';
 	import { listenLater } from '../../../stores/app.store';
 	import ButtonMinus from '../../../components/buttons/button-minus.svelte';
+	import { onMount } from 'svelte';
+	import ContextMenu from '../../../components/context-menu.svelte';
+	import { createContextMenu } from '../../../lib/services/context-menu.service';
 
+	let albumTile;
 	export let id: string;
 	export let artistId: string;
 	export let src: string;
@@ -19,6 +23,31 @@
 	export let year: string;
 	export let type: string;
 	export let subtitle: 'artist' | 'year' = 'artist';
+
+	onMount(() => {
+		// right click listener
+		albumTile.addEventListener('contextmenu', (e) => {
+			console.log(e.clientX);
+			e.preventDefault();
+			createContextMenu({
+				x: e.clientX,
+				y: e.clientY,
+				items: [
+					{
+						text: 'Play',
+						icon: 'play',
+						onClick: () => playAlbum(e)
+					},
+					{
+						text: 'Add to Listen Later',
+						icon: 'plus',
+						onClick: () => favorite(e)
+					}
+				],
+				target: albumTile
+			});
+		});
+	});
 
 	const playAlbum = (e: MouseEvent) => {
 		e.preventDefault();
@@ -33,14 +62,14 @@
 	};
 </script>
 
-<div class="album-tile">
+<div class="album-tile" bind:this={albumTile}>
 	<div class="album-overlay-container">
 		<a
 			class="album-overlay"
 			href={type !== 'stations' ? `/media/${type.slice(0, -1)}/${id}` : null}
 		>
 			<ButtonPlay color="white" on:click={playAlbum} />
-			<ButtonOptions />
+			<ButtonOptions on:click={() => {}} />
 			<div
 				title={$listenLater.some((item) => item.id === id)
 					? 'Remove from Listen Later'
@@ -130,7 +159,9 @@
 		.album-image {
 			min-width: 10rem;
 			max-width: 12rem;
+			min-height: 12rem;
 			max-height: 12rem;
+
 			img {
 				min-width: 10rem;
 				max-width: 12rem;

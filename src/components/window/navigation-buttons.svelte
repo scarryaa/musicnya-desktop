@@ -32,7 +32,7 @@
 	$navigation-chip-background-active: #a0a0a0d5;
 
 	.nav-buttons {
-		z-index: 99;
+		z-index: 9999999;
 		display: flex;
 		position: fixed;
 		flex-direction: row;
