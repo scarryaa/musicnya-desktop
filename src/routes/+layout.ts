@@ -4,6 +4,7 @@ import type { MusicKit } from '../lib/types/musickit';
 import { initMusicKit } from '../lib/api/music.api';
 import { addEventHandlers } from '../lib/event-handlers/apple-music-events';
 import { getLibraryPlaylists } from '../lib/api/musickit.api';
+import { loggedIn } from '../stores/app.store';
 
 /**
  * @type {import('@sveltejs/kit').LayoutLoad}
@@ -25,6 +26,11 @@ export async function load({ page, session, fetch }) {
 					.then((instance) => {
 						musicUserToken.set(instance.musicUserToken);
 						developerToken.set(instance.developerToken);
+						return instance;
+					})
+					.then((instance) => {
+						// check if user is logged in
+						loggedIn.set(instance.isAuthorized);
 						return instance;
 					})
 					.then((instance) => {

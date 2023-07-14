@@ -7,17 +7,19 @@
 	import '@fontsource/montserrat';
 	import '@fontsource/noto-sans-jp';
 
+	import type { MusicKit } from '../lib/types/musickit';
+
 	import {
 		drawerOpen,
 		drawerRightOpen,
-		firstLaunch,
 		listenLater,
+		loggedIn,
 		lyricsOpen,
 		queueOpen,
 		scrollPositionY
 	} from '../stores/app.store';
 	import { libraryPlaylists } from '../stores/musickit.store';
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 
 	import Drawer from '../components/drawer/drawer.svelte';
 	import { toasts } from '../stores/toasts.store';
@@ -46,6 +48,8 @@
 	import LoadingSpinner from '../components/loading-spinner.svelte';
 	import Lyrics from '../components/lyrics.svelte';
 	import Queue from '../components/queue.svelte';
+	import Modal from '../components/window/modal.svelte';
+	import Login from '../components/login.svelte';
 
 	let drawer;
 
@@ -76,16 +80,16 @@
 		const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark').matches;
 
 		setTheme(prefersDarkMode || hasSetDarkMode ? 'dark' : 'light');
-		// initializer
-		firstLaunch.set(false);
-		// if ($firstLaunch) {
-		// 	modal = new Modal({
-		// 		target: document.body,
-		// 		props: {
-		// 			component: Startup
-		// 		}
-		// 	});
-		// }
+
+		//check if user is logged in
+		if (!$loggedIn) {
+			const modal = new Modal({
+				target: document.body,
+				props: {
+					component: Login
+				}
+			});
+		}
 
 		//read in listen later
 		localStorage.getItem('listenLater') === null

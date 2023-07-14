@@ -1,24 +1,25 @@
 {
 	"name": "musicnya-desktop-svelte",
-	"author": "scarryaa",
-	"license": "MIT",
-	"description": "A purrfect alternative to Apple Music on Linux, Windows, and macOS.",
 	"version": "1.2.0-alpha",
+	"description": "A purrfect alternative to Apple Music on Linux, Windows, and macOS.",
 	"private": true,
+	"author": {
+		"name": "scarryaa",
+		"email": "scarryaa@gmail.com",
+		"url": "http://scarlet.zone/"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/scarryaa/musicnya-desktop.git"
+	  },
+	  "keywords": [
+		"musicnya",
+		"apple music",
+		"music"
+	],
 	"main": "main.cjs",
 	"bin": "main.cjs",
-	"build": {
-		"electronDownload": {
-			"mirror": "https://github.com/castlabs/electron-releases/releases/download/v"
-		},
-		"appId": "com.nyan-inc.musicnya",
-		"productName": "musicnya",
-		"linux": {
-			"target": [
-				"AppImage"
-			]
-		}
-	},
+	"type": "module",
 	"scripts": {
 		"dev": "(cd ./libs/nyan_core && cargo run) & (cd ./libs/api_server && node index.ts) & vite dev",
 		"electron-dev": "concurrently \"yarn run dev\" \"yarn run electron\"",
@@ -32,6 +33,47 @@
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write ."
+	},
+	"build": {
+		"productName": "musicnya",
+		"artifactName": "musicnya-${version}-${os}-${arch}.${ext}",
+		"appId": "org.nyan-inc.musicnya",
+		"copyright": "Copyright © 2023 nyan-inc",
+		"electronDownload": {
+			"mirror": "https://github.com/castlabs/electron-releases/releases/download/v"
+		},
+		"mac": {
+			"category": "public.app-category.music",
+			"icon": "build/icon.icns",
+			"extendInfo": {
+				"NSAppleMusicUsageDescription": "This app utilizes MusicKitJS for access to your Apple Music library."
+			},
+			"target": [
+				"dmg"
+			]
+		},
+		"linux": {
+			"icon": "build/icon.png",
+			"asar": true,
+			"description": "A purrfect alternative to Apple Music on Linux, Windows, and macOS.",
+			"category": "AudioVideo",
+			"target": [
+				"AppImage"
+			]
+		},
+		"win": {
+			"icon": "build/icon.ico",
+			"asar": false,
+			"target": [
+				"nsis",
+				"msi"
+			]
+		},
+		"nsis": {
+			"installerIcon": "build/logo.ico",
+			"installerHeaderIcon": "build/logo.ico",
+			"deleteAppDataOnUninstall": true
+		  }
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
@@ -58,7 +100,6 @@
 		"vitest": "^0.25.3",
 		"wait-on": "^7.0.1"
 	},
-	"type": "module",
 	"dependencies": {
 		"@fontsource/inter": "^5.0.4",
 		"@fontsource/montserrat": "^5.0.4",

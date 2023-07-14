@@ -7,7 +7,7 @@ export const lyricsOpen = writable(false);
 export const lyrics = writable('');
 export const queueOpen = writable(false);
 export const queue = writable([]);
-export const firstLaunch = writable(true);
+export const loggedIn = writable(false);
 export const listenLater = writable([]);
 export const scrollPosition: {
 	[n: number]: typeof writable;
