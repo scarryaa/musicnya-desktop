@@ -47,6 +47,7 @@
 				addToPlaylist,
 				addToLibrary,
 				removeFromLibrary,
+				shareLink,
 				favorited,
 				inLibrary
 			);
@@ -132,43 +133,49 @@
 		).then(() => (favorited = 1));
 	};
 
-	const share = async (e: MouseEvent) => {
+	const share = async (e: MouseEvent, url?: string) => {
 		e.preventDefault();
-
 		// copy to clipboard
 		if (navigator.clipboard && shareLink) {
 			navigator.clipboard.writeText(shareLink).then(() => {
 				console.log('Copied to clipboard successfully!');
 			});
 		} else {
-			const url = await fetch(
-				`https://amp-api.music.apple.com/v1/me/library/${type.replace(
-					'library-',
-					''
-				)}/${id}/catalog`,
-				{
-					method: 'GET',
-					headers: {
-						Authorization: `Bearer ${get(developerToken)}`,
-						'media-user-token': get(musicUserToken)
+			if (window.location.pathname.includes('library')) {
+				url = await fetch(
+					`https://amp-api.music.apple.com/v1/me/library/${type.replace(
+						'library-',
+						''
+					)}/${id}/catalog`,
+					{
+						method: 'GET',
+						headers: {
+							Authorization: `Bearer ${get(developerToken)}`,
+							'media-user-token': get(musicUserToken)
+						}
 					}
-				}
-			).then(async (res) => {
-				if (res.status === 401) {
-					throw new Error('Unauthorized');
-				}
-				const json = await res.json();
-				console.log(json);
-				return json;
-			});
+				).then(async (res) => {
+					if (res.status === 401) {
+						throw new Error('Unauthorized');
+					}
+					const json = await res.json();
+					console.log(json);
+					return json['data'][0]['attributes']['url'];
+				});
+			}
 
-			if (url) {
+			if (url && !window.location.pathname.includes('library')) {
 				const shareUrl = url.data[0].attributes.url;
+				console.log(shareUrl);
 				if (navigator.clipboard && shareUrl) {
 					navigator.clipboard.writeText(shareUrl).then(() => {
 						console.log('Copied to clipboard successfully!');
 					});
 				}
+			} else {
+				navigator.clipboard.writeText(url || '').then(() => {
+					console.log('Copied to clipboard successfully!');
+				});
 			}
 		}
 	};
@@ -226,7 +233,28 @@
 			href={type !== 'stations' ? `/media/${type.slice(0, -1)}/${id}` : null}
 		>
 			<ButtonPlay color="white" on:click={playAlbum} />
-			<ButtonOptions on:click={() => {}} />
+			<ButtonOptions
+				on:click={(e) =>
+					setUpAlbumTileMenu(
+						e,
+						this,
+						id,
+						type,
+						unfavorite,
+						favorite,
+						dislike,
+						playAlbum,
+						_playNext,
+						_playLater,
+						share,
+						addToPlaylist,
+						addToLibrary,
+						removeFromLibrary,
+						shareLink,
+						favorited,
+						inLibrary
+					)}
+			/>
 			<div
 				title={$listenLater.some((item) => item.id === id)
 					? 'Remove from Listen Later'

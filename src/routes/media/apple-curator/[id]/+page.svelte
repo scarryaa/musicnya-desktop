@@ -63,6 +63,7 @@
 					<div class="resources">
 						{#each item.resources as resource}
 							<AlbumTile
+								shareLink={resource.attributes?.url}
 								type={resource.type}
 								title={resource.attributes?.name}
 								artist={resource.attributes?.artistName}

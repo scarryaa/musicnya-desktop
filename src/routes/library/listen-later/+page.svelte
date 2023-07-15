@@ -12,6 +12,7 @@
 			<AlbumTile
 				id={item.id}
 				artistId=""
+				shareLink={item.attributes.url}
 				src={item.attributes.artwork.url
 					.replace('{w}', '300')
 					.replace('{h}', '300')

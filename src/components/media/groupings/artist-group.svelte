@@ -13,7 +13,7 @@
 	};
 	export let viewType: string;
 	export let groupTitle: string;
-	export let contentType: 'albums' | 'songs' | 'videos' | 'artists' = 'album';
+	export let contentType: 'albums' | 'songs' | 'videos' | 'artists' = 'albums';
 	export let scrollable = true;
 
 	let scrollButtons: HTMLElement | null;

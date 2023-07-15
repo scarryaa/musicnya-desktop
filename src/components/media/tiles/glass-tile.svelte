@@ -10,13 +10,14 @@
 	export let type: string;
 	export let subtitle: 'artist' | 'year' = 'artist';
 	export let badge: string;
+	export let shareLink: string;
 </script>
 
 <div class="glass-tile">
 	{#if badge}
 		<div class="badge">{badge}</div>
 	{/if}
-	<AlbumTile {id} {artistId} {src} {title} {artist} {year} {type} {subtitle} />
+	<AlbumTile {id} {artistId} {src} {title} {artist} {year} {type} {subtitle} {shareLink} />
 	<div class="glass-info" style="background-image: url({src})">
 		<div class="glass-info__inner">
 			<a

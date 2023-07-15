@@ -1,6 +1,5 @@
 <script lang="ts">
 	import TableTile from '../../../components/media/tiles/table-tile.svelte';
-	import AlbumTile from '../../../components/media/tiles/album-tile.svelte';
 
 	export let data;
 	console.log(data.media);

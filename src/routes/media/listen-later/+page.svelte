@@ -10,6 +10,7 @@
 	<div class="content">
 		{#each $listenLater as item}
 			<AlbumTile
+				shareLink={item.url}
 				id={item.id}
 				src={item.artwork}
 				title={item.name}

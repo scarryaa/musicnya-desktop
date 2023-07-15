@@ -14,10 +14,11 @@ export const setUpAlbumTileMenu = async (
 	play: (e: any) => void,
 	playNext: (e: any) => void,
 	playLater: (e: any) => void,
-	share: (e: any) => void,
+	share: (e: any, shareLink?: string) => void,
 	addToPlaylist: (e: any) => void,
 	addToLibrary: (e: any) => void,
 	removeFromLibrary: (e: any) => void,
+	shareLink?: string,
 	favorited?: -1 | 0 | 1,
 	inLibrary?: boolean
 ) => {
@@ -169,9 +170,9 @@ export const setUpAlbumTileMenu = async (
 				text: 'Share',
 				style: 'solid',
 				icon: 'square-caret-down',
-				action: () => share(e)
+				action: () => share(e, shareLink)
 			}
 		],
-		target: albumTile as HTMLElement
+		target: albumTile as unknown as HTMLElement
 	});
 };

@@ -52,6 +52,7 @@
 	{#each data.media as media}
 		{#if glass}
 			<GlassTile
+				shareLink={media.attributes?.url}
 				type={media.type}
 				subtitle="artist"
 				id={media.id}
