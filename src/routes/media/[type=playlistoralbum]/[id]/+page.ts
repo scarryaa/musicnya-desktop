@@ -97,10 +97,15 @@ const loadMediaItem = async ({ fetch, params, mediaType, libraryType }) => {
 	return await getMediaColor(merged);
 };
 
-export async function load(context) {
+export async function load(
+	context
+): Promise<
+	| { status: number; media?: undefined }
+	| { media: Promise<MusicKit.MediaItem | { status: number } | undefined>; status?: undefined }
+> {
 	const { params } = context;
 
-	const mediaTypes = {
+	const mediaTypes: { [key: string]: string } = {
 		playlist: 'catalog/us',
 		'library-playlist': 'me/library',
 		album: 'catalog/us',

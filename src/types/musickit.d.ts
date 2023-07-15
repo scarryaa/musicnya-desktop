@@ -57,7 +57,7 @@ export declare namespace MusicKit {
 	 * @returns the singleton {@link MusicKitInstance}, or undefined if the instance has not been configured.
 	 *
 	 * NOTE: {@link MusicKit.configure()} must have been called first for the singleton instance to have been created. Otherwise this will return undefined. */
-	function getInstance(): MusicKitInstance;
+	export function getInstance(): MusicKitInstance;
 
 	/**Takes an artwork object, which is common in Apple Music API Responses.
 	 * @param artwork The Artwork object.
@@ -130,7 +130,7 @@ export declare namespace MusicKit {
 	/**he MusicKit instance is a singleton, meaning there is only one instance for the runtime of your application.
 	 *
 	 * It can be accessed as the resolved value of {@link MusicKit.configure()} or the return value of {@link MusicKit.getInstance()} after configuration. */
-	class MusicKitInstance {
+	export class MusicKitInstance {
 		/**Used to call the Apple Music API.
 		 * @see Apple Music API: {@link [Accessing Music Content](https://js-cdn.music.apple.com/musickit/v3/docs/iframe.html?path=/story/accessing-music-content--page)} */
 		api: MusicKitAPI;

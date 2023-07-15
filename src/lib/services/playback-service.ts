@@ -1,5 +1,3 @@
-import type { MusicKit } from '../../lib/types/musickit';
-
 export const play = (type: string, id: string | string[], position = 0) => {
 	const oldShuffleMode = MusicKit.getInstance().shuffleMode;
 	MusicKit.getInstance().shuffleMode = 0;

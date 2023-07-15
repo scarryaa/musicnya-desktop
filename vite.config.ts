@@ -9,10 +9,21 @@ export default defineConfig({
 	},
 	server: {
 		fs: {
-			allow: [
-				searchForWorkspaceRoot(process.cwd()),
-				'config.json'
-			]
+			allow: [searchForWorkspaceRoot(process.cwd()), 'config.json']
 		}
-	}
+	},
+	build: {
+		outDir: 'build'
+	},
+	resolve: {
+		alias: {
+			$components: './src/components',
+			$lib: './src/lib',
+			$stores: './src/stores',
+			$utils: './src/utils',
+			$routes: './src/routes',
+			$types: './src/types'
+		}
+	},
+	root: process.cwd()
 });

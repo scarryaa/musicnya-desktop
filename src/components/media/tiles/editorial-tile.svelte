@@ -11,7 +11,6 @@
 	export let subtitle: string;
 	export let type: string;
 	export let id: string;
-	export let editorialElementKind: string;
 	export let href: string;
 </script>
 
@@ -62,10 +61,6 @@
 		&:focus-visible .editorial-tile__overlay,
 		&:focus-within .editorial-tile__overlay {
 			opacity: 1;
-		}
-
-		&:focus-within .editorial-tile {
-			background-color: rgba(0, 0, 0, 0.1);
 		}
 
 		&:hover .editorial-tile__overlay {

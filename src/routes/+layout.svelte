@@ -7,8 +7,6 @@
 	import '@fontsource/montserrat';
 	import '@fontsource/noto-sans-jp';
 
-	import type { MusicKit } from '../lib/types/musickit';
-
 	import {
 		drawerOpen,
 		drawerRightOpen,

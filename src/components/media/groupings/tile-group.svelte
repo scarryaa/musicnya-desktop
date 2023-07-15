@@ -73,8 +73,6 @@
 			scrollEvent.shouldScroll = true;
 		});
 	};
-
-	console.log(data);
 </script>
 
 <div class="tile-group">

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { hide } from '../lib/services/modal.service';
-	import type { MusicKit } from '../lib/types/musickit';
 </script>
 
 <div class="login-wrapper">

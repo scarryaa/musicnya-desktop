@@ -1,5 +1,4 @@
 import { repeatMode, shuffleMode } from '../../stores/musickit.store';
-import type { MusicKit } from '../types/musickit';
 
 const checkForMusicKit = () => {
 	if (!MusicKit.getInstance()) {

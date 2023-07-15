@@ -1,11 +1,11 @@
-var process = require('process');
+const processImport = require('process');
 
 // Listen on a specific host via the HOST environment variable
-var host = process.env.HOST || '0.0.0.0';
+const host = processImport.env.HOST || '0.0.0.0';
 // Listen on a specific port via the PORT environment variable
-var port = process.env.PORT || 3000;
+const port = processImport.env.PORT || 3000;
 
-var cors_proxy = require('cors-anywhere');
+const cors_proxy = require('cors-anywhere');
 cors_proxy
 	.createServer({
 		originWhitelist: [], // Allow all origins

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { drawerOpen } from '../../stores/app.store';
 
-	export let title;
+	export let title: string = '';
 </script>
 
 <div class="drawer-button" on:click on:keydown {title}>

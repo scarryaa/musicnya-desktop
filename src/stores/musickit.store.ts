@@ -1,4 +1,4 @@
-import type { MusicKit } from '../lib/types/musickit';
+import type { MusicKit } from '../types/musickit';
 import { writable, type Writable } from 'svelte/store';
 
 const enum playbackStates {

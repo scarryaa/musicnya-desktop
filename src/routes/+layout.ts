@@ -1,6 +1,5 @@
 import { browser } from '$app/environment';
 import { developerToken, libraryPlaylists, musicUserToken } from '../stores/musickit.store';
-import type { MusicKit } from '../lib/types/musickit';
 import { initMusicKit } from '../lib/api/music.api';
 import { addEventHandlers } from '../lib/event-handlers/apple-music-events';
 import { getLibraryPlaylists } from '../lib/api/musickit.api';

@@ -4,7 +4,7 @@ import Login from '../../components/login.svelte';
 let modal;
 
 export const hide = () => {
-	document.querySelector('.modal').remove();
+	document.querySelector('.modal')?.remove();
 };
 
 export const show = () => {

@@ -2,16 +2,28 @@
 	"extends": "./.svelte-kit/tsconfig.json",
 	"compilerOptions": {
 		"allowJs": true,
+		"allowImportingTsExtensions": true,
 		"checkJs": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"resolveJsonModule": true,
-		"skipLibCheck": true,
+		"moduleResolution": "node",
 		"sourceMap": true,
 		"strict": true,
-		"baseUrl": "./",
-		"types": ["./src/lib/types/musickit/index.d.ts"]
-	}
+	},
+	"include": [
+		"src/**/*",
+		"global.d.ts"
+	],
+	"exclude": [
+		"node_modules/*",
+		"__sapper__/*",
+		"public/*"
+	],
+	"files": [
+		"src/global.d.ts",
+		"src/types/musickit.d.ts"
+	]
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//
 	// If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes

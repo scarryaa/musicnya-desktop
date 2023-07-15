@@ -1,7 +1,6 @@
 <script lang="ts">
 	import DrawerButton from './drawer/drawer-button.svelte';
 	import AllInclusive from 'svelte-material-icons/AllInclusive.svelte';
-	import type { MusicKit } from '../lib/types/musickit';
 
 	console.log(MusicKit.getInstance().queue.items);
 </script>

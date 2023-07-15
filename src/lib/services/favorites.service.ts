@@ -1,6 +1,5 @@
 import { get } from 'svelte/store';
 import { listenLater } from '../../stores/app.store';
-import type { MusicKit } from '../types/musickit';
 
 export const addToListenLater = (
 	type: string,

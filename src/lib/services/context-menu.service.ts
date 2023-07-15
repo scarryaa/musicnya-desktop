@@ -14,7 +14,7 @@ interface ContextMenuOptions {
 }
 
 export const createContextMenu = (options: ContextMenuOptions) => {
-	const { topItems = [], items, target } = options;
+	const { topItems = [], items } = options;
 	const contextMenu = document.createElement('div');
 	contextMenu.classList.add('context-menu');
 	contextMenu.style.left = `${options.x}px`;
