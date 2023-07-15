@@ -14,6 +14,7 @@
 	import { createContextMenu } from '../../../lib/services/context-menu.service';
 	import { developerToken, musicUserToken } from '../../../stores/musickit.store';
 	import { get } from 'svelte/store';
+	import { setUpAlbumTileMenu } from '../../../lib/api/context-menu.api';
 
 	let albumTile: any;
 	export let id: string;
@@ -30,161 +31,26 @@
 
 	onMount(() => {
 		// right click listener
-		if (type !== 'stations') {
-			albumTile.addEventListener('contextmenu', async (e) => {
-				e.preventDefault();
-				let catalogId = id;
-
-				if (window.location.pathname.includes('library')) {
-					catalogId = await fetch(
-						`https://amp-api.music.apple.com/v1/me/library/${type.replace(
-							'library-',
-							''
-						)}/${id}/catalog`,
-						{
-							method: 'GET',
-							headers: {
-								Authorization: `Bearer ${get(developerToken)}`,
-								'media-user-token': get(musicUserToken)
-							}
-						}
-					).then(async (res) => {
-						if (res.status === 401) {
-							throw new Error('Unauthorized');
-						}
-						const json = await res.json();
-						console.log(json);
-						return json.data?.[0]?.id;
-					});
-				}
-
-				// check if item is favorited
-				const _favorited =
-					favorited ??
-					(await fetch(
-						`https://amp-api.music.apple.com/v1/me/ratings/${type.replace(
-							'library-',
-							''
-						)}?platform=web&ids=${id}`,
-						{
-							method: 'GET',
-							headers: {
-								Authorization: `Bearer ${get(developerToken)}`,
-								'media-user-token': get(musicUserToken)
-							}
-						}
-					)
-						.then(async (res) => {
-							if (res.status === 401) {
-								throw new Error('Unauthorized');
-							}
-							const json = await res.json();
-							console.log(json);
-							return json;
-						})
-						.then((res) => res.data?.[0]?.attributes?.value));
-
-				// check if item is in library
-				const _inLibrary = window.location.pathname.includes('library')
-					? true
-					: inLibrary ??
-					  (await fetch(
-							`https://amp-api.music.apple.com/v1/catalog/us/?ids[${type.replace(
-								'library-',
-								''
-							)}]=${id}&relate=library&fields=inLibrary&extend=tbtcgyep`,
-							{
-								method: 'GET',
-								headers: {
-									Authorization: `Bearer ${get(developerToken)}`,
-									'media-user-token': get(musicUserToken)
-								}
-							}
-					  )
-							.then(async (res) => {
-								if (res.status === 401) {
-									throw new Error('Unauthorized');
-								}
-								const json = await res.json();
-								console.log(json);
-								return json;
-							})
-							.then((res) => res.data?.[0]?.attributes?.inLibrary));
-
-				createContextMenu({
-					x: e.clientX,
-					y: e.clientY,
-					topItems: [
-						_favorited === 1
-							? {
-									text: 'Unlove',
-									style: 'solid',
-									icon: 'heart',
-									action: () => unfavorite(e, catalogId)
-							  }
-							: {
-									text: 'Love',
-									style: 'regular',
-									icon: 'heart',
-									action: () => favorite(e, catalogId)
-							  },
-						_favorited === 1 || _favorited === 0
-							? {
-									text: 'Dislike',
-									style: 'regular',
-									icon: 'thumbs-down',
-									action: () => dislike(e, catalogId)
-							  }
-							: {
-									text: 'Undislike',
-									style: 'solid',
-									icon: 'thumbs-down',
-									action: () => unfavorite(e, catalogId)
-							  }
-					],
-					items: [
-						{
-							text: 'Add to Playlist',
-							style: 'solid',
-							icon: 'bars',
-							action: () => {}
-						},
-						_inLibrary
-							? {
-									text: 'Remove from Library',
-									style: 'solid',
-									icon: 'minus',
-									action: () => removeFromLibrary(e)
-							  }
-							: {
-									text: 'Add to Library',
-									style: 'solid',
-									icon: 'plus',
-									action: () => addToLibrary(e)
-							  },
-						{
-							text: 'Play Next',
-							style: 'solid',
-							icon: 'arrow-turn-up',
-							action: () => _playNext(e)
-						},
-						{
-							text: 'Play Last',
-							style: 'solid',
-							icon: 'arrow-turn-down',
-							action: () => _playLater(e)
-						},
-						{
-							text: 'Share',
-							style: 'solid',
-							icon: 'square-caret-down',
-							action: () => share(e)
-						}
-					],
-					target: albumTile
-				});
-			});
-		}
+		albumTile.addEventListener('contextmenu', async (e: any) => {
+			setUpAlbumTileMenu(
+				e,
+				this,
+				id,
+				type,
+				unfavorite,
+				favorite,
+				dislike,
+				playAlbum,
+				_playNext,
+				_playLater,
+				share,
+				addToPlaylist,
+				addToLibrary,
+				removeFromLibrary,
+				favorited,
+				inLibrary
+			);
+		});
 	});
 
 	const playAlbum = (e: MouseEvent) => {
@@ -200,6 +66,11 @@
 	const _playLater = (e: MouseEvent) => {
 		e.preventDefault();
 		playLater(type.slice(0, -1).replace('library-', ''), id);
+	};
+
+	const addToPlaylist = (e: MouseEvent) => {
+		e.preventDefault();
+		// addToPlaylistModal(type.slice(0, -1).replace('library-', ''), id);
 	};
 
 	const dislike = async (e: MouseEvent, catalogId: string) => {
@@ -320,34 +191,6 @@
 	const removeFromLibrary = async (e: MouseEvent) => {
 		e.preventDefault();
 
-		//get catalog id
-		const catalogId = await fetch(
-			`https://api.music.apple.com/v1/me/library/${type.replace('library-', '')}/${id}/catalog`,
-			{
-				method: 'GET',
-				headers: {
-					Authorization: `Bearer ${get(developerToken)}`,
-					'media-user-token': get(musicUserToken)
-				}
-			}
-		)
-			.then(
-				async (res) => {
-					if (res.status === 401) {
-						throw new Error('Unauthorized');
-					}
-					const json = await res.json();
-					console.log(json);
-					return json.data[0].id;
-				},
-				(err) => {
-					console.log(err);
-				}
-			)
-			.finally(() => {
-				inLibrary = false;
-			});
-
 		// remove from library
 		await fetch(
 			`https://amp-api.music.apple.com/v1/me/library/${type.replace(
@@ -361,7 +204,11 @@
 					authorization: `Bearer ${get(developerToken)}`
 				}
 			}
-		);
+		).finally(() => {
+			if (window.location.pathname.includes('library')) {
+				albumTile.remove();
+			}
+		});
 	};
 
 	const _addToListenLater = (e: MouseEvent) => {

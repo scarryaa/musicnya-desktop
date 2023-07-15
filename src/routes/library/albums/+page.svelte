@@ -11,6 +11,8 @@
 		{#if data?.media.length > 0}
 			{#each data.media as item}
 				<AlbumTile
+					shareLink={item.attributes?.url}
+					inLibrary={true}
 					id={item.id}
 					artistId=""
 					src={item.attributes?.artwork?.url
