@@ -3,6 +3,71 @@ import { get } from 'svelte/store';
 import { createContextMenu } from '../services/context-menu.service';
 import type AlbumTile from '../../components/media/tiles/album-tile.svelte';
 
+export const setUpMediaPageMenu = async (
+	e: MouseEvent,
+	id: string,
+	type: string,
+	unfavorite: (e: MouseEvent, catalogId: string) => void,
+	favorite: (e: MouseEvent, catalogId: string) => void,
+	dislike: (e: MouseEvent, catalogId: string) => void,
+	share: (e: MouseEvent, shareLink?: string) => void,
+	addToPlaylist: (e: MouseEvent) => void,
+	shareLink?: string,
+	favorited?: -1 | 0 | 1,
+	inLibrary?: boolean
+) => {
+	e.preventDefault();
+	let catalogId = id;
+
+	createContextMenu({
+		x: e.clientX,
+		y: e.clientY,
+		topItems: [
+			favorited === 1
+				? {
+						text: 'Unlove',
+						style: 'solid',
+						icon: 'heart',
+						action: () => unfavorite(e, catalogId)
+				  }
+				: {
+						text: 'Love',
+						style: 'regular',
+						icon: 'heart',
+						action: () => favorite(e, catalogId)
+				  },
+			favorited === 1 || favorited === 0 || favorited === undefined
+				? {
+						text: 'Dislike',
+						style: 'regular',
+						icon: 'thumbs-down',
+						action: () => dislike(e, catalogId)
+				  }
+				: {
+						text: 'Undislike',
+						style: 'solid',
+						icon: 'thumbs-down',
+						action: () => unfavorite(e, catalogId)
+				  }
+		],
+		items: [
+			{
+				text: 'Add to Playlist',
+				style: 'solid',
+				icon: 'bars',
+				action: () => addToPlaylist(e)
+			},
+			{
+				text: 'Share',
+				style: 'solid',
+				icon: 'square-caret-down',
+				action: () => share(e, shareLink)
+			}
+		],
+		target: e.target as HTMLElement
+	});
+};
+
 export const setUpAlbumTileMenu = async (
 	e: MouseEvent,
 	albumTile: AlbumTile,

@@ -12,10 +12,19 @@
 	import Check from 'svelte-material-icons/Check.svelte';
 	import DotsHorizontal from 'svelte-material-icons/DotsHorizontal.svelte';
 	import ClockTimeFiveOutline from 'svelte-material-icons/ClockTimeFiveOutline.svelte';
+	import { setUpMediaPageMenu } from '$lib/api/context-menu.api.js';
+	import { developerToken, musicUserToken } from '../../../../stores/musickit.store.js';
+	import { get } from 'svelte/store';
 
 	export let data;
 
+	let type = data.media?.type;
+	let id = data.media?.id;
+	let favorited = data.media?.attributes?.userRating?.value || 0;
+	let shareLink = data.media?.attributes?.url;
 	$: inLibrary = data.media?.attributes?.inLibrary;
+
+	const addToPlaylist = () => {};
 
 	const _removeFromLibrary = async () => {
 		await removeFromLibrary(
@@ -45,6 +54,112 @@
 
 	const playShuffle = (type, id) => {
 		return type === 'library' ? shuffle(type, [id || '']) : play(type, [id || '']);
+	};
+
+	const dislike = async (e: MouseEvent, catalogId: string) => {
+		e.preventDefault();
+
+		// dislike
+		await fetch(
+			`https://amp-api.music.apple.com/v1/me/ratings/${type.replace('library-', '')}/${catalogId}`,
+			{
+				method: 'PUT',
+				headers: {
+					Authorization: `Bearer ${get(developerToken)}`,
+					'media-user-token': get(musicUserToken)
+				},
+				body: JSON.stringify({
+					attributes: {
+						value: -1
+					}
+				})
+			}
+		).then(() => (favorited = -1));
+	};
+
+	const unfavorite = async (e: MouseEvent, catalogId: string) => {
+		e.preventDefault();
+
+		// remove from favorites
+		await fetch(
+			`https://amp-api.music.apple.com/v1/me/ratings/${type.replace('library-', '')}/${catalogId}`,
+			{
+				method: 'DELETE',
+				headers: {
+					Authorization: `Bearer ${get(developerToken)}`,
+					'media-user-token': get(musicUserToken)
+				}
+			}
+		).then(() => (favorited = 0));
+	};
+
+	const favorite = async (e: MouseEvent, catalogId: string) => {
+		e.preventDefault();
+
+		// add to favorites
+		await fetch(
+			`https://amp-api.music.apple.com/v1/me/ratings/${type.replace('library-', '')}/${catalogId}`,
+			{
+				method: 'PUT',
+				headers: {
+					Authorization: `Bearer ${get(developerToken)}`,
+					'media-user-token': get(musicUserToken)
+				},
+				body: JSON.stringify({
+					attributes: {
+						value: 1
+					},
+					type: 'rating'
+				})
+			}
+		).then(() => (favorited = 1));
+	};
+
+	const share = async (e: MouseEvent, url?: string) => {
+		e.preventDefault();
+		// copy to clipboard
+		if (navigator.clipboard && shareLink) {
+			navigator.clipboard.writeText(shareLink).then(() => {
+				console.log('Copied to clipboard successfully!');
+			});
+		} else {
+			if (window.location.pathname.includes('library')) {
+				url = await fetch(
+					`https://amp-api.music.apple.com/v1/me/library/${type.replace(
+						'library-',
+						''
+					)}/${id}/catalog`,
+					{
+						method: 'GET',
+						headers: {
+							Authorization: `Bearer ${get(developerToken)}`,
+							'media-user-token': get(musicUserToken)
+						}
+					}
+				).then(async (res) => {
+					if (res.status === 401) {
+						throw new Error('Unauthorized');
+					}
+					const json = await res.json();
+					console.log(json);
+					return json['data'][0]['attributes']['url'];
+				});
+			}
+
+			if (url && !window.location.pathname.includes('library')) {
+				const shareUrl = url.data[0].attributes.url;
+				console.log(shareUrl);
+				if (navigator.clipboard && shareUrl) {
+					navigator.clipboard.writeText(shareUrl).then(() => {
+						console.log('Copied to clipboard successfully!');
+					});
+				}
+			} else {
+				navigator.clipboard.writeText(url || '').then(() => {
+					console.log('Copied to clipboard successfully!');
+				});
+			}
+		}
 	};
 </script>
 
@@ -117,14 +232,27 @@
 						width="2rem"
 						height="2rem"
 						icon={inLibrary ? Check : Download}
-						on:click={() => (inLibrary ? _removeFromLibrary(data) : _addToLibrary(data))}
+						on:click={() => (inLibrary ? _removeFromLibrary() : _addToLibrary())}
 					/>
 					<ButtonIcon
 						bg="transparent"
 						width="2rem"
 						height="2rem"
 						icon={DotsHorizontal}
-						on:click={() => console.log('more')}
+						on:click={(e) =>
+							setUpMediaPageMenu(
+								e,
+								id,
+								type,
+								unfavorite,
+								favorite,
+								dislike,
+								share,
+								addToPlaylist,
+								shareLink,
+								favorited,
+								inLibrary
+							)}
 					/>
 				</div>
 			</div>
