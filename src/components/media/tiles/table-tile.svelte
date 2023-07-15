@@ -15,7 +15,7 @@
 	export let playlistId: string | null;
 </script>
 
-<tr class="table-row" id="table-row" on:dblclick={() => play('song', id)}>
+<tr class="table-row" id="table-row" on:dblclick={() => play('album', albumId, number)}>
 	<td class="table-number" id="table-number">
 		<div class="table-number__wrapper">
 			<span class="table-number__wrapper-number">{number + 1}</span>

@@ -6,7 +6,17 @@
 </script>
 
 <div class="slider">
-	<input bind:value {step} type="range" {min} {max} class="input" on:input on:change />
+	<input
+		bind:value
+		{step}
+		type="range"
+		{min}
+		{max}
+		class="input"
+		on:input
+		on:change
+		on:mousewheel
+	/>
 </div>
 
 <style lang="scss">

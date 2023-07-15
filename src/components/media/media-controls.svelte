@@ -122,6 +122,13 @@
 				min={0}
 				max={1}
 				on:input={(e) => setVolume(e.target.value || 0)}
+				on:mousewheel={(e) => {
+					e.preventDefault();
+					if (volumeValue <= 1 + e.deltaY / 1000 && volumeValue > 0 + e.deltaY / 1000) {
+						console.log(volumeValue);
+						_setVolume(volumeValue - e.deltaY / 1000);
+					}
+				}}
 			/>
 		</div>
 	</div>
