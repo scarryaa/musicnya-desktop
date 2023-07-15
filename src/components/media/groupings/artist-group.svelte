@@ -125,6 +125,7 @@
 				<div class="artist-group__content__tile">
 					<AlbumTile
 						type="albums"
+						shareLink={media.attributes.url}
 						subtitle="year"
 						id={media.id}
 						title={media.attributes.name}

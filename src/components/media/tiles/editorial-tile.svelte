@@ -32,7 +32,7 @@
 		{/if}
 	</div>
 	<div class="editorial-tile__overlay-wrapper">
-		<a class="editorial-tile__overlay" href={type !== 'stations' ? href : null}>
+		<a class="editorial-tile__overlay" href={type !== 'stations' ? href : undefined}>
 			{#if showPlayButton}
 				<div class="editorial-tile__overlay__icon">
 					<ButtonPlay color="white" size="4rem" on:click={() => play(type, [id])} />

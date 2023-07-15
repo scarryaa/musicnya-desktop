@@ -134,6 +134,7 @@
 
 		&:hover .superhero-tile__overlay,
 		&:hover .superhero-tile__overlay-wrapper {
+			border-radius: $border-radius;
 			opacity: 1;
 		}
 

@@ -11,10 +11,11 @@
 	import { listenLater } from '../../../stores/app.store';
 	import ButtonMinus from '../../../components/buttons/button-minus.svelte';
 	import { onMount } from 'svelte';
-	import ContextMenu from '../../../components/context-menu.svelte';
 	import { createContextMenu } from '../../../lib/services/context-menu.service';
+	import { developerToken, musicUserToken } from '../../../stores/musickit.store';
+	import { get } from 'svelte/store';
 
-	let albumTile;
+	let albumTile: any;
 	export let id: string;
 	export let artistId: string;
 	export let src: string;
@@ -22,31 +23,95 @@
 	export let artist: string;
 	export let year: string;
 	export let type: string;
-	export let subtitle: 'artist' | 'year' = 'artist';
+	export let subtitle: 'artist' | 'year' | 'none' = 'artist';
+	export let shareLink: string | undefined;
+	export let inLibrary: boolean | undefined = undefined;
 
 	onMount(() => {
 		// right click listener
-		albumTile.addEventListener('contextmenu', (e) => {
-			console.log(e.clientX);
-			e.preventDefault();
-			createContextMenu({
-				x: e.clientX,
-				y: e.clientY,
-				items: [
-					{
-						text: 'Play',
-						icon: 'play',
-						onClick: () => playAlbum(e)
-					},
-					{
-						text: 'Add to Listen Later',
-						icon: 'plus',
-						onClick: () => favorite(e)
-					}
-				],
-				target: albumTile
+		if (type !== 'stations') {
+			albumTile.addEventListener('contextmenu', async (e) => {
+				e.preventDefault();
+
+				// check if item is in library
+				const _inLibrary = window.location.pathname.includes('library')
+					? true
+					: inLibrary ??
+					  (await fetch(
+							`https://amp-api.music.apple.com/v1/catalog/us/?ids[${type.replace(
+								'library-',
+								''
+							)}]=${id}&relate=library&fields=inLibrary&extend=tbtcgyep`,
+							{
+								method: 'GET',
+								headers: {
+									Authorization: `Bearer ${get(developerToken)}`,
+									'media-user-token': get(musicUserToken)
+								}
+							}
+					  )
+							.then(async (res) => {
+								if (res.status === 401) {
+									throw new Error('Unauthorized');
+								}
+								const json = await res.json();
+								console.log(json);
+								return json;
+							})
+							.then((res) => res.data?.[0]?.attributes?.inLibrary));
+
+				createContextMenu({
+					x: e.clientX,
+					y: e.clientY,
+					topItems: [
+						{
+							text: 'Love',
+							icon: 'heart',
+							action: () => {}
+						},
+						{
+							text: 'Dislike',
+							icon: 'thumbs-down',
+							action: () => favorite(e)
+						}
+					],
+					items: [
+						{
+							text: 'Add to Playlist',
+							icon: 'bars',
+							action: () => favorite(e)
+						},
+						_inLibrary
+							? {
+									text: 'Remove from Library',
+									icon: 'minus',
+									action: () => removeFromLibrary(e)
+							  }
+							: {
+									text: 'Add to Library',
+									icon: 'plus',
+									action: () => addToLibrary(e)
+							  },
+						{
+							text: 'Play Next',
+							icon: 'arrow-turn-up',
+							action: () => favorite(e)
+						},
+						{
+							text: 'Play Last',
+							icon: 'arrow-turn-down',
+							action: () => favorite(e)
+						},
+						{
+							text: 'Share',
+							icon: 'square-caret-down',
+							action: () => share(e)
+						}
+					],
+					target: albumTile
+				});
 			});
-		});
+		}
 	});
 
 	const playAlbum = (e: MouseEvent) => {
@@ -54,7 +119,110 @@
 		play(type.slice(0, -1).replace('library-', ''), id);
 	};
 
-	const favorite = (e: MouseEvent) => {
+	const share = async (e: MouseEvent) => {
+		e.preventDefault();
+
+		// copy to clipboard
+		if (navigator.clipboard && shareLink) {
+			navigator.clipboard.writeText(shareLink).then(() => {
+				console.log('Copied to clipboard successfully!');
+			});
+		} else {
+			const url = await fetch(
+				`https://amp-api.music.apple.com/v1/me/library/${type.replace(
+					'library-',
+					''
+				)}/${id}/catalog`,
+				{
+					method: 'GET',
+					headers: {
+						Authorization: `Bearer ${get(developerToken)}`,
+						'media-user-token': get(musicUserToken)
+					}
+				}
+			).then(async (res) => {
+				if (res.status === 401) {
+					throw new Error('Unauthorized');
+				}
+				const json = await res.json();
+				console.log(json);
+				return json;
+			});
+
+			if (url) {
+				const shareUrl = url.data[0].attributes.url;
+				if (navigator.clipboard && shareUrl) {
+					navigator.clipboard.writeText(shareUrl).then(() => {
+						console.log('Copied to clipboard successfully!');
+					});
+				}
+			}
+		}
+	};
+
+	const addToLibrary = async (e: MouseEvent) => {
+		e.preventDefault();
+
+		// add to library
+		await fetch(`https://amp-api.music.apple.com/v1/me/library?ids[${type}]=${id}`, {
+			method: 'POST',
+			headers: {
+				'media-user-token': get(musicUserToken),
+				authorization: `Bearer ${get(developerToken)}`
+			}
+		}).finally(() => {
+			inLibrary = true;
+		});
+	};
+
+	const removeFromLibrary = async (e: MouseEvent) => {
+		e.preventDefault();
+
+		//get catalog id
+		const catalogId = await fetch(
+			`https://api.music.apple.com/v1/me/library/${type.replace('library-', '')}/${id}/catalog`,
+			{
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${get(developerToken)}`,
+					'media-user-token': get(musicUserToken)
+				}
+			}
+		)
+			.then(
+				async (res) => {
+					if (res.status === 401) {
+						throw new Error('Unauthorized');
+					}
+					const json = await res.json();
+					console.log(json);
+					return json.data[0].id;
+				},
+				(err) => {
+					console.log(err);
+				}
+			)
+			.finally(() => {
+				inLibrary = false;
+			});
+
+		// remove from library
+		await fetch(
+			`https://amp-api.music.apple.com/v1/me/library/${type.replace(
+				'library-',
+				''
+			)}/${id}?art[url]=f`,
+			{
+				method: 'DELETE',
+				headers: {
+					'media-user-token': get(musicUserToken),
+					authorization: `Bearer ${get(developerToken)}`
+				}
+			}
+		);
+	};
+
+	const _addToListenLater = (e: MouseEvent) => {
 		e.preventDefault();
 		inListenLater(type.slice(0, -1), id)
 			? removeFromListenLater(type.slice(0, -1), id)
@@ -77,7 +245,7 @@
 			>
 				<svelte:component
 					this={$listenLater.some((item) => item.id === id) ? ButtonMinus : ButtonPlus}
-					on:click={favorite}
+					on:click={_addToListenLater}
 				/>
 			</div>
 		</a>

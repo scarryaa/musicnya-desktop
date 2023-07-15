@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { hide } from '../lib/services/modal.service';
 	import type { MusicKit } from '../lib/types/musickit';
 </script>
 
@@ -23,7 +25,8 @@
 					await MusicKit.getInstance()
 						.authorize()
 						.finally(() => {
-							window.location.href = '/';
+							hide();
+							window.location.reload();
 						})}>Sign in with Apple Music</button
 			>
 		</div>

@@ -13,7 +13,12 @@ cors_proxy
 		setHeaders: {
 			origin: 'https://music.apple.com',
 			'access-control-allow-origin':
-				'https://music.apple.com, https://localhost:4200, https://localhost:3000'
+				'https://music.apple.com, https://localhost:4200, https://localhost:3000',
+			// set recieved headers
+			'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Range',
+			'access-control-allow-methods': '*',
+			'access-control-allow-credentials': 'true',
+			'access-control-max-age': '86400'
 		}
 	})
 	.listen(port, host, function () {

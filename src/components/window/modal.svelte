@@ -2,16 +2,6 @@
 	import Close from 'svelte-material-icons/Close.svelte';
 
 	export let component: ConstructorOfATypedSvelteComponent;
-
-	export const show = () => {
-		const modal = document.createElement('div');
-		modal.classList.add('modal');
-		document.body.appendChild(modal);
-	};
-
-	export const hide = () => {
-		document.querySelector('.modal')?.remove();
-	};
 </script>
 
 <div class="modal">

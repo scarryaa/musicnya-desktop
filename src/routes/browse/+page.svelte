@@ -137,11 +137,15 @@
 							href={child.attributes?.editorialElementKind === '320'
 								? child.attributes?.link?.url?.includes('viewMultiRoom')
 									? `/media/${child.type}/${
-											child.attributes?.link?.url.split('/').pop().split('=')[2].split('&')[0]
+											child.attributes?.link?.url?.split('/')?.pop()?.split('=')[2]?.split('&')[0]
 									  }`
 									: `/media/${child.type}/${
-											child.attributes?.link?.url.split('/').pop().split('=')[2]
+											child.attributes?.link?.url?.split('/').pop()?.split('=')[2]
 									  }`
+								: child.attributes?.editorialElementKind === '394'
+								? `/media/editorial-elements/${
+										child.attributes?.link?.url?.split('/').pop()?.split('=')[2]?.split('&')[0]
+								  }`
 								: `/media/${child.relationships?.contents?.data?.[0]?.type.slice(0, -1)}/${
 										child.relationships?.contents?.data?.[0]?.id
 								  }`}

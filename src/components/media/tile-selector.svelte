@@ -116,6 +116,7 @@
 						artist={media.attributes?.artistName || media.attributes?.curatorName}
 						artistId={media.relationships?.artists?.data?.[0]?.id}
 						year={media.attributes?.releaseDate}
+						shareLink={media.attributes?.url}
 						src={media.attributes?.artwork?.url
 							.replace('{w}x{h}', '400x400')
 							.replace('{f}', 'webp') || '/images/music_note.png'}
@@ -126,6 +127,7 @@
 			{#if type === 'personal-recommendation'}
 				<div class="tile-group__content__tile">
 					<AlbumTile
+						shareLink={media.attributes?.url}
 						type={media.type}
 						subtitle="artist"
 						id={media.id}
@@ -164,6 +166,7 @@
 				{#if media.type === 'albums'}
 					<div class="tile-group__content__tile">
 						<AlbumTile
+							shareLink={media.attributes?.url}
 							type={media.type}
 							subtitle="artist"
 							id={media.id}
@@ -181,6 +184,7 @@
 				{#if media.type === 'playlists'}
 					<div class="tile-group__content__tile">
 						<AlbumTile
+							shareLink={media.attributes?.url}
 							type={media.type}
 							subtitle="artist"
 							id={media.id}
@@ -215,6 +219,7 @@
 				{#if media.type === 'stations'}
 					<div class="tile-group__content__tile">
 						<AlbumTile
+							shareLink={media.attributes?.url}
 							type={media.type}
 							subtitle="artist"
 							id={media.id}

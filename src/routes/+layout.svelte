@@ -50,6 +50,8 @@
 	import Queue from '../components/queue.svelte';
 	import Modal from '../components/window/modal.svelte';
 	import Login from '../components/login.svelte';
+	import { goto } from '$app/navigation';
+	import { show } from '../lib/services/modal.service';
 
 	let drawer;
 
@@ -83,16 +85,11 @@
 
 		//check if user is logged in
 		if (!$loggedIn) {
-			const modal = new Modal({
-				target: document.body,
-				props: {
-					component: Login
-				}
-			});
+			show();
 		} else {
 			// redirect to home if user is logged in
 			if (window.location.pathname === '/') {
-				window.location.href = '/home';
+				goto('/home');
 			}
 		}
 
