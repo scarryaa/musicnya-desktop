@@ -44,8 +44,8 @@ jobs:
       - name: Build Electron app
         run: npm run dist
 
-      - name: Upload Artifacts
+      - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.platform }}-${{ matrix.os }}
-          path: ./dist
+          path: ./dist/${{ matrix.platform }}-${{ matrix.os }}

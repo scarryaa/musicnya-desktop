@@ -62,7 +62,6 @@
 			]
 		},
 		"win": {
-			"icon": "build/icon.png",
 			"asar": false,
 			"target": [
 				"nsis",
@@ -70,8 +69,6 @@
 			]
 		},
 		"nsis": {
-			"installerIcon": "build/logo.png",
-			"installerHeaderIcon": "build/logo.png",
 			"deleteAppDataOnUninstall": true
 		  }
 	},
