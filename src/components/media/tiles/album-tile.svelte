@@ -31,27 +31,29 @@
 
 	onMount(() => {
 		// right click listener
-		albumTile.addEventListener('contextmenu', async (e: any) => {
-			setUpAlbumTileMenu(
-				e,
-				this,
-				id,
-				type,
-				unfavorite,
-				favorite,
-				dislike,
-				playAlbum,
-				_playNext,
-				_playLater,
-				share,
-				addToPlaylist,
-				addToLibrary,
-				removeFromLibrary,
-				shareLink,
-				favorited,
-				inLibrary
-			);
-		});
+		if (type !== 'stations') {
+			albumTile.addEventListener('contextmenu', async (e: any) => {
+				setUpAlbumTileMenu(
+					e,
+					this,
+					id,
+					type,
+					unfavorite,
+					favorite,
+					dislike,
+					playAlbum,
+					_playNext,
+					_playLater,
+					share,
+					addToPlaylist,
+					addToLibrary,
+					removeFromLibrary,
+					shareLink,
+					favorited,
+					inLibrary
+				);
+			});
+		}
 	});
 
 	const playAlbum = (e: MouseEvent) => {
@@ -234,26 +236,29 @@
 		>
 			<ButtonPlay color="white" on:click={playAlbum} />
 			<ButtonOptions
-				on:click={(e) =>
-					setUpAlbumTileMenu(
-						e,
-						this,
-						id,
-						type,
-						unfavorite,
-						favorite,
-						dislike,
-						playAlbum,
-						_playNext,
-						_playLater,
-						share,
-						addToPlaylist,
-						addToLibrary,
-						removeFromLibrary,
-						shareLink,
-						favorited,
-						inLibrary
-					)}
+				on:click={(e) => {
+					if (type !== 'stations') {
+						setUpAlbumTileMenu(
+							e,
+							this,
+							id,
+							type,
+							unfavorite,
+							favorite,
+							dislike,
+							playAlbum,
+							_playNext,
+							_playLater,
+							share,
+							addToPlaylist,
+							addToLibrary,
+							removeFromLibrary,
+							shareLink,
+							favorited,
+							inLibrary
+						);
+					}
+				}}
 			/>
 			<div
 				title={$listenLater.some((item) => item.id === id)

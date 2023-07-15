@@ -120,7 +120,7 @@ export const setUpAlbumTileMenu = async (
 						icon: 'heart',
 						action: () => favorite(e, catalogId)
 				  },
-			_favorited === 1 || _favorited === 0
+			_favorited === 1 || _favorited === 0 || _favorited === undefined
 				? {
 						text: 'Dislike',
 						style: 'regular',
