@@ -1,5 +1,6 @@
 interface ContextMenuItem {
 	text?: string;
+	style: 'regular' | 'solid';
 	icon: string;
 	action: () => void;
 }
@@ -34,7 +35,7 @@ export const createContextMenu = (options: ContextMenuOptions) => {
 		menuItem.style.marginRight = '10px';
 
 		menuItem.innerHTML = `
-				<i class="fa-regular fa-${item.icon}" title="${item.text}"></i>
+				<i class="fa-${item.style} fa-${item.icon}" title="${item.text}"></i>
 			`;
 		menuItem.addEventListener('click', () => {
 			contextMenu.remove();

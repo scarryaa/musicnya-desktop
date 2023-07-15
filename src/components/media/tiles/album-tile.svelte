@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { play } from '../../..//lib/services/playback-service';
+	import { play, playLater, playNext } from '../../..//lib/services/playback-service';
 	import ButtonOptions from '../../../components/buttons/button-options.svelte';
 	import ButtonPlay from '../../../components/buttons/button-play.svelte';
 	import {
@@ -26,12 +26,63 @@
 	export let subtitle: 'artist' | 'year' | 'none' = 'artist';
 	export let shareLink: string | undefined;
 	export let inLibrary: boolean | undefined = undefined;
+	export let favorited: -1 | 0 | 1 | undefined = undefined;
 
 	onMount(() => {
 		// right click listener
 		if (type !== 'stations') {
 			albumTile.addEventListener('contextmenu', async (e) => {
 				e.preventDefault();
+				let catalogId = id;
+
+				if (window.location.pathname.includes('library')) {
+					catalogId = await fetch(
+						`https://amp-api.music.apple.com/v1/me/library/${type.replace(
+							'library-',
+							''
+						)}/${id}/catalog`,
+						{
+							method: 'GET',
+							headers: {
+								Authorization: `Bearer ${get(developerToken)}`,
+								'media-user-token': get(musicUserToken)
+							}
+						}
+					).then(async (res) => {
+						if (res.status === 401) {
+							throw new Error('Unauthorized');
+						}
+						const json = await res.json();
+						console.log(json);
+						return json.data?.[0]?.id;
+					});
+				}
+
+				// check if item is favorited
+				const _favorited =
+					favorited ??
+					(await fetch(
+						`https://amp-api.music.apple.com/v1/me/ratings/${type.replace(
+							'library-',
+							''
+						)}?platform=web&ids=${id}`,
+						{
+							method: 'GET',
+							headers: {
+								Authorization: `Bearer ${get(developerToken)}`,
+								'media-user-token': get(musicUserToken)
+							}
+						}
+					)
+						.then(async (res) => {
+							if (res.status === 401) {
+								throw new Error('Unauthorized');
+							}
+							const json = await res.json();
+							console.log(json);
+							return json;
+						})
+						.then((res) => res.data?.[0]?.attributes?.value));
 
 				// check if item is in library
 				const _inLibrary = window.location.pathname.includes('library')
@@ -64,46 +115,68 @@
 					x: e.clientX,
 					y: e.clientY,
 					topItems: [
-						{
-							text: 'Love',
-							icon: 'heart',
-							action: () => {}
-						},
-						{
-							text: 'Dislike',
-							icon: 'thumbs-down',
-							action: () => favorite(e)
-						}
+						_favorited === 1
+							? {
+									text: 'Unlove',
+									style: 'solid',
+									icon: 'heart',
+									action: () => unfavorite(e, catalogId)
+							  }
+							: {
+									text: 'Love',
+									style: 'regular',
+									icon: 'heart',
+									action: () => favorite(e, catalogId)
+							  },
+						_favorited === 1 || _favorited === 0
+							? {
+									text: 'Dislike',
+									style: 'regular',
+									icon: 'thumbs-down',
+									action: () => dislike(e, catalogId)
+							  }
+							: {
+									text: 'Undislike',
+									style: 'solid',
+									icon: 'thumbs-down',
+									action: () => unfavorite(e, catalogId)
+							  }
 					],
 					items: [
 						{
 							text: 'Add to Playlist',
+							style: 'solid',
 							icon: 'bars',
-							action: () => favorite(e)
+							action: () => {}
 						},
 						_inLibrary
 							? {
 									text: 'Remove from Library',
+									style: 'solid',
 									icon: 'minus',
 									action: () => removeFromLibrary(e)
 							  }
 							: {
 									text: 'Add to Library',
+									style: 'solid',
 									icon: 'plus',
 									action: () => addToLibrary(e)
 							  },
 						{
 							text: 'Play Next',
+							style: 'solid',
 							icon: 'arrow-turn-up',
-							action: () => favorite(e)
+							action: () => _playNext(e)
 						},
 						{
 							text: 'Play Last',
+							style: 'solid',
 							icon: 'arrow-turn-down',
-							action: () => favorite(e)
+							action: () => _playLater(e)
 						},
 						{
 							text: 'Share',
+							style: 'solid',
 							icon: 'square-caret-down',
 							action: () => share(e)
 						}
@@ -117,6 +190,75 @@
 	const playAlbum = (e: MouseEvent) => {
 		e.preventDefault();
 		play(type.slice(0, -1).replace('library-', ''), id);
+	};
+
+	const _playNext = (e: MouseEvent) => {
+		e.preventDefault();
+		playNext(type.slice(0, -1).replace('library-', ''), id);
+	};
+
+	const _playLater = (e: MouseEvent) => {
+		e.preventDefault();
+		playLater(type.slice(0, -1).replace('library-', ''), id);
+	};
+
+	const dislike = async (e: MouseEvent, catalogId: string) => {
+		e.preventDefault();
+
+		// dislike
+		await fetch(
+			`https://amp-api.music.apple.com/v1/me/ratings/${type.replace('library-', '')}/${catalogId}`,
+			{
+				method: 'PUT',
+				headers: {
+					Authorization: `Bearer ${get(developerToken)}`,
+					'media-user-token': get(musicUserToken)
+				},
+				body: JSON.stringify({
+					attributes: {
+						value: -1
+					}
+				})
+			}
+		).then(() => (favorited = -1));
+	};
+
+	const unfavorite = async (e: MouseEvent, catalogId: string) => {
+		e.preventDefault();
+
+		// remove from favorites
+		await fetch(
+			`https://amp-api.music.apple.com/v1/me/ratings/${type.replace('library-', '')}/${catalogId}`,
+			{
+				method: 'DELETE',
+				headers: {
+					Authorization: `Bearer ${get(developerToken)}`,
+					'media-user-token': get(musicUserToken)
+				}
+			}
+		).then(() => (favorited = 0));
+	};
+
+	const favorite = async (e: MouseEvent, catalogId: string) => {
+		e.preventDefault();
+
+		// add to favorites
+		await fetch(
+			`https://amp-api.music.apple.com/v1/me/ratings/${type.replace('library-', '')}/${catalogId}`,
+			{
+				method: 'PUT',
+				headers: {
+					Authorization: `Bearer ${get(developerToken)}`,
+					'media-user-token': get(musicUserToken)
+				},
+				body: JSON.stringify({
+					attributes: {
+						value: 1
+					},
+					type: 'rating'
+				})
+			}
+		).then(() => (favorited = 1));
 	};
 
 	const share = async (e: MouseEvent) => {
