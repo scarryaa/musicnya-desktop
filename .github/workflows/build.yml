@@ -8,7 +8,17 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            platform: linux
+            target: AppImage
+          - os: macos-latest
+            platform: mac
+            target: dmg
+          - os: windows-latest
+            platform: win
+            target: nsis
 
     steps:
       - name: Check out Git repository
@@ -34,11 +44,8 @@ jobs:
       - name: Build Electron app
         run: npm run dist
 
-      - name: Archive artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: electron-app
-          path: |
-            ./dist/musicnya-1.1.1-alpha.AppImage
-            ./dist/musicnya-1.1.1-alpha.dmg
-            ./dist/musicnya Setup 1.1.1-alpha.exe
+          name: ${{ matrix.platform }}-${{ matrix.os }}
+          path: ./dist
