@@ -37,7 +37,7 @@
 	},
 	"build": {
 		"productName": "musicnya",
-		"artifactName": "musicnya-desktop-svelte_${version}_amd64",
+		"artifactName": "musicnya-desktop_${version}_amd64",
 		"appId": "org.nyan-inc.musicnya",
 		"copyright": "Copyright © 2023 nyan-inc",
 		"electronDownload": {
