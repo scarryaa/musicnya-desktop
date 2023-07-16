@@ -1,6 +1,6 @@
 {
 	"name": "musicnya-desktop-svelte",
-	"version": "1.2.2-alpha",
+	"version": "1.3-alpha",
 	"description": "A purrfect alternative to Apple Music on Linux, Windows, and macOS.",
 	"private": true,
 	"author": {
@@ -63,7 +63,6 @@
 			]
 		},
 		"win": {
-			"asar": false,
 			"target": [
 				"nsis",
 				"msi"
