@@ -17,7 +17,7 @@
 		unfavorite,
 		unfavoritePlaylist
 	} from '$lib/api/actions.api';
-	import { setUpAlbumTileMenu, setUpPlaylistTileMenu } from '$lib/api/context-menu.api';
+	import { setUpPlaylistTileMenu } from '$lib/api/context-menu.api';
 
 	export let title: string;
 	export let artist: string;

@@ -34,7 +34,12 @@
 	<td class="table-title" id="table-title">
 		<div class="table-title__wrapper">
 			{#if type !== 'albums' && type !== 'library-albums'}
-				<img loading="lazy" class="table-title__wrapper-img" {src} alt="Track Art" />
+				<img
+					loading="lazy"
+					class="table-title__wrapper-img"
+					src={src || '/static/images/music_note.png'}
+					alt="Track Art"
+				/>
 			{/if}
 			<div class="table-title__wrapper-text">
 				<span class="table-title__wrapper-text-title">{title}</span>

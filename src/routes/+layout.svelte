@@ -51,6 +51,7 @@
 	import { goto } from '$app/navigation';
 	import { show } from '../lib/services/modal.service';
 	import { newPlaylist } from '$lib/api/actions.api';
+	import Toast from '../components/toast.svelte';
 
 	let drawer;
 
@@ -249,6 +250,7 @@
 					{:else}
 						<slot />
 					{/if}
+					<Toast />
 				</div>
 			</div>
 		</div>

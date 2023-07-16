@@ -8,6 +8,7 @@ import {
 } from '$lib/services/favorites.service';
 import { play, playLater, playNext } from '$lib/services/playback-service';
 import { show } from '$lib/services/modal.service';
+import Toast, { showToast } from '../../components/toast.svelte';
 
 export const playAlbum = (e: MouseEvent, type: string, id: string) => {
 	e.preventDefault();
@@ -249,8 +250,12 @@ export const sharePlaylist = async (e: MouseEvent, type: string, id: string) => 
 
 	if (navigator.clipboard && url) {
 		navigator.clipboard.writeText(url).then(() => {
-			console.log('Copied to clipboard successfully!');
+			//show toast
+			showToast('Copied to clipboard!');
 		});
+	} else {
+		//show toast
+		showToast('Error copying to clipboard!');
 	}
 };
 

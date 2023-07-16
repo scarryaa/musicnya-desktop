@@ -2,9 +2,14 @@
 	import { onMount } from 'svelte';
 	import TileGroup from '../../components/media/groupings/tile-group.svelte';
 	import { goto } from '$app/navigation';
+	import { showToast } from '../../components/toast.svelte';
 
 	onMount(async () => {
-		window.onunhandledrejection = (e) => {};
+		window.onunhandledrejection = (e) => {
+			// show toast
+			console.log(e);
+			showToast(e.reason?.errors?.[0]?.detail || 'Something went wrong');
+		};
 	});
 
 	export let data: {
