@@ -1,11 +1,15 @@
 export const play = (type: string, id: string | string[], position = 0) => {
+	if (MusicKit.getInstance().playbackState === 2) {
+		MusicKit.getInstance().pause();
+	}
+
 	const oldShuffleMode = MusicKit.getInstance().shuffleMode;
 	MusicKit.getInstance().shuffleMode = 0;
 	MusicKit.getInstance()
 		.setQueue({
 			[type]: id,
-			startPlaying: true,
-			startPosition: position
+			startPlaying: false,
+			startWith: position
 		})
 		.finally(() => {
 			MusicKit.getInstance().play();

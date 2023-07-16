@@ -21,6 +21,14 @@
 <style lang="scss">
 	@use '../../variables.scss' as *;
 
+	:root[data-theme='dark'] {
+		--modal-background: #141414;
+	}
+
+	:root[data-theme='light'] {
+		--modal-background: #ffffff;
+	}
+
 	.modal {
 		position: fixed;
 		top: 0;
@@ -38,10 +46,11 @@
 			transform: translate(-50%, -50%);
 			width: 80%;
 			height: 80%;
-			background-color: white;
+			background-color: var(--modal-background);
 			border-radius: 0.4rem;
 			overflow-y: overlay;
 			padding: 1.6rem;
+			color: var(--text);
 		}
 
 		&__buttons__button {

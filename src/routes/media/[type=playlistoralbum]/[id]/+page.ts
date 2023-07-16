@@ -1,4 +1,3 @@
-import type { MusicKit } from 'src/lib/types/musickit';
 import { getDominantColor } from '../../../../lib/services/color-service';
 import {
 	developerToken,
@@ -22,7 +21,7 @@ const getMediaColor = async (media: MusicKit.MediaItem | undefined) => {
 		media?.attributes?.artwork?.url ||
 		media?.relationships?.tracks?.data?.[0]?.attributes?.artwork?.url ||
 		'';
-	if (media) {
+	if (media && url) {
 		media.color = await getDominantColor(resolveArtworkURL(url));
 	}
 	return media;

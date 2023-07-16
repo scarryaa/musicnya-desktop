@@ -15,6 +15,7 @@
 	import { setUpMediaPageMenu } from '$lib/api/context-menu.api.js';
 	import { developerToken, musicUserToken } from '../../../../stores/musickit.store.js';
 	import { get } from 'svelte/store';
+	import { show } from '$lib/services/modal.service.js';
 
 	export let data;
 
@@ -24,7 +25,9 @@
 	let shareLink = data.media?.attributes?.url;
 	$: inLibrary = data.media?.attributes?.inLibrary;
 
-	const addToPlaylist = () => {};
+	const addToPlaylist = () => {
+		console.log('add to playlist');
+	};
 
 	const _removeFromLibrary = async () => {
 		await removeFromLibrary(
@@ -172,7 +175,8 @@
 				.replace('{f}', 'webp') ||
 				data.media?.relationships?.tracks?.data?.[0]?.attributes?.artwork?.url
 					.replace('{w}x{h}', '300x300')
-					.replace('{f}', 'webp')}
+					.replace('{f}', 'webp') ||
+				'/static/images/music_note.png'}
 			alt="Media Art"
 		/>
 		<div class="media-info__title-desc">
@@ -276,7 +280,7 @@
 			</thead>
 			<tbody>
 				<div style="height: 1rem;" />
-				{#if data.media?.type === 'playlists' || data.media?.type === 'library-playlists'}
+				{#if data.media?.type === 'playlists' || (data.media?.type === 'library-playlists' && data.media?.relationships?.tracks?.data?.length > 0)}
 					{#each data.media.relationships?.tracks.data as track, i}
 						<TableTile
 							title={track.attributes?.name}

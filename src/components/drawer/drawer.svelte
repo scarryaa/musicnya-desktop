@@ -116,7 +116,7 @@
 			margin-left: 0;
 			flex-grow: 0;
 			flex-shrink: 0;
-			background-color: var(--drawer-background-dark);
+			background-color: var(--drawer-background);
 			border-radius: $border-radius;
 
 			:global(> *) {
@@ -126,12 +126,7 @@
 				justify-content: flex-start;
 				align-items: flex-start;
 				width: 100%;
-				height: calc(100%);
-				margin-left: $item-margin;
-			}
-
-			:global(> * > *) {
-				margin-block: 0.75rem;
+				height: 100%;
 			}
 		}
 

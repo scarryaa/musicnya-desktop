@@ -2,6 +2,14 @@ import { developerToken, musicUserToken } from '../../stores/musickit.store';
 import { get } from 'svelte/store';
 import { createContextMenu } from '../services/context-menu.service';
 import type AlbumTile from '../../components/media/tiles/album-tile.svelte';
+import type MediaTile from '../../components/media/tiles/media-tile.svelte';
+import {
+	addToPlaylist,
+	removeFromLibrary,
+	removePlaylistFromLibrary,
+	renamePlaylist,
+	sharePlaylist
+} from './actions.api';
 
 export const setUpMediaPageMenu = async (
 	e: MouseEvent,
@@ -68,21 +76,124 @@ export const setUpMediaPageMenu = async (
 	});
 };
 
+export const setUpPlaylistTileMenu = async (
+	e: MouseEvent,
+	playlistTile: MediaTile,
+	id: string,
+	type: string,
+	renamePlaylist: (e: MouseEvent, type: string, id: string) => void,
+	unfavorite: (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) => void,
+	favorite: (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) => void,
+	dislike: (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) => void,
+	play: (e: MouseEvent, type: string, id: string) => void,
+	playNext: (e: MouseEvent, type: string, id: string) => void,
+	playLater: (e: MouseEvent, type: string, id: string) => void,
+	sharePlaylist: (e: MouseEvent, type: string, id: string) => void,
+	favorited?: -1 | 0 | 1 | undefined,
+	inLibrary?: boolean
+) => {
+	e.preventDefault();
+	let catalogId = id;
+
+	// check if item is favorited
+	const _favorited =
+		favorited ??
+		(await fetch(
+			`https://amp-api.music.apple.com/v1/me/ratings/${type}?platform=web&ids=${catalogId}`,
+			{
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${get(developerToken)}`,
+					'media-user-token': get(musicUserToken)
+				}
+			}
+		)
+			.then(async (res) => {
+				if (res.status === 401) {
+					throw new Error('Unauthorized');
+				}
+				const json = await res.json();
+				console.log(json);
+				return json;
+			})
+			.then((res) => res.data?.[0]?.attributes?.value));
+
+	createContextMenu({
+		x: e.clientX,
+		y: e.clientY,
+		topItems: [
+			_favorited === 1
+				? {
+						text: 'Unlove',
+						style: 'solid',
+						icon: 'heart',
+						action: () => unfavorite(e, type, catalogId, _favorited)
+				  }
+				: {
+						text: 'Love',
+						style: 'regular',
+						icon: 'heart',
+						action: () => favorite(e, type, catalogId, _favorited)
+				  },
+			_favorited === 1 || _favorited === 0 || _favorited === undefined
+				? {
+						text: 'Dislike',
+						style: 'regular',
+						icon: 'thumbs-down',
+						action: () => dislike(e, type, catalogId, _favorited)
+				  }
+				: {
+						text: 'Undislike',
+						style: 'solid',
+						icon: 'thumbs-down',
+						action: () => unfavorite(e, type, catalogId, _favorited)
+				  },
+			{
+				text: 'Remove from Library',
+				style: 'solid',
+				icon: 'trash',
+				action: () => removePlaylistFromLibrary(e, type, catalogId)
+			}
+		],
+		items: [
+			{
+				text: 'Add to Playlist',
+				style: 'solid',
+				icon: 'bars',
+				action: () => addToPlaylist(e)
+			},
+			{
+				text: 'Rename',
+				style: 'solid',
+				icon: 'pencil',
+				action: () => renamePlaylist(e, type, catalogId)
+			},
+			{
+				text: 'Share',
+				style: 'solid',
+				icon: 'square-caret-down',
+				action: () => sharePlaylist(e, type, id)
+			}
+		],
+		target: e.target as HTMLElement
+	});
+};
+
 export const setUpAlbumTileMenu = async (
 	e: MouseEvent,
 	albumTile: AlbumTile,
 	id: string,
 	type: string,
-	unfavorite: (e: MouseEvent, catalogId: string) => void,
-	favorite: (e: MouseEvent, catalogId: string) => void,
-	dislike: (e: MouseEvent, catalogId: string) => void,
-	play: (e: MouseEvent) => void,
-	playNext: (e: MouseEvent) => void,
-	playLater: (e: MouseEvent) => void,
-	share: (e: MouseEvent, shareLink?: string) => void,
+	unfavorite: (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) => void,
+	favorite: (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) => void,
+	dislike: (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) => void,
+	play: (e: MouseEvent, type: string, id: string) => void,
+	playNext: (e: MouseEvent, type: string, id: string) => void,
+	playLater: (e: MouseEvent, type: string, id: string) => void,
+	share: (e: MouseEvent, type: string, id: string, shareLink?: string, url?: string) => void,
 	addToPlaylist: (e: MouseEvent) => void,
-	addToLibrary: (e: MouseEvent) => void,
-	removeFromLibrary: (e: MouseEvent) => void,
+	addToLibrary: (e: MouseEvent, type: string, id: string, inLibrary: boolean) => void,
+	removeFromLibrary: (e: MouseEvent, type: string, id: string, albumTile: AlbumTile) => void,
 	shareLink?: string,
 	favorited?: -1 | 0 | 1,
 	inLibrary?: boolean
@@ -177,26 +288,26 @@ export const setUpAlbumTileMenu = async (
 						text: 'Unlove',
 						style: 'solid',
 						icon: 'heart',
-						action: () => unfavorite(e, catalogId)
+						action: () => unfavorite(e, type, catalogId, _favorited)
 				  }
 				: {
 						text: 'Love',
 						style: 'regular',
 						icon: 'heart',
-						action: () => favorite(e, catalogId)
+						action: () => favorite(e, type, catalogId, _favorited)
 				  },
 			_favorited === 1 || _favorited === 0 || _favorited === undefined
 				? {
 						text: 'Dislike',
 						style: 'regular',
 						icon: 'thumbs-down',
-						action: () => dislike(e, catalogId)
+						action: () => dislike(e, type, catalogId, _favorited)
 				  }
 				: {
 						text: 'Undislike',
 						style: 'solid',
 						icon: 'thumbs-down',
-						action: () => unfavorite(e, catalogId)
+						action: () => unfavorite(e, type, catalogId, _favorited)
 				  }
 		],
 		items: [
@@ -211,31 +322,31 @@ export const setUpAlbumTileMenu = async (
 						text: 'Remove from Library',
 						style: 'solid',
 						icon: 'minus',
-						action: () => removeFromLibrary(e)
+						action: () => removeFromLibrary(e, type, id, albumTile)
 				  }
 				: {
 						text: 'Add to Library',
 						style: 'solid',
 						icon: 'plus',
-						action: () => addToLibrary(e)
+						action: () => addToLibrary(e, type, id, _inLibrary)
 				  },
 			{
 				text: 'Play Next',
 				style: 'solid',
 				icon: 'arrow-turn-up',
-				action: () => playNext(e)
+				action: () => playNext(e, type, catalogId)
 			},
 			{
 				text: 'Play Last',
 				style: 'solid',
 				icon: 'arrow-turn-down',
-				action: () => playLater(e)
+				action: () => playLater(e, type, catalogId)
 			},
 			{
 				text: 'Share',
 				style: 'solid',
 				icon: 'square-caret-down',
-				action: () => share(e, shareLink)
+				action: () => share(e, type, catalogId, shareLink)
 			}
 		],
 		target: albumTile as unknown as HTMLElement

@@ -1,12 +1,64 @@
 <script lang="ts">
+	import {
+		_addToListenLater,
+		_playLater,
+		_playNext,
+		addToLibrary,
+		addToPlaylist,
+		dislike,
+		dislikePlaylist,
+		favorite,
+		favoritePlaylist,
+		playAlbum,
+		removeFromLibrary,
+		renamePlaylist,
+		share,
+		sharePlaylist,
+		unfavorite,
+		unfavoritePlaylist
+	} from '$lib/api/actions.api';
+	import { setUpAlbumTileMenu, setUpPlaylistTileMenu } from '$lib/api/context-menu.api';
+
 	export let title: string;
 	export let artist: string;
 	export let src: string;
 	export let href: string;
 	export const tabindex: string = '';
+
+	export let id: string;
+	export let type: string = 'library-playlists';
+	export let shareLink: string | undefined;
+	export let inLibrary: boolean | undefined = undefined;
+	export let favorited: -1 | 0 | 1 | undefined = undefined;
 </script>
 
-<a class="album-tile" role="button" tabindex="0" on:click on:keydown {href}>
+<a
+	class="album-tile"
+	role="button"
+	tabindex="0"
+	on:click
+	on:keydown
+	{href}
+	on:contextmenu={(e) => {
+		e.preventDefault();
+		setUpPlaylistTileMenu(
+			e,
+			this,
+			id,
+			type,
+			renamePlaylist,
+			unfavoritePlaylist,
+			favoritePlaylist,
+			dislikePlaylist,
+			playAlbum,
+			_playNext,
+			_playLater,
+			sharePlaylist,
+			favorited,
+			inLibrary
+		);
+	}}
+>
 	<img {src} alt="Album Art" loading="lazy" />
 	<div class="album-info">
 		<div class="album-title">{title}</div>

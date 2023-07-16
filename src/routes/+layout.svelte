@@ -50,6 +50,7 @@
 	import Login from '../components/login.svelte';
 	import { goto } from '$app/navigation';
 	import { show } from '../lib/services/modal.service';
+	import { newPlaylist } from '$lib/api/actions.api';
 
 	let drawer;
 
@@ -175,6 +176,7 @@
 					title="New Playlist"
 					--showPlus={$drawerOpen ? 'block' : 'none'}
 					--margin-left="2.7rem"
+					on:click={(e) => newPlaylist(e)}
 				>
 					<Plus slot="icon" />
 				</DrawerButton>
@@ -210,6 +212,8 @@
 			>
 				{#each $libraryPlaylists as playlist, i (i)}
 					<MediaTile
+						id={playlist.id}
+						type="library-playlists"
 						href={`/media/playlist/${playlist.id}`}
 						tabindex="-1"
 						--showInfo={$drawerOpen ? 'block' : 'none'}
