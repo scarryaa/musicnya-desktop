@@ -270,7 +270,7 @@ export const share = async (
 	// copy to clipboard
 	if (navigator.clipboard && shareLink) {
 		navigator.clipboard.writeText(shareLink).then(() => {
-			console.log('Copied to clipboard successfully!');
+			showToast('Copied to clipboard!');
 		});
 	} else {
 		if (window.location.pathname.includes('library')) {
@@ -301,12 +301,12 @@ export const share = async (
 			console.log(shareUrl);
 			if (navigator.clipboard && shareUrl) {
 				navigator.clipboard.writeText(shareUrl).then(() => {
-					console.log('Copied to clipboard successfully!');
+					showToast('Copied to clipboard!');
 				});
 			}
 		} else {
 			navigator.clipboard.writeText(url || '').then(() => {
-				console.log('Copied to clipboard successfully!');
+				showToast('Copied to clipboard!');
 			});
 		}
 	}

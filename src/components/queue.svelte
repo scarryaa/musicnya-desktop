@@ -1,10 +1,43 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import DrawerButton from './drawer/drawer-button.svelte';
 	import AllInclusive from 'svelte-material-icons/AllInclusive.svelte';
 	import Play from 'svelte-material-icons/Play.svelte';
 
 	$: items = MusicKit.getInstance().queue.items;
 	$: console.log(items);
+
+	export const lookupArtist = async (name: string) => {
+		await fetch(
+			`https://amp-api.music.apple.com/v1/catalog/us/search?term=${name}&limit=1&types=artists`,
+			{
+				headers: {
+					Authorization: `Bearer ${MusicKit.getInstance().developerToken}`,
+					'Content-Type': 'application/json',
+					Accept: 'application/json',
+					'media-user-token': MusicKit.getInstance().musicUserToken
+				}
+			}
+		)
+			.then((res) => res.json())
+			.then((data) => goto(`/media/artist/${data.results.artists.data[0].id}`));
+	};
+
+	export const lookupAlbum = async (name: string, artistName: string) => {
+		await fetch(
+			`https://amp-api.music.apple.com/v1/catalog/us/search?term=${name} ${artistName}&limit=1&types=albums`,
+			{
+				headers: {
+					Authorization: `Bearer ${MusicKit.getInstance().developerToken}`,
+					'Content-Type': 'application/json',
+					Accept: 'application/json',
+					'media-user-token': MusicKit.getInstance().musicUserToken
+				}
+			}
+		)
+			.then((res) => res.json())
+			.then((data) => goto(`/media/album/${data.results.albums.data[0].id}`));
+	};
 </script>
 
 <div class="queue">
@@ -16,28 +49,29 @@
 		{#each items as item}
 			<div class="item">
 				<div class="item__image">
-					<div class="item__image__overlay">
-						<svelte:component
-							this={Play}
-							color="white"
-							size="1.8rem"
-							on:click={() =>
-								MusicKit.getInstance().setQueue({
-									items: items,
-									startWith: items.indexOf(item),
-									startPlaying: true
-								})}
-						/>
+					<div
+						class="item__image__overlay"
+						on:click={() =>
+							MusicKit.getInstance().setQueue({
+								items: items,
+								startWith: items.indexOf(item),
+								startPlaying: true
+							})}
+					>
+						<svelte:component this={Play} color="white" size="1.8rem" />
 					</div>
 					<img src={item.attributes?.artwork?.url.replace('{w}x{h}', '100x100')} />
 				</div>
 				<div class="item__info">
-					<a class="title" href="media/{item.container?.type}/{item.container?.id}"
-						>{item.attributes?.name}</a
+					<div
+						class="title"
+						on:click={() => lookupAlbum(item.attributes?.albumName, item.attributes?.artistName)}
 					>
-					<a class="artist" href="media/artists/{item.attributes?.artistName}"
-						>{item.attributes?.artistName}</a
-					>
+						{item.attributes?.name}
+					</div>
+					<div class="artist" on:click={() => lookupArtist(item.attributes?.artistName)}>
+						{item.attributes?.artistName}
+					</div>
 				</div>
 			</div>
 		{/each}

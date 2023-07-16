@@ -17,8 +17,6 @@
     --text-dark: #000000;
     --text-inverse: #ffffff;
     --text-inverse-dark: #e6e6e6;
-
-	--toast-background: #ffffff;
 }
 
 :root[data-theme="dark"] {
@@ -38,12 +36,12 @@
     --text-dark: #000000;
     --text-inverse: #000;
     --text-inverse-dark: #e6e6e6;
-
-	--toast-background: var(--accent);
 }
 
 :root {
 	--accent: #d41b73;
+	--toast-background: var(--accent);
+	--toast-text: #ffffff;
 }
 
 html, body {

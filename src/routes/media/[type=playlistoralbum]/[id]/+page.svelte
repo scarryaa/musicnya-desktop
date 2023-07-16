@@ -16,6 +16,7 @@
 	import { developerToken, musicUserToken } from '../../../../stores/musickit.store.js';
 	import { get } from 'svelte/store';
 	import { show } from '$lib/services/modal.service.js';
+	import { showToast } from '../../../../components/toast.svelte';
 
 	export let data;
 
@@ -123,7 +124,7 @@
 		// copy to clipboard
 		if (navigator.clipboard && shareLink) {
 			navigator.clipboard.writeText(shareLink).then(() => {
-				console.log('Copied to clipboard successfully!');
+				showToast('Copied to clipboard!');
 			});
 		} else {
 			if (window.location.pathname.includes('library')) {
@@ -154,12 +155,12 @@
 				console.log(shareUrl);
 				if (navigator.clipboard && shareUrl) {
 					navigator.clipboard.writeText(shareUrl).then(() => {
-						console.log('Copied to clipboard successfully!');
+						showToast('Copied to clipboard!');
 					});
 				}
 			} else {
 				navigator.clipboard.writeText(url || '').then(() => {
-					console.log('Copied to clipboard successfully!');
+					showToast('Copied to clipboard!');
 				});
 			}
 		}

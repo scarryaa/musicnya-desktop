@@ -45,15 +45,12 @@
 
 		&__text {
 			font-size: 1.2rem;
-			color: var(--text);
+			color: var(--toast-text);
 		}
 
 		&__close {
 			border-radius: 4px;
 			margin-left: 1rem;
-			svg {
-				fill: var(--text);
-			}
 
 			&:hover {
 				background-color: rgba(0, 0, 0, 0.1);
