@@ -4,12 +4,84 @@ import { createContextMenu } from '../services/context-menu.service';
 import type AlbumTile from '../../components/media/tiles/album-tile.svelte';
 import type MediaTile from '../../components/media/tiles/media-tile.svelte';
 import {
+	_playLater,
+	_playNext,
 	addToPlaylist,
 	removeFromLibrary,
 	removePlaylistFromLibrary,
 	renamePlaylist,
 	sharePlaylist
 } from './actions.api';
+
+export const setUpQueueItemMenu = async (
+	e: MouseEvent,
+	id: string,
+	type: string,
+	unfavorite: (e: MouseEvent, catalogId: string) => void,
+	favorite: (e: MouseEvent, catalogId: string) => void,
+	dislike: (e: MouseEvent, catalogId: string) => void,
+	share: (e: MouseEvent, shareLink?: string) => void,
+	addToPlaylist: (e: MouseEvent) => void,
+	shareLink?: string,
+	favorited?: -1 | 0 | 1,
+	inLibrary?: boolean
+) => {
+	e.preventDefault();
+	let catalogId = id;
+
+	createContextMenu({
+		x: e.clientX,
+		y: e.clientY,
+		target: e.target as HTMLElement,
+		topItems: [
+			favorited === 1
+				? {
+						text: 'Unlove',
+						style: 'solid',
+						icon: 'heart',
+						action: () => unfavorite(e, catalogId)
+				  }
+				: {
+						text: 'Love',
+						style: 'regular',
+						icon: 'heart',
+						action: () => favorite(e, catalogId)
+				  },
+			{
+				text: 'Dislike',
+				style: favorited === -1 ? 'solid' : 'regular',
+				icon: 'thumbs-down',
+				action: () => dislike(e, catalogId)
+			},
+			{
+				text: 'Remove from queue',
+				style: 'solid',
+				icon: 'trash',
+				action: () => console.log('remove from queue')
+			}
+		],
+		items: [
+			{
+				text: 'Add to Library',
+				style: inLibrary ? 'solid' : 'regular',
+				icon: 'plus',
+				action: () => addToLibrary(e, catalogId, inLibrary)
+			},
+			{
+				text: 'Add to Playlist',
+				style: 'regular',
+				icon: 'plus',
+				action: () => addToPlaylist(e)
+			},
+			{
+				text: 'Share',
+				style: 'regular',
+				icon: 'share',
+				action: () => share(e, shareLink)
+			}
+		]
+	});
+};
 
 export const setUpMediaPageMenu = async (
 	e: MouseEvent,

@@ -1,9 +1,15 @@
 import { browser } from '$app/environment';
-import { developerToken, libraryPlaylists, musicUserToken } from '../stores/musickit.store';
+import {
+	autoplay,
+	developerToken,
+	libraryPlaylists,
+	musicUserToken
+} from '../stores/musickit.store';
 import { initMusicKit } from '../lib/api/music.api';
 import { addEventHandlers } from '../lib/event-handlers/apple-music-events';
 import { getLibraryPlaylists } from '../lib/api/musickit.api';
 import { loggedIn } from '../stores/app.store';
+import { get } from 'svelte/store';
 
 /**
  * @type {import('@sveltejs/kit').LayoutLoad}
@@ -25,6 +31,7 @@ export async function load({ page, session, fetch }) {
 					.then((instance) => {
 						musicUserToken.set(instance.musicUserToken);
 						developerToken.set(instance.developerToken);
+						instance._autoplayEnabled = get(autoplay);
 						return instance;
 					})
 					.then((instance) => {

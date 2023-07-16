@@ -1,8 +1,16 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { addToPlaylist, dislike, favorite, share, unfavorite } from '$lib/api/actions.api';
+	import { setUpQueueItemMenu } from '$lib/api/context-menu.api';
 	import DrawerButton from './drawer/drawer-button.svelte';
 	import AllInclusive from 'svelte-material-icons/AllInclusive.svelte';
 	import Play from 'svelte-material-icons/Play.svelte';
+	import { autoplay } from '../stores/musickit.store';
+	import { get } from 'svelte/store';
+
+	MusicKit.getInstance().addEventListener('queueItemsDidChange', (e) => {
+		items = MusicKit.getInstance().queue.items;
+	});
 
 	$: items = MusicKit.getInstance().queue.items;
 	$: console.log(items);
@@ -43,11 +51,34 @@
 <div class="queue">
 	<div class="header">
 		<h2>Queue</h2>
-		<svelte:component this={AllInclusive} width="2.5rem" on:click />
+		<div
+			class="autoplay-button"
+			on:click={() => {
+				autoplay.update((v) => !v);
+				MusicKit.getInstance().autoplay = get(autoplay);
+				items = MusicKit.getInstance().queue.items;
+			}}
+			style="background-color: {$autoplay ? 'rgba(0, 0, 0, 0.5)' : 'transparent'}"
+		>
+			<svelte:component this={AllInclusive} width="2.5rem" />
+		</div>
 	</div>
 	<div class="content">
 		{#each items as item}
-			<div class="item">
+			<div
+				class="item"
+				on:contextmenu={(e) =>
+					setUpQueueItemMenu(
+						e,
+						item.id,
+						item.type,
+						unfavorite,
+						favorite,
+						dislike,
+						share,
+						addToPlaylist
+					)}
+			>
 				<div class="item__image">
 					<div
 						class="item__image__overlay"
@@ -80,11 +111,13 @@
 
 <style lang="scss">
 	:root[data-theme='dark'] {
-		--hover: rgba(255, 255, 255, 0.1);
+		--hover: rgba(255, 255, 255, 0.2);
+		--active: rgba(255, 255, 255, 0.1);
 	}
 
 	:root[data-theme='light'] {
 		--hover: rgba(0, 0, 0, 0.1);
+		--active: rgba(0, 0, 0, 0.2);
 	}
 
 	.queue {
@@ -106,7 +139,12 @@
 			margin-inline: 1rem;
 			margin-bottom: 0.5rem;
 
-			:global(:nth-child(2)) {
+			.autoplay-button {
+				width: 2rem;
+				height: 2rem;
+				display: flex;
+				justify-content: center;
+				align-items: center;
 				margin-left: auto;
 				margin-right: 0.5rem;
 				border-radius: 4px;
@@ -114,7 +152,11 @@
 				color: var(--text);
 
 				&:hover {
-					background-color: var(--hover);
+					background-color: var(--hover) !important;
+				}
+
+				&:active {
+					background-color: var(--active) !important;
 				}
 			}
 

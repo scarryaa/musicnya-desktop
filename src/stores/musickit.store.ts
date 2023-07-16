@@ -29,3 +29,4 @@ export const playbackState = writable(playbackStates.none);
 export const playing = writable(false);
 export const repeatMode = writable(0);
 export const shuffleMode = writable(false);
+export const autoplay = writable(true);
