@@ -1,17 +1,16 @@
 import Modal from '../../components/window/modal.svelte';
-import Login from '../../components/login.svelte';
-
-let modal;
 
 export const hide = () => {
 	document.querySelector('.modal')?.remove();
 };
 
-export const show = () => {
-	modal = new Modal({
+export const show = (component: any, width: number, height: number) => {
+	new Modal({
 		target: document.body,
 		props: {
-			component: Login
+			component: component,
+			width: width,
+			height: height
 		}
 	});
 };

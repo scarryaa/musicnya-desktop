@@ -24,7 +24,7 @@
 	import Footer from '../components/footer.svelte';
 	import NowPlayingTile from '../components/media/tiles/now-playing-tile.svelte';
 	import DrawerChip from '../components/drawer/drawer-chip.svelte';
-	import MediaTile from '../components/media/tiles/media-tile.svelte';
+	import DrawerTile from '../components/media/tiles/drawer-tile.svelte';
 	import Titlebar from '../components/window/titlebar.svelte';
 	import DrawerButton from '../components/drawer/drawer-button.svelte';
 	import NavigationButtons from '../components/window/navigation-buttons.svelte';
@@ -85,7 +85,7 @@
 
 		//check if user is logged in
 		if (!$loggedIn) {
-			show();
+			show(Login, 700, 400);
 		} else {
 			// redirect to home if user is logged in
 			if (window.location.pathname === '/') {
@@ -209,17 +209,19 @@
 			</div>
 			<div
 				class="bottom-left__scroll-wrapper"
-				style="width: {$drawerOpen ? '95%' : '70%'}; padding-right: {$drawerOpen ? '0' : '0.8rem'}"
+				style="width: {$drawerOpen ? '80%' : '70%'}; padding-right: {$drawerOpen
+					? '30px'
+					: '0.8rem'}"
 			>
 				{#each $libraryPlaylists as playlist, i (i)}
-					<MediaTile
+					<DrawerTile
 						id={playlist.id}
 						type="library-playlists"
 						href={`/media/playlist/${playlist.id}`}
 						tabindex="-1"
 						--showInfo={$drawerOpen ? 'block' : 'none'}
 						title={playlist.attributes?.name || 'Untitled'}
-						artist={playlist.attributes?.curatorName || 'Me'}
+						artist={playlist.attributes?.curatorName || ''}
 						src={playlist.attributes?.artwork?.url
 							.replace('{w}x{h}', '100x100')
 							.replace('{f}', 'webp') ||
@@ -349,7 +351,8 @@
 	}
 
 	.bottom-left__scroll-wrapper {
-		width: 95%;
+		width: 90%;
+		padding-right: 10px;
 		display: block;
 		position: relative;
 		height: inherit;

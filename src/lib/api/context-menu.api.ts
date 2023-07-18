@@ -2,15 +2,13 @@ import { developerToken, musicUserToken } from '../../stores/musickit.store';
 import { get } from 'svelte/store';
 import { createContextMenu } from '../services/context-menu.service';
 import type AlbumTile from '../../components/media/tiles/album-tile.svelte';
-import type MediaTile from '../../components/media/tiles/media-tile.svelte';
+import type DrawerTile from '../../components/media/tiles/drawer-tile.svelte';
 import {
 	_playLater,
 	_playNext,
 	addToPlaylist,
-	removeFromLibrary,
 	removePlaylistFromLibrary,
-	renamePlaylist,
-	sharePlaylist
+	share
 } from './actions.api';
 
 export const setUpQueueItemMenu = async (
@@ -27,7 +25,6 @@ export const setUpQueueItemMenu = async (
 	inLibrary?: boolean
 ) => {
 	e.preventDefault();
-	let catalogId = id;
 
 	createContextMenu({
 		x: e.clientX,
@@ -39,25 +36,25 @@ export const setUpQueueItemMenu = async (
 						text: 'Unlove',
 						style: 'solid',
 						icon: 'heart',
-						action: () => unfavorite(e, catalogId)
+						action: () => unfavorite(e, id)
 				  }
 				: {
 						text: 'Love',
 						style: 'regular',
 						icon: 'heart',
-						action: () => favorite(e, catalogId)
+						action: () => favorite(e, id)
 				  },
 			{
 				text: 'Dislike',
 				style: favorited === -1 ? 'solid' : 'regular',
 				icon: 'thumbs-down',
-				action: () => dislike(e, catalogId)
+				action: () => dislike(e, id)
 			},
 			{
 				text: 'Remove from queue',
 				style: 'solid',
 				icon: 'trash',
-				action: () => console.log('remove from queue')
+				action: () => removeFromQueue(e, id)
 			}
 		],
 		items: [
@@ -65,7 +62,7 @@ export const setUpQueueItemMenu = async (
 				text: 'Add to Library',
 				style: inLibrary ? 'solid' : 'regular',
 				icon: 'plus',
-				action: () => addToLibrary(e, catalogId, inLibrary)
+				action: () => addToLibrary(e, id, inLibrary)
 			},
 			{
 				text: 'Add to Playlist',
@@ -90,96 +87,25 @@ export const setUpMediaPageMenu = async (
 	unfavorite: (e: MouseEvent, catalogId: string) => void,
 	favorite: (e: MouseEvent, catalogId: string) => void,
 	dislike: (e: MouseEvent, catalogId: string) => void,
-	share: (e: MouseEvent, shareLink?: string) => void,
+	share: (e: MouseEvent, type: string, id: string, shareLink?: string, url?: string) => void,
 	addToPlaylist: (e: MouseEvent) => void,
+	renamePlaylist: (e: MouseEvent, type: string, id: string) => void,
 	shareLink?: string,
 	favorited?: -1 | 0 | 1,
 	inLibrary?: boolean
 ) => {
 	e.preventDefault();
-	let catalogId = id;
-
-	createContextMenu({
-		x: e.clientX,
-		y: e.clientY,
-		topItems: [
-			favorited === 1
-				? {
-						text: 'Unlove',
-						style: 'solid',
-						icon: 'heart',
-						action: () => unfavorite(e, catalogId)
-				  }
-				: {
-						text: 'Love',
-						style: 'regular',
-						icon: 'heart',
-						action: () => favorite(e, catalogId)
-				  },
-			favorited === 1 || favorited === 0 || favorited === undefined
-				? {
-						text: 'Dislike',
-						style: 'regular',
-						icon: 'thumbs-down',
-						action: () => dislike(e, catalogId)
-				  }
-				: {
-						text: 'Undislike',
-						style: 'solid',
-						icon: 'thumbs-down',
-						action: () => unfavorite(e, catalogId)
-				  }
-		],
-		items: [
-			{
-				text: 'Add to Playlist',
-				style: 'solid',
-				icon: 'bars',
-				action: () => addToPlaylist(e)
-			},
-			{
-				text: 'Share',
-				style: 'solid',
-				icon: 'square-caret-down',
-				action: () => share(e, shareLink)
-			}
-		],
-		target: e.target as HTMLElement
-	});
-};
-
-export const setUpPlaylistTileMenu = async (
-	e: MouseEvent,
-	playlistTile: MediaTile,
-	id: string,
-	type: string,
-	renamePlaylist: (e: MouseEvent, type: string, id: string) => void,
-	unfavorite: (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) => void,
-	favorite: (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) => void,
-	dislike: (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) => void,
-	play: (e: MouseEvent, type: string, id: string) => void,
-	playNext: (e: MouseEvent, type: string, id: string) => void,
-	playLater: (e: MouseEvent, type: string, id: string) => void,
-	sharePlaylist: (e: MouseEvent, type: string, id: string) => void,
-	favorited?: -1 | 0 | 1 | undefined,
-	inLibrary?: boolean
-) => {
-	e.preventDefault();
-	let catalogId = id;
 
 	// check if item is favorited
 	const _favorited =
 		favorited ??
-		(await fetch(
-			`https://amp-api.music.apple.com/v1/me/ratings/${type}?platform=web&ids=${catalogId}`,
-			{
-				method: 'GET',
-				headers: {
-					Authorization: `Bearer ${get(developerToken)}`,
-					'media-user-token': get(musicUserToken)
-				}
+		(await fetch(`https://amp-api.music.apple.com/v1/me/ratings/${type}?platform=web&ids=${id}`, {
+			method: 'GET',
+			headers: {
+				Authorization: `Bearer ${get(developerToken)}`,
+				'media-user-token': get(musicUserToken)
 			}
-		)
+		})
 			.then(async (res) => {
 				if (res.status === 401) {
 					throw new Error('Unauthorized');
@@ -199,32 +125,121 @@ export const setUpPlaylistTileMenu = async (
 						text: 'Unlove',
 						style: 'solid',
 						icon: 'heart',
-						action: () => unfavorite(e, type, catalogId, _favorited)
+						action: () => unfavorite(e, id)
 				  }
 				: {
 						text: 'Love',
 						style: 'regular',
 						icon: 'heart',
-						action: () => favorite(e, type, catalogId, _favorited)
+						action: () => favorite(e, id)
 				  },
 			_favorited === 1 || _favorited === 0 || _favorited === undefined
 				? {
 						text: 'Dislike',
 						style: 'regular',
 						icon: 'thumbs-down',
-						action: () => dislike(e, type, catalogId, _favorited)
+						action: () => dislike(e, id)
 				  }
 				: {
 						text: 'Undislike',
 						style: 'solid',
 						icon: 'thumbs-down',
-						action: () => unfavorite(e, type, catalogId, _favorited)
+						action: () => unfavorite(e, id)
+				  }
+		],
+		items: [
+			{
+				text: 'Add to Playlist',
+				style: 'solid',
+				icon: 'bars',
+				action: () => addToPlaylist(e)
+			},
+			{
+				text: 'Rename Playlist',
+				style: 'solid',
+				icon: 'pencil',
+				action: () => renamePlaylist(e, type, id)
+			},
+			{
+				text: 'Share',
+				style: 'solid',
+				icon: 'square-caret-down',
+				action: () => share(e, type, id, shareLink)
+			}
+		],
+		target: e.target as HTMLElement
+	});
+};
+
+export const setUpPlaylistTileMenu = async (
+	e: MouseEvent,
+	id: string,
+	type: string,
+	renamePlaylist: (e: MouseEvent, type: string, id: string) => void,
+	unfavorite: (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) => void,
+	favorite: (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) => void,
+	dislike: (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) => void,
+	share: (e: MouseEvent, type: string, id: string) => void,
+	favorited?: -1 | 0 | 1 | undefined,
+	inLibrary?: boolean
+) => {
+	e.preventDefault();
+
+	// check if item is favorited
+	const _favorited =
+		favorited ??
+		(await fetch(`https://amp-api.music.apple.com/v1/me/ratings/${type}?platform=web&ids=${id}`, {
+			method: 'GET',
+			headers: {
+				Authorization: `Bearer ${get(developerToken)}`,
+				'media-user-token': get(musicUserToken)
+			}
+		})
+			.then(async (res) => {
+				if (res.status === 401) {
+					throw new Error('Unauthorized');
+				}
+				const json = await res.json();
+				console.log(json);
+				return json;
+			})
+			.then((res) => res.data?.[0]?.attributes?.value));
+
+	createContextMenu({
+		x: e.clientX,
+		y: e.clientY,
+		topItems: [
+			_favorited === 1
+				? {
+						text: 'Unlove',
+						style: 'solid',
+						icon: 'heart',
+						action: () => unfavorite(e, type, id, _favorited)
+				  }
+				: {
+						text: 'Love',
+						style: 'regular',
+						icon: 'heart',
+						action: () => favorite(e, type, id, _favorited)
+				  },
+			_favorited === 1 || _favorited === 0 || _favorited === undefined
+				? {
+						text: 'Dislike',
+						style: 'regular',
+						icon: 'thumbs-down',
+						action: () => dislike(e, type, id, _favorited)
+				  }
+				: {
+						text: 'Undislike',
+						style: 'solid',
+						icon: 'thumbs-down',
+						action: () => unfavorite(e, type, id, _favorited)
 				  },
 			{
 				text: 'Remove from Library',
 				style: 'solid',
 				icon: 'trash',
-				action: () => removePlaylistFromLibrary(e, type, catalogId)
+				action: () => removePlaylistFromLibrary(e, type, id)
 			}
 		],
 		items: [
@@ -238,13 +253,13 @@ export const setUpPlaylistTileMenu = async (
 				text: 'Rename',
 				style: 'solid',
 				icon: 'pencil',
-				action: () => renamePlaylist(e, type, catalogId)
+				action: () => renamePlaylist(e, type, id)
 			},
 			{
 				text: 'Share',
 				style: 'solid',
 				icon: 'square-caret-down',
-				action: () => sharePlaylist(e, type, id)
+				action: () => share(e, type, id)
 			}
 		],
 		target: e.target as HTMLElement

@@ -56,6 +56,7 @@
 			on:click={() => {
 				autoplay.update((v) => !v);
 				MusicKit.getInstance().autoplay = get(autoplay);
+				MusicKit.getInstance().autoplayEnabled = get(autoplay);
 				items = MusicKit.getInstance().queue.items;
 			}}
 			style="background-color: {$autoplay ? 'rgba(0, 0, 0, 0.5)' : 'transparent'}"

@@ -6,16 +6,12 @@
 		addToLibrary,
 		addToPlaylist,
 		dislike,
-		dislikePlaylist,
 		favorite,
-		favoritePlaylist,
 		playAlbum,
 		removeFromLibrary,
 		renamePlaylist,
 		share,
-		sharePlaylist,
-		unfavorite,
-		unfavoritePlaylist
+		unfavorite
 	} from '$lib/api/actions.api';
 	import { setUpPlaylistTileMenu } from '$lib/api/context-menu.api';
 
@@ -43,17 +39,13 @@
 		e.preventDefault();
 		setUpPlaylistTileMenu(
 			e,
-			this,
 			id,
 			type,
 			renamePlaylist,
-			unfavoritePlaylist,
-			favoritePlaylist,
-			dislikePlaylist,
-			playAlbum,
-			_playNext,
-			_playLater,
-			sharePlaylist,
+			unfavorite,
+			favorite,
+			dislike,
+			share,
 			favorited,
 			inLibrary
 		);
@@ -128,16 +120,16 @@
 		.album-info {
 			display: var(--showInfo);
 			flex-direction: column;
-			margin-top: 0.6rem;
 			margin-left: 1rem;
 			text-align: left;
 			padding-right: 12px;
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
+			align-self: center;
+			width: 100%;
 
 			.album-title {
-				align-self: flex-start;
 				font-size: 1rem;
 				font-weight: 400;
 				overflow: hidden;

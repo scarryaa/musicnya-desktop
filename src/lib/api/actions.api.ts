@@ -7,27 +7,56 @@ import {
 	removeFromListenLater
 } from '$lib/services/favorites.service';
 import { play, playLater, playNext } from '$lib/services/playback-service';
+import { showToast } from '../../components/toast.svelte';
 import { show } from '$lib/services/modal.service';
-import Toast, { showToast } from '../../components/toast.svelte';
+import Rename from '../../components/rename.svelte';
 
-export const playAlbum = (e: MouseEvent, type: string, id: string) => {
-	e.preventDefault();
-	play(type.slice(0, -1).replace('library-', ''), id);
+const getHeaders = () => ({
+	Authorization: `Bearer ${get(developerToken)}`,
+	'media-user-token': get(musicUserToken)
+});
+
+const fetchResource = (url: RequestInfo | URL, options: RequestInit | undefined) =>
+	fetch(url, { ...options, headers: getHeaders() })
+		.then((res) => res.json())
+		.catch(console.error);
+
+const fetchRating = async (url: RequestInfo | URL, method: any, value: any) => {
+	const body = JSON.stringify({
+		attributes: {
+			value
+		},
+		type: 'rating'
+	});
+
+	const options = {
+		method,
+		body
+	};
+
+	await fetchResource(url, options);
 };
 
-export const _playNext = (e: MouseEvent, type: string, id: string) => {
+export const playMedia = (
+	e: MouseEvent,
+	type: string,
+	id: string,
+	operation: (arg0: string, arg1: string) => void
+) => {
 	e.preventDefault();
-	playNext(type.slice(0, -1).replace('library-', ''), id);
+	operation(type.slice(0, -1).replace('library-', ''), id);
 };
 
-export const _playLater = (e: MouseEvent, type: string, id: string) => {
-	e.preventDefault();
-	playLater(type.slice(0, -1).replace('library-', ''), id);
-};
+export const playAlbum = (e: MouseEvent, type: string, id: string) => playMedia(e, type, id, play);
+
+export const _playNext = (e: MouseEvent, type: string, id: string) =>
+	playMedia(e, type, id, playNext);
+
+export const _playLater = (e: MouseEvent, type: string, id: string) =>
+	playMedia(e, type, id, playLater);
 
 export const addToPlaylist = (e: MouseEvent) => {
 	e.preventDefault();
-	show('add-to-playlist');
 };
 
 export const newPlaylist = (e: MouseEvent) => {
@@ -53,211 +82,52 @@ export const newPlaylist = (e: MouseEvent) => {
 		});
 };
 
-export const dislike = async (
-	e: MouseEvent,
-	type: string,
-	catalogId: string,
-	favorited: -1 | 0 | 1
-) => {
-	e.preventDefault();
-	const oldVal = favorited;
-
-	// dislike
-	await fetch(
-		`https://amp-api.music.apple.com/v1/me/ratings/${type.replace('library-', '')}/${catalogId}`,
-		{
-			method: 'PUT',
-			headers: {
-				Authorization: `Bearer ${get(developerToken)}`,
-				'media-user-token': get(musicUserToken)
-			},
-			body: JSON.stringify({
-				attributes: {
-					value: -1
-				}
-			})
-		}
-	)
-		.then(() => (favorited = -1))
-		.catch((err) => {
-			console.log(err);
-			favorited = oldVal;
-		});
-};
-
-export const unfavorite = async (
-	e: MouseEvent,
-	type: string,
-	catalogId: string,
-	favorited: -1 | 0 | 1
-) => {
-	e.preventDefault();
-	const oldVal = favorited;
-
-	// remove from favorites
-	await fetch(
-		`https://amp-api.music.apple.com/v1/me/ratings/${type.replace('library-', '')}/${catalogId}`,
-		{
-			method: 'DELETE',
-			headers: {
-				Authorization: `Bearer ${get(developerToken)}`,
-				'media-user-token': get(musicUserToken)
-			}
-		}
-	)
-		.then(() => (favorited = 0))
-		.catch((err) => {
-			console.log(err);
-			favorited = oldVal;
-		});
-};
-
-export const favorite = async (
-	e: MouseEvent,
-	type: string,
-	catalogId: string,
-	favorited: -1 | 0 | 1
-) => {
-	e.preventDefault();
-	const oldVal = favorited;
-
-	// add to favorites
-	await fetch(
-		`https://amp-api.music.apple.com/v1/me/ratings/${type.replace('library-', '')}/${catalogId}`,
-		{
-			method: 'PUT',
-			headers: {
-				Authorization: `Bearer ${get(developerToken)}`,
-				'media-user-token': get(musicUserToken)
-			},
-			body: JSON.stringify({
-				attributes: {
-					value: 1
-				},
-				type: 'rating'
-			})
-		}
-	)
-		.then(() => (favorited = 1))
-		.catch((err) => {
-			console.log(err);
-			favorited = oldVal;
-		});
-};
-
-export const dislikePlaylist = async (
-	e: MouseEvent,
-	type: string,
-	catalogId: string,
-	favorited: -1 | 0 | 1
-) => {
-	e.preventDefault();
-	const oldVal = favorited;
-
-	// dislike
-	await fetch(`https://amp-api.music.apple.com/v1/me/ratings/${type}/${catalogId}`, {
-		method: 'PUT',
-		headers: {
-			Authorization: `Bearer ${get(developerToken)}`,
-			'media-user-token': get(musicUserToken)
-		},
-		body: JSON.stringify({
-			attributes: {
-				value: -1
-			}
-		})
-	})
-		.then(() => (favorited = -1))
-		.catch((err) => {
-			console.log(err);
-			favorited = oldVal;
-		});
-};
-
-export const unfavoritePlaylist = async (
-	e: MouseEvent,
-	type: string,
-	catalogId: string,
-	favorited: -1 | 0 | 1
-) => {
-	e.preventDefault();
-	const oldVal = favorited;
-
-	// remove from favorites
-	await fetch(`https://amp-api.music.apple.com/v1/me/ratings/${type}/${catalogId}`, {
-		method: 'DELETE',
-		headers: {
-			Authorization: `Bearer ${get(developerToken)}`,
-			'media-user-token': get(musicUserToken)
-		}
-	})
-		.then(() => (favorited = 0))
-		.catch((err) => {
-			console.log(err);
-			favorited = oldVal;
-		});
-};
-
-export const favoritePlaylist = async (
-	e: MouseEvent,
-	type: string,
-	catalogId: string,
-	favorited: -1 | 0 | 1
-) => {
-	e.preventDefault();
-	const oldVal = favorited;
-
-	// add to favorites
-	await fetch(`https://amp-api.music.apple.com/v1/me/ratings/${type}/${catalogId}`, {
-		method: 'PUT',
-		headers: {
-			Authorization: `Bearer ${get(developerToken)}`,
-			'media-user-token': get(musicUserToken)
-		},
-		body: JSON.stringify({
-			attributes: {
-				value: 1
-			},
-			type: 'rating'
-		})
-	})
-		.then(() => (favorited = 1))
-		.catch((err) => {
-			console.log(err);
-			favorited = oldVal;
-		});
-};
-
-export const sharePlaylist = async (e: MouseEvent, type: string, id: string) => {
-	e.preventDefault();
-	// copy to clipboard
-
-	const url = await fetch(
-		`https://amp-api.music.apple.com/v1/me/library/${type.replace('library-', '')}/${id}/catalog`,
-		{
-			method: 'GET',
-			headers: {
-				Authorization: `Bearer ${get(developerToken)}`,
-				'media-user-token': get(musicUserToken)
-			}
-		}
-	)
-		.then((res) => res.json())
-		.then((json) => json.data?.[0].attributes.url)
-		.catch((err) => {
-			console.log(err);
-		});
-
-	if (navigator.clipboard && url) {
-		navigator.clipboard.writeText(url).then(() => {
-			//show toast
+const writeToClipboard = async (text: string) => {
+	if (navigator.clipboard) {
+		try {
+			await navigator.clipboard.writeText(text);
 			showToast('Copied to clipboard!');
-		});
+		} catch (err) {
+			showToast('Unable to copy to clipboard');
+		}
 	} else {
-		//show toast
-		showToast('Error copying to clipboard!');
+		showToast('Clipboard API not available');
 	}
 };
+
+export const handleRating = async (
+	e: { preventDefault: () => void },
+	type: string,
+	catalogId: any,
+	favorited: any,
+	value: number,
+	method: string
+) => {
+	e.preventDefault();
+
+	const oldVal = favorited;
+	const url = `https://amp-api.music.apple.com/v1/me/ratings/${type.replace(
+		'library-',
+		''
+	)}/${catalogId}`;
+
+	try {
+		await fetchRating(url, method, value);
+		favorited = value;
+	} catch (err) {
+		console.error(err);
+		favorited = oldVal;
+	}
+};
+
+export const dislike = (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) =>
+	handleRating(e, type, catalogId, favorited, -1, 'PUT');
+
+export const unfavorite = (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) =>
+	handleRating(e, type, catalogId, favorited, 0, 'DELETE');
+
+export const favorite = (e: MouseEvent, type: string, catalogId: string, favorited: -1 | 0 | 1) =>
+	handleRating(e, type, catalogId, favorited, 1, 'PUT');
 
 export const share = async (
 	e: MouseEvent,
@@ -267,63 +137,61 @@ export const share = async (
 	url?: string
 ) => {
 	e.preventDefault();
-	// copy to clipboard
-	if (navigator.clipboard && shareLink) {
-		navigator.clipboard.writeText(shareLink).then(() => {
-			showToast('Copied to clipboard!');
-		});
-	} else {
-		if (window.location.pathname.includes('library')) {
-			url = await fetch(
+
+	if (shareLink) {
+		await writeToClipboard(shareLink);
+		return;
+	}
+
+	if (type?.includes('library')) {
+		try {
+			const response = await fetch(
 				`https://amp-api.music.apple.com/v1/me/library/${type.replace(
 					'library-',
 					''
 				)}/${id}/catalog`,
 				{
 					method: 'GET',
-					headers: {
-						Authorization: `Bearer ${get(developerToken)}`,
-						'media-user-token': get(musicUserToken)
-					}
+					headers: getHeaders()
 				}
-			).then(async (res) => {
-				if (res.status === 401) {
-					throw new Error('Unauthorized');
-				}
-				const json = await res.json();
-				console.log(json);
-				return json['data'][0]['attributes']['url'];
-			});
-		}
+			);
 
-		if (url && !window.location.pathname.includes('library')) {
-			const shareUrl = url.data[0].attributes.url;
-			console.log(shareUrl);
-			if (navigator.clipboard && shareUrl) {
-				navigator.clipboard.writeText(shareUrl).then(() => {
-					showToast('Copied to clipboard!');
-				});
+			if (response.status === 401) {
+				throw new Error('Unauthorized');
 			}
-		} else {
-			navigator.clipboard.writeText(url || '').then(() => {
-				showToast('Copied to clipboard!');
-			});
+
+			const json = await response.json();
+			url = json['data'][0]['attributes']['url'];
+		} catch (err) {
+			console.error(err);
+			showToast('Error fetching URL');
+			return;
 		}
+	}
+
+	if (url && !type.includes('library')) {
+		let shareUrl;
+		try {
+			shareUrl = url.data[0].attributes.url;
+		} catch (err) {
+			console.error('Error parsing URL data');
+			return;
+		}
+		await writeToClipboard(shareUrl);
+	} else if (url) {
+		await writeToClipboard(url);
+	} else {
+		showToast('No URL provided');
 	}
 };
 
-export const addToLibrary = async (e: MouseEvent, type: string, id: string, inLibrary: boolean) => {
+export const addToLibrary = async (e: MouseEvent, type: string, id: string) => {
 	e.preventDefault();
 
 	// add to library
 	await fetch(`https://amp-api.music.apple.com/v1/me/library?ids[${type}]=${id}`, {
 		method: 'POST',
-		headers: {
-			'media-user-token': get(musicUserToken),
-			authorization: `Bearer ${get(developerToken)}`
-		}
-	}).finally(() => {
-		inLibrary = true;
+		headers: getHeaders()
 	});
 };
 
@@ -331,18 +199,47 @@ export const renamePlaylist = async (e: MouseEvent, type: string, id: string) =>
 	e.preventDefault();
 
 	// show modal
-	const name = undefined;
+	show(Rename, 500, 400);
+
+	// get name
+	const name: string = await new Promise((resolve) => {
+		const input = document.getElementById('playlist-name') as HTMLInputElement;
+		const button = document.getElementById('rename') as HTMLButtonElement;
+
+		button.addEventListener('click', () => {
+			resolve(input.value);
+		});
+
+		input.addEventListener('keydown', (e) => {
+			if (e.key === 'Enter') {
+				resolve(input.value);
+			}
+		});
+	});
 	if (!name) return;
+
+	// rename local playlist
+	let playlists = get(libraryPlaylists);
+	const playlist = playlists.find((playlist) => playlist.id === id);
+	if (playlist && playlist.attributes) {
+		playlist.attributes.name = name;
+
+		//sort playlists
+		playlists = playlists.sort((a, b) => {
+			if (a.attributes.name < b.attributes.name) return -1;
+			if (a.attributes.name > b.attributes.name) return 1;
+			return 0;
+		});
+
+		libraryPlaylists.update((playlists) => playlists);
+	}
 
 	// rename playlist
 	await fetch(
 		`https://amp-api.music.apple.com/v1/me/library/${type.replace('library-', '')}/${id}`,
 		{
 			method: 'PUT',
-			headers: {
-				'media-user-token': get(musicUserToken),
-				authorization: `Bearer ${get(developerToken)}`
-			},
+			headers: getHeaders(),
 			body: JSON.stringify({
 				attributes: {
 					name
@@ -364,10 +261,7 @@ export const removePlaylistFromLibrary = async (e: MouseEvent, type: string, id:
 		)}/${id}?art[url]=f`,
 		{
 			method: 'DELETE',
-			headers: {
-				'media-user-token': get(musicUserToken),
-				authorization: `Bearer ${get(developerToken)}`
-			}
+			headers: getHeaders()
 		}
 	);
 
@@ -394,10 +288,7 @@ export const removeFromLibrary = async (
 		)}/${id}?art[url]=f`,
 		{
 			method: 'DELETE',
-			headers: {
-				'media-user-token': get(musicUserToken),
-				authorization: `Bearer ${get(developerToken)}`
-			}
+			headers: getHeaders()
 		}
 	).finally(() => {
 		if (window.location.pathname.includes('library')) {

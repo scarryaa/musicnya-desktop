@@ -2,10 +2,12 @@
 	import Close from 'svelte-material-icons/Close.svelte';
 
 	export let component: ConstructorOfATypedSvelteComponent;
+	export let width: number = 400;
+	export let height: number = 300;
 </script>
 
 <div class="modal">
-	<div class="modal__content">
+	<div class="modal__content" style="width: {width}px; height: {height}px;">
 		<button
 			class="modal__buttons__button"
 			on:click={() => document.querySelector('.modal')?.remove()}
@@ -44,13 +46,12 @@
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
-			width: 80%;
-			height: 80%;
 			background-color: var(--modal-background);
 			border-radius: 0.4rem;
 			overflow-y: overlay;
 			padding: 1.6rem;
 			color: var(--text);
+			overflow: hidden;
 		}
 
 		&__buttons__button {

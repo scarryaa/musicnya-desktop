@@ -3,13 +3,15 @@
 	export let text: string;
 	export let bg: string;
 	export let width: string;
-	export let height: String;
+	export let height: string;
+	export let id: string;
 </script>
 
 <button
 	on:click
 	class="button-filled {$$restProps.class ?? ''}"
 	style="background-color: {bg}; width: {width}; height: {height}"
+	{id}
 >
 	<div class="button-filled__icon-text">
 		<svelte:component this={icon} />

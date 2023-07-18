@@ -15,8 +15,8 @@
 	import { setUpMediaPageMenu } from '$lib/api/context-menu.api.js';
 	import { developerToken, musicUserToken } from '../../../../stores/musickit.store.js';
 	import { get } from 'svelte/store';
-	import { show } from '$lib/services/modal.service.js';
 	import { showToast } from '../../../../components/toast.svelte';
+	import { renamePlaylist, share } from '$lib/api/actions.api.js';
 
 	export let data;
 
@@ -48,15 +48,15 @@
 		});
 	};
 
-	const getTypeWithoutPrefix = (type) => {
+	const getTypeWithoutPrefix = (type: string) => {
 		return type?.replace('library-', '') || '';
 	};
 
-	const getUrlWithSize = (url) => {
+	const getUrlWithSize = (url: string) => {
 		return replaceUrlPlaceholders(url, '300x300');
 	};
 
-	const playShuffle = (type, id) => {
+	const playShuffle = (type: string, id: string) => {
 		return type === 'library' ? shuffle(type, [id || '']) : play(type, [id || '']);
 	};
 
@@ -118,53 +118,6 @@
 			}
 		).then(() => (favorited = 1));
 	};
-
-	const share = async (e: MouseEvent, url?: string) => {
-		e.preventDefault();
-		// copy to clipboard
-		if (navigator.clipboard && shareLink) {
-			navigator.clipboard.writeText(shareLink).then(() => {
-				showToast('Copied to clipboard!');
-			});
-		} else {
-			if (window.location.pathname.includes('library')) {
-				url = await fetch(
-					`https://amp-api.music.apple.com/v1/me/library/${type.replace(
-						'library-',
-						''
-					)}/${id}/catalog`,
-					{
-						method: 'GET',
-						headers: {
-							Authorization: `Bearer ${get(developerToken)}`,
-							'media-user-token': get(musicUserToken)
-						}
-					}
-				).then(async (res) => {
-					if (res.status === 401) {
-						throw new Error('Unauthorized');
-					}
-					const json = await res.json();
-					console.log(json);
-					return json['data'][0]['attributes']['url'];
-				});
-			}
-
-			if (url && !window.location.pathname.includes('library')) {
-				const shareUrl = url.data[0].attributes.url;
-				console.log(shareUrl);
-				if (navigator.clipboard && shareUrl) {
-					navigator.clipboard.writeText(shareUrl).then(() => {
-						showToast('Copied to clipboard!');
-					});
-				}
-			} else {
-				navigator.clipboard.writeText(url || '').then(() => {
-					showToast('Copied to clipboard!');
-				});
-			}
-		}
-	};
 </script>
 
 <div class="media-wrapper" style="background: {data.media?.color?.hex || '#a0a0a0'}">
@@ -212,6 +165,7 @@
 			<div style="display: flex; flex-direction: row; width: inherit;">
 				<div class="play-shuffle">
 					<ButtonFilled
+						id="play"
 						bg=""
 						width="6rem"
 						height="2.5rem"
@@ -221,6 +175,7 @@
 							play(data.media?.type.replace('library-', '') || '', [data.media?.id || ''])}
 					/>
 					<ButtonFilled
+						id="shuffle"
 						bg=""
 						width="7rem"
 						height="2.5rem"
@@ -254,9 +209,7 @@
 								dislike,
 								share,
 								addToPlaylist,
-								shareLink,
-								favorited,
-								inLibrary
+								renamePlaylist
 							)}
 					/>
 				</div>
@@ -426,7 +379,7 @@
 			min-height: 100%;
 			height: auto;
 			margin-top: 2rem;
-			margin-left: -2rem;
+			margin-left: -1.4rem;
 			padding: 0.5rem;
 			padding-top: 0;
 			padding-inline: 1rem;
