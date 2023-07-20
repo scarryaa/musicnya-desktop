@@ -13,9 +13,6 @@ jobs:
           - os: ubuntu-latest
             platform: linux
             target: AppImage
-          - os: macos-latest
-            platform: mac
-            target: dmg
           - os: windows-latest
             platform: win
             target: nsis
