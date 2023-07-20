@@ -113,7 +113,6 @@
 		};
 
 		const handle_error = (e: ErrorEvent) => {
-			e.preventDefault();
 			report_error(e?.message);
 		};
 

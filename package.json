@@ -11,8 +11,8 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/scarryaa/musicnya-desktop.git"
-	  },
-	  "keywords": [
+	},
+	"keywords": [
 		"musicnya",
 		"apple music",
 		"music"
@@ -21,7 +21,7 @@
 	"bin": "main.cjs",
 	"type": "module",
 	"scripts": {
-		"dev": "(cd ./libs/nyan_core && cargo run) & (cd ./libs/api_server && node index.ts) & vite dev",
+		"dev": "vite dev",
 		"electron-dev": "concurrently \"yarn run dev\" \"yarn run electron\"",
 		"electron": "wait-on http://localhost:5173 && ${IN_NIX_SHELL:+steam-run} electron --no-sandbox .",
 		"build": "vite build",
@@ -43,6 +43,18 @@
 		"electronDownload": {
 			"mirror": "https://github.com/castlabs/electron-releases/releases/download/v"
 		},
+		"files": [
+			"main.cjs",
+			"preload.cjs",
+			{
+				"from": "build",
+				"to": ""
+			},
+			{
+				"from": "libs",
+				"to": "libs"
+			}
+		],
 		"mac": {
 			"category": "public.app-category.music",
 			"icon": "build/icon.icns",
@@ -60,6 +72,9 @@
 			"category": "AudioVideo",
 			"target": [
 				"AppImage"
+			],
+			"asarUnpack": [
+				"libs/**/*"
 			]
 		},
 		"win": {
@@ -70,11 +85,12 @@
 		},
 		"nsis": {
 			"deleteAppDataOnUninstall": true
-		  }
+		}
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^2.0.0",
+		"@sveltejs/adapter-static": "^2.0.0",
 		"@sveltejs/kit": "^1.5.0",
 		"@types/lodash": "^4.14.195",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
@@ -103,7 +119,12 @@
 		"@fontsource/noto-sans-jp": "^5.0.4",
 		"@fontsource/readex-pro": "^5.0.4",
 		"@fontsource/uncut-sans": "^5.0.4",
+		"@sentry/node": "^7.59.3",
+		"@sentry/svelte": "^7.59.3",
+		"electron-context-menu": "^3.6.1",
+		"electron-reloader": "^1.2.3",
 		"electron-serve": "^1.1.0",
+		"electron-window-state": "^5.0.3",
 		"fast-average-color": "^9.3.0",
 		"lodash": "^4.17.21",
 		"svelte-material-icons": "^3.0.4"

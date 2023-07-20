@@ -36,6 +36,7 @@ in pkgs.mkShell {
     nodePackages.npm
     electron-castlabs
     p7zip
+    appimage-run
   ];
 
   RUSTC_VERSION = pkgs.lib.readFile ./rust-toolchain;

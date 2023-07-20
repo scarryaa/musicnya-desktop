@@ -16,7 +16,7 @@ import { get } from 'svelte/store';
  */
 export async function load({ page, session, fetch }) {
 	if (browser) {
-		return fetch('http://localhost:5173/config.json')
+		return fetch('./config.json')
 			.then((response) => response.json())
 			.then((data) => data)
 			.then((data) =>

@@ -11,30 +11,32 @@
 
 <div class="page-wrapper">
 	<img
-		src={data.media.attributes?.uber?.masterArt?.url.replace('{w}x{h}', '1920x1080')}
+		src={data.media?.attributes?.uber?.masterArt?.url.replace('{w}x{h}', '1920x1080')}
 		alt={data.media?.attributes?.name}
 	/>
 	<div class="page-content">
-		<h1 class="title">{data.media?.attributes?.title || ''}</h1>
-		{#each data.media?.relationships?.children?.data as item}
-			{#if item.attributes?.editorialElementKind === '404'}
-				{#if item.attributes?.title}
-					<h2 class="title">
-						{item.attributes?.title || ''}
-					</h2>
+		{#if data.media}
+			<h1 class="title">{data.media?.attributes?.title || ''}</h1>
+			{#each data.media?.relationships?.children?.data as item}
+				{#if item.attributes?.editorialElementKind === '404'}
+					{#if item.attributes?.title}
+						<h2 class="title">
+							{item.attributes?.title || ''}
+						</h2>
+					{/if}
+					<p class="description">
+						{@html item.attributes?.description || ''}
+					</p>
+				{:else if item.attributes?.editorialElementKind === '345'}
+					<TileGroup
+						wrap={false}
+						data={{ media: item }}
+						groupTitle={item.attributes?.title || ''}
+						contentType={item.type}
+					/>
 				{/if}
-				<p class="description">
-					{@html item.attributes?.description || ''}
-				</p>
-			{:else if item.attributes?.editorialElementKind === '345'}
-				<TileGroup
-					wrap={false}
-					data={{ media: item }}
-					groupTitle={item.attributes?.title || ''}
-					contentType={item.type}
-				/>
-			{/if}
-		{/each}
+			{/each}
+		{/if}
 	</div>
 </div>
 

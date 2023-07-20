@@ -1,87 +1,123 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const { app, BrowserWindow, components} = require("electron");
-const path = require("path");
-const ipcMain = require("electron").ipcMain;
+const windowStateManager = require('electron-window-state');
+const { app, BrowserWindow, ipcMain, components, utilityProcess } = require('electron');
+const contextMenu = require('electron-context-menu');
+const serve = require('electron-serve');
+const path = require('path');
+const { exec } = require('child_process');
 
-let mainWindow;
+utilityProcess.fork(path.join(__dirname, '/libs/api_server/index.ts'))
+const script = exec('(cd ./libs/nyan_core && cargo run)', (error, stdout, stderr) => {
+  if (error) {
+    console.log(`error: ${error.message}`);
+    return;
+  }
+});
+
+try {
+	require('electron-reloader')(module);
+} catch (e) {
+	console.error(e);
+}
 
 if (process.platform === "linux") {
-  app.commandLine.appendSwitch("enable-accelerated-mjpeg-decode");
-  app.commandLine.appendSwitch("enable-accelerated-video");
-  app.commandLine.appendSwitch("disable-gpu-driver-bug-workarounds");
-  app.commandLine.appendSwitch("ignore-gpu-blacklist");
-  app.commandLine.appendSwitch("enable-native-gpu-memory-buffers");
-  app.commandLine.appendSwitch("enable-accelerated-video-decode");
-  app.commandLine.appendSwitch("enable-gpu-rasterization");
-  app.commandLine.appendSwitch("enable-native-gpu-memory-buffers");
-  app.commandLine.appendSwitch("enable-oop-rasterization");
-  app.commandLine.appendSwitch("in-process-gpu");
-  app.commandLine.appendSwitch("enable-features", "Vulkan");
-}
-
-function isDev() {
-  return !app.isPackaged;
-}
-
-function createWindow() {
-  mainWindow = new BrowserWindow({
-    width: 950,
-    height: 650,
-    webPreferences: {
-      nodeIntegration: true,
-      preload: path.join(__dirname, "preload.cjs"),
-    },
-    icon: path.join(__dirname, "public/favicon.png"),
-    titleBarStyle: "hidden",
-    autoHideMenuBar: true,
-    frame: false,
-    show: false,
-    minHeight: 400,
-    minWidth: 950,
-    acceptFirstMouse: true,
-    center: true,
-    roundedCorners: true,
-  });
-
-  mainWindow.loadURL("http://localhost:5173/");
-
-  process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = true;
-  if (isDev()) {
-    mainWindow.webContents.openDevTools();
+	app.commandLine.appendSwitch("enable-accelerated-mjpeg-decode");
   }
 
-  mainWindow.on("closed", function () {
-    mainWindow = null;
-  });
+const serveURL = serve({ directory: '.' });
+const port = process.env.PORT || 5173;
+const dev = !app.isPackaged;
+let mainWindow;
 
-  mainWindow.once("ready-to-show", () => {
-    mainWindow.show();
-  });
+function createWindow() {
+	let windowState = windowStateManager({
+		defaultWidth: 950,
+		defaultHeight: 650,
+	});
+
+	const mainWindow = new BrowserWindow({
+		backgroundColor: 'whitesmoke',
+		titleBarStyle: 'hidden',
+		autoHideMenuBar: true,
+		trafficLightPosition: {
+			x: 17,
+			y: 32,
+		},
+		minHeight: 400,
+		minWidth: 950,
+		frame: false,
+		show: false,
+		acceptFirstMouse: true,
+		center: true,
+		roundedCorners: true,
+		webPreferences: {
+			enableRemoteModule: false,
+			contextIsolation: true,
+			nodeIntegration: true,
+			spellcheck: false,
+			devTools: true,
+			preload: path.join(__dirname, 'preload.cjs'),
+		},
+		x: windowState.x,
+		y: windowState.y,
+		width: windowState.width,
+		height: windowState.height,
+	});
+
+	windowState.manage(mainWindow);
+
+	mainWindow.once('ready-to-show', () => {
+		mainWindow.show();
+		mainWindow.focus();
+	});
+
+	mainWindow.on('close', () => {
+		windowState.saveState(mainWindow);
+	});
+
+	return mainWindow;
 }
 
-app.on("ready", async () => {
-  await components.whenReady();
-  createWindow();
+contextMenu({
+	showLookUpSelection: false,
+	showSearchWithGoogle: false,
+	showCopyImage: false,
+	prepend: (defaultActions, params, browserWindow) => [
+		{
+			label: 'Make App 💻',
+		},
+	],
 });
 
+function loadVite(port) {
+	mainWindow.loadURL(`http://localhost:${port}`).catch((e) => {
+		console.log('Error loading URL, retrying', e);
+		setTimeout(() => {
+			loadVite(port);
+		}, 200);
+	});
+}
 
-app.on("window-all-closed", function () {
-  if (process.platform !== "darwin") app.quit();
+async function createMainWindow() {
+	await components.whenReady();
+	mainWindow = createWindow();
+	mainWindow.once('close', () => {
+		mainWindow = null;
+	});
+
+	if (dev) loadVite(port);
+	else serveURL(mainWindow);
+}
+
+app.once('ready', createMainWindow);
+app.on('activate', () => {
+	if (!mainWindow) {
+		createMainWindow();
+	}
+});
+app.on('window-all-closed', () => {
+	if (process.platform !== 'darwin') app.quit();
 });
 
-app.on("activate", function () {
-  if (mainWindow === null) createWindow();
-});
-
-// ipc communication
-ipcMain.on('close-window', async () => {
-  mainWindow.close();
-});
-
-ipcMain.on('minimize-window', async () => {
-  mainWindow.minimize();
-});
-
-ipcMain.on('maximize-window', async () => {
-  mainWindow.maximize();
+ipcMain.on('to-main', (event, count) => {
+	return mainWindow.webContents.send('from-main', `next count is ${count + 1}`);
 });

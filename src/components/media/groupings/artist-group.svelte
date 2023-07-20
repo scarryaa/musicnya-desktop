@@ -107,25 +107,58 @@
 		</div>
 	</div>
 	<div class="artist-group__content">
-		{#each data.artist.views?.[viewType]?.data as media}
-			{#if contentType === 'songs'}
-				<div class="artist-group__content__song">
-					<SongTile
-						id={media.id}
-						title={media.attributes.name}
-						subtitle="year"
-						artist={media.attributes.artistName}
-						year={media.attributes.releaseDate?.slice(0, 4)}
-						src={media.attributes.artwork?.url.replace('{w}x{h}', '100x100').replace('{f}', 'webp')}
-					/>
-				</div>
-			{/if}
+		{#if typeof data.artist?.views?.[viewType]?.data !== 'object'}
+			<p>No {contentType} found</p>
+		{:else}
+			{#each data.artist?.views?.[viewType]?.data as media}
+				{#if contentType === 'songs'}
+					<div class="artist-group__content__song">
+						<SongTile
+							id={media.id}
+							title={media.attributes.name}
+							subtitle="year"
+							artist={media.attributes.artistName}
+							year={media.attributes.releaseDate?.slice(0, 4)}
+							src={media.attributes.artwork?.url
+								.replace('{w}x{h}', '100x100')
+								.replace('{f}', 'webp')}
+						/>
+					</div>
+				{/if}
 
-			{#if contentType === 'albums'}
-				<div class="artist-group__content__tile">
-					<AlbumTile
-						type="albums"
-						shareLink={media.attributes.url}
+				{#if contentType === 'albums'}
+					<div class="artist-group__content__tile">
+						<AlbumTile
+							type="albums"
+							shareLink={media.attributes.url}
+							subtitle="year"
+							id={media.id}
+							title={media.attributes.name}
+							artist={media.attributes.artistName}
+							artistId={media.attributes.artistId}
+							year={media.attributes.releaseDate?.slice(0, 4)}
+							src={media.attributes.artwork?.url
+								.replace('{w}x{h}', '400x400')
+								.replace('{f}', 'webp')}
+						/>
+					</div>
+				{/if}
+
+				{#if contentType === 'artists'}
+					<div class="artist-group__content__artist">
+						<ArtistTile
+							id={media.id}
+							title={media.attributes.name}
+							src={media.attributes.artwork?.url
+								.replace('{w}x{h}', '300x300')
+								.replace('{f}', 'webp')}
+						/>
+					</div>
+				{/if}
+
+				{#if contentType === 'videos'}
+					<VideoTile
+						type="videos"
 						subtitle="year"
 						id={media.id}
 						title={media.attributes.name}
@@ -134,32 +167,9 @@
 						year={media.attributes.releaseDate?.slice(0, 4)}
 						src={media.attributes.artwork?.url.replace('{w}x{h}', '400x400').replace('{f}', 'webp')}
 					/>
-				</div>
-			{/if}
-
-			{#if contentType === 'artists'}
-				<div class="artist-group__content__artist">
-					<ArtistTile
-						id={media.id}
-						title={media.attributes.name}
-						src={media.attributes.artwork?.url.replace('{w}x{h}', '300x300').replace('{f}', 'webp')}
-					/>
-				</div>
-			{/if}
-
-			{#if contentType === 'videos'}
-				<VideoTile
-					type="videos"
-					subtitle="year"
-					id={media.id}
-					title={media.attributes.name}
-					artist={media.attributes.artistName}
-					artistId={media.attributes.artistId}
-					year={media.attributes.releaseDate?.slice(0, 4)}
-					src={media.attributes.artwork?.url.replace('{w}x{h}', '400x400').replace('{f}', 'webp')}
-				/>
-			{/if}
-		{/each}
+				{/if}
+			{/each}
+		{/if}
 	</div>
 </div>
 

@@ -13,35 +13,39 @@
 	<div
 		class="page-wrapper__background"
 		style="background: url({(
-			data.artist.attributes?.editorialArtwork?.bannerUber?.url ||
-			data.artist.attributes?.artwork?.url
+			data.artist?.attributes?.editorialArtwork?.bannerUber?.url ||
+			data.artist?.attributes?.artwork?.url ||
+			''
 		)
 			.replace('{w}x{h}', '1200x1200')
 			.replace('{f}', 'webp')}), url({(
-			data.artist.attributes?.editorialArtwork?.bannerUber?.url ||
-			data.artist.attributes?.artwork?.url
+			data.artist?.attributes?.editorialArtwork?.bannerUber?.url ||
+			data.artist?.attributes?.artwork?.url ||
+			''
 		)
 			.replace('{w}x{h}', '200x200')
-			.replace('{f}', 'webp')}), linear-gradient({data.artist.attributes?.editorialArtwork
+			.replace('{f}', 'webp')}), linear-gradient({data.artist?.attributes?.editorialArtwork
 			?.bannerUber?.bgColor || '#000'}, rgba(0, 0, 0))"
 	>
 		<div class="page-wrapper__artist-info">
-			<h1 class="page-wrapper__artist-info__title">{data.artist.attributes?.name}</h1>
+			<h1 class="page-wrapper__artist-info__title">{data.artist?.attributes?.name}</h1>
 			<div class="page-wrapper__artist-info__buttons">
 				<ButtonPlay
 					color="white"
 					size="2.2rem"
 					background={true}
-					on:click={() => play('artist', data.artist.id)}
+					on:click={() => play('artist', data.artist?.id)}
 				/>
 			</div>
 		</div>
 	</div>
 	<div class="page-wrapper__content">
-		<div class="top-songs">
-			<ArtistGroup groupTitle="Top Songs" viewType="top-songs" {data} contentType="songs" />
-		</div>
-		{#if data.artist.views?.['latest-release'].data.length > 0}
+		{#if data.artist?.views?.['top-songs']?.data.length > 0}
+			<div class="top-songs">
+				<ArtistGroup groupTitle="Top Songs" viewType="top-songs" {data} contentType="songs" />
+			</div>
+		{/if}
+		{#if data.artist?.views?.['latest-release'].data.length > 0}
 			<ArtistGroup
 				groupTitle="Latest Release"
 				viewType="latest-release"
@@ -49,10 +53,10 @@
 				contentType="albums"
 			/>
 		{/if}
-		{#if data.artist.views?.['full-albums']?.data.length > 0}
+		{#if data.artist?.views?.['full-albums']?.data.length > 0}
 			<ArtistGroup groupTitle="Albums" viewType="full-albums" {data} contentType="albums" />
 		{/if}
-		{#if data.artist.views?.['top-music-videos']?.data?.length > 0}
+		{#if data.artist?.views?.['top-music-videos']?.data?.length > 0}
 			<ArtistGroup
 				groupTitle="Top Videos"
 				viewType="top-music-videos"
@@ -60,16 +64,16 @@
 				contentType="videos"
 			/>
 		{/if}
-		{#if data.artist.views?.['playlists']?.data?.length > 0}
+		{#if data.artist?.views?.['playlists']?.data?.length > 0}
 			<ArtistGroup groupTitle="Artist Playlists" viewType="playlists" {data} contentType="albums" />
 		{/if}
-		{#if data.artist.views?.['singles']?.data?.length > 0}
+		{#if data.artist?.views?.['singles']?.data?.length > 0}
 			<ArtistGroup groupTitle="Singles" viewType="singles" {data} contentType="albums" />
 		{/if}
-		{#if data.artist.views?.['live-albums']?.data?.length > 0}
+		{#if data.artist?.views?.['live-albums']?.data?.length > 0}
 			<ArtistGroup groupTitle="Live Albums" viewType="live-albums" {data} contentType="albums" />
 		{/if}
-		{#if data.artist.views?.['compilation-albums']?.data?.length > 0}
+		{#if data.artist?.views?.['compilation-albums']?.data?.length > 0}
 			<ArtistGroup
 				groupTitle="Compilations"
 				viewType="compilation-albums"
@@ -77,7 +81,7 @@
 				contentType="albums"
 			/>
 		{/if}
-		{#if data.artist.views?.['similar-artists']?.data?.length > 0}
+		{#if data.artist?.views?.['similar-artists']?.data?.length > 0}
 			<ArtistGroup
 				groupTitle="Similar Artists"
 				viewType="similar-artists"
