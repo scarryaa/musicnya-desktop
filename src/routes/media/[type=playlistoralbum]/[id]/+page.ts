@@ -42,7 +42,7 @@ const loadMediaItem = async ({ fetch, params, mediaType, libraryType }) => {
 	}
 
 	const fetchMediaItem = fetch(
-		`http://localhost:3001/v1/${libraryType}/${mediaType}s/${params.id}?fields[${mediaType}]=inLibrary&l=en-US&platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls&include[songs]=artists`,
+		`https://amp-api.music.apple.com/v1/${libraryType}/${mediaType}s/${params.id}?fields[${mediaType}]=inLibrary&l=en-US&platform=web&include=tracks&fields[tracks]=name,artistName,curatorName,composerName,artwork,playParams,contentRating,albumName,url,durationInMillis,audioTraits,extendedAssetUrls&include[songs]=artists`,
 		{
 			headers,
 			mode: 'cors'
@@ -50,7 +50,7 @@ const loadMediaItem = async ({ fetch, params, mediaType, libraryType }) => {
 	);
 
 	const fetchInLibrary = fetch(
-		`http://localhost:3001/v1/catalog/us/${mediaType}s/${params.id}?fields%5Bplaylists%5D=inLibrary&fields%5Balbums%5D=inLibrary&relate=library`,
+		`https://amp-api.music.apple.com/v1/catalog/us/${mediaType}s/${params.id}?fields%5Bplaylists%5D=inLibrary&fields%5Balbums%5D=inLibrary&relate=library`,
 		{
 			headers,
 			mode: 'cors'

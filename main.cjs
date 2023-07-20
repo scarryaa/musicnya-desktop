@@ -4,14 +4,32 @@ const contextMenu = require('electron-context-menu');
 const serve = require('electron-serve');
 const path = require('path');
 const { exec } = require('child_process');
+const processImport = require('process');
 
-utilityProcess.fork(path.join(__dirname, '/libs/api_server/index.ts'))
-const script = exec('(cd ./libs/nyan_core && cargo run)', (error, stdout, stderr) => {
-  if (error) {
-    console.log(`error: ${error.message}`);
-    return;
-  }
-});
+// Listen on a specific host via the HOST environment variable
+const host = processImport.env.HOST || '0.0.0.0';
+// Listen on a specific port via the PORT environment variable
+const corsPort = processImport.env.PORT || 3000;
+
+const cors_proxy = require('cors-anywhere');
+cors_proxy
+	.createServer({
+		originWhitelist: [], // Allow all origins
+		methodWhitelist: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE'],
+		setHeaders: {
+			origin: 'https://music.apple.com',
+			'access-control-allow-origin':
+				'https://music.apple.com, https://localhost:4200, https://localhost:3000',
+			// set recieved headers
+			'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Range',
+			'access-control-allow-methods': '*',
+			'access-control-allow-credentials': 'true',
+			'access-control-max-age': '86400'
+		}
+	})
+	.listen(corsPort, host, function () {
+		console.log('Running CORS Anywhere on ' + host + ':' + corsPort);
+	});
 
 try {
 	require('electron-reloader')(module);

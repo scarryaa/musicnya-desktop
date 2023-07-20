@@ -30,6 +30,7 @@ let
 in pkgs.mkShell {
   packages = with pkgs; [
     clang
+    appimage-run
     llvmPackages.bintools
     rustup
     nodejs
@@ -37,6 +38,8 @@ in pkgs.mkShell {
     electron-castlabs
     p7zip
     appimage-run
+    pkg-config
+    openssl
   ];
 
   RUSTC_VERSION = pkgs.lib.readFile ./rust-toolchain;

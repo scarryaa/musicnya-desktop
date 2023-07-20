@@ -5,7 +5,7 @@ import { get } from 'svelte/store';
 export async function load({ fetch, params }) {
 	return {
 		media: await fetch(
-			`http://localhost:3001/v1/editorial/us/multirooms/${params.id}?platform=web&extend=editorialArtwork%2Cuber%2ClockupStyle&l=en-us`,
+			`https://amp-api.music.apple.com/v1/editorial/us/multirooms/${params.id}?platform=web&extend=editorialArtwork%2Cuber%2ClockupStyle&l=en-us`,
 			{
 				headers: {
 					'media-user-token': get(musicUserToken),
@@ -40,7 +40,7 @@ export async function load({ fetch, params }) {
 				).then((response) => {
 					return response.json().then(async (res) => {
 						return await fetch(
-							`http://localhost:3001/v1/editorial/us/multirooms/${res.results.target.id}?platform=web&extend=editorialArtwork%2Cuber%2ClockupStyle&l=en-us`,
+							`https://amp-api.music.apple.com/v1/editorial/us/multirooms/${res.results.target.id}?platform=web&extend=editorialArtwork%2Cuber%2ClockupStyle&l=en-us`,
 							{
 								headers: {
 									'media-user-token': get(musicUserToken),

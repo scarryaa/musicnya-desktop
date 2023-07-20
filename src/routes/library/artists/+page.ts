@@ -6,7 +6,7 @@ import { get } from 'svelte/store';
 export async function load({ fetch, params }) {
 	return {
 		media: await fetch(
-			`http://localhost:3001/v1/me/library/artists/?include=catalog&platform=web&limit=100&l=en-us`,
+			`https://amp-api.music.apple.com/v1/me/library/artists/?include=catalog&platform=web&limit=100&l=en-us`,
 			{
 				headers: {
 					'media-user-token': get(musicUserToken),
