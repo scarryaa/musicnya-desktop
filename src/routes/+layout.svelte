@@ -20,7 +20,6 @@
 	import { onMount } from 'svelte';
 
 	import Drawer from '../components/drawer/drawer.svelte';
-	import { toasts } from '../stores/toasts.store';
 	import Footer from '../components/footer.svelte';
 	import NowPlayingTile from '../components/media/tiles/now-playing-tile.svelte';
 	import DrawerChip from '../components/drawer/drawer-chip.svelte';
@@ -46,7 +45,6 @@
 	import LoadingSpinner from '../components/loading-spinner.svelte';
 	import Lyrics from '../components/lyrics.svelte';
 	import Queue from '../components/queue.svelte';
-	import Modal from '../components/window/modal.svelte';
 	import Login from '../components/login.svelte';
 	import { goto } from '$app/navigation';
 	import { show } from '../lib/services/modal.service';
@@ -97,32 +95,6 @@
 		localStorage.getItem('listenLater') === null
 			? localStorage.setItem('listenLater', JSON.stringify([]))
 			: listenLater.set(JSON.parse(localStorage.getItem('listenLater') || ''));
-
-		const report_error = (msg: string = 'unknown error') => {
-			$toasts.push({
-				message: `Unhandled error: ${msg}`,
-				type: 'error'
-			});
-
-			console.error(msg);
-		};
-
-		const handle_rejection = (e: PromiseRejectionEvent) => {
-			e.preventDefault();
-			report_error(e?.reason);
-		};
-
-		const handle_error = (e: ErrorEvent) => {
-			report_error(e?.message);
-		};
-
-		window.addEventListener('unhandledrejection', handle_rejection);
-		window.addEventListener('error', handle_error);
-
-		return () => {
-			window.removeEventListener('unhandledrejection', handle_rejection);
-			window.removeEventListener('error', handle_error);
-		};
 	});
 </script>
 

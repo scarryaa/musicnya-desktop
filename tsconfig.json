@@ -14,7 +14,7 @@
 	"include": [
 		"src/**/*",
 		"global.d.ts"
-	],
+, "libs/api_server/api-server.ts"	],
 	"exclude": [
 		"node_modules/*",
 		"__sapper__/*",
