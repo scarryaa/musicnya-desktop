@@ -8,11 +8,10 @@ export const play = (type: string, id: string | string[], position = 0) => {
 	MusicKit.getInstance()
 		.setQueue({
 			[type]: id,
-			startPlaying: false,
+			startPlaying: true,
 			startWith: position
 		})
 		.finally(() => {
-			MusicKit.getInstance().play();
 			MusicKit.getInstance().shuffleMode = oldShuffleMode;
 		});
 };
